@@ -1,0 +1,167 @@
+Parenting Plan Builder: Background, Justification, and Specifications
+Background and Justification
+Parenting Plans in South Africa
+In South Africa, parenting plans are formalized agreements between parents outlining how they will co-parent their child post-separation or divorce. Governed by the Children's Act 38 of 2005 (sections 33–35), these plans prioritize the best interests of the child, encouraging parents to collaboratively define their parental responsibilities and rights. They can be informal agreements or legally enforceable when registered with the Family Advocate or a court. This legal framework underscores the need for a tool that simplifies and standardizes the process.
+Need for a Structured Tool
+Crafting a parenting plan is often a daunting task, fraught with emotional and logistical challenges. A structured tool addresses this by:
+
+Guiding parents step-by-step to ensure all critical elements are considered.
+Aligning plans with legal standards to enhance enforceability.
+Reducing conflict by offering clear, neutral options and focusing on the child’s well-being.
+
+User-Friendly Interface
+The tool is designed to be accessible to parents regardless of their legal expertise. It features:
+
+Intuitive navigation and clear instructions.
+Explanations of legal terms and implications.
+Positive reinforcement to motivate parents throughout the process.
+
+Cultural Sensitivity
+South Africa’s rich cultural diversity requires a tool that respects and accommodates various traditions. The Parenting Plan Builder allows parents to integrate cultural practices into their plans, ensuring relevance and inclusivity.
+Legal Compliance
+To ensure validity, the tool incorporates South African legal requirements, providing references to relevant laws and explaining their implications. This empowers parents to make informed, compliant decisions.
+
+Detailed Specifications for the Tool
+1. Introductory Section
+
+Purpose: Introduces the concept of parenting plans, their significance, and legal foundation.
+Content:
+Overview of parenting plans.
+References to the South African Constitution, Children's Act 38 of 2005, and UN Convention on the Rights of the Child.
+Encouraging messages (e.g., "You’re taking a positive step for your child’s future!").
+
+
+Implementation: Static text with embedded legal references and motivational tone.
+
+2. Assessment (Step 0)
+
+Purpose: Gathers initial context to tailor the experience.
+Features:
+Questions about relationship status, child status, existing plans, court orders, and disputes.
+Tailored recommendations (e.g., "Based on your input, creating a new plan is recommended.").
+Positive language (e.g., “Every step you take helps your child thrive.”).
+
+
+Implementation: Form with radio buttons, checkboxes, and text outputs.
+
+3. Child and Parent Details (Step 1)
+
+Purpose: Collects essential personal information.
+Features:
+Child’s name (optional, with checkbox for “Name chosen”).
+Date inputs for birthdays.
+Parents’ names, birthdays, and addresses (for distance calculations).
+Tooltips explaining each field’s purpose.
+
+
+Implementation: Input fields with validation and info icons.
+
+4. Relationship and Agreements (Step 2)
+
+Purpose: Defines the parents’ relationship and agreement method.
+Features:
+Dropdowns for relationship type (e.g., married, divorced) and agreement method (e.g., mutual consent, mediation).
+“Other” option with text input for flexibility.
+Explanations for each choice.
+
+
+Implementation: Dropdowns with descriptive tooltips.
+
+5. Custody Arrangements (Step 3)
+
+Purpose: Outlines custody details.
+Features:
+Dropdowns for primary residence, physical custody, and legal custody.
+“Other” option for primary residence.
+Textarea for additional comments.
+
+
+Implementation: Dropdowns and textarea with character limit.
+
+6. Visitation Schedules (Step 4)
+
+Purpose: Establishes visitation timelines.
+Features:
+Predefined weekly and holiday schedule options.
+Custom schedule input fields.
+Special dates (e.g., birthdays) with calendar export option.
+Comments field.
+
+
+Implementation: Radio buttons, text inputs, and calendar integration.
+
+7. Communication and Decision-Making (Step 5)
+
+Purpose: Defines interaction and decision protocols.
+Features:
+Primary/secondary communication methods (e.g., phone, email) for routine and disputes.
+Contact person details (if applicable).
+Textarea for decision-making responsibilities.
+
+
+Implementation: Dropdowns, text inputs, and textarea.
+
+8. Financial Responsibilities (Step 6)
+
+Purpose: Allocates child-related expenses.
+Features:
+Dynamic table with expense categories (e.g., education, healthcare).
+Predefined and custom expense entries.
+Percentage allocation per parent (must sum to 100%).
+Decision method (e.g., consent, court order).
+Dashboard view of totals.
+
+
+Implementation: Table with input validation and summary visuals.
+
+9. Dispute Resolution (Step 7)
+
+Purpose: Plans for conflict resolution.
+Features:
+Multi-select dropdown for methods (e.g., mediation, arbitration).
+Details field for each method.
+General comments textarea.
+
+
+Implementation: Multi-select dropdown and text inputs.
+
+10. Review and Edit (Step 8)
+
+Purpose: Allows final review and adjustments.
+Features:
+Summary of all sections.
+Edit links per section.
+Positive reinforcement (e.g., “Great job! Your plan is almost ready.”).
+
+
+Implementation: Collapsible sections with edit buttons.
+
+11. Finalize (Step 9)
+
+Purpose: Completes and exports the plan.
+Features:
+Options: PDF download, email, print, calendar export.
+Save feature for registered users.
+Warning for unregistered users about data reset.
+
+
+Implementation: Buttons triggering export functions.
+
+
+Additional Features
+
+Calendar Integration: Exports special dates as an .ics file for tools like Google Calendar.
+Distance Calculation: Calculates distance between parents’ addresses for inclusion in the plan.
+Positive Messaging: Embedded throughout to encourage and support users.
+Cultural Considerations: Option to select and describe cultural practices.
+
+
+Technical Implementation
+
+Frontend: HTML, CSS (Tailwind), JavaScript.
+Libraries: ics-js for calendar exports, jsPDF for PDF generation.
+Design: Lightweight, responsive, and accessible with minimal server-side dependencies.
+
+
+Conclusion
+The Parenting Plan Builder simplifies a complex process, ensuring legal compliance, cultural sensitivity, and a focus on the child’s best interests. By providing a structured, supportive platform, it empowers parents to create effective plans, aligning with Flamea’s mission to strengthen families.

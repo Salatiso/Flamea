@@ -1,36 +1,43 @@
-﻿Flamea.org - Revised Site File Structure
-This structure supports our hybrid website architecture: a single, scrolling landing page (index.html) for public-facing content and separate, dedicated pages for interactive tools and features.
-flamea-website/
+﻿FLAMEA.org - Final Project File StructureThis document outlines the complete and final file and folder structure for the FLAMEA.org website. This organization ensures that the project is maintainable, scalable, and easy to navigate for future development.flamea-website/
+│
 ├── 📂 assets/
 │   ├── 📂 css/
-│   │   └── style.css       # Main custom stylesheet
+│   │   └── style.css             # Custom global styles complementing Tailwind CSS
+│   │
 │   ├── 📂 js/
-│   │   ├── main.js         # Main JavaScript for universal interactivity (menu, popups)
-│   │   ├── auth.js         # Firebase Authentication logic for all pages
-│   │   ├── chatbot.js      # Dedicated JS for the chatbot
-│   │   ├── quiz.js         # Logic for the Knowledge Hub quiz on the index page
-│   │   ├── parenting-plan.js # Logic for the Parenting Plan wizard
-│   │   ├── journal.js      # Logic for the Co-Parenting Journal
-│   │   └── locator.js      # Logic for the Resource Locator
-│   ├── 📂 images/
-│   │   └── ... (Logos, background patterns, etc.)
+│   │   ├── main.js               # Core global scripts (e.g., footer year, modal initialization)
+│   │   ├── auth.js               # Handles all Firebase Authentication (login, logout, registration)
+│   │   ├── chatbot.js            # Logic for the AI Legal Assistant (Gemini API)
+│   │   ├── podcast-player.js     # Fetches and plays podcast episodes from RSS feed
+│   │   ├── assessment.js         # Powers the Needs Assessment tool and generates recommendations
+│   │   ├── plan-builder.js       # Core logic for the interactive Parenting Plan wizard
+│   │   ├── book-reader.js        # Manages book loading, pagination, and progress saving
+│   │   ├── locator.js            # Logic for searching and filtering the resource directory
+│   │   └── activity-tracker.js   # Powers the Family Activity Tracker (formerly Dispute Tracker)
+│   │
+│   ├── 📂 documents/
+│   │   ├── BK-Goliaths_Stand.txt
+│   │   ├── BK-HomeSchooling_Father.txt
+│   │   └── BK-Beyond_Redress.txt
+│   │
 │   └── 📂 templates/
-│   │   └── affidavit_template.pdf # Downloadable resource templates
-│   └── 📂 documents/
-│        └── Structure.txt # Downloadable resource templates
+│       └── Parenting_Plan_Template_Blank.pdf # Downloadable blank template
 │
-├── index.html              # The main public-facing, single-page scrolling experience.
-├── tools.html              # The member hub/dashboard listing all tools.
-├── login.html              # The dedicated Login/Register page.
-├── resources.html          # NEW: Comprehensive resources and forms page.
-├── training.html           # NEW: Hub for training modules and interactive flows.
-├── community.html          # The community forum/blog page.
-├── book-reader.html        # The on-screen book reader page.
-├── parenting-plan.html     # The Parenting Plan wizard tool page.
-├── journal.html            # NEW: The Co-Parenting Journal tool page.
-├── locator.html            # The Resource Locator tool page.
-├── visitation-calendar.html # NEW: The Visitation & Activity Scheduler page.
-├── about.html
-├── contact.html
-├── privacy-policy.html
-└── terms-of-service.html
+├── index.html                    # Main landing page (Dashboard Layout)
+├── about.html                      # The story of FLAMEA with interactive timeline
+├── tools.html                      # Central hub linking to all tools and media
+├── training.html                   # Hub for training modules
+├── resources.html                  # Comprehensive, categorized resource directory
+├── community.html                  # Community forum page
+├── publications.html               # Library for books and articles
+├── forms.html                      # Library of legal forms
+├── assessment.html                 # The Needs Assessment tool
+├── parenting-plan.html             # Landing page for the Parenting Plan tool
+├── plan-builder.html               # The interactive wizard for building the Parenting Plan
+├── activity-tracker.html           # The new Family Activity Tracker tool
+├── locator.html                    # The Resource Locator tool
+├── login.html                      # Login/Registration page with benefits table
+├── dashboard.html                  # Personalized user dashboard (future development)
+├── privacy-policy.html             # Site's privacy policy
+├── terms-of-service.html           # Site's terms of service
+└── README.md                       # Project overview for the repository
