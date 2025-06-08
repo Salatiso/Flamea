@@ -12,11 +12,25 @@
         <aside class="bg-gray-900 p-6 flex flex-col">
             <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
             <nav id="main-nav" class="flex flex-col space-y-4">
-                <a href="tools.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
-                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
-                </a>
-                <!-- Other links -->
-            </nav>
+    <!-- Standard Page Links -->
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+    
+    <!-- Divider -->
+    <div class="border-t border-gray-700 my-2"></div>
+
+    <!-- Interactive Tool Buttons -->
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+        <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+    </button>
+    <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+        <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
+    </button>
+</nav>
             <div class="mt-auto text-center">
                 <div id="auth-links-desktop" class="mb-4"></div>
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
