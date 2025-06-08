@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Parenting Plan Builder</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/ics@0.7.0/dist/ics.min.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .form-input { background-color: #374151; border-color: #4B5563; }
+        .form-input:focus { --tw-ring-color: #3B82F6; border-color: #3B82F6; }
+        .form-step, .option-page { display: none; animation: fadeIn 0.5s; }
+        .form-step.active, .option-page.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                <div class="border-t border-gray-700 my-2"></div>
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+                </button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
+                </button>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">© <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div id="parenting-plan-tool" class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Parenting Plan Builder</h2>
+                <p class="text-lg text-gray-400 mb-8">Create a detailed, legally-informed parenting plan tailored to your family’s needs.</p>
+
+                <!-- Option Selection Page -->
+                <div id="option-page" class="option-page active bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                    <h3 class="text-2xl font-bold text-green-400 mb-6">Choose Your Option</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <button id="wizard-option" class="bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 flex items-center">
+                            <i class="fas fa-magic mr-2"></i> Automated Wizard
+                            <p class="text-sm mt-2">Start with an assessment to get a recommendation and auto-fill your plan.</p>
+                        </button>
+                        <button id="manual-option" class="bg-blue-600 text-white py-4 px-6 rounded-lg hover:bg-blue-700 flex items-center">
+                            <i class="fas fa-edit mr-2"></i> Manual Option
+                            <p class="text-sm mt-2">Input your details step-by-step to build your plan.</p>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Wizard and Manual Steps -->
+                <div id="plan-builder" class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg hidden">
+                    <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
+                        <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
+                    </div>
+
+                    <form id="plan-form">
+                        <!-- Step 0: Assessment (Wizard Only) -->
+                        <div id="step-0" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 0: Assessment</h3>
+                            <p class="mb-4">Answer these questions to determine if a parenting plan is recommended.</p>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="relationshipStatus" class="block text-sm font-medium text-gray-300">Are you and the other parent in a relationship?</label>
+                                    <select id="relationshipStatus" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="childStatus" class="block text-sm font-medium text-gray-300">Child Status</label>
+                                    <select id="childStatus" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="born">Born</option>
+                                        <option value="conceived">Conceived</option>
+                                        <option value="notYet">Not Yet Conceived</option>
+                                    </select>
+                                </div>
+                                <div id="existingPlanDiv" class="hidden">
+                                    <label for="existingPlan" class="block text-sm font-medium text-gray-300">Is there an existing parenting plan?</label>
+                                    <select id="existingPlan" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div id="courtOrderDiv" class="hidden">
+                                    <label for="courtOrder" class="block text-sm font-medium text-gray-300">Is there a court order affecting parental rights?</label>
+                                    <select id="courtOrder" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                                <div id="disputesDiv" class="hidden">
+                                    <label for="disputes" class="block text-sm font-medium text-gray-300">Are there disputes regarding parenting?</label>
+                                    <select id="disputes" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="yes">Yes</option>
+                                        <option value="no">No</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div id="recommendation" class="mt-6 p-4 bg-gray-800 rounded-lg hidden">
+                                <p id="recommendationText" class="text-lg"></p>
+                            </div>
+                        </div>
+
+                        <!-- Step 1: Child & Parent Details -->
+                        <div id="step-1" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 1: Child & Parent Details</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-info-circle text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">South African Constitution (Section 28) and Children’s Act (Section 18) prioritize the child’s best interests, with equal parental rights by default (UNCRC Article 18).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="childName" class="block text-sm font-medium text-gray-300">Child’s Full Name</label>
+                                    <input type="text" id="childName" class="mt-1 block w-full rounded-md form-input p-2">
+                                </div>
+                                <div>
+                                    <label for="childAge" class="block text-sm font-medium text-gray-300">Child’s Age (if born)</label>
+                                    <input type="number" id="childAge" class="mt-1 block w-full rounded-md form-input p-2">
+                                </div>
+                                <div>
+                                    <label for="parentA" class="block text-sm font-medium text-gray-300">Parent A’s Full Name</label>
+                                    <input type="text" id="parentA" class="mt-1 block w-full rounded-md form-input p-2">
+                                </div>
+                                <div>
+                                    <label for="parentB" class="block text-sm font-medium text-gray-300">Parent B’s Full Name</label>
+                                    <input type="text" id="parentB" class="mt-1 block w-full rounded-md form-input p-2">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 2: Relationship & Agreements -->
+                        <div id="step-2" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 2: Relationship & Agreements</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-gavel text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Children’s Act (Section 33) encourages parental agreements. Equality Act ensures fairness (UNCRC Article 3).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="relationshipType" class="block text-sm font-medium text-gray-300">Relationship Type</label>
+                                    <select id="relationshipType" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="unmarried">Unmarried</option>
+                                        <option value="divorced">Divorced</option>
+                                        <option value="separated">Separated</option>
+                                        <option value="inRelationship">In a Relationship</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="agreementMethod" class="block text-sm font-medium text-gray-300">How were agreements reached?</label>
+                                    <select id="agreementMethod" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="consent">By Consent</option>
+                                        <option value="courtOrder">By Court Order</option>
+                                        <option value="dispute">In Dispute</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 3: Custody Arrangements -->
+                        <div id="step-3" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 3: Custody Arrangements</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-home text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Children’s Act (Section 18(2)) defines custody types. Primary residence is critical (UNCRC Article 9).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div class="bg-gray-800 p-4 rounded-lg">
+                                    <label for="primaryResidence" class="block text-sm font-medium text-gray-300 font-bold">Primary Residence</label>
+                                    <input type="text" id="primaryResidence" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., With Parent A">
+                                </div>
+                                <div>
+                                    <label for="physicalCustody" class="block text-sm font-medium text-gray-300">Physical Custody</label>
+                                    <select id="physicalCustody" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="joint">Joint</option>
+                                        <option value="primary">Primary with One Parent</option>
+                                        <option value="sole">Sole</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="legalCustody" class="block text-sm font-medium text-gray-300">Legal Custody</label>
+                                    <select id="legalCustody" class="mt-1 block w-full rounded-md form-input p-2">
+                                        <option value="joint">Joint</option>
+                                        <option value="sole">Sole</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Visitation Schedules -->
+                        <div id="step-4" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 4: Visitation Schedules</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-calendar-alt text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Children’s Act (Section 7) emphasizes the child’s best interests in scheduling (UNCRC Article 12).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="weeklySchedule" class="block text-sm font-medium text-gray-300">Weekly Schedule</label>
+                                    <textarea id="weeklySchedule" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Weekdays with Parent A"></textarea>
+                                </div>
+                                <div>
+                                    <label for="holidaySchedule" class="block text-sm font-medium text-gray-300">Holiday Schedule</label>
+                                    <textarea id="holidaySchedule" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Christmas with Parent B"></textarea>
+                                </div>
+                                <div>
+                                    <label for="specialDates" class="block text-sm font-medium text-gray-300">Special Dates (e.g., visitations, school events)</label>
+                                    <input type="text" id="specialDates" class="mt-1 block w-full rounded-md form-input p-2" placeholder="DD/MM/YYYY, separated by commas">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 5: Communication & Decision-Making -->
+                        <div id="step-5" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 5: Communication & Decision-Making</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-comments text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Children’s Act (Section 18(2)(b)) supports co-parenting communication (UNCRC Article 5).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="communicationMethod" class="block text-sm font-medium text-gray-300">Communication Methods</label>
+                                    <textarea id="communicationMethod" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Email, co-parenting app"></textarea>
+                                </div>
+                                <div>
+                                    <label for="decisionMaking" class="block text-sm font-medium text-gray-300">Decision-Making Responsibilities</label>
+                                    <textarea id="decisionMaking" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Joint on education"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 6: Financial Responsibilities -->
+                        <div id="step-6" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 6: Financial Responsibilities</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-money-bill-wave text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Maintenance Act governs support; Equality Act ensures fairness (UNCRC Article 27).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="childSupport" class="block text-sm font-medium text-gray-300">Child Support</label>
+                                    <textarea id="childSupport" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Monthly payments by Parent A"></textarea>
+                                </div>
+                                <div>
+                                    <label for="otherExpenses" class="block text-sm font-medium text-gray-300">Other Expenses</label>
+                                    <textarea id="otherExpenses" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., School fees shared"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 7: Dispute Resolution -->
+                        <div id="step-7" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 7: Dispute Resolution</h3>
+                            <div class="flex items-center mb-4">
+                                <i class="fas fa-handshake text-blue-400 mr-2"></i>
+                                <p class="text-sm text-gray-400">Children’s Act (Section 34) and Family Advocate support mediation (UNCRC Article 12).</p>
+                            </div>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="disputeResolution" class="block text-sm font-medium text-gray-300">Dispute Resolution Methods</label>
+                                    <textarea id="disputeResolution" class="mt-1 block w-full rounded-md form-input p-2" placeholder="e.g., Mediation"></textarea>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 8: Review & Edit -->
+                        <div id="step-8" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 8: Review & Edit</h3>
+                            <p class="mb-4">Review your plan and edit as needed.</p>
+                            <div id="planPreview" class="space-y-4"></div>
+                        </div>
+
+                        <!-- Step 9: Finalize -->
+                        <div id="step-9" class="form-step">
+                            <h3 class="text-2xl font-bold text-green-400 mb-6">Step 9: Finalize</h3>
+                            <p class="mb-4">Choose how to proceed with your plan:</p>
+                            <div class="space-y-4">
+                                <button id="downloadPdf" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"><i class="fas fa-file-pdf mr-2"></i> Download PDF</button>
+                                <button id="emailPlan" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"><i class="fas fa-envelope mr-2"></i> Email Plan</button>
+                                <button id="printPlan" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"><i class="fas fa-print mr-2"></i> Print Plan</button>
+                                <button id="exportCalendar" class="bg-blue-600 text-white py-2 px-6 rounded-lg hover:bg-blue-700"><i class="fas fa-calendar mr-2"></i> Export Calendar</button>
+                                <button id="saveToAccount" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 disabled:opacity-50"><i class="fas fa-save mr-2"></i> Save to Account</button>
+                            </div>
+                        </div>
+                    </form>
+
+                    <div class="mt-10 flex justify-between">
+                        <button id="prev-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50" disabled>Previous</button>
+                        <button id="next-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Next</button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const optionPage = document.getElementById('option-page');
+        const planBuilder = document.getElementById('plan-builder');
+        const steps = document.querySelectorAll('.form-step');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const progressBar = document.getElementById('progress-bar');
+        let currentStep = 0;
+        let isWizard = false;
+        const planData = {};
+
+        // Option Selection
+        document.getElementById('wizard-option').addEventListener('click', () => {
+            isWizard = true;
+            optionPage.classList.remove('active');
+            planBuilder.classList.remove('hidden');
+            showStep(0);
+        });
+        document.getElementById('manual-option').addEventListener('click', () => {
+            isWizard = false;
+            optionPage.classList.remove('active');
+            planBuilder.classList.remove('hidden');
+            showStep(1);
+        });
+
+        function showStep(step) {
+            steps.forEach(el => el.classList.remove('active'));
+            document.getElementById(`step-${step}`).classList.add('active');
+            updateProgress(step);
+            prevBtn.disabled = step === (isWizard ? 0 : 1);
+        }
+
+        function updateProgress(step) {
+            const totalSteps = isWizard ? 9 : 8;
+            const progress = (step / totalSteps) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep === 0 && isWizard) {
+                // Assessment Logic
+                planData.relationshipStatus = document.getElementById('relationshipStatus').value;
+                planData.childStatus = document.getElementById('childStatus').value;
+                planData.existingPlan = document.getElementById('existingPlan').value;
+                planData.courtOrder = document.getElementById('courtOrder').value;
+                planData.disputes = document.getElementById('disputes').value;
+
+                let recommendation = '';
+                if (planData.childStatus === 'notYet') {
+                    recommendation = 'Since the child is not yet conceived, consider planning ahead.';
+                } else if (planData.childStatus === 'conceived') {
+                    recommendation = 'A parenting plan can be prepared now for after birth.';
+                } else if (planData.existingPlan === 'yes') {
+                    recommendation = 'You have an existing plan. Update it as needed.';
+                } else if (planData.courtOrder === 'yes') {
+                    recommendation = 'Align your plan with the court order.';
+                } else if (planData.disputes === 'yes') {
+                    recommendation = 'A parenting plan is highly recommended due to disputes.';
+                } else {
+                    recommendation = 'A parenting plan is recommended for clarity and harmony.';
+                }
+
+                document.getElementById('recommendationText').textContent = recommendation;
+                document.getElementById('recommendation').classList.remove('hidden');
+                currentStep++;
+                showStep(currentStep);
+            } else {
+                saveStepData();
+                if (currentStep < (isWizard ? 9 : 8)) {
+                    currentStep++;
+                    if (currentStep === 8) populateReview();
+                    showStep(currentStep);
+                }
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > (isWizard ? 0 : 1)) {
+                currentStep--;
+                showStep(currentStep);
+            }
+        });
+
+        function saveStepData() {
+            switch (currentStep) {
+                case 1:
+                    planData.childName = document.getElementById('childName').value;
+                    planData.childAge = document.getElementById('childAge').value;
+                    planData.parentA = document.getElementById('parentA').value;
+                    planData.parentB = document.getElementById('parentB').value;
+                    break;
+                case 2:
+                    planData.relationshipType = document.getElementById('relationshipType').value;
+                    planData.agreementMethod = document.getElementById('agreementMethod').value;
+                    break;
+                case 3:
+                    planData.primaryResidence = document.getElementById('primaryResidence').value;
+                    planData.physicalCustody = document.getElementById('physicalCustody').value;
+                    planData.legalCustody = document.getElementById('legalCustody').value;
+                    break;
+                case 4:
+                    planData.weeklySchedule = document.getElementById('weeklySchedule').value;
+                    planData.holidaySchedule = document.getElementById('holidaySchedule').value;
+                    planData.specialDates = document.getElementById('specialDates').value;
+                    break;
+                case 5:
+                    planData.communicationMethod = document.getElementById('communicationMethod').value;
+                    planData.decisionMaking = document.getElementById('decisionMaking').value;
+                    break;
+                case 6:
+                    planData.childSupport = document.getElementById('childSupport').value;
+                    planData.otherExpenses = document.getElementById('otherExpenses').value;
+                    break;
+                case 7:
+                    planData.disputeResolution = document.getElementById('disputeResolution').value;
+                    break;
+            }
+        }
+
+        function populateReview() {
+            const preview = document.getElementById('planPreview');
+            preview.innerHTML = `
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Child & Parent Details</h4>
+                    <p>Child: ${planData.childName || 'Not specified'}, Age: ${planData.childAge || 'N/A'}</p>
+                    <p>Parent A: ${planData.parentA || 'Not specified'}</p>
+                    <p>Parent B: ${planData.parentB || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="1">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Relationship & Agreements</h4>
+                    <p>Type: ${planData.relationshipType || 'Not specified'}</p>
+                    <p>Agreed by: ${planData.agreementMethod || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="2">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Custody Arrangements</h4>
+                    <p><strong>Primary Residence:</strong> ${planData.primaryResidence || 'Not specified'}</p>
+                    <p>Physical: ${planData.physicalCustody || 'Not specified'}</p>
+                    <p>Legal: ${planData.legalCustody || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="3">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Visitation Schedules</h4>
+                    <p>Weekly: ${planData.weeklySchedule || 'Not specified'}</p>
+                    <p>Holidays: ${planData.holidaySchedule || 'Not specified'}</p>
+                    <p>Special Dates: ${planData.specialDates || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="4">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Communication & Decision-Making</h4>
+                    <p>Methods: ${planData.communicationMethod || 'Not specified'}</p>
+                    <p>Decisions: ${planData.decisionMaking || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="5">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Financial Responsibilities</h4>
+                    <p>Support: ${planData.childSupport || 'Not specified'}</p>
+                    <p>Expenses: ${planData.otherExpenses || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="6">Edit</button>
+                </div>
+                <div class="bg-gray-800 p-4 rounded-lg">
+                    <h4 class="font-bold">Dispute Resolution</h4>
+                    <p>${planData.disputeResolution || 'Not specified'}</p>
+                    <button class="edit-btn text-blue-400" data-step="7">Edit</button>
+                </div>
+            `;
+            document.querySelectorAll('.edit-btn').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    currentStep = parseInt(e.target.dataset.step);
+                    showStep(currentStep);
+                });
+            });
+        }
+
+        // Finalization Actions
+        document.getElementById('downloadPdf').addEventListener('click', () => {
+            const planText = generatePlanText();
+            const blob = new Blob([planText], { type: 'application/pdf' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'parenting-plan.pdf';
+            a.click();
+            if (!isRegistered()) resetAccess();
+        });
+
+        document.getElementById('emailPlan').addEventListener('click', () => {
+            const planText = generatePlanText();
+            window.location.href = `mailto:?subject=Parenting Plan&body=${encodeURIComponent(planText)}`;
+            if (!isRegistered()) resetAccess();
+        });
+
+        document.getElementById('printPlan').addEventListener('click', () => {
+            const planText = generatePlanText();
+            const printWindow = window.open('', '', 'width=800,height=600');
+            printWindow.document.write(`<pre>${planText}</pre>`);
+            printWindow.document.close();
+            printWindow.print();
+            if (!isRegistered()) resetAccess();
+        });
+
+        document.getElementById('exportCalendar').addEventListener('click', () => {
+            const dates = (planData.specialDates || '').split(',').filter(d => d.trim());
+            const events = dates.map(date => {
+                const [day, month, year] = date.trim().split('/');
+                return {
+                    title: 'Parenting Event',
+                    start: [parseInt(year), parseInt(month), parseInt(day)],
+                    duration: { days: 1 }
+                };
+            });
+            ics.createEvents(events, (error, value) => {
+                if (!error) {
+                    const blob = new Blob([value], { type: 'text/calendar' });
+                    const url = URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.href = url;
+                    a.download = 'parenting-plan-calendar.ics';
+                    a.click();
+                }
+            });
+        });
+
+        document.getElementById('saveToAccount').addEventListener('click', () => {
+            if (isRegistered()) alert('Saved to your account (backend integration needed).');
+            else alert('Please register to save your plan.');
+        });
+
+        function generatePlanText() {
+            return `
+Parenting Plan
+Child: ${planData.childName || 'Not specified'}, Age: ${planData.childAge || 'N/A'}
+Parent A: ${planData.parentA || 'Not specified'}
+Parent B: ${planData.parentB || 'Not specified'}
+Relationship: ${planData.relationshipType || 'Not specified'}
+Agreed by: ${planData.agreementMethod || 'Not specified'}
+Primary Residence: ${planData.primaryResidence || 'Not specified'}
+Physical Custody: ${planData.physicalCustody || 'Not specified'}
+Legal Custody: ${planData.legalCustody || 'Not specified'}
+Weekly Schedule: ${planData.weeklySchedule || 'Not specified'}
+Holiday Schedule: ${planData.holidaySchedule || 'Not specified'}
+Special Dates: ${planData.specialDates || 'Not specified'}
+Communication: ${planData.communicationMethod || 'Not specified'}
+Decision-Making: ${planData.decisionMaking || 'Not specified'}
+Child Support: ${planData.childSupport || 'Not specified'}
+Other Expenses: ${planData.otherExpenses || 'Not specified'}
+Dispute Resolution: ${planData.disputeResolution || 'Not specified'}
+            `.trim();
+        }
+
+        function isRegistered() {
+            return false; // Placeholder; integrate with auth system
+        }
+
+        function resetAccess() {
+            planData = {};
+            currentStep = isWizard ? 0 : 1;
+            showStep(currentStep);
+            alert('Access reset for unregistered users.');
+        }
+    </script>
+</body>
+</html>
