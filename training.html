@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Training Hub</title>
+    <title>FLAMEA - The Father's Armoury Training Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -12,149 +12,120 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto; /* Allow content to scroll if it overflows */
-        }
-        .sidebar-link, .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-link:hover, .sidebar-direct-link:hover {
-            background-color: #2563EB; /* blue-600 */
-            color: white;
-            transform: translateX(10px);
-        }
-        /* Highlight the active page link */
-        .sidebar-direct-link.active {
-             background-color: #2563EB;
-             color: white;
-             transform: translateX(10px);
-        }
-        .course-card {
-            transition: all 0.3s ease;
-        }
-        .course-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-        }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .option-card, .course-card { transition: all 0.3s ease; }
+        .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.1), 0 4px 6px -2px rgba(52, 211, 153, 0.05); border-color: #34D399; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
     <div class="main-container">
+        <!-- Sidebar -->
         <aside class="bg-gray-900 p-6 flex flex-col">
             <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
             <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
-
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
+                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                 <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                 <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                 <a href="training.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                 <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                 <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
+                 <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast</button>
+                 <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
             </nav>
             <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
-                </div>
+                <div id="auth-links-desktop" class="mb-4"></div>
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
 
-        <main class="main-content bg-gray-800 p-8 md:p-12">
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">The Father's Armoury</h2>
-                <p class="text-lg text-gray-400 mb-8">Forge your skills. Sharpen your knowledge. Reclaim your role.</p>
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold font-roboto text-white">The Father's Armoury</h2>
+                    <p class="text-lg text-gray-400 mb-8">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
+                </div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Wizard vs Manual Path Selection -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <a href="training-assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
+                        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
+                        <p class="text-gray-400">New here? Answer a few questions and get a personalized training plan.</p>
+                    </a>
+                    <a href="#course-catalogue" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
+                        <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
+                        <p class="text-gray-400">Know what you're looking for? Browse our full catalogue of courses.</p>
+                    </a>
+                </div>
 
-                    <div class="course-card bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-gavel text-3xl text-blue-400 mr-4"></i>
-                                <h3 class="text-2xl font-bold">The Father's Legal Compass</h3>
-                            </div>
-                            <p class="text-gray-400 mb-4 h-20">Navigate the Children's Act, family law, and court processes with confidence.</p>
-                            <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</a>
-                        </div>
+                <!-- Membership Banner -->
+                 <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
+                    <i class="fas fa-user-shield text-5xl text-blue-300"></i>
+                    <div>
+                        <h3 class="font-bold text-xl">Become a FLAMEA Member</h3>
+                        <p class="mt-1 text-blue-200">
+                            <a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your course progress, earn completion certificates with unique QR codes, and build your "Superdad" Life CV.
+                        </p>
+                    </div>
+                </div>
+
+
+                <!-- Course Catalogue -->
+                <div id="course-catalogue">
+                    <!-- Category 1: Legal Education -->
+                    <h3 class="text-3xl font-bold font-roboto text-green-400 border-b-2 border-green-400 pb-2 mb-6">🎓 Legal Education</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                        <a href="training/course-constitution.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                            <div class="flex items-center mb-4"><i class="fas fa-landmark text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">SA Constitution</h4></div>
+                            <p class="text-gray-400 mb-4 h-20">Understand your foundational rights as a father under South Africa's supreme law.</p>
+                            <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                        </a>
+                        <a href="training/course-childrens-act.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                             <div class="flex items-center mb-4"><i class="fas fa-child text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The Children's Act</h4></div>
+                            <p class="text-gray-400 mb-4 h-20">A deep dive into parental rights, responsibilities, care, and contact.</p>
+                            <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                        </a>
+                         <a href="training/course-family-law.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                            <div class="flex items-center mb-4"><i class="fas fa-balance-scale text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">Family Law Overview</h4></div>
+                            <p class="text-gray-400 mb-4 h-20">Navigate the Marriage, Divorce, and Maintenance Acts with confidence.</p>
+                            <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                        </a>
                     </div>
 
-                    <div class="course-card bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-user-graduate text-3xl text-green-400 mr-4"></i>
-                                <h3 class="text-2xl font-bold">Beyond the Classroom</h3>
-                            </div>
-                            <p class="text-gray-400 mb-4 h-20">Learn to champion your child's education, from public schooling to homeschooling.</p>
-                            <a href="#" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</a>
-                        </div>
-                    </div>
-
-                    <div class="course-card bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-hands-helping text-3xl text-yellow-400 mr-4"></i>
-                                <h3 class="text-2xl font-bold">Constructive Co-Parenting</h3>
-                            </div>
+                    <!-- Category 2: Practical Parenting Skills -->
+                    <h3 class="text-3xl font-bold font-roboto text-blue-400 border-b-2 border-blue-400 pb-2 mb-6">👨‍👧‍👦 Practical Parenting Skills</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                         <a href="training/course-co-parenting.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                            <div class="flex items-center mb-4"><i class="fas fa-hands-helping text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Co-Parenting 101</h4></div>
                             <p class="text-gray-400 mb-4 h-20">Master communication, conflict resolution, and building effective parenting plans.</p>
-                            <a href="#" class="bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</a>
-                        </div>
+                           <span class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                        </a>
+                         <a href="training/course-daily-care.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                           <div class="flex items-center mb-4"><i class="fas fa-baby-carriage text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Newborn & Daily Care</h4></div>
+                            <p class="text-gray-400 mb-4 h-20">From changing diapers to installing car seats, gain confidence in daily tasks.</p>
+                            <span class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                        </a>
+                         <a href="https://sazi.life" target="_blank" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                            <div class="flex items-center mb-4"><i class="fas fa-tools text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">DIY & Life Skills</h4></div>
+                            <p class="text-gray-400 mb-4 h-20">Learn practical home skills on our partner site, Sazi.life. (External Link)</p>
+                            <span class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg block text-center">Visit Sazi.life</span>
+                        </a>
                     </div>
-
-                     <div class="course-card bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-chart-line text-3xl text-indigo-400 mr-4"></i>
-                                <h3 class="text-2xl font-bold">Fatherhood & Financial Fitness</h3>
-                            </div>
-                            <p class="text-gray-400 mb-4 h-20">Strategies for budgeting, managing maintenance, and building a financial legacy.</p>
-                            <a href="#" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg block text-center cursor-not-allowed" title="Coming Soon">Coming Soon</a>
-                        </div>
-                    </div>
-                    
-                     <div class="course-card bg-gray-900 rounded-lg overflow-hidden shadow-lg">
-                        <div class="p-6">
-                            <div class="flex items-center mb-4">
-                                <i class="fas fa-child text-3xl text-red-400 mr-4"></i>
-                                <h3 class="text-2xl font-bold">The Engaged Father</h3>
-                            </div>
-                            <p class="text-gray-400 mb-4 h-20">Techniques for emotional connection, positive discipline, and being a present force in your child's life.</p>
-                            <a href="#" class="bg-gray-600 text-white font-bold py-2 px-4 rounded-lg block text-center cursor-not-allowed" title="Coming Soon">Coming Soon</a>
-                        </div>
-                    </div>
-
+                     <!-- Other Categories... -->
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-    </script>
-    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
-    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
     <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/chatbot.js"></script>

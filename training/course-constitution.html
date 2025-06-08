@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA Training - The SA Constitution</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.5rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #4B5563; padding-bottom: 0.5rem;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; }
+        .prose strong { color: #A7F3D0; } /* A light green for emphasis */
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; }
+        .quiz-option:hover { background-color: #374151; } /* gray-700 */
+        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></a>
+            <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Training Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Content</h4>
+                 <a href="#intro" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm">Introduction</a>
+                 <a href="#section9" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm">Section 9: Equality</a>
+                 <a href="#section28" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm">Section 28: Children's Rights</a>
+                 <a href="#quiz" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm">Final Quiz</a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-green-400">Foundational Module: The SA Constitution</h1>
+                    <p class="text-lg text-gray-400 mt-2">Understand the supreme law that underpins all your rights as a father.</p>
+                </div>
+
+                <!-- Course Content -->
+                <div class="prose max-w-none prose-invert">
+                    <section id="intro">
+                        <h2>Introduction: Why the Constitution is Your Starting Point</h2>
+                        <p>In any legal matter in South Africa, especially those involving your family and children, the <strong>Constitution of the Republic of South Africa, 1996</strong>, is the most important document. It is the <strong>supreme law</strong> of the land. This means no other law, no court ruling, and no government action can go against what the Constitution says. For fathers, it is your ultimate shield and your strongest tool.</p>
+                        <!-- SVG Diagram -->
+                        <div class="bg-gray-900 p-6 rounded-lg my-6">
+                            <svg width="100%" viewBox="0 0 400 200" xmlns="http://www.w3.org/2000/svg">
+                                <style>.svg-text{font-family: 'Open Sans', sans-serif; fill: white;} .svg-text-bold{font-weight: bold;}</style>
+                                <!-- Top Box -->
+                                <rect x="100" y="10" width="200" height="40" rx="5" fill="#10B981"/>
+                                <text x="200" y="35" text-anchor="middle" class="svg-text svg-text-bold">SA Constitution (Supreme Law)</text>
+                                <!-- Lines -->
+                                <path d="M 200 50 V 80" stroke="#4B5563" stroke-width="2"/>
+                                <path d="M 50 100 H 350" stroke="#4B5563" stroke-width="2"/>
+                                <path d="M 100 100 V 120" stroke="#4B5563" stroke-width="2"/>
+                                <path d="M 300 100 V 120" stroke="#4B5563" stroke-width="2"/>
+                                <!-- Bottom Boxes -->
+                                <rect x="25" y="120" width="150" height="30" rx="5" fill="#3B82F6"/>
+                                <text x="100" y="140" text-anchor="middle" class="svg-text">All Other Acts (e.g. Children's Act)</text>
+                                <rect x="225" y="120" width="150" height="30" rx="5" fill="#3B82F6"/>
+                                <text x="300" y="140" text-anchor="middle" class="svg-text">All Court Rulings</text>
+                            </svg>
+                        </div>
+                        <p>This diagram shows that everything—from the Children's Act to the decisions made in court—must flow from and agree with the Constitution. If they don't, they can be challenged. Two sections are especially important for fathers: Section 9 and Section 28.</p>
+                    </section>
+
+                    <section id="section9">
+                        <h2>Section 9: Your Right to Equality</h2>
+                        <p>Section 9 is the equality clause. It states that <strong>everyone is equal before the law</strong> and has the right to equal protection. Crucially, it prohibits unfair discrimination by the state or any person on grounds including race, <strong>gender, sex, and marital status.</strong></p>
+                        <p>What this means for you as a father is simple but profound: the law cannot, and should not, prefer a mother over a father simply because she is a woman. Your rights and responsibilities as a parent are equal. Any assumption that a child is automatically "better off" with their mother is a form of gender discrimination and is unconstitutional.</p>
+                    </section>
+                    
+                    <section id="section28">
+                        <h2>Section 28: The Best Interests of the Child are Paramount</h2>
+                        <p>Section 28 focuses entirely on the rights of children. The most important part is Section 28(2), which states: <strong>"A child's best interests are of paramount importance in every matter concerning the child."</strong></p>
+                        <p>This is the ultimate test for any decision made by a court, a social worker, or even you as a parent. It is not about what is best for the mother or the father; it is about what is objectively best for the child's well-being, development, and safety. When you argue your case in court or mediation, every point should be linked back to this principle. Demonstrating how your involvement, care, and contact serves the child's best interests is the most powerful argument you can make.</p>
+                    </section>
+                    
+                    <!-- Final Quiz Section -->
+                    <section id="quiz" class="mt-12 pt-8 border-t-2 border-gray-700">
+                        <h2 class="text-2xl font-bold">Test Your Knowledge</h2>
+                        <div id="quiz-container" class="bg-gray-900 p-8 rounded-lg space-y-6">
+                            <!-- Question 1 -->
+                            <div class="quiz-question">
+                                <p class="font-semibold text-lg">1. What is the supreme law of South Africa?</p>
+                                <div class="space-y-2 mt-2" data-question="1" data-answer="b">
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) The Children's Act</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) The Constitution</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) A High Court ruling</div>
+                                </div>
+                            </div>
+                             <!-- Question 2 -->
+                            <div class="quiz-question">
+                                <p class="font-semibold text-lg">2. Which section of the Constitution guarantees your right to be treated equally without gender discrimination?</p>
+                                <div class="space-y-2 mt-2" data-question="2" data-answer="a">
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) Section 9</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) Section 28</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) The Maintenance Act</div>
+                                </div>
+                            </div>
+                            <!-- Question 3 -->
+                             <div class="quiz-question">
+                                <p class="font-semibold text-lg">3. What is the most important principle in any legal matter involving a child?</p>
+                                <div class="space-y-2 mt-2" data-question="3" data-answer="c">
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) The mother's preference</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) The father's financial contribution</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) The child's best interests</div>
+                                </div>
+                            </div>
+                            <button id="submit-quiz" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
+                            <div id="quiz-results" class="text-center font-bold text-xl pt-4"></div>
+                        </div>
+                    </section>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Certificate Modal -->
+    <div id="certificate-modal" class="certificate-modal fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl max-w-2xl w-full text-center relative">
+            <button id="close-modal-btn" class="absolute top-4 right-4 text-2xl text-gray-400 hover:text-white">&times;</button>
+            <div id="certificate-content" class="bg-white text-gray-900 p-10 rounded-md border-8 border-green-500">
+                <i class="fas fa-award text-6xl text-yellow-500 mb-4"></i>
+                <h2 class="text-3xl font-bold font-roboto text-gray-800">Certificate of Completion</h2>
+                <p class="text-lg mt-4">This certifies that</p>
+                <p id="cert-user-name" class="text-2xl font-bold text-blue-700 my-2">[Member Name]</p>
+                <p class="text-lg">has successfully completed the course</p>
+                <p class="text-2xl font-bold text-blue-700 my-2">Foundational Module: The SA Constitution</p>
+                <p id="cert-date" class="text-gray-600 mt-4">on [Date]</p>
+                <div id="cert-qr-code" class="mt-6 flex flex-col items-center">
+                    <!-- QR code will be injected here -->
+                </div>
+            </div>
+            <div class="mt-6 flex gap-4 justify-center">
+                <button id="print-cert-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg">Print Certificate</button>
+                <a href="../training.html" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg">Back to Hub</a>
+            </div>
+        </div>
+    </div>
+
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        // --- Quiz Logic ---
+        const quizContainer = document.getElementById('quiz-container');
+        const submitBtn = document.getElementById('submit-quiz');
+        const resultsDiv = document.getElementById('quiz-results');
+
+        quizContainer.addEventListener('click', (e) => {
+            if (e.target.matches('.quiz-option')) {
+                const parentQuestion = e.target.parentElement;
+                // Deselect other options in the same question
+                parentQuestion.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                // Select the clicked option
+                e.target.classList.add('selected');
+            }
+        });
+
+        submitBtn.addEventListener('click', () => {
+            const questions = quizContainer.querySelectorAll('.quiz-question');
+            let score = 0;
+            questions.forEach(q => {
+                const selected = q.querySelector('.quiz-option.selected');
+                if (selected && selected.dataset.option === q.querySelector('[data-answer]').dataset.answer) {
+                    score++;
+                }
+            });
+            
+            const totalQuestions = questions.length;
+            resultsDiv.innerHTML = `You scored ${score} out of ${totalQuestions}.`;
+
+            if (score === totalQuestions) {
+                resultsDiv.innerHTML += '<br><span class="text-green-400">Excellent! You have mastered the basics.</span>';
+                // Show certificate modal
+                showCertificate();
+            } else {
+                resultsDiv.innerHTML += '<br><span class="text-red-400">Good effort! Please review the content and try again to earn your certificate.</span>';
+            }
+        });
+
+        // --- Certificate Logic ---
+        const certificateModal = document.getElementById('certificate-modal');
+        const showCertificate = () => {
+            const user = window.flamea.auth.currentUser;
+            const userName = user ? (user.displayName || user.email.split('@')[0]) : 'A Dedicated Father';
+            const completionDate = new Date().toLocaleDateString('en-ZA', { day: 'numeric', month: 'long', year: 'numeric' });
+            
+            document.getElementById('cert-user-name').textContent = userName;
+            document.getElementById('cert-date').textContent = `on ${completionDate}`;
+
+            // QR Code Generation
+            const qrContainer = document.getElementById('cert-qr-code');
+            const certificateId = `flamea-cert-${new Date().getTime()}`; // Simple unique ID
+            const verifyUrl = `https://flamea.org/verify?id=${certificateId}`;
+            qrContainer.innerHTML = `<img src="https://api.qrserver.com/v1/create-qr-code/?size=120x120&data=${encodeURIComponent(verifyUrl)}" alt="Certificate QR Code"><p class="text-xs text-gray-500 mt-2">Scan to verify</p>`;
+            
+            certificateModal.classList.add('active');
+        };
+
+        document.getElementById('close-modal-btn').addEventListener('click', () => {
+            certificateModal.classList.remove('active');
+        });
+        
+        document.getElementById('print-cert-btn').addEventListener('click', () => {
+             const { jsPDF } = window.jspdf;
+             const doc = new jsPDF();
+             const certificateContent = document.getElementById('certificate-content');
+             doc.html(certificateContent, {
+                 callback: function (doc) {
+                     doc.save('FLAMEA_Constitution_Certificate.pdf');
+                 },
+                 x: 15,
+                 y: 15,
+                 width: 180,
+                 windowWidth: 650
+             });
+        });
+
+    </script>
+    <script type="module" src="../assets/js/auth.js"></script>
+</body>
+</html>
