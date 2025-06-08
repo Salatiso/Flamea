@@ -7,17 +7,11 @@ document.addEventListener('DOMContentLoaded', () => {
     const chatbotInput = document.getElementById('chatbot-input');
     const messagesContainer = document.getElementById('messages-container');
 
-    if (!aiToolCard || !chatbotModal || !closeChatbotBtn) {
-        return; // Exit if the necessary elements aren't on this page
+    // This handles the new modal setup from main.js
+    if (aiToolCard && chatbotModal) {
+         aiToolCard.setAttribute('data-modal-target', 'chatbot-modal');
+         closeChatbotBtn.setAttribute('data-modal-close', 'chatbot-modal');
     }
-
-    aiToolCard.addEventListener('click', () => {
-        chatbotModal.classList.add('flex');
-    });
-
-    closeChatbotBtn.addEventListener('click', () => {
-        chatbotModal.classList.remove('flex');
-    });
 
     let chatHistory = [];
 
@@ -30,7 +24,8 @@ document.addEventListener('DOMContentLoaded', () => {
     const addMessage = (text, sender) => {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-bubble', sender === 'user' ? 'user-message' : 'bot-message');
-        messageElement.textContent = text;
+        // A simple way to render newlines from the AI response
+        messageElement.innerHTML = text.replace(/\n/g, '<br>');
         messagesContainer.appendChild(messageElement);
         messagesContainer.scrollTop = messagesContainer.scrollHeight;
     };
@@ -42,7 +37,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 typingIndicator = document.createElement('div');
                 typingIndicator.id = 'typing-indicator';
                 typingIndicator.classList.add('bot-message');
-                typingIndicator.innerHTML = '<span class="animate-pulse">Typing...</span>';
+                typingIndicator.innerHTML = '<span class="animate-pulse">The Guide is thinking...</span>';
                 messagesContainer.appendChild(typingIndicator);
                 messagesContainer.scrollTop = messagesContainer.scrollHeight;
             }
@@ -64,14 +59,17 @@ document.addEventListener('DOMContentLoaded', () => {
 
         if (chatHistory.length === 0) {
             chatHistory.push({ role: "user", parts: [{ text: systemPrompt }] });
-             chatHistory.push({ role: "model", parts: [{ text: "Understood. I am The Flamea Guide. I will provide supportive, factual information on South African family law for fathers and always include the disclaimer." }] });
+            chatHistory.push({ role: "model", parts: [{ text: "Understood. I am The Flamea Guide. I will provide supportive, factual information on South African family law for fathers and always include the disclaimer." }] });
         }
         chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
 
         try {
             const apiKey = ""; // The platform will provide this
             const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-            const payload = { contents: chatHistory };
+            
+            // We only send the last few messages to keep the context relevant and the payload small
+            const recentHistory = chatHistory.slice(-6); // System prompt + 2 pairs of user/model messages
+            const payload = { contents: recentHistory };
 
             const response = await fetch(apiUrl, {
                 method: 'POST',
@@ -84,24 +82,21 @@ document.addEventListener('DOMContentLoaded', () => {
             }
 
             const result = await response.json();
-
+            
             showTypingIndicator(false);
             
-            if (result.candidates && result.candidates.length > 0 &&
-                result.candidates[0].content && result.candidates[0].content.parts &&
-                result.candidates[0].content.parts.length > 0) {
-                
+            if (result.candidates && result.candidates[0].content && result.candidates[0].content.parts[0].text) {
                 const botResponse = result.candidates[0].content.parts[0].text;
                 addMessage(botResponse, 'bot');
                 chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
             } else {
-                addMessage("I'm sorry, I couldn't generate a response. Please try again.", 'bot');
+                 addMessage("I'm sorry, I encountered an issue and couldn't generate a response. Please try rephrasing your question.", 'bot');
             }
 
         } catch (error) {
             showTypingIndicator(false);
             console.error("Chatbot API Error:", error);
-            addMessage("I'm having trouble connecting right now. Please check your connection and try again.", 'bot');
+            addMessage("I'm having trouble connecting to my knowledge base right now. Please check your internet connection and try again.", 'bot');
         }
     });
 });
