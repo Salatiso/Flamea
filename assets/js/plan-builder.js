@@ -1,35 +1,113 @@
-// assets/js/plan-builder.js
+// This code goes into the file at: flamea-website/assets/js/plan-builder.js
 document.addEventListener('DOMContentLoaded', () => {
+    // --- FORM & NAVIGATION ELEMENTS ---
+    const planForm = document.getElementById('plan-form');
+    if (!planForm) return; // Exit if not on the plan-builder page
+
     const formSteps = document.querySelectorAll('.form-step');
     const prevBtn = document.getElementById('prev-btn');
     const nextBtn = document.getElementById('next-btn');
     const progressBar = document.getElementById('progress-bar');
     const downloadBtn = document.getElementById('download-btn');
-    
+    const saveBtn = document.getElementById('save-btn'); // For saving to Firebase
+
     let currentStep = 0;
     const totalSteps = formSteps.length;
 
-    // --- Live Preview Listeners ---
-    const parentAInput = document.getElementById('parentA');
-    const parentBInput = document.getElementById('parentB');
-    const childNameInput = document.getElementById('childName');
-    const rightsClauseInput = document.getElementById('rightsClause');
+    // --- LIVE PREVIEW & DATA ELEMENTS ---
+    const planData = {}; // Object to hold all form data
+
+    const livePreviewElements = {
+        parentA: document.getElementById('preview-parentA'),
+        parentB: document.getElementById('preview-parentB'),
+        childName: document.getElementById('preview-childName'),
+        rights: document.getElementById('preview-rights'),
+        residence: document.getElementById('preview-residence'),
+        distance: document.getElementById('preview-distance')
+    };
     
-    const previewParentA = document.getElementById('preview-parentA');
-    const previewParentB = document.getElementById('preview-parentB');
-    const previewChildName = document.getElementById('preview-childName');
-    const previewRights = document.getElementById('preview-rights');
+    // --- GOOGLE MAPS API INTEGRATION ---
+    let map, directionsService, directionsRenderer;
+    let autocompleteParentA, autocompleteParentB;
 
-    parentAInput.addEventListener('input', () => previewParentA.textContent = parentAInput.value || '[Parent A]');
-    parentBInput.addEventListener('input', () => previewParentB.textContent = parentBInput.value || '[Parent B]');
-    childNameInput.addEventListener('input', () => previewChildName.textContent = childNameInput.value || "[Child's Name]");
-    rightsClauseInput.addEventListener('input', () => {
-        previewRights.textContent = rightsClauseInput.value || 'Both parents have full and equal parental responsibilities and rights as outlined in the Children\'s Act 38 of 2005.';
-    });
+    window.initMap = () => {
+        const addressParentAInput = document.getElementById('parentA_address');
+        const addressParentBInput = document.getElementById('parentB_address');
+        
+        if(!addressParentAInput || !addressParentBInput) return;
 
+        // Initialize Autocomplete for address fields
+        const autocompleteOptions = {
+            componentRestrictions: { country: "za" }, // Restrict to South Africa
+            fields: ["formatted_address", "geometry.location"],
+        };
 
-    // --- Wizard Navigation ---
-    const updateWizard = () => {
+        autocompleteParentA = new google.maps.places.Autocomplete(addressParentAInput, autocompleteOptions);
+        autocompleteParentB = new google.maps.places.Autocomplete(addressParentBInput, autocompleteOptions);
+
+        autocompleteParentA.addListener('place_changed', () => handlePlaceSelect('parentA', autocompleteParentA));
+        autocompleteParentB.addListener('place_changed', () => handlePlaceSelect('parentB', autocompleteParentB));
+    };
+
+    const handlePlaceSelect = (parentKey, autocomplete) => {
+        const place = autocomplete.getPlace();
+        if (place.geometry && place.geometry.location) {
+            planData[`${parentKey}_address`] = place.formatted_address;
+            planData[`${parentKey}_coords`] = place.geometry.location.toJSON();
+            updateLivePreview();
+            calculateDistance();
+        }
+    };
+    
+    const calculateDistance = () => {
+        if (planData.parentA_coords && planData.parentB_coords) {
+            const service = new google.maps.DistanceMatrixService();
+            service.getDistanceMatrix({
+                origins: [planData.parentA_coords],
+                destinations: [planData.parentB_coords],
+                travelMode: google.maps.TravelMode.DRIVING,
+                unitSystem: google.maps.UnitSystem.METRIC,
+            }, (response, status) => {
+                if (status === 'OK' && response.rows[0].elements[0].status === 'OK') {
+                    const distance = response.rows[0].elements[0].distance.text;
+                    const duration = response.rows[0].elements[0].duration.text;
+                    planData.distanceInfo = { distance, duration };
+                    updateLivePreview();
+                } else {
+                    console.error('Error calculating distance:', status);
+                    planData.distanceInfo = null;
+                    updateLivePreview();
+                }
+            });
+        }
+    };
+
+    // --- WIZARD LOGIC ---
+    const updateLivePreview = () => {
+        // Update text content from planData object
+        livePreviewElements.parentA.textContent = planData.parentA || '[Parent A]';
+        livePreviewElements.parentB.textContent = planData.parentB || '[Parent B]';
+        livePreviewElements.childName.textContent = planData.childName || "[Child's Name]";
+        livePreviewElements.rights.textContent = planData.rightsClause || 'Both parents have full and equal parental responsibilities and rights as outlined in the Children\'s Act 38 of 2005.';
+        livePreviewElements.residence.textContent = planData.primaryResidence || '[Primary Residence not specified]';
+
+        if(planData.distanceInfo) {
+             livePreviewElements.distance.parentElement.classList.remove('hidden');
+             livePreviewElements.distance.textContent = `${planData.distanceInfo.distance} (approx. ${planData.distanceInfo.duration} drive)`;
+        } else {
+             livePreviewElements.distance.parentElement.classList.add('hidden');
+        }
+    };
+
+    const gatherStepData = (stepIndex) => {
+        const stepElement = formSteps[stepIndex];
+        const inputs = stepElement.querySelectorAll('input, select, textarea');
+        inputs.forEach(input => {
+            planData[input.id] = input.value;
+        });
+    };
+
+    const updateWizardUI = () => {
         formSteps.forEach((step, index) => {
             step.classList.toggle('active', index === currentStep);
         });
@@ -38,36 +116,52 @@ document.addEventListener('DOMContentLoaded', () => {
         progressBar.style.width = `${progressPercentage}%`;
 
         prevBtn.disabled = currentStep === 0;
-        nextBtn.disabled = currentStep === totalSteps - 1;
-        downloadBtn.disabled = currentStep !== totalSteps - 1; // Enable download only on the last step
+        
+        if(currentStep === totalSteps - 1) {
+            nextBtn.classList.add('hidden');
+            document.getElementById('final-actions').classList.remove('hidden');
+        } else {
+            nextBtn.classList.remove('hidden');
+            document.getElementById('final-actions').classList.add('hidden');
+        }
+        
+        // Disable save/download if not logged in
+        if(window.flamea && window.flamea.auth) {
+            const user = window.flamea.auth.currentUser;
+            downloadBtn.disabled = !user;
+            saveBtn.disabled = !user;
+             if(!user) {
+                downloadBtn.title = "Register for free to download";
+                saveBtn.title = "Register for free to save";
+            } else {
+                 downloadBtn.title = "";
+                saveBtn.title = "";
+            }
+        }
     };
 
     nextBtn.addEventListener('click', () => {
+        gatherStepData(currentStep);
+        updateLivePreview();
         if (currentStep < totalSteps - 1) {
             currentStep++;
-            updateWizard();
+            updateWizardUI();
         }
     });
 
     prevBtn.addEventListener('click', () => {
+        gatherStepData(currentStep);
+        updateLivePreview();
         if (currentStep > 0) {
             currentStep--;
-            updateWizard();
+            updateWizardUI();
         }
     });
 
-    // --- PDF Generation ---
+    // --- FINAL ACTIONS ---
     downloadBtn.addEventListener('click', () => {
-        // This is a placeholder for member check.
-        // In the full version, we'd check Firebase auth state here.
-        const isMember = true; // Replace with actual check
-        if (!isMember) {
-            alert("Please register for a free account to download your completed document.");
-            return;
-        }
-
         const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
+        const doc = new jsPDF({ format: 'a4' });
         const previewContent = document.getElementById('preview-pane');
         
         doc.html(previewContent, {
@@ -81,8 +175,27 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Initial state
-    updateWizard();
-    // Set default rights clause preview
-    previewRights.textContent = 'Both parents have full and equal parental responsibilities and rights as outlined in the Children\'s Act 38 of 2005.';
+    saveBtn.addEventListener('click', async () => {
+        if(window.flamea && window.flamea.saveDocument) {
+           gatherStepData(currentStep); // gather final step data
+           updateLivePreview();
+           
+           const docId = await window.flamea.saveDocument('parentingPlans', planData);
+           if(docId) {
+               alert(`Your parenting plan has been securely saved to your Dashboard!`);
+                window.location.href = 'dashboard.html';
+           }
+        } else {
+            alert("Could not save document. Auth module not found.");
+        }
+    });
+
+    // --- INITIALIZATION ---
+    planForm.addEventListener('input', (e) => {
+        gatherStepData(currentStep);
+        updateLivePreview();
+    });
+    
+    updateWizardUI();
+    updateLivePreview(); // Set initial default text
 });
