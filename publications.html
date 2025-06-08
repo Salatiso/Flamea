@@ -9,4 +9,74 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.cs
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .book-card {
+            transition: all 0.3s ease;
+            border: 1px solid #374151; /* gray-700 */
+        }
+        .book-card:hover {
+            transform: translateY(-8px);
+            border-color: #fb923c; /* orange-400 */
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="tools.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <!-- Other links -->
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Publications</h2>
+                <p class="text-lg text-gray-400 mb-8">A library of essential reading to arm fathers with knowledge and perspective.</p>
+                
+                <h3 class="text-3xl font-bold font-roboto text-orange-400 border-b-2 border-orange-400 pb-2 mb-6">Our Books</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- Book: Goliath's Stand -->
+                    <div class="book-card bg-gray-900 p-6 rounded-xl flex flex-col">
+                        <i class="fas fa-gavel text-4xl text-orange-400 mb-4 self-center"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2 text-center">Goliath's Stand</h4>
+                        <p class="text-gray-400 flex-grow mb-4">Challenging Discrimination in Family Courts in a Quest for Equality Before the Law.</p>
+                        <a href="book-reader.html?book=BK-Goliaths_Stand" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Read Now</a>
+                    </div>
+                    <!-- Book: The Homeschooling Father -->
+                    <div class="book-card bg-gray-900 p-6 rounded-xl flex flex-col">
+                        <i class="fas fa-home text-4xl text-orange-400 mb-4 self-center"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2 text-center">The Homeschooling Father</h4>
+                        <p class="text-gray-400 flex-grow mb-4">A practical guide on why and how to take charge of your child's education.</p>
+                        <a href="book-reader.html?book=BK-HomeSchooling_Father" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Read Now</a>
+                    </div>
+                    <!-- Book: Beyond Redress -->
+                    <div class="book-card bg-gray-900 p-6 rounded-xl flex flex-col">
+                        <i class="fas fa-lightbulb text-4xl text-orange-400 mb-4 self-center"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2 text-center">Beyond Redress</h4>
+                        <p class="text-gray-400 flex-grow mb-4">Prioritising the Child's Best Interests to Achieve True Equality before the Law.</p>
+                        <a href="book-reader.html?book=BK-Beyond_Redress" class="bg-orange-600 hover:bg-orange-700 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Read Now</a>
+                    </div>
+                </div>
+
+                <h3 class="text-3xl font-bold font-roboto text-orange-400 border-b-2 border-orange-400 pb-2 mb-6 mt-12">Key Articles</h3>
+                <div class="text-gray-400 bg-gray-900 bg-opacity-50 p-6 rounded-lg">
+                    <p>This section will feature important articles and blog posts. Coming soon.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>
