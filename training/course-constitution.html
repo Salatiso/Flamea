@@ -23,7 +23,7 @@
         .prose strong { color: #A7F3D0; }
         .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
         .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
         .quiz-option:hover { background-color: #374151; }
         .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
         .module { display: none; }
@@ -35,7 +35,7 @@
         .progress-bar-container { background-color: #4B5563; }
         .progress-bar-fill { background-color: #34D399; transition: width 0.5s ease-in-out; }
         .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: #10B981; color: white; }
+        .feedback.correct { background-color: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: white; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -77,7 +77,7 @@
                 <div class="prose max-w-none prose-invert">
                     <!-- Module 1: Foundations (Initially Active) -->
                     <div id="module1" class="module active">
-                        <section id="intro">
+                        <section>
                             <h2>Module 1: Foundations of the Constitution</h2>
                             <p>In any legal matter in South Africa, the <strong>Constitution of the Republic of South Africa, 1996</strong>, is the most important document. It is the <strong>supreme law</strong> of the land. This means no other law, no court ruling, and no government action can go against what the Constitution says. For fathers, it is your ultimate shield and your strongest tool.</p>
                              <h3>A. Key Principles for Fathers (50% Focus)</h3>
@@ -107,14 +107,14 @@
                     <!-- Module 2: The Bill of Rights -->
                     <div id="module2" class="module">
                         <h2>Module 2: A Deeper Dive into the Bill of Rights</h2>
-                        <p>This module will explore the Bill of Rights in more detail...</p>
+                        <p>The Bill of Rights is Chapter 2 of the Constitution and is the cornerstone of democracy in South Africa. It enshrines the rights of all people in our country and affirms the democratic values of human dignity, equality, and freedom.</p>
                         <button id="start-quiz2" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 2 Quiz</button>
                     </div>
 
                     <!-- Module 3: Structure of State -->
                     <div id="module3" class="module">
                          <h2>Module 3: Understanding the Structure of the State</h2>
-                        <p>This module explains the different branches of government...</p>
+                        <p>The Constitution not only grants rights but also separates power between three branches of government to ensure no single branch becomes too powerful. This is known as the Separation of Powers.</p>
                         <button id="start-quiz3" class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-lg text-lg mt-8">Start Final Quiz</button>
                     </div>
 
@@ -123,7 +123,7 @@
                     <section id="quiz1" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
                         <h2 class="text-2xl font-bold">Module 1 Quiz: Foundations (5 Questions)</h2>
                         <div id="quiz-container1" class="bg-gray-900 p-8 rounded-lg space-y-6">
-                            <!-- Question 1 -->
+                             <!-- Question 1 -->
                             <div class="quiz-question">
                                 <p class="font-semibold text-lg">1. What is the supreme law of South Africa?</p>
                                 <div class="space-y-2 mt-2" data-answer="b">
@@ -182,7 +182,6 @@
                      <section id="quiz2" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
                         <h2 class="text-2xl font-bold">Module 2 Quiz: The Bill of Rights (10 Questions)</h2>
                         <div id="quiz-container2" class="bg-gray-900 p-8 rounded-lg space-y-6">
-                            <!-- Placeholder for 10 questions -->
                             <p>Quiz 2 questions will appear here...</p>
                              <button id="submit-quiz2-btn" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
                              <div id="quiz-results2" class="text-center font-bold text-xl pt-4"></div>
@@ -193,7 +192,6 @@
                      <section id="quiz3" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
                         <h2 class="text-2xl font-bold">Module 3 Quiz: Structure of State (15 Questions)</h2>
                          <div id="quiz-container3" class="bg-gray-900 p-8 rounded-lg space-y-6">
-                            <!-- Placeholder for 15 questions -->
                             <p>Quiz 3 questions will appear here...</p>
                              <button id="submit-quiz3-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
                              <div id="quiz-results3" class="text-center font-bold text-xl pt-4"></div>
@@ -256,27 +254,30 @@
             const showModule = (moduleNumber) => {
                 Object.values(modules).forEach(m => {
                     m.content.classList.remove('active');
-                    m.quiz.classList.remove('active');
+                    if(m.quiz) m.quiz.classList.remove('active');
                 });
                 modules[moduleNumber].content.classList.add('active');
-                modules[moduleNumber].content.scrollIntoView();
+                window.location.hash = `module${moduleNumber}`;
             };
 
             const showQuiz = (quizNum) => {
                 modules[quizNum].content.classList.remove('active');
                 modules[quizNum].quiz.classList.add('active');
-                modules[quizNum].quiz.scrollIntoView();
+                window.location.hash = `quiz${quizNum}`;
             };
             
             const selectAnswer = (e) => {
                 if (e.target.matches('.quiz-option')) {
-                    const parentQuestion = e.target.parentElement;
-                    const feedbackDiv = parentQuestion.nextElementSibling;
+                    const parentQuestion = e.target.closest('.quiz-question');
+                    const feedbackDiv = parentQuestion.querySelector('.feedback');
+                    const optionsContainer = parentQuestion.querySelector('[data-answer]');
                     
-                    parentQuestion.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                    optionsContainer.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
                     e.target.classList.add('selected');
                     
-                    if (e.target.dataset.option === parentQuestion.dataset.answer) {
+                    parentQuestion.querySelectorAll('.feedback').forEach(f => f.style.display = 'none');
+
+                    if (e.target.dataset.option === optionsContainer.dataset.answer) {
                         feedbackDiv.textContent = e.target.dataset.feedback;
                         feedbackDiv.className = 'feedback correct';
                         feedbackDiv.style.display = 'block';
@@ -351,9 +352,16 @@
             Object.keys(modules).forEach(key => {
                 const num = parseInt(key);
                 const module = modules[num];
-                module.quizBtn.addEventListener('click', () => showQuiz(num));
-                document.getElementById(`quiz-container${num}`).addEventListener('click', selectAnswer);
-                module.submitBtn.addEventListener('click', () => handleSubmit(num));
+                if (module.quizBtn) {
+                    module.quizBtn.addEventListener('click', () => showQuiz(num));
+                }
+                const quizContainer = document.getElementById(`quiz-container${num}`);
+                if(quizContainer) {
+                    quizContainer.addEventListener('click', selectAnswer);
+                }
+                if (module.submitBtn) {
+                   module.submitBtn.addEventListener('click', () => handleSubmit(num));
+                }
             });
 
             document.getElementById('close-modal-btn').addEventListener('click', () => { certificateModal.classList.remove('active'); });

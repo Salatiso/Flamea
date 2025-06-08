@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA Training - Family Law Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Re-using the same styles from the master course template */
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #3B82F6; padding-bottom: 0.5rem; color: #60A5FA;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #93C5FD;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #93C5FD; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #3B82F6; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(59, 130, 246, 0.2); border: 1px solid #3B82F6; color: white; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-blue-400">A</span></a>
+             <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Marriage Regimes</a>
+                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Divorce Process</a>
+                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Maintenance & Protection</a>
+            </nav>
+            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
+                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+             <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-blue-400">Family Law Overview</h1>
+                    <p class="text-lg text-gray-400 mt-2">Understand the laws governing marriage, divorce, and domestic partnerships.</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #3B82F6;"></div>
+                </div>
+
+                 <!-- Course Content Area -->
+                <div class="prose max-w-none prose-invert">
+                    <!-- Module 1: Marriage Regimes -->
+                    <div id="module1" class="module active">
+                        <section>
+                            <h2>Module 1: Understanding Marriage Regimes in South Africa</h2>
+                            <p>Family law governs the relationships, rights, and duties within family structures. One of the first and most critical decisions a couple makes is their <strong>marital regime</strong>. This choice has significant financial consequences, especially during a divorce. In South Africa, there are three main types.</p>
+                            
+                            <h3>A. Types of Marriages</h3>
+                             <ul>
+                                <li><strong>Civil Marriage:</strong> This is a monogamous marriage between a man and a woman, governed by the Marriage Act.</li>
+                                <li><strong>Civil Union:</strong> This allows same-sex or opposite-sex couples to enter into a legal union with the same consequences as a civil marriage. Governed by the Civil Union Act.</li>
+                                <li><strong>Customary Marriage:</strong> A marriage negotiated, celebrated or concluded according to any of the systems of indigenous African customary law that exist in South Africa. This is recognised by the Recognition of Customary Marriages Act. Importantly, if a man is in a customary marriage, he cannot enter into a civil marriage with another woman, but he can enter into further customary marriages.</li>
+                            </ul>
+
+                            <h3>B. The Financial Consequences: Your Marital Regime</h3>
+                            <p>When you get married, you must decide how your assets will be treated. If you do not sign an Antenuptial Contract (ANC) before getting married, you are automatically married <strong>In Community of Property</strong>.</p>
+                             <!-- SVG Diagram: Marital Regimes -->
+                            <div class="bg-gray-900 p-6 rounded-lg my-6">
+                                <h4 class="text-lg font-bold text-center text-blue-300 mb-4">Marital Property Regimes</h4>
+                                <svg width="100%" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg">
+                                     <style>.svg-text{font-family: 'Open Sans', sans-serif; fill: white; font-size: 11px;}</style>
+                                     <!-- In Community -->
+                                     <rect x="10" y="40" width="130" height="60" rx="5" fill="#1E40AF"/>
+                                     <text x="75" y="65" text-anchor="middle" class="svg-text font-bold">In Community</text>
+                                     <text x="75" y="85" text-anchor="middle" class="svg-text">One Joint Estate</text>
+                                     <!-- Out of Community (No Accrual) -->
+                                      <rect x="160" y="40" width="130" height="60" rx="5" fill="#1E3A8A"/>
+                                      <text x="225" y="60" text-anchor="middle" class="svg-text font-bold">Out of Community</text>
+                                      <text x="225" y="75" text-anchor="middle" class="svg-text">(without accrual)</text>
+                                      <text x="225" y="95" text-anchor="middle" class="svg-text">Two Separate Estates</text>
+                                     <!-- Out of Community (With Accrual) -->
+                                     <rect x="310" y="40" width="130" height="60" rx="5" fill="#1D4ED8"/>
+                                      <text x="375" y="60" text-anchor="middle" class="svg-text font-bold">Out of Community</text>
+                                      <text x="375" y="75" text-anchor="middle" class="svg-text">(with accrual)</text>
+                                      <text x="375" y="95" text-anchor="middle" class="svg-text">Share the Growth</text>
+                                </svg>
+                            </div>
+                        </section>
+                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+                    </div>
+                     <!-- Other modules and quizzes follow -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Modal and Scripts would be identical to the master template -->
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
+</body>
+</html>
