@@ -1,0 +1,17 @@
+/* assets/css/style.css */
+
+/* This file can be used for custom CSS that complements Tailwind. */
+/* For example, custom animation classes or complex component styles. */
+
+body {
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.tool-card {
+    transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+}
+
+.tool-card:hover {
+    transform: translateY(-8px);
+}

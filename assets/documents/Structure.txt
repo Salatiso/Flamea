@@ -1,0 +1,36 @@
+﻿Flamea.org - Revised Site File Structure
+This structure supports our hybrid website architecture: a single, scrolling landing page (index.html) for public-facing content and separate, dedicated pages for interactive tools and features.
+flamea-website/
+├── 📂 assets/
+│   ├── 📂 css/
+│   │   └── style.css       # Main custom stylesheet
+│   ├── 📂 js/
+│   │   ├── main.js         # Main JavaScript for universal interactivity (menu, popups)
+│   │   ├── auth.js         # Firebase Authentication logic for all pages
+│   │   ├── chatbot.js      # Dedicated JS for the chatbot
+│   │   ├── quiz.js         # Logic for the Knowledge Hub quiz on the index page
+│   │   ├── parenting-plan.js # Logic for the Parenting Plan wizard
+│   │   ├── journal.js      # Logic for the Co-Parenting Journal
+│   │   └── locator.js      # Logic for the Resource Locator
+│   ├── 📂 images/
+│   │   └── ... (Logos, background patterns, etc.)
+│   └── 📂 templates/
+│   │   └── affidavit_template.pdf # Downloadable resource templates
+│   └── 📂 documents/
+│        └── Structure.txt # Downloadable resource templates
+│
+├── index.html              # The main public-facing, single-page scrolling experience.
+├── tools.html              # The member hub/dashboard listing all tools.
+├── login.html              # The dedicated Login/Register page.
+├── resources.html          # NEW: Comprehensive resources and forms page.
+├── training.html           # NEW: Hub for training modules and interactive flows.
+├── community.html          # The community forum/blog page.
+├── book-reader.html        # The on-screen book reader page.
+├── parenting-plan.html     # The Parenting Plan wizard tool page.
+├── journal.html            # NEW: The Co-Parenting Journal tool page.
+├── locator.html            # The Resource Locator tool page.
+├── visitation-calendar.html # NEW: The Visitation & Activity Scheduler page.
+├── about.html
+├── contact.html
+├── privacy-policy.html
+└── terms-of-service.html
