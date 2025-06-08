@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Comprehensive Resources</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+        }
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+        details > summary {
+            list-style: none;
+            cursor: pointer;
+        }
+        details > summary::-webkit-details-marker {
+            display: none;
+        }
+        details summary .icon {
+            transition: transform 0.3s;
+        }
+        details[open] summary .icon {
+            transform: rotate(90deg);
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission
+                </a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
+                </a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub
+                </a>
+                 <a href="resources.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
+                    <i class="fas fa-book-open w-6 text-center mr-4"></i> Resources
+                </a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-users w-6 text-center mr-4"></i> Community
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Resource Directory</h2>
+                <p class="text-lg text-gray-400 mb-8">A comprehensive directory of courts, advocacy groups, and support services for fathers and families in South Africa.</p>
+
+                <div class="space-y-4">
+                    <!-- Courts -->
+                    <details class="bg-gray-900 bg-opacity-75 rounded-lg">
+                        <summary class="p-4 text-xl font-bold flex justify-between items-center">
+                            <span><i class="fas fa-landmark w-8 mr-3 text-blue-400"></i>Courts</span>
+                            <i class="fas fa-chevron-right icon"></i>
+                        </summary>
+                        <div class="p-4 border-t border-gray-700">
+                            <!-- Constitutional Court -->
+                            <details class="mb-2">
+                                <summary class="font-semibold text-lg p-2 hover:bg-gray-700 rounded">Constitutional Court</summary>
+                                <div class="pl-6 pt-2 text-gray-300">
+                                    <p><strong>Role:</strong> Apex court for constitutional matters.</p>
+                                    <p><strong>Address:</strong> 1 Hospital Street, Constitution Hill, Braamfontein, 2017</p>
+                                    <p><strong>Phone:</strong> +27 11 359-7400</p>
+                                    <p><strong>Email:</strong> director@concourt.org.za</p>
+                                </div>
+                            </details>
+                            <!-- High Courts -->
+                            <details class="mb-2">
+                                <summary class="font-semibold text-lg p-2 hover:bg-gray-700 rounded">High Courts</summary>
+                                <div class="pl-6 pt-2 text-gray-300">Handles serious family law cases and appeals. Each province has a division.</div>
+                            </details>
+                             <!-- Magistrates' Courts -->
+                            <details>
+                                <summary class="font-semibold text-lg p-2 hover:bg-gray-700 rounded">Magistrates' Courts (Children's Courts)</summary>
+                                <div class="pl-6 pt-2 text-gray-300">Primary courts for most family law matters. Every Magistrates' Court is also a Children's Court.</div>
+                            </details>
+                        </div>
+                    </details>
+                    
+                    <!-- Family Advocate -->
+                    <details class="bg-gray-900 bg-opacity-75 rounded-lg">
+                        <summary class="p-4 text-xl font-bold flex justify-between items-center">
+                           <span><i class="fas fa-balance-scale w-8 mr-3 text-green-400"></i>Family Advocate Offices</span>
+                           <i class="fas fa-chevron-right icon"></i>
+                        </summary>
+                        <div class="p-4 border-t border-gray-700 space-y-3 text-gray-300">
+                             <p>Provides free mediation for custody, access, and guardianship disputes.</p>
+                             <p><strong>Gauteng (Johannesburg):</strong> Adv Dorothy M Nameng-Sanyane, 011 333 3724</p>
+                             <p><strong>Gauteng (Pretoria):</strong> Adv Shantelle Dames-Smith, 012 323 0760</p>
+                             <p><strong>Western Cape (Cape Town):</strong> Adv. S. Ebrahim, 021 426 1216</p>
+                             <p><strong>KwaZulu-Natal (Durban):</strong> Adv. Nana N. Khumalo, 031 310 6500</p>
+                             <p><strong>Eastern Cape (Gqeberha):</strong> Adv L Vumenjani, 041 508 1300</p>
+                        </div>
+                    </details>
+
+                    <!-- NGOs & Advocacy -->
+                    <details class="bg-gray-900 bg-opacity-75 rounded-lg">
+                        <summary class="p-4 text-xl font-bold flex justify-between items-center">
+                           <span><i class="fas fa-hands-helping w-8 mr-3 text-yellow-400"></i>NGOs & Advocacy Organisations</span>
+                           <i class="fas fa-chevron-right icon"></i>
+                        </summary>
+                        <div class="p-4 border-t border-gray-700">
+                            <!-- Men & Fathers -->
+                            <details class="mb-2">
+                                <summary class="font-semibold text-lg p-2 hover:bg-gray-700 rounded">Organisations Supporting Fathers & Men</summary>
+                                <div class="pl-6 pt-2 text-gray-300 space-y-4">
+                                    <div><strong>Cool Dads Foundation:</strong> Workshops, school drives. (Kwa-Thema, Springs)</div>
+                                    <div><strong>Dads On Duty:</strong> Mentorship, life skills. (Ennerdale, Johannesburg)</div>
+                                    <div><strong>Fathers 4 Justice SA:</strong> Advocacy, bonding guidance. (National)</div>
+                                    <div><strong>Father A Nation (FAN):</strong> Restoring men as fathers and role models. (National)</div>
+                                </div>
+                            </details>
+                            <!-- Children & Families -->
+                             <details>
+                                <summary class="font-semibold text-lg p-2 hover:bg-gray-700 rounded">Organisations Supporting Children & Families</summary>
+                                <div class="pl-6 pt-2 text-gray-300 space-y-4">
+                                    <div><strong>FAMSA:</strong> Family and marriage counselling. (National)</div>
+                                    <div><strong>Save the Children SA:</strong> Child protection and support. (National)</div>
+                                    <div><strong>Sonke Gender Justice:</strong> Gender equality and engaging men. (National)</div>
+                                    <div><strong>Centre for Child Law:</strong> Child rights litigation and policy. (Pretoria)</div>
+                                </div>
+                            </details>
+                        </div>
+                    </details>
+
+                    <!-- Legal & Social Services -->
+                     <details class="bg-gray-900 bg-opacity-75 rounded-lg">
+                        <summary class="p-4 text-xl font-bold flex justify-between items-center">
+                           <span><i class="fas fa-briefcase w-8 mr-3 text-indigo-400"></i>Legal & Social Services</span>
+                           <i class="fas fa-chevron-right icon"></i>
+                        </summary>
+                        <div class="p-4 border-t border-gray-700 space-y-3 text-gray-300">
+                            <p><strong>Legal Aid South Africa:</strong> Free legal services for qualifying individuals. Toll-Free: 0800 110 110</p>
+                            <p><strong>ProBono.Org:</strong> Connects public with free legal services from private professionals.</p>
+                            <p><strong>Department of Social Development (DSD):</strong> Provincial offices provide social work services, family preservation programs, and child welfare support.</p>
+                        </div>
+                    </details>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

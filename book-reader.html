@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Book Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+            background-color: #1f2937; /* gray-800 */
+        }
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+        .book-viewport {
+            perspective: 2000px;
+        }
+        .book {
+            width: 100%;
+            height: 75vh;
+            position: relative;
+            transform-style: preserve-3d;
+        }
+        .book-page {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            padding: 2rem;
+            background-color: #f3f4f6; /* A paper-like color */
+            color: #111827;
+            font-family: 'Lora', serif;
+            line-height: 1.7;
+            overflow-y: auto;
+            border: 1px solid #d1d5db;
+        }
+        #printable-excerpt { display: none; }
+
+        @media print {
+            body * { visibility: hidden; }
+            #printable-excerpt, #printable-excerpt * {
+                visibility: visible;
+            }
+            #printable-excerpt {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+                <a href="book-reader.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
+                    <i class="fas fa-book-reader w-6 text-center mr-4"></i> Library
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12 flex flex-col">
+            <div class="flex-shrink-0">
+                 <h1 id="book-title" class="text-4xl font-bold font-roboto text-green-400 mb-2">Library</h1>
+                 <h2 id="chapter-title" class="text-2xl font-semibold text-gray-400 mb-6 border-b-2 border-gray-700 pb-4">Goliath's Stand</h2>
+            </div>
+           
+            <div class="book-viewport flex-grow">
+                 <div class="book">
+                    <div id="book-content-container" class="book-page">
+                        <p>Loading...</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Navigation -->
+            <div class="flex-shrink-0 mt-6 flex justify-between items-center">
+                <button id="prev-btn" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-6 rounded-lg flex items-center disabled:opacity-50" disabled>
+                    <i class="fas fa-arrow-left mr-2"></i> Previous Page
+                </button>
+                <div class="text-lg text-gray-400 font-semibold">
+                    Page <span id="page-num">1</span> of <span id="total-pages">1</span>
+                </div>
+                 <button id="print-excerpt-btn" class="hidden bg-yellow-500 hover:bg-yellow-600 text-gray-900 font-bold py-2 px-6 rounded-lg">
+                    <i class="fas fa-print mr-2"></i> Print Excerpt
+                </button>
+                <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg flex items-center disabled:opacity-50" disabled>
+                    Next Page <i class="fas fa-arrow-right ml-2"></i>
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <div id="printable-excerpt"></div>
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/book-reader.js"></script>
+</body>
+</html>

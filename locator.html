@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Resource Locator</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+        }
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+        .form-input {
+            background-color: #374151; /* gray-700 */
+            border-color: #4B5563; /* gray-600 */
+        }
+        .form-input:focus {
+            --tw-ring-color: #3B82F6; /* blue-500 */
+            border-color: #3B82F6;
+        }
+        #list-container::-webkit-scrollbar { width: 8px; }
+        #list-container::-webkit-scrollbar-track { background: #1f2937; }
+        #list-container::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                 <a href="tools.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
+                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
+                </a>
+                <!-- Other links would go here, linking to other tool pages -->
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Resource Locator</h2>
+                <p class="text-lg text-gray-400 mb-8">Find essential support services near you. Enter a keyword to search for Courts, Family Advocates, and NGOs.</p>
+
+                <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                    <div class="flex flex-col md:flex-row gap-4 mb-8">
+                        <input type="text" id="location-search" placeholder="Enter city or keyword, e.g., Johannesburg" class="flex-grow p-3 rounded-md form-input text-white">
+                        <select id="resource-type" class="p-3 rounded-md form-input text-white">
+                            <option value="all">All Resource Types</option>
+                            <option value="court">Court</option>
+                            <option value="family-advocate">Family Advocate</option>
+                            <option value="ngo-father">Father/Men NGOs</option>
+                            <option value="ngo-family">Family/Child NGOs</option>
+                            <option value="social-work">Social Work</option>
+                            <option value="legal-aid">Legal Aid</option>
+                        </select>
+                        <button id="search-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Search</button>
+                    </div>
+                    
+                    <div id="list-container" class="max-h-[65vh] overflow-y-auto space-y-4 pr-4">
+                        <p id="list-placeholder" class="text-center text-gray-500 p-8">Enter a search term to find resources.</p>
+                        <!-- Results will be injected by locator.js -->
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script src="assets/js/locator.js"></script>
+</body>
+</html>

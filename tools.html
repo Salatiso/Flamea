@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Empowerment Tools</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://unpkg.com/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .tool-card { transition: all 0.3s ease; border: 1px solid #374151; }
+        .tool-card:hover { transform: translateY(-8px); border-color: #34D399; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
+        .modal-container { display: none; }
+        .modal-container.flex { display: flex; }
+        .modal-box { height: 80vh; max-height: 700px; }
+        #episode-list::-webkit-scrollbar { width: 6px; }
+        #episode-list::-webkit-scrollbar-thumb { background-color: #4B5563; border-radius: 10px; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="tools.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <!-- Other links -->
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4"></div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Empowerment Tools & Media</h2>
+                <p class="text-lg text-gray-400 mb-8">Practical resources, knowledge, and insights to give you clarity and control.</p>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    <!-- AI Assistant -->
+                    <div id="ai-tool-card" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center cursor-pointer">
+                        <i class="fas fa-robot text-5xl text-purple-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">AI Legal Assistant</h3>
+                        <p class="text-gray-400 flex-grow">Ask questions and get informational guidance on family law topics.</p>
+                    </div>
+
+                    <!-- Publications -->
+                    <a href="publications.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
+                        <i class="fas fa-book-reader text-5xl text-orange-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">Publications</h3>
+                        <p class="text-gray-400 flex-grow">Access our library of books and articles on fatherhood and the law.</p>
+                    </a>
+
+                    <!-- YouTube -->
+                    <a href="https://www.youtube.com/@Salatiso" target="_blank" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
+                        <i class="fab fa-youtube text-5xl text-red-500 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">YouTube Channel</h3>
+                        <p class="text-gray-400 flex-grow">Watch interviews, discussions, and tutorials on our official channel.</p>
+                    </a>
+
+                    <!-- Podcast -->
+                    <div id="podcast-tool-card" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center cursor-pointer">
+                        <i class="fas fa-podcast text-5xl text-pink-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">FLAMEA Podcast</h3>
+                        <p class="text-gray-400 flex-grow">Listen to the latest episodes for insights and stories from the front lines.</p>
+                    </div>
+
+                    <!-- Other tool cards -->
+                    <a href="parenting-plan.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
+                        <i class="fas fa-file-signature text-5xl text-blue-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">Parenting Plan Builder</h3>
+                        <p class="text-gray-400 flex-grow">Create a comprehensive, legally-informed parenting plan.</p>
+                    </a>
+                    <a href="dispute-tracker.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
+                        <i class="fas fa-shield-alt text-5xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-3">Family Dispute Tracker</h3>
+                        <p class="text-gray-400 flex-grow">Securely log events, communications, and documents.</p>
+                    </a>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <!-- Modals (AI and Podcast) -->
+    <div id="chatbot-modal" class="modal-container fixed inset-0 bg-black bg-opacity-70 items-center justify-center z-50"></div>
+    <div id="podcast-modal" class="modal-container fixed inset-0 bg-black bg-opacity-70 items-center justify-center z-50">
+        <div class="modal-box bg-gray-800 rounded-2xl shadow-2xl flex flex-col w-full max-w-2xl border-2 border-pink-500">
+            <div class="bg-gray-900 text-white p-4 rounded-t-xl flex justify-between items-center">
+                <h3 class="font-bold text-lg flex items-center"><i class="fas fa-podcast text-pink-400 mr-3"></i> FLAMEA Podcast</h3>
+                <button id="close-podcast" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+            </div>
+            <div id="episode-list" class="flex-1 p-4 overflow-y-auto space-y-4">
+                <p>Loading episodes...</p>
+            </div>
+        </div>
+    </div>
+
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/chatbot.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>
+</body>
+</html>

@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - About Us</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+            background-image: linear-gradient(rgba(31, 41, 55, 0.95), rgba(31, 41, 55, 0.95)), url('https://images.unsplash.com/photo-1519120126-16817531a7c7?q=80&w=1974');
+            background-size: cover;
+            background-position: center;
+        }
+        .sidebar-link, .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-link:hover, .sidebar-direct-link:hover {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+        .sidebar-direct-link.active {
+             background-color: #2563EB;
+             color: white;
+             transform: translateX(10px);
+        }
+        /* Timeline Styles */
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .timeline-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem; /* Center on the icon */
+            transform: translateX(-50%);
+            height: 100%;
+            width: 4px;
+            background-color: #4B5563; /* gray-600 */
+        }
+        .timeline-icon {
+            z-index: 10;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+                <a href="about.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
+                    <i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission
+                </a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
+                </a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub
+                </a>
+                 <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-book-open w-6 text-center mr-4"></i> Resources
+                </a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-users w-6 text-center mr-4"></i> Community
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+                        Login / Register
+                    </a>
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-3xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto mb-8 text-white text-center">The Story of FLAMEA</h2>
+                <!-- Timeline Container -->
+                <div class="relative timeline-line pl-12">
+                    
+                    <!-- Timeline Item 1: The Spark -->
+                    <div class="timeline-item mb-12">
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-fire"></i>
+                        </div>
+                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                            <h3 class="text-2xl font-bold text-blue-400">The Spark (2024)</h3>
+                            <p class="text-gray-300 mt-2">A father-led advocacy movement born from the urgent need to reclaim our rightful place as equal partners in raising our children. We are fathers who refuse to accept a system that marginalizes us.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 2: The Mission -->
+                    <div class="timeline-item mb-12">
+                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-bullseye"></i>
+                        </div>
+                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                            <h3 class="text-2xl font-bold text-green-400">Our Mission</h3>
+                            <p class="text-gray-300 mt-2">To fight fatherlessness, prevent crime, end gender-based violence, and restore morality by demanding equal parenting rights and challenging every discriminatory practice in our legal system.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 3: The Vision -->
+                    <div class="timeline-item mb-12">
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-yellow-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-eye"></i>
+                        </div>
+                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                            <h3 class="text-2xl font-bold text-yellow-400">Our Vision</h3>
+                            <p class="text-gray-300 mt-2">A South Africa where every child grows up with an involved father figure, where young men choose purpose over crime, and where family courts operate without gender bias, upholding the Constitution.</p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 4: The Values -->
+                     <div class="timeline-item mb-12">
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center">
+                           <i class="fas fa-gem"></i>
+                        </div>
+                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                            <h3 class="text-2xl font-bold text-indigo-400">Our Values (SALATISO)</h3>
+                             <p class="text-gray-300 mt-2">
+                                <strong>S</strong>afety, <strong>A</strong>ssurance, <strong>L</strong>earning, <strong>A</strong>daptability, <strong>T</strong>raining, <strong>I</strong>ntegrity, <strong>S</strong>olutions, <strong>O</strong>perations. These principles guide every action we take.
+                            </p>
+                        </div>
+                    </div>
+
+                    <!-- Timeline Item 5: The Call to Action -->
+                    <div class="timeline-item">
+                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center">
+                            <i class="fas fa-fist-raised"></i>
+                        </div>
+                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                            <h3 class="text-2xl font-bold text-red-400">Your Stand</h3>
+                            <p class="text-gray-300 mt-2">This is your platform. This is your movement. We are not asking for permission—we are taking our rightful place. Join us and lead the change.</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        const timelineItems = document.querySelectorAll('.timeline-item');
+        const mainContent = document.querySelector('.main-content');
+
+        const isElementInViewport = el => {
+            const rect = el.getBoundingClientRect();
+            return (
+                rect.top >= 0 &&
+                rect.left >= 0 &&
+                rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+                rect.right <= (window.innerWidth || document.documentElement.clientWidth)
+            );
+        };
+
+        const callbackFunc = () => {
+            for (let i = 0; i < timelineItems.length; i++) {
+                if (isElementInViewport(timelineItems[i])) {
+                    timelineItems[i].classList.add("is-visible");
+                }
+            }
+        };
+
+        // listen for events
+        mainContent.addEventListener("load", callbackFunc);
+        mainContent.addEventListener("scroll", callbackFunc);
+        // initial check
+        callbackFunc();
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/chatbot.js"></script>
+</body>
+</html>

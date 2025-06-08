@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Login / Register</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+        }
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+        .form-input {
+            background-color: #374151; /* gray-700 */
+            border-color: #4B5563; /* gray-600 */
+        }
+        .form-input:focus {
+            --tw-ring-color: #3B82F6; /* blue-500 */
+            border-color: #3B82F6;
+        }
+        .tab-btn.active {
+            border-bottom-color: #34D399; /* emerald-400 */
+            color: #34D399;
+        }
+        .feature-check { color: #34D399; }
+        .feature-cross { color: #F87171; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+                        Login / Register
+                    </a>
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold font-roboto text-white">Access Your Armoury</h2>
+                    <p class="mt-2 text-lg text-gray-400">Log in to manage your tools or sign up to unlock your member benefits.</p>
+                </div>
+
+                <div class="grid lg:grid-cols-2 gap-10 mt-10 items-start">
+                    <!-- Auth Box -->
+                    <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                        <div class="flex border-b border-gray-700 mb-6">
+                            <button id="login-tab" class="tab-btn w-1/2 py-3 font-semibold text-gray-400 border-b-2 border-transparent transition" onclick="showTab('login')">Log In</button>
+                            <button id="register-tab" class="tab-btn w-1/2 py-3 font-semibold text-gray-400 border-b-2 border-transparent transition" onclick="showTab('register')">Register</button>
+                        </div>
+                        <div id="auth-message" class="mb-4 text-center text-red-400"></div>
+                        <div id="login-form-container">
+                            <form id="login-form" class="space-y-6">
+                                <input id="login-email" type="email" autocomplete="email" required placeholder="Email address" class="w-full p-3 rounded-md form-input">
+                                <input id="login-password" type="password" autocomplete="current-password" required placeholder="Password" class="w-full p-3 rounded-md form-input">
+                                <button type="submit" class="w-full font-bold py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition">Sign In</button>
+                            </form>
+                        </div>
+                        <div id="register-form-container" class="hidden">
+                             <form id="register-form" class="space-y-6">
+                                <input id="register-email" type="email" autocomplete="email" required placeholder="Email address" class="w-full p-3 rounded-md form-input">
+                                <input id="register-password" type="password" autocomplete="new-password" required placeholder="Password (min. 6 characters)" class="w-full p-3 rounded-md form-input">
+                                <button type="submit" class="w-full font-bold py-3 px-4 rounded-lg bg-blue-600 hover:bg-blue-700 transition">Create Account</button>
+                            </form>
+                        </div>
+                        <div class="relative flex py-5 items-center">
+                            <div class="flex-grow border-t border-gray-600"></div><span class="flex-shrink mx-4 text-gray-400">Or</span><div class="flex-grow border-t border-gray-600"></div>
+                        </div>
+                        <button id="google-signin-btn" class="w-full flex justify-center items-center py-3 px-4 border border-gray-600 rounded-lg bg-gray-800 hover:bg-gray-700 transition">
+                            <i class="fab fa-google w-5 h-5 mr-3"></i>Continue with Google
+                        </button>
+                    </div>
+
+                    <!-- Benefits Table -->
+                    <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                        <h3 class="text-2xl font-bold text-center mb-6">Compare Your Benefits</h3>
+                        <table class="w-full text-left">
+                            <thead>
+                                <tr class="border-b-2 border-gray-700">
+                                    <th class="p-3 font-semibold">Feature</th>
+                                    <th class="p-3 text-center font-semibold">Guest</th>
+                                    <th class="p-3 text-center font-semibold text-green-400">Member (Free)</th>
+                                </tr>
+                            </thead>
+                            <tbody class="text-gray-300">
+                                <tr class="border-b border-gray-700"><td class="p-3">Read On-Screen Books</td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3">Access to Basic Tools</td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                                <tr class="border-b border-gray-700"><td class="p-3">Use Interactive Chatbot</td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-white">Save Parenting Plans & Journals</td><td class="p-3 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-3 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                <tr class="border-b border-gray-700"><td class="p-3 font-bold text-white">Personalized Member Dashboard</td><td class="p-3 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-3 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-white">Track Training & Earn Badges</td><td class="p-3 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-3 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                <tr><td class="p-3">Full Community Forum Access</td><td class="p-3 text-center">Read-Only</td><td class="p-3 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                            </tbody>
+                        </table>
+                         <div class="text-center mt-6">
+                            <button onclick="showTab('register')" class="bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition-transform hover:scale-105">
+                                Register for Free to Unlock
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        const loginTab = document.getElementById('login-tab');
+        const registerTab = document.getElementById('register-tab');
+        const loginForm = document.getElementById('login-form-container');
+        const registerForm = document.getElementById('register-form-container');
+        function showTab(tabName) {
+            if (tabName === 'login') {
+                loginTab.classList.add('active');
+                registerTab.classList.remove('active');
+                loginForm.classList.remove('hidden');
+                registerForm.classList.add('hidden');
+            } else {
+                loginTab.classList.remove('active');
+                registerTab.classList.add('active');
+                loginForm.classList.add('hidden');
+                registerForm.classList.remove('hidden');
+            }
+        }
+        showTab('login');
+    </script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

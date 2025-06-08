@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - My Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            overflow-y: auto;
+        }
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
+            color: white;
+            transform: translateX(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                 <!-- Add other links here, marking dashboard as active if needed -->
+                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+                <a href="dashboard.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg">
+                    <i class="fas fa-user-circle w-6 text-center mr-4"></i> My Dashboard
+                </a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
+                </a>
+                <!-- ... other links -->
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <!-- Auth links will be populated by auth.js -->
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div id="dashboard-container" class="max-w-7xl mx-auto hidden">
+                <h2 id="dashboard-welcome" class="text-4xl font-bold font-roboto mb-8 text-white">My Dashboard</h2>
+                
+                <div class="grid grid-cols-1 lg:grid-cols-2 gap-10">
+                    <!-- Saved Parenting Plans -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 flex items-center"><i class="fas fa-file-alt w-6 mr-3 text-blue-400"></i> My Parenting Plans</h3>
+                        <div id="parenting-plans-list" class="space-y-4">
+                            <p class="text-gray-400">Loading your saved plans...</p>
+                        </div>
+                    </div>
+                    <!-- Saved Dispute Logs -->
+                    <div>
+                        <h3 class="text-2xl font-bold mb-4 flex items-center"><i class="fas fa-shield-alt w-6 mr-3 text-green-400"></i> My Dispute Logs</h3>
+                        <div id="dispute-logs-list" class="space-y-4">
+                            <p class="text-gray-400">Loading your saved logs...</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="dashboard-login-prompt" class="text-center mt-20">
+                <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
+                <h2 class="text-3xl font-bold text-white mt-4">This is Your Personal Dashboard</h2>
+                <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to view your saved documents.</p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/dashboard.js"></script>
+</body>
+</html>

@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Fathers. Leaders. Legacy.</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .content-panel { display: none; animation: slideIn 0.6s forwards; }
+        .content-panel.active { display: flex; }
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        .sidebar-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+        .sidebar-link.active, .sidebar-link:hover {
+            background-color: #2563EB; /* blue-600 */
+            color: white;
+            transform: translateX(10px);
+        }
+        /* New styling for direct links to look like sidebar links */
+        .sidebar-direct-link {
+             transition: all 0.3s ease;
+             transform: translateX(0);
+        }
+         .sidebar-direct-link:hover {
+            background-color: #2563EB; /* blue-600 */
+            color: white;
+            transform: translateX(10px);
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <a href="#home" class="sidebar-link active flex items-center p-4 rounded-lg" data-target="home">
+                    <i class="fas fa-home w-6 text-center mr-4"></i> Home
+                </a>
+                <a href="#mission" class="sidebar-link flex items-center p-4 rounded-lg" data-target="mission">
+                    <i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission
+                </a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools
+                </a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub
+                </a>
+                 <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-book-open w-6 text-center mr-4"></i> Resources
+                </a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-users w-6 text-center mr-4"></i> Community
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+                        Login / Register
+                    </a>
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content Area -->
+        <main class="bg-gray-800 bg-cover bg-center" style="background-image: linear-gradient(rgba(31, 41, 55, 0.8), rgba(31, 41, 55, 0.8)), url('https://images.unsplash.com/photo-1594541337994-399a5e3a890b?q=80&w=2070');">
+            <!-- Home Panel -->
+            <div id="home" class="content-panel active w-full h-full flex-col justify-center items-center p-12 text-center">
+                <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-2xl">Empowering South African fathers to reclaim their role.</p>
+            </div>
+            
+            <!-- Mission Panel -->
+            <div id="mission" class="content-panel w-full h-full flex-col justify-center items-center p-12 text-center">
+                <i class="fas fa-bullseye text-6xl text-green-400 mb-6"></i>
+                <h2 class="text-5xl font-bold font-roboto mb-4">Our Mission</h2>
+                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed">
+                    FLAMEA challenges every discriminatory practice that marginalizes fathers. We fight for equality before the law, ensuring that fathers and mothers are judged on their merits as parents, not their gender.
+                </p>
+            </div>
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script>
+        document.getElementById('main-nav').addEventListener('click', function(e) {
+            const link = e.target.closest('.sidebar-link');
+            // Only prevent default for panel-switching links
+            if (link && link.dataset.target) {
+                e.preventDefault();
+                const targetId = link.dataset.target;
+
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
+
+                document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+                document.getElementById(targetId).classList.add('active');
+            }
+        });
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/chatbot.js"></script>
+</body>
+</html>
