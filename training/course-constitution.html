@@ -34,6 +34,8 @@
         .certificate-modal.active { display: flex; }
         .progress-bar-container { background-color: #4B5563; }
         .progress-bar-fill { background-color: #34D399; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: #10B981; color: white; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -42,10 +44,10 @@
         <aside class="bg-gray-900 p-6 flex flex-col">
             <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></a>
             <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Training Hub</a>
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
                  <div class="border-t border-gray-700 my-2"></div>
                  <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm">Module 1: Foundations</a>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Foundations</a>
                  <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Bill of Rights</a>
                  <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Structure of State</a>
             </nav>
@@ -78,7 +80,15 @@
                         <section id="intro">
                             <h2>Module 1: Foundations of the Constitution</h2>
                             <p>In any legal matter in South Africa, the <strong>Constitution of the Republic of South Africa, 1996</strong>, is the most important document. It is the <strong>supreme law</strong> of the land. This means no other law, no court ruling, and no government action can go against what the Constitution says. For fathers, it is your ultimate shield and your strongest tool.</p>
-                             <h3>A. The Constitution's Supremacy (50% Focus)</h3>
+                             <h3>A. Key Principles for Fathers (50% Focus)</h3>
+                            <p>Two sections are especially important for fathers seeking to enforce their rights:</p>
+                            <ul>
+                                <li><strong>Section 9: Your Right to Equality.</strong> This is the equality clause. It states that everyone is equal before the law and prohibits unfair discrimination on grounds including race, <strong>gender, sex, and marital status.</strong> For you as a father, this means the law cannot and should not prefer a mother over a father simply because she is a woman. Your rights and responsibilities as a parent are equal.</li>
+                                <li><strong>Section 28: The Best Interests of the Child are Paramount.</strong> Section 28(2) states: "A child's best interests are of paramount importance in every matter concerning the child." This is the ultimate test. It's not about the mother's interests or the father's interests; it is about what is objectively best for the child. Every argument you make should be linked to this principle.</li>
+                            </ul>
+                        </section>
+                        <section>
+                            <h3>B. The Supremacy of the Constitution (50% Focus)</h3>
                             <p>Section 2 of the Constitution declares its own supremacy. Think of it as the ultimate foundation of a house. All other laws (like the Children's Act, the Maintenance Act) are the walls and the roof. If any wall or roof section is not built correctly according to the foundation's plan, it is invalid and must be fixed or removed. This principle is vital because it means that even if a specific law seems to disadvantage you, if it contradicts the foundational principles of equality and dignity in the Constitution, it can be challenged.</p>
                             <!-- SVG Diagram -->
                             <div class="bg-gray-900 p-6 rounded-lg my-6">
@@ -90,12 +100,6 @@
                                     <rect x="225" y="120" width="150" height="30" rx="5" fill="#3B82F6"/><text x="300" y="140" text-anchor="middle" class="svg-text">All Court Rulings</text>
                                 </svg>
                             </div>
-                            <h3>B. Key Principles for Fathers (50% Focus)</h3>
-                            <p>Two sections are especially important for fathers seeking to enforce their rights:</p>
-                            <ul>
-                                <li><strong>Section 9: Your Right to Equality.</strong> This is the equality clause. It states that everyone is equal before the law and prohibits unfair discrimination on grounds including race, <strong>gender, sex, and marital status.</strong> For you as a father, this means the law cannot and should not prefer a mother over a father simply because she is a woman. Your rights and responsibilities as a parent are equal.</li>
-                                <li><strong>Section 28: The Best Interests of the Child are Paramount.</strong> Section 28(2) states: "A child's best interests are of paramount importance in every matter concerning the child." This is the ultimate test. It's not about the mother's interests or the father's interests; it is about what is objectively best for the child. Every argument you make should be linked to this principle.</li>
-                            </ul>
                         </section>
                         <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
                     </div>
@@ -103,74 +107,98 @@
                     <!-- Module 2: The Bill of Rights -->
                     <div id="module2" class="module">
                         <h2>Module 2: A Deeper Dive into the Bill of Rights</h2>
-                        <!-- Content for module 2 -->
                         <p>This module will explore the Bill of Rights in more detail...</p>
-                        <button id="start-quiz2" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 2 Quiz</button>
+                        <button id="start-quiz2" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 2 Quiz</button>
                     </div>
 
                     <!-- Module 3: Structure of State -->
                     <div id="module3" class="module">
                          <h2>Module 3: Understanding the Structure of the State</h2>
-                        <!-- Content for module 3 -->
                         <p>This module explains the different branches of government...</p>
-                        <button id="start-quiz3" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Final Quiz</button>
+                        <button id="start-quiz3" class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-lg text-lg mt-8">Start Final Quiz</button>
                     </div>
 
                     <!-- QUIZZES -->
                     <!-- Quiz 1 -->
                     <section id="quiz1" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
-                        <h2 class="text-2xl font-bold">Module 1 Quiz: Foundations</h2>
+                        <h2 class="text-2xl font-bold">Module 1 Quiz: Foundations (5 Questions)</h2>
                         <div id="quiz-container1" class="bg-gray-900 p-8 rounded-lg space-y-6">
                             <!-- Question 1 -->
                             <div class="quiz-question">
                                 <p class="font-semibold text-lg">1. What is the supreme law of South Africa?</p>
                                 <div class="space-y-2 mt-2" data-answer="b">
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) The Children's Act</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) The Constitution</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) A High Court ruling</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a" data-feedback="Incorrect. The Children's Act is an important law, but it is subordinate to the Constitution.">a) The Children's Act</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b" data-feedback="Correct! Section 2 of the Constitution states that it is the supreme law of the Republic; law or conduct inconsistent with it is invalid.">b) The Constitution</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c" data-feedback="Incorrect. While court rulings are legally binding, they must still align with the Constitution.">c) A High Court ruling</div>
                                 </div>
+                                <div class="feedback"></div>
                             </div>
                             <!-- Question 2 -->
                             <div class="quiz-question">
                                 <p class="font-semibold text-lg">2. Which section of the Constitution guarantees your right to be treated equally without gender discrimination?</p>
                                 <div class="space-y-2 mt-2" data-answer="a">
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) Section 9</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) Section 28</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) Section 2</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a" data-feedback="Correct! Section 9 is the equality clause and is a father's most powerful tool against gender bias in family law matters.">a) Section 9</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b" data-feedback="Incorrect. Section 28 deals with the Rights of Children. While related, Section 9 specifically covers equality.">b) Section 28</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c" data-feedback="Incorrect. Section 2 establishes the supremacy of the Constitution itself.">c) Section 2</div>
                                 </div>
+                                <div class="feedback"></div>
                             </div>
                             <!-- Question 3 -->
                              <div class="quiz-question">
                                 <p class="font-semibold text-lg">3. What is the most important principle in any legal matter involving a child?</p>
                                 <div class="space-y-2 mt-2" data-answer="c">
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) The mother's preference</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) The father's financial contribution</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) The child's best interests</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a" data-feedback="Incorrect. A parent's preference is secondary to what is factually in the child's best interests.">a) The mother's preference</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b" data-feedback="Incorrect. Financial contribution is a factor, but it is not the 'paramount' principle.">b) The father's financial contribution</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c" data-feedback="Correct! Section 28(2) explicitly states that 'A child's best interests are of paramount importance in every matter concerning the child.'">c) The child's best interests</div>
                                 </div>
+                                 <div class="feedback"></div>
                             </div>
                              <!-- Question 4 -->
                             <div class="quiz-question">
                                 <p class="font-semibold text-lg">4. Can a normal Act of Parliament overrule the Constitution?</p>
                                 <div class="space-y-2 mt-2" data-answer="b">
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) Yes, if Parliament votes on it.</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) No, the Constitution is supreme.</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) Only in a state of emergency.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a" data-feedback="Incorrect. The principle of constitutional supremacy prevents this.">a) Yes, if Parliament votes on it.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b" data-feedback="Correct! The Constitution is the supreme law. Any law or conduct inconsistent with it is invalid.">b) No, the Constitution is supreme.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c" data-feedback="Incorrect. Even in a state of emergency, actions must be constitutionally justifiable.">c) Only in a state of emergency.</div>
                                 </div>
+                                 <div class="feedback"></div>
                             </div>
                              <!-- Question 5 -->
                             <div class="quiz-question">
                                 <p class="font-semibold text-lg">5. The principle of 'equality' in Section 9 means...</p>
                                 <div class="space-y-2 mt-2" data-answer="a">
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a">a) Fathers and mothers have equal rights and responsibilities.</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b">b) All parents must earn the same income.</div>
-                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c">c) Mothers have more rights in court.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="a" data-feedback="Correct! The clause prohibits unfair discrimination based on gender or marital status, affirming that both parents start on an equal footing.">a) Fathers and mothers have equal rights and responsibilities.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="b" data-feedback="Incorrect. Equality before the law is about rights and opportunities, not financial outcomes.">b) All parents must earn the same income.</div>
+                                    <div class="quiz-option border border-gray-600 rounded p-3" data-option="c" data-feedback="Incorrect. This would be a direct violation of Section 9.">c) Mothers have more rights in court.</div>
                                 </div>
+                                <div class="feedback"></div>
                             </div>
                             <button id="submit-quiz1-btn" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
                             <div id="quiz-results1" class="text-center font-bold text-xl pt-4"></div>
                         </div>
                     </section>
-                    <!-- More Quizzes for Module 2 and 3 would go here -->
+                    
+                    <!-- Quiz 2 -->
+                     <section id="quiz2" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
+                        <h2 class="text-2xl font-bold">Module 2 Quiz: The Bill of Rights (10 Questions)</h2>
+                        <div id="quiz-container2" class="bg-gray-900 p-8 rounded-lg space-y-6">
+                            <!-- Placeholder for 10 questions -->
+                            <p>Quiz 2 questions will appear here...</p>
+                             <button id="submit-quiz2-btn" class="w-full bg-blue-600 hover:bg-blue-700 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
+                             <div id="quiz-results2" class="text-center font-bold text-xl pt-4"></div>
+                        </div>
+                     </section>
+
+                     <!-- Quiz 3 -->
+                     <section id="quiz3" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700">
+                        <h2 class="text-2xl font-bold">Module 3 Quiz: Structure of State (15 Questions)</h2>
+                         <div id="quiz-container3" class="bg-gray-900 p-8 rounded-lg space-y-6">
+                            <!-- Placeholder for 15 questions -->
+                            <p>Quiz 3 questions will appear here...</p>
+                             <button id="submit-quiz3-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 font-bold py-3 rounded-lg text-lg">Submit Answers</button>
+                             <div id="quiz-results3" class="text-center font-bold text-xl pt-4"></div>
+                        </div>
+                     </section>
                 </div>
             </div>
         </main>
@@ -203,46 +231,83 @@
         document.getElementById('currentYear').textContent = new Date().getFullYear();
 
         document.addEventListener('DOMContentLoaded', () => {
-            const modules = document.querySelectorAll('.module');
-            const quizzes = document.querySelectorAll('.quiz-section');
+            const modules = {
+                1: { content: document.getElementById('module1'), quiz: document.getElementById('quiz1'), link: document.getElementById('module1-link'), quizBtn: document.getElementById('start-quiz1'), submitBtn: document.getElementById('submit-quiz1-btn'), resultsDiv: document.getElementById('quiz-results1'), questions: 5, certTitle: 'Basic Achievement', certLevel: 'Module 1: Foundations' },
+                2: { content: document.getElementById('module2'), quiz: document.getElementById('quiz2'), link: document.getElementById('module2-link'), quizBtn: document.getElementById('start-quiz2'), submitBtn: document.getElementById('submit-quiz2-btn'), resultsDiv: document.getElementById('quiz-results2'), questions: 10, certTitle: 'Advanced Certificate', certLevel: 'Module 2: The Bill of Rights' },
+                3: { content: document.getElementById('module3'), quiz: document.getElementById('quiz3'), link: document.getElementById('module3-link'), quizBtn: document.getElementById('start-quiz3'), submitBtn: document.getElementById('submit-quiz3-btn'), resultsDiv: document.getElementById('quiz-results3'), questions: 15, certTitle: 'Superdad Certificate', certLevel: 'Module 3: Structure of State' }
+            };
             const progressBar = document.getElementById('progress-bar');
-            
-            const startQuiz1Btn = document.getElementById('start-quiz1');
-            const submitQuiz1Btn = document.getElementById('submit-quiz1-btn');
-            const quizContainer1 = document.getElementById('quiz-container1');
-            const resultsDiv1 = document.getElementById('quiz-results1');
-            
             const certificateModal = document.getElementById('certificate-modal');
-            
             let currentModule = 1;
 
             const updateProgressBar = () => {
-                const progress = ((currentModule - 1) / 3) * 100;
+                const progress = ((currentModule - 1) / Object.keys(modules).length) * 100;
                 progressBar.style.width = `${progress}%`;
             };
 
             const unlockModule = (moduleNumber) => {
-                const link = document.getElementById(`module${moduleNumber}-link`);
-                if(link) {
-                    link.classList.remove('text-gray-500', 'pointer-events-none');
-                    link.classList.add('text-white');
+                const module = modules[moduleNumber];
+                if (module && module.link) {
+                    module.link.classList.remove('text-gray-500', 'pointer-events-none');
+                    module.link.classList.add('text-white');
                 }
             };
-
-            const selectAnswer = (e) => {
-                if (e.target.matches('.quiz-option')) {
-                    const parentQuestion = e.target.parentElement;
-                    parentQuestion.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
-                    e.target.classList.add('selected');
-                }
+            
+            const showModule = (moduleNumber) => {
+                Object.values(modules).forEach(m => {
+                    m.content.classList.remove('active');
+                    m.quiz.classList.remove('active');
+                });
+                modules[moduleNumber].content.classList.add('active');
+                modules[moduleNumber].content.scrollIntoView();
             };
 
             const showQuiz = (quizNum) => {
-                document.getElementById(`module${quizNum}`).classList.add('hidden');
-                document.getElementById(`quiz${quizNum}`).classList.add('active');
-                 document.getElementById(`quiz${quizNum}`).scrollIntoView();
+                modules[quizNum].content.classList.remove('active');
+                modules[quizNum].quiz.classList.add('active');
+                modules[quizNum].quiz.scrollIntoView();
             };
             
+            const selectAnswer = (e) => {
+                if (e.target.matches('.quiz-option')) {
+                    const parentQuestion = e.target.parentElement;
+                    const feedbackDiv = parentQuestion.nextElementSibling;
+                    
+                    parentQuestion.querySelectorAll('.quiz-option').forEach(opt => opt.classList.remove('selected'));
+                    e.target.classList.add('selected');
+                    
+                    if (e.target.dataset.option === parentQuestion.dataset.answer) {
+                        feedbackDiv.textContent = e.target.dataset.feedback;
+                        feedbackDiv.className = 'feedback correct';
+                        feedbackDiv.style.display = 'block';
+                    } else {
+                        feedbackDiv.style.display = 'none';
+                    }
+                }
+            };
+
+            const handleSubmit = (moduleNum) => {
+                const module = modules[moduleNum];
+                const quizContainer = document.getElementById(`quiz-container${moduleNum}`);
+                const questions = quizContainer.querySelectorAll('.quiz-question');
+                let score = 0;
+                questions.forEach(q => {
+                    const selected = q.querySelector('.quiz-option.selected');
+                    if (selected && selected.dataset.option === q.querySelector('[data-answer]').dataset.answer) {
+                        score++;
+                    }
+                });
+                const totalQuestions = questions.length;
+                module.resultsDiv.innerHTML = `You scored ${score} out of ${totalQuestions}.`;
+
+                if (score === totalQuestions) {
+                    module.resultsDiv.innerHTML += '<br><span class="text-green-400">Excellent! You have passed the module.</span>';
+                    showCertificate(moduleNum);
+                } else {
+                    module.resultsDiv.innerHTML += '<br><span class="text-red-400">Please review the content and try again to earn your certificate.</span>';
+                }
+            };
+
             const showCertificate = (level) => {
                 const user = window.flamea && window.flamea.auth ? window.flamea.auth.currentUser : null;
                 const userName = user ? (user.displayName || (user.email ? user.email.split('@')[0] : 'A Dedicated Father')) : 'A Dedicated Father';
@@ -251,25 +316,28 @@
                 document.getElementById('cert-user-name').textContent = userName;
                 document.getElementById('cert-date').textContent = `on ${completionDate}`;
                 
-                const certTitle = document.getElementById('cert-title');
-                const certLevelName = document.getElementById('cert-level-name');
+                const moduleInfo = modules[level];
+                document.getElementById('cert-title').textContent = moduleInfo.certTitle;
+                document.getElementById('cert-level-name').textContent = moduleInfo.certLevel;
+                
                 const nextModuleBtn = document.getElementById('next-module-btn');
-
-                if(level === 1) {
-                    certTitle.textContent = 'Basic Achievement';
-                    certLevelName.textContent = 'Module 1: Foundations';
+                const nextModuleNum = level + 1;
+                if (modules[nextModuleNum]) {
                     nextModuleBtn.classList.remove('hidden');
-                    nextModuleBtn.textContent = 'Start Module 2';
-                    nextModuleBtn.onclick = () => {
+                    nextModuleBtn.textContent = `Start Module ${nextModuleNum}`;
+                    nextModuleBtn.onclick = (e) => {
+                         e.preventDefault();
                          certificateModal.classList.remove('active');
-                         document.getElementById('quiz1').classList.remove('active');
-                         document.getElementById('module2').classList.add('active');
-                         unlockModule(2);
-                         currentModule = 2;
+                         modules[level].quiz.classList.remove('active');
+                         modules[nextModuleNum].content.classList.add('active');
+                         unlockModule(nextModuleNum);
+                         currentModule = nextModuleNum;
                          updateProgressBar();
+                         window.location.hash = `module${nextModuleNum}`;
                     };
+                } else {
+                    nextModuleBtn.classList.add('hidden');
                 }
-                // Add logic for level 2 and 3 certificates here
                 
                 const qrContainer = document.getElementById('cert-qr-code');
                 const certificateId = `flamea-cert-const-${level}-${new Date().getTime()}`;
@@ -279,55 +347,33 @@
                 certificateModal.classList.add('active');
             };
 
-
-            startQuiz1Btn.addEventListener('click', () => showQuiz(1));
-            
-            quizContainer1.addEventListener('click', selectAnswer);
-
-            submitQuiz1Btn.addEventListener('click', () => {
-                const questions = quizContainer1.querySelectorAll('.quiz-question');
-                let score = 0;
-                questions.forEach(q => {
-                    const selected = q.querySelector('.quiz-option.selected');
-                    if (selected && selected.dataset.option === q.querySelector('[data-answer]').dataset.answer) {
-                        score++;
-                    }
-                });
-                const totalQuestions = questions.length;
-                resultsDiv1.innerHTML = `You scored ${score} out of ${totalQuestions}.`;
-
-                if (score === totalQuestions) {
-                    resultsDiv1.innerHTML += '<br><span class="text-green-400">Excellent! You have passed the module.</span>';
-                    showCertificate(1);
-                } else {
-                    resultsDiv1.innerHTML += '<br><span class="text-red-400">Please review the content and try again to earn your certificate.</span>';
-                }
+            // Setup event listeners
+            Object.keys(modules).forEach(key => {
+                const num = parseInt(key);
+                const module = modules[num];
+                module.quizBtn.addEventListener('click', () => showQuiz(num));
+                document.getElementById(`quiz-container${num}`).addEventListener('click', selectAnswer);
+                module.submitBtn.addEventListener('click', () => handleSubmit(num));
             });
-            
-             document.getElementById('close-modal-btn').addEventListener('click', () => {
-                certificateModal.classList.remove('active');
-            });
-            
+
+            document.getElementById('close-modal-btn').addEventListener('click', () => { certificateModal.classList.remove('active'); });
             document.getElementById('print-cert-btn').addEventListener('click', () => {
                  const { jsPDF } = window.jspdf;
                  const doc = new jsPDF();
                  const certificateContent = document.getElementById('certificate-content');
                  doc.html(certificateContent, {
-                     callback: function (doc) {
-                         doc.save('FLAMEA_Constitution_Certificate.pdf');
-                     },
+                     callback: function (doc) { doc.save('FLAMEA_Certificate.pdf'); },
                      x: 15, y: 15, width: 180, windowWidth: 650
                  });
             });
 
-            // Check auth status to show reminder
-            setTimeout(() => { // Use timeout to wait for auth.js to load
+            // Auth Reminder
+            setTimeout(() => {
                 if(window.flamea && window.flamea.auth) {
                     if (!window.flamea.auth.currentUser) {
                         document.getElementById('auth-reminder').classList.remove('hidden');
                     }
                 } else {
-                    // Fallback if auth module doesn't load
                      document.getElementById('auth-reminder').classList.remove('hidden');
                 }
             }, 1500);
