@@ -12,36 +12,12 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto;
-        }
-        .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active {
-            background-color: #2563EB;
-            color: white;
-            transform: translateX(10px);
-        }
-        .form-input {
-            background-color: #374151; /* gray-700 */
-            border-color: #4B5563; /* gray-600 */
-        }
-        .form-input:focus {
-            --tw-ring-color: #3B82F6; /* blue-500 */
-            border-color: #3B82F6;
-        }
-        .form-step { display: none; animation: fadeIn 0.5s; }
-        .form-step.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+        .choice-card { border: 1px solid #4B5563; transition: all 0.3s ease; }
+        .choice-card:hover { transform: scale(1.05); border-color: #34D399; box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.1), 0 4px 6px -2px rgba(52, 211, 153, 0.05); }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -77,56 +53,52 @@
 
         <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
-            <div id="parenting-plan-tool" class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Parenting Plan Builder</h2>
-                <p class="text-lg text-gray-400 mb-8">This wizard guides you through creating a detailed, legally-informed parenting plan.</p>
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center">
+                    <h2 class="text-4xl font-bold font-roboto text-white">The Co-Parenting Compass</h2>
+                    <p class="mt-2 text-lg text-gray-400">Build a strong, fair, and legally sound Parenting Plan that puts your child first.</p>
+                </div>
                 
-                <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-                    <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
-                        <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 20%"></div>
-                    </div>
-                    
-                    <form id="plan-form">
-                        <!-- Step 1: Child & Parent Details -->
-                        <div id="step-1" class="form-step active">
-                             <h3 class="text-2xl font-bold text-green-400 mb-6">Step 1: The People Involved</h3>
-                             <div class="space-y-4">
-                                <div>
-                                    <label for="childName" class="block text-sm font-medium text-gray-300">Child's Full Name</label>
-                                    <input type="text" id="childName" class="mt-1 block w-full rounded-md form-input p-2">
-                                </div>
-                                <div>
-                                    <label for="parentA" class="block text-sm font-medium text-gray-300">Parent A's Full Name</label>
-                                    <input type="text" id="parentA" class="mt-1 block w-full rounded-md form-input p-2">
-                                </div>
-                                 <div>
-                                    <label for="parentB" class="block text-sm font-medium text-gray-300">Parent B's Full Name</label>
-                                    <input type="text" id="parentB" class="mt-1 block w-full rounded-md form-input p-2">
-                                </div>
-                             </div>
-                        </div>
-                        <!-- More steps will go here -->
-                    </form>
-
-                     <div class="mt-10 flex justify-between">
-                        <button id="prev-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50" disabled>Previous</button>
-                        <button id="next-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Next</button>
-                        <div id="final-actions" class="hidden">
-                             <button id="save-btn" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700 disabled:opacity-50">Save to My Account</button>
+                <div class="mt-10 bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg border-l-4 border-blue-500">
+                    <div class="flex items-start">
+                        <i class="fas fa-gavel text-2xl text-blue-400 mt-1 mr-4"></i>
+                        <div>
+                            <h3 class="font-bold text-xl text-white">The Law is Your Foundation</h3>
+                            <p class="text-gray-300 mt-1">Under the <strong class="text-green-400">Children's Act 38 of 2005</strong>, the "best interests of the child" are paramount. A good parenting plan is not about winning or losing; it is a written agreement that proves both parents are committed to this principle. It is your roadmap to cooperative and effective co-parenting.</p>
                         </div>
                     </div>
                 </div>
+
+                <div class="mt-12 text-center">
+                    <h3 class="text-2xl font-bold text-white mb-6">How would you like to start?</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Option A: Assessment Wizard -->
+                        <a href="plan-builder.html?mode=wizard" class="choice-card bg-gray-900 p-8 rounded-xl flex flex-col items-center">
+                            <i class="fas fa-magic text-5xl text-purple-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white mb-2">Assessment & Wizard</h4>
+                            <p class="text-gray-400 flex-grow">Answer a few questions to get a recommendation and let our wizard guide you step-by-step through building your plan.</p>
+                        </a>
+                        <!-- Option B: Manual Builder -->
+                        <a href="plan-builder.html?mode=manual" class="choice-card bg-gray-900 p-8 rounded-xl flex flex-col items-center">
+                            <i class="fas fa-drafting-compass text-5xl text-green-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white mb-2">Manual Builder</h4>
+                            <p class="text-gray-400 flex-grow">For those who know what they need. Jump straight into the plan builder and fill out the sections at your own pace.</p>
+                        </a>
+                    </div>
+                </div>
+
+                <div class="mt-12 text-center">
+                    <a href="/assets/templates/Parenting_Plan_Template_Blank.pdf" download class="text-gray-400 hover:text-white hover:underline">
+                        <i class="fas fa-file-pdf mr-2"></i>Or, download a blank PDF template to fill out offline.
+                    </a>
+                </div>
+
             </div>
         </main>
     </div>
     
-    <!-- Scripts -->
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-        // Add JS for wizard navigation here
-    </script>
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
     <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/parenting-plan.js"></script>
 </body>
 </html>
