@@ -1,349 +1,401 @@
-import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
-import { doc, getDoc, setDoc, collection, query, getDocs } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-firestore.js";
-import { ref, uploadBytes, getDownloadURL } from "https://www.gstatic.com/firebasejs/9.17.1/firebase-storage.js";
-import { auth, db, storage } from './firebase-config.js';
+import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, getDoc, setDoc, onSnapshot, collection, addDoc, query, where, orderBy, updateDoc, deleteDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getStorage, ref, uploadBytesResumable, getDownloadURL } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-storage.js";
+import { getFirebaseConfig } from './firebase-config.js';
 
-let currentUser = null;
-let userProfileData = {}; // Global store for user's profile data
+// --- INITIALIZATION ---
+const firebaseApp = initializeApp(getFirebaseConfig());
+const auth = getAuth(firebaseApp);
+const db = getFirestore(firebaseApp);
+const storage = getStorage(firebaseApp);
 
-// --- Main Auth Listener ---
+let userId = null;
+let profileCompletenessChart = null;
+
+// --- DOM ELEMENTS ---
+const loadingState = document.getElementById('loading-state');
+const dashboardContainer = document.getElementById('dashboard-container');
+const loginPrompt = document.getElementById('dashboard-login-prompt');
+
+// --- AUTHENTICATION LISTENER ---
 onAuthStateChanged(auth, user => {
-    const loadingDiv = document.getElementById('loading-state');
-    const dashboardContainer = document.getElementById('dashboard-container');
-    const loginPrompt = document.getElementById('dashboard-login-prompt');
-
     if (user) {
-        currentUser = user;
+        userId = user.uid;
+        loadingState.classList.add('hidden');
         dashboardContainer.classList.remove('hidden');
-        loginPrompt.classList.add('hidden');
-        loadingDiv.style.display = 'none';
-        
-        document.getElementById('dashboard-welcome').textContent = `Welcome, ${user.displayName || user.email}`;
-        
-        fetchAllUserData(user.uid);
-        setupEventListeners();
+        initializeDashboard();
     } else {
-        currentUser = null;
+        userId = null;
+        loadingState.classList.add('hidden');
         dashboardContainer.classList.add('hidden');
-        loginPrompt.classList.remove('hidden');
-        loadingDiv.style.display = 'none';
+        // A login prompt specific to the old dashboard code is referenced.
+        // I will assume there's a login prompt on the new page to show.
+        const newLoginPrompt = document.querySelector('#dashboard-container + div');
+        if(newLoginPrompt) newLoginPrompt.classList.remove('hidden');
     }
 });
 
-
-// --- Data Fetching ---
-async function fetchAllUserData(userId) {
-    await fetchProfileData(userId);
-    await fetchCourseProgress(userId);
-    // Add functions to fetch parenting plans, dispute logs etc. here
+// --- MAIN INITIALIZER ---
+function initializeDashboard() {
+    setupTabs();
+    loadProfileData();
+    loadActivitySummary();
+    setupTodoSystem();
+    setupSkillsSystem();
+    setupDocumentSystem();
+    // Keep other initializers like for achievements if they exist
 }
 
-async function fetchProfileData(userId) {
-    const docRef = doc(db, "users", userId, "profile", "main");
-    const docSnap = await getDoc(docRef);
-
-    if (docSnap.exists()) {
-        userProfileData = docSnap.data();
-    } else {
-        // Create a default profile if one doesn't exist
-        userProfileData = {
-            name: currentUser.displayName || '',
-            summary: 'A dedicated father committed to growth and excellence.',
-            workExperience: [],
-            links: {
-                linkedin: '',
-                coursera: ''
-            }
-        };
-    }
-    renderProfileData();
-}
-
-async function fetchCourseProgress(userId) {
-    const certificatesGrid = document.getElementById('certificates-grid');
-    const badgesSection = document.getElementById('badges-section');
-    try {
-        const q = query(collection(db, "users", userId, "progress"));
-        const querySnapshot = await getDocs(q);
-
-        if (querySnapshot.empty) {
-            certificatesGrid.innerHTML = '<p class="text-gray-400 col-span-full">No certificates earned yet.</p>';
-            badgesSection.innerHTML = '<p class="text-gray-400">No badges earned yet.</p>';
-        } else {
-            let certsHtml = '';
-            let badges = new Set();
-            querySnapshot.forEach((doc) => {
-                const data = doc.data();
-                certsHtml += createCertificateCard(data);
-                if (data.certLevel === 'Superdad Certificate') {
-                    badges.add('Superdad');
-                }
-            });
-            certificatesGrid.innerHTML = certsHtml;
-            renderBadges(Array.from(badges));
-        }
-    } catch (error) {
-        console.error("Error fetching course progress: ", error);
-        certificatesGrid.innerHTML = '<p class="text-red-500 col-span-full">Error loading certificates.</p>';
-    }
-}
-
-
-// --- Data Rendering ---
-function renderProfileData() {
-    document.getElementById('profile-summary').textContent = userProfileData.summary || 'No summary provided.';
-    renderWorkExperience();
-    renderExternalLinks();
-}
-
-function renderWorkExperience() {
-    const section = document.getElementById('work-experience-section');
-    if (userProfileData.workExperience && userProfileData.workExperience.length > 0) {
-        let html = '';
-        userProfileData.workExperience.forEach(job => {
-            html += `
-                <div class="border-l-4 border-gray-700 pl-4 py-2">
-                    <h4 class="font-bold text-lg text-white">${job.Title || 'N/A'} at ${job.Company || 'N/A'}</h4>
-                    <p class="text-sm text-gray-400">${job.Dates || 'N/A'}</p>
-                    <p class="text-sm mt-1">${job.Description || ''}</p>
-                </div>
-            `;
-        });
-        section.innerHTML = html;
-    } else {
-        section.innerHTML = '<p>No work experience uploaded. Click "Upload CV" to add your professional history.</p>';
-    }
-}
-
-function renderExternalLinks() {
-    const section = document.getElementById('external-links-section');
-    const { links } = userProfileData;
-    let html = '';
-    if (links?.linkedin) {
-        html += `<div><a href="${links.linkedin}" target="_blank" class="hover:text-green-400"><i class="fab fa-linkedin mr-2"></i> LinkedIn Profile</a></div>`;
-    }
-    if (links?.coursera) {
-        html += `<div><a href="${links.coursera}" target="_blank" class="hover:text-green-400"><i class="fas fa-graduation-cap mr-2"></i> Coursera Profile</a></div>`;
-    }
-    section.innerHTML = html || '<p>No external links added. Click "Edit Profile" to add them.</p>';
-}
-
-function renderBadges(badges) {
-    const section = document.getElementById('badges-section');
-    if (badges.length > 0) {
-        let html = '';
-        badges.forEach(badge => {
-            if (badge === 'Superdad') {
-                html += `
-                    <div class="text-center">
-                        <div class="bg-yellow-500 text-white rounded-full h-20 w-20 flex items-center justify-center text-3xl shadow-lg">
-                            <i class="fas fa-trophy"></i>
-                        </div>
-                        <p class="text-sm mt-2 font-bold">Superdad</p>
-                    </div>
-                `;
-            }
-        });
-        section.innerHTML = html;
-    } else {
-        section.innerHTML = '<p class="text-gray-400">Complete all 3 modules of a course to earn a Superdad badge!</p>';
-    }
-}
-
-
-function createCertificateCard(data) {
-    const { courseTitle, certLevel, certDate, certificateId } = data;
-    const colors = { 'Basic Achievement': 'border-green-500', 'Advanced Certificate': 'border-blue-500', 'Superdad Certificate': 'border-yellow-500' };
-    const borderColor = colors[certLevel] || 'border-gray-500';
-
-    return `
-        <div class="cert-card bg-gray-900 p-6 rounded-lg border-l-4 ${borderColor} shadow-lg">
-            <div class="flex items-center mb-3"><i class="fas fa-award text-2xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold text-white">${courseTitle}</h4></div>
-            <p class="text-gray-300">Level: <span class="font-semibold text-white">${certLevel}</span></p>
-            <p class="text-gray-400 text-sm">Earned on: ${certDate}</p>
-            <p class="text-gray-500 text-xs mt-2 truncate">ID: ${certificateId}</p>
-        </div>
-    `;
-}
-
-// --- Event Listeners Setup ---
-function setupEventListeners() {
-    // Tab switching
-    const tabButtons = document.querySelectorAll('.tab-button');
+// --- TAB MANAGEMENT ---
+function setupTabs() {
+    const tabs = document.querySelectorAll('.tab-button');
     const tabContents = document.querySelectorAll('.tab-content');
-    tabButtons.forEach(button => {
-        button.addEventListener('click', () => {
-            tabButtons.forEach(btn => btn.classList.remove('active'));
-            button.classList.add('active');
-            const tab = button.dataset.tab;
+    tabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            tabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            const target = tab.getAttribute('data-tab');
             tabContents.forEach(content => {
-                content.id === tab ? content.classList.add('active') : content.classList.remove('active');
+                content.classList.toggle('active', content.id === target);
             });
         });
     });
+}
 
-    // Modals
-    const editProfileModal = document.getElementById('edit-profile-modal');
-    const uploadCvModal = document.getElementById('upload-cv-modal');
-    const exportModal = document.getElementById('export-modal');
-
-    document.getElementById('edit-profile-btn').addEventListener('click', () => {
-        document.getElementById('profile-name').value = userProfileData.name || currentUser.displayName;
-        document.getElementById('profile-summary-input').value = userProfileData.summary || '';
-        document.getElementById('profile-linkedin').value = userProfileData.links?.linkedin || '';
-        document.getElementById('profile-coursera').value = userProfileData.links?.coursera || '';
-        editProfileModal.classList.add('active');
+// --- PROFILE & OVERVIEW WIDGETS ---
+async function loadProfileData() {
+    const docRef = doc(db, 'users', userId);
+    onSnapshot(docRef, (docSnap) => {
+        const profileData = docSnap.exists() ? docSnap.data().profile || {} : {};
+        // Populate Life CV (re-using old logic if available)
+        // For now, let's just update the welcome message
+        document.getElementById('dashboard-welcome').textContent = `Welcome, ${profileData.name || 'User'}`;
+        updateProfileCompleteness(profileData);
     });
-    document.getElementById('upload-cv-btn').addEventListener('click', () => uploadCvModal.classList.add('active'));
-    document.getElementById('export-profile-btn').addEventListener('click', () => exportModal.classList.add('active'));
-    
-    document.getElementById('cancel-edit-btn').addEventListener('click', () => editProfileModal.classList.remove('active'));
-    document.getElementById('cancel-upload-btn').addEventListener('click', () => uploadCvModal.classList.remove('active'));
-    document.getElementById('cancel-export-btn').addEventListener('click', () => exportModal.classList.remove('active'));
-
-    // Forms
-    document.getElementById('profile-form').addEventListener('submit', handleProfileSave);
-    document.getElementById('cv-upload-form').addEventListener('submit', handleCVUpload);
-    document.getElementById('generate-export-btn').addEventListener('click', handleExport);
 }
 
-// --- Form Handlers & Logic ---
-async function handleProfileSave(e) {
-    e.preventDefault();
-    const newProfileData = {
-        name: document.getElementById('profile-name').value,
-        summary: document.getElementById('profile-summary-input').value,
-        links: {
-            linkedin: document.getElementById('profile-linkedin').value,
-            coursera: document.getElementById('profile-coursera').value
+function updateProfileCompleteness(profile) {
+    let score = 0;
+    const fields = ['name', 'summary', 'linkedin', 'skills', 'experience'];
+    fields.forEach(field => {
+        if (profile[field] && (typeof profile[field] === 'string' ? profile[field].trim() !== '' : profile[field].length > 0)) {
+            score += 1;
+        }
+    });
+    const percentage = Math.round((score / fields.length) * 100);
+
+    const ctx = document.getElementById('profile-completeness-chart').getContext('2d');
+    document.getElementById('profile-completeness-text').textContent = `${percentage}%`;
+
+    if (profileCompletenessChart) profileCompletenessChart.destroy();
+    
+    profileCompletenessChart = new Chart(ctx, {
+        type: 'doughnut',
+        data: {
+            datasets: [{
+                data: [percentage, 100 - percentage],
+                backgroundColor: ['#34D399', '#4B5563'],
+                borderWidth: 0
+            }]
         },
-        workExperience: userProfileData.workExperience || []
-    };
-    
-    const docRef = doc(db, "users", currentUser.uid, "profile", "main");
-    try {
-        await setDoc(docRef, newProfileData, { merge: true });
-        userProfileData = newProfileData;
-        renderProfileData();
-        document.getElementById('edit-profile-modal').classList.remove('active');
-        alert('Profile saved successfully!');
-    } catch (error) {
-        console.error("Error saving profile: ", error);
-        alert('Error saving profile. Please try again.');
-    }
+        options: {
+            responsive: true,
+            cutout: '80%',
+            plugins: { tooltip: { enabled: false } }
+        }
+    });
 }
 
-async function handleCVUpload(e) {
-    e.preventDefault();
-    const fileInput = document.getElementById('cv-file-input');
-    const file = fileInput.files[0];
-    const statusDiv = document.getElementById('upload-status');
+// --- ACTIVITY TRACKER SUMMARY ---
+function loadActivitySummary() {
+    const thirtyDaysAgo = new Date();
+    thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
 
-    if (!file) {
-        statusDiv.textContent = 'Please select a file.';
+    const activitiesRef = collection(db, 'users', userId, 'activities');
+    const q = query(activitiesRef, where("date", ">=", thirtyDaysAgo.toISOString().split('T')[0]), orderBy("date", "desc"));
+    
+    onSnapshot(q, (snapshot) => {
+        let totalFinancial = 0;
+        let totalTime = 0;
+        const recentActivities = [];
+
+        snapshot.forEach(doc => {
+            const act = doc.data();
+            const userPortion = (act.userContribution || 0) / 100;
+             if (act.type === 'financial') {
+                totalFinancial += (parseFloat(act.value) || 0) * userPortion;
+            } else if (act.type === 'time') {
+                totalTime += (parseFloat(act.value) || 0) * userPortion;
+            }
+            if(recentActivities.length < 3) recentActivities.push(act);
+        });
+
+        document.getElementById('summary-financial').textContent = `R ${totalFinancial.toFixed(2)}`;
+        document.getElementById('summary-time').textContent = `${totalTime.toFixed(1)} Hrs`;
+        renderRecentActivities(recentActivities);
+    });
+}
+
+function renderRecentActivities(activities) {
+    const listEl = document.getElementById('recent-activities-list');
+    listEl.innerHTML = '';
+    if (activities.length === 0) {
+        listEl.innerHTML = '<p class="text-gray-500">No activities logged in the last 30 days.</p>';
         return;
     }
-    
-    statusDiv.textContent = 'Uploading...';
-    // Upload to Firebase Storage first (optional, but good practice)
-    const storageRef = ref(storage, `cvs/${currentUser.uid}/${file.name}`);
-    await uploadBytes(storageRef, file);
-    
-    // Now parse the file content
-    const reader = new FileReader();
-    reader.onload = async function(event) {
-        const text = event.target.result;
-        const experience = parseCSV(text);
-        if (experience.length > 0) {
-            userProfileData.workExperience = experience;
-            await handleProfileSave(e); // Save the updated profile with new experience
-            statusDiv.textContent = 'CV parsed and experience updated!';
-            setTimeout(() => document.getElementById('upload-cv-modal').classList.remove('active'), 2000);
-        } else {
-             statusDiv.textContent = 'Could not parse CSV. Please ensure it has "Title", "Company", "Dates" columns.';
+    activities.forEach(act => {
+        const item = document.createElement('div');
+        item.className = 'bg-gray-800 p-3 rounded-lg flex justify-between items-center';
+        item.innerHTML = `<p>${act.title}</p><p class="text-sm text-gray-400">${act.date}</p>`;
+        listEl.appendChild(item);
+    });
+}
+
+
+// --- TO-DO LIST SYSTEM ---
+function setupTodoSystem() {
+    const todoForm = document.getElementById('todo-form');
+    const todoInput = document.getElementById('todo-input');
+    const todoDueDate = document.getElementById('todo-due-date');
+
+    todoForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const taskText = todoInput.value.trim();
+        if (taskText) {
+            await addDoc(collection(db, 'users', userId, 'todos'), {
+                text: taskText,
+                completed: false,
+                dueDate: todoDueDate.value || null,
+                createdAt: serverTimestamp()
+            });
+            todoForm.reset();
         }
-    };
-    reader.readAsText(file);
+    });
+    
+    document.getElementById('add-todo-quick-btn').addEventListener('click', () => {
+        document.querySelector('.tab-button[data-tab="todos"]').click();
+        todoInput.focus();
+    });
+
+    // Listen for changes
+    const todosRef = collection(db, 'users', userId, 'todos');
+    const q = query(todosRef, orderBy('createdAt', 'desc'));
+    onSnapshot(q, (snapshot) => {
+        const todos = [];
+        snapshot.forEach(doc => todos.push({ id: doc.id, ...doc.data() }));
+        renderTodoList(todos);
+    });
 }
 
-function parseCSV(text) {
-    const lines = text.split('\n');
-    const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-    const experience = [];
+function renderTodoList(todos) {
+    const todoListEl = document.getElementById('todo-list');
+    const upcomingListEl = document.getElementById('upcoming-todos-list');
+    todoListEl.innerHTML = '';
+    upcomingListEl.innerHTML = '';
+    let overdueCount = 0;
     
-    // Find column indices for robust parsing
-    const titleIndex = headers.indexOf('Title');
-    const companyIndex = headers.indexOf('Company Name');
-    const datesIndex = headers.indexOf('Dates Employed');
-    const descIndex = headers.indexOf('Description');
-
-    if (titleIndex === -1 || companyIndex === -1) return []; // Essential columns missing
-
-    for (let i = 1; i < lines.length; i++) {
-        if (!lines[i]) continue;
-        const data = lines[i].split(',');
-        experience.push({
-            Title: data[titleIndex]?.trim().replace(/"/g, ''),
-            Company: data[companyIndex]?.trim().replace(/"/g, ''),
-            Dates: data[datesIndex]?.trim().replace(/"/g, ''),
-            Description: data[descIndex]?.trim().replace(/"/g, '')
-        });
+    if (todos.length === 0) {
+        todoListEl.innerHTML = '<p class="text-gray-500">No tasks yet. Add one above!</p>';
     }
-    return experience;
+
+    const today = new Date().toISOString().split('T')[0];
+
+    todos.forEach(todo => {
+        const itemEl = document.createElement('div');
+        itemEl.className = `todo-item flex items-center justify-between bg-gray-800 p-3 rounded-lg ${todo.completed ? 'completed' : ''}`;
+        
+        const isOverdue = todo.dueDate && todo.dueDate < today && !todo.completed;
+        if(isOverdue) overdueCount++;
+
+        itemEl.innerHTML = `
+            <div class="flex items-center gap-3">
+                <input type="checkbox" data-id="${todo.id}" class="h-5 w-5" ${todo.completed ? 'checked' : ''}>
+                <div>
+                    <p>${todo.text}</p>
+                    ${todo.dueDate ? `<p class="text-xs ${isOverdue ? 'text-red-400' : 'text-gray-400'}">Due: ${todo.dueDate}</p>` : ''}
+                </div>
+            </div>
+            <button data-id="${todo.id}" class="delete-todo-btn text-red-500 hover:text-red-700"><i class="fas fa-trash"></i></button>
+        `;
+        todoListEl.appendChild(itemEl);
+
+        // Populate upcoming list
+        if(!todo.completed && upcomingListEl.children.length < 3) {
+             upcomingListEl.appendChild(itemEl.cloneNode(true));
+        }
+    });
+    if (upcomingListEl.children.length === 0) upcomingListEl.innerHTML = '<p class="text-gray-500">No upcoming tasks.</p>';
+    
+    document.getElementById('overdue-tasks-alert').classList.toggle('hidden', overdueCount === 0);
+
+    // Add event listeners
+    todoListEl.querySelectorAll('input[type="checkbox"]').forEach(box => box.addEventListener('change', toggleTodoStatus));
+    todoListEl.querySelectorAll('.delete-todo-btn').forEach(btn => btn.addEventListener('click', deleteTodo));
 }
 
-async function handleExport() {
-    const content = await generateExportHtml();
-    const email = document.getElementById('export-email').value;
-
-    if (email) {
-        // Using mailto link for client-side emailing
-        const subject = `${userProfileData.name}'s Life CV from Flamea.org`;
-        const body = `Please find the attached Life CV.\n\n${content.innerText}`; // Simple text version for email body
-        window.location.href = `mailto:${email}?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(body)}`;
-    } else {
-        // Download as PDF
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.html(content, {
-            callback: function (doc) {
-                doc.save(`${userProfileData.name}_Life_CV.pdf`);
-            },
-            x: 10, y: 10, width: 190, windowWidth: 800
-        });
-    }
-     document.getElementById('export-modal').classList.remove('active');
+async function toggleTodoStatus(e) {
+    const todoId = e.target.dataset.id;
+    await updateDoc(doc(db, 'users', userId, 'todos', todoId), {
+        completed: e.target.checked
+    });
 }
 
-function generateExportHtml() {
-    // This function creates a hidden div with the selected content,
-    // which can then be used by jsPDF or for emailing.
-    const selectedSections = Array.from(document.querySelectorAll('#export-options input:checked')).map(cb => cb.dataset.section);
-    
-    const exportContainer = document.createElement('div');
-    exportContainer.style.padding = '20px';
-    exportContainer.style.fontFamily = 'sans-serif';
-    exportContainer.style.color = 'black';
+async function deleteTodo(e) {
+    const todoId = e.currentTarget.dataset.id;
+    await deleteDoc(doc(db, 'users', userId, 'todos', todoId));
+}
 
-    let html = `<h1>Life CV: ${userProfileData.name}</h1>`;
-    
-    if (selectedSections.includes('summary')) {
-        html += `<h2>Professional Summary</h2><p>${userProfileData.summary}</p>`;
-    }
-    if (selectedSections.includes('experience') && userProfileData.workExperience.length > 0) {
-        html += `<h2>Work Experience</h2>`;
-        userProfileData.workExperience.forEach(job => {
-            html += `<div style="margin-bottom: 15px;"><h4><b>${job.Title}</b> at ${job.Company}</h4><p><i>${job.Dates}</i></p><p>${job.Description}</p></div>`;
-        });
-    }
-    if (selectedSections.includes('links')) {
-         html += `<h2>External Profiles</h2><p>LinkedIn: ${userProfileData.links.linkedin || 'N/A'}</p><p>Coursera: ${userProfileData.links.coursera || 'N/A'}</p>`;
-    }
-     if (selectedSections.includes('achievements')) {
-         // This part needs to query the certificates grid. For simplicity, we'll just add a title.
-         html += `<h2>FLAMEA Achievements</h2><p>User has completed multiple training modules on Flamea.org, demonstrating a commitment to personal and parental growth. Full certificate list available on profile.</p>`;
-    }
 
-    exportContainer.innerHTML = html;
-    return exportContainer;
+// --- SKILLS CABINET SYSTEM ---
+function setupSkillsSystem() {
+    // Modal handling
+    const modal = document.getElementById('skill-modal');
+    const addBtn = document.getElementById('add-skill-btn');
+    const cancelBtn = document.getElementById('cancel-skill-btn');
+    const skillForm = document.getElementById('skill-form');
+
+    addBtn.addEventListener('click', () => { 
+        skillForm.reset();
+        document.getElementById('skill-id').value = '';
+        modal.classList.add('active'); 
+    });
+    cancelBtn.addEventListener('click', () => { modal.classList.remove('active'); });
+
+    // Form submission
+    skillForm.addEventListener('submit', async e => {
+        e.preventDefault();
+        const skillData = {
+            name: document.getElementById('skill-name').value,
+            type: document.getElementById('skill-type').value,
+            proficiency: parseInt(document.getElementById('skill-proficiency').value),
+            proof: document.getElementById('skill-proof').value,
+        };
+
+        const docRef = doc(db, 'users', userId);
+        const docSnap = await getDoc(docRef);
+        const existingProfile = docSnap.exists() ? docSnap.data().profile || {} : {};
+        const skills = existingProfile.skills || [];
+        
+        // This is a simple implementation. A real app would handle edits vs. adds.
+        skills.push(skillData);
+        
+        await setDoc(docRef, { profile: { ...existingProfile, skills } }, { merge: true });
+        modal.classList.remove('active');
+    });
+
+    // Listen for skills data
+    const docRef = doc(db, 'users', userId);
+    onSnapshot(docRef, (docSnap) => {
+        const skills = docSnap.exists() ? (docSnap.data().profile || {}).skills || [] : [];
+        renderSkills(skills);
+    });
+}
+
+function renderSkills(skills) {
+    const listEl = document.getElementById('skills-list');
+    listEl.innerHTML = '';
+    if (skills.length === 0) {
+        listEl.innerHTML = '<p class="text-gray-500 text-center">No skills logged. Click "Add New Skill" to start.</p>';
+        return;
+    }
+    skills.forEach(skill => {
+        const itemEl = document.createElement('div');
+        itemEl.className = 'bg-gray-800 p-4 rounded-lg';
+        itemEl.innerHTML = `
+            <div class="flex justify-between items-start">
+                <div>
+                    <h4 class="font-bold text-lg">${skill.name}</h4>
+                    <span class="text-xs font-semibold ${skill.type === 'formal' ? 'bg-blue-500' : 'bg-green-500'} px-2 py-1 rounded-full">${skill.type}</span>
+                </div>
+                <button class="text-gray-400 hover:text-white"><i class="fas fa-edit"></i></button>
+            </div>
+            <div class="mt-4">
+                <p class="text-sm text-gray-400">Proficiency:</p>
+                <div class="w-full bg-gray-700 rounded-full h-2.5">
+                    <div class="bg-blue-500 h-2.5 rounded-full" style="width: ${skill.proficiency}%"></div>
+                </div>
+            </div>
+            ${skill.proof ? `<a href="${skill.proof}" target="_blank" class="text-blue-400 text-sm mt-2 inline-block hover:underline">View Proof <i class="fas fa-external-link-alt ml-1"></i></a>` : ''}
+        `;
+        listEl.appendChild(itemEl);
+    });
+}
+
+// --- DOCUMENT CABINET SYSTEM ---
+function setupDocumentSystem() {
+    const fileInput = document.getElementById('doc-file-input');
+    const uploadContainer = document.getElementById('doc-upload-container');
+
+    fileInput.addEventListener('change', e => {
+        const file = e.target.files[0];
+        if (file) {
+            uploadDocument(file);
+        }
+    });
+    
+    // Listen for documents
+    const docsRef = collection(db, 'users', userId, 'documents');
+    onSnapshot(docsRef, (snapshot) => {
+        const docs = [];
+        snapshot.forEach(doc => docs.push({ id: doc.id, ...doc.data() }));
+        renderDocuments(docs);
+    });
+}
+
+function uploadDocument(file) {
+    const progressEl = document.getElementById('upload-progress');
+    const filePath = `users/${userId}/documents/${Date.now()}_${file.name}`;
+    const storageRef = ref(storage, filePath);
+    const uploadTask = uploadBytesResumable(storageRef, file);
+
+    uploadTask.on('state_changed', 
+        (snapshot) => {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progressEl.textContent = `Uploading: ${Math.round(progress)}%`;
+            progressEl.classList.remove('hidden');
+        }, 
+        (error) => {
+            console.error("Upload failed:", error);
+            progressEl.textContent = 'Upload Failed!';
+        }, 
+        async () => {
+            const downloadURL = await getDownloadURL(uploadTask.snapshot.ref);
+            await addDoc(collection(db, 'users', userId, 'documents'), {
+                name: file.name,
+                url: downloadURL,
+                type: file.type,
+                size: file.size,
+                uploadedAt: serverTimestamp()
+            });
+            progressEl.classList.add('hidden');
+        }
+    );
+}
+
+function renderDocuments(docs) {
+    const listEl = document.getElementById('document-list');
+    listEl.innerHTML = '';
+    if (docs.length === 0) {
+        listEl.innerHTML = '<p class="text-gray-500 col-span-full text-center">No documents uploaded.</p>';
+        return;
+    }
+    docs.forEach(doc => {
+        const itemEl = document.createElement('a');
+        itemEl.href = doc.url;
+        itemEl.target = '_blank';
+        itemEl.className = 'bg-gray-900 p-4 rounded-lg block hover:bg-gray-800';
+        // Simple icon logic
+        let icon = 'fa-file';
+        if (doc.type.includes('pdf')) icon = 'fa-file-pdf';
+        if (doc.type.includes('image')) icon = 'fa-file-image';
+
+        itemEl.innerHTML = `
+            <div class="flex items-center">
+                <i class="fas ${icon} text-3xl text-blue-400"></i>
+                <p class="ml-4 font-semibold truncate">${doc.name}</p>
+            </div>
+        `;
+        listEl.appendChild(itemEl);
+    });
 }

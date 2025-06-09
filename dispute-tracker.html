@@ -3,126 +3,139 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Dispute Tracker</title>
+    <title>FLAMEA - Family Activity Tracker</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto;
-        }
-        .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active {
-            background-color: #2563EB;
-            color: white;
-            transform: translateX(10px);
-        }
-        .form-input {
-            background-color: #374151; /* gray-700 */
-            border-color: #4B5563; /* gray-600 */
-        }
-        .form-input:focus {
-            --tw-ring-color: #3B82F6; /* blue-500 */
-            border-color: #3B82F6;
-        }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
+        .form-input { background-color: #374151; border-color: #4B5563; }
+        .form-input:focus { --tw-ring-color: #3B82F6; border-color: #3B82F6; }
+        .modal { display: none; }
+        .modal.active { display: flex; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
     <div class="main-container">
         <!-- Sidebar Navigation -->
         <aside class="bg-gray-900 p-6 flex flex-col">
-             <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
-
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
+            <a href="index.html" class="block mb-12 text-center"><img src="assets/images/flamea-logo.png" alt="Flamea Logo" class="h-12 mx-auto"></a>
+            <nav id="main-nav" class="flex flex-col space-y-2">
+                <a href="dashboard.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tachometer-alt w-6 text-center mr-3"></i> Dashboard</a>
+                <a href="tools.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg bg-blue-600"><i class="fas fa-tools w-6 text-center mr-3"></i> Our Tools</a>
+                <!-- Other links -->
             </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <!-- Auth links will be populated by auth.js -->
-                </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
+            <div class="mt-auto" id="auth-container"></div>
         </aside>
         
         <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Family Dispute Tracker</h2>
-                <p class="text-lg text-gray-400 mb-8">A secure and private tool to log events, communications, and expenses. Your log is only visible to you.</p>
-
-                <div id="tracker-tool-container" class="hidden">
-                    <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg mb-8">
-                        <h3 class="text-2xl font-bold mb-4">Add a New Log Entry</h3>
-                        <form id="dispute-log-form" class="space-y-4">
-                            <div>
-                                <label for="log-date" class="block text-sm font-medium text-gray-300">Date & Time of Event</label>
-                                <input type="datetime-local" id="log-date" required class="mt-1 block w-full rounded-md form-input text-white">
-                            </div>
-                            <div>
-                                <label for="log-title" class="block text-sm font-medium text-gray-300">Title / Subject</label>
-                                <input type="text" id="log-title" placeholder="e.g., Phone Call with Co-parent" required class="mt-1 block w-full rounded-md form-input">
-                            </div>
-                            <div>
-                                <label for="log-description" class="block text-sm font-medium text-gray-300">Factual Description of Event</label>
-                                <textarea id="log-description" rows="5" placeholder="Describe what happened as factually as possible." required class="mt-1 block w-full rounded-md form-input"></textarea>
-                            </div>
-                            <button type="submit" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">Save Entry</button>
-                        </form>
+            <div id="tracker-tool-container" class="max-w-6xl mx-auto hidden">
+                <div class="flex justify-between items-center mb-8">
+                    <div>
+                        <h2 class="text-4xl font-bold font-roboto text-white">Family Activity Tracker</h2>
+                        <p class="text-lg text-gray-400">Log contributions, track progress, and build cooperation.</p>
                     </div>
-                    <div class="mt-12">
-                        <h3 class="text-2xl font-bold mb-4">Your Private Log</h3>
-                        <div id="log-entries-container" class="space-y-4">
-                            <div id="logs-placeholder" class="text-center text-gray-500 py-8 bg-gray-900 bg-opacity-50 rounded-lg">Loading your logs...</div>
+                    <button id="generate-report-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700"><i class="fas fa-file-alt mr-2"></i> Create Report</button>
+                </div>
+
+                <!-- Contribution Dashboard -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-green-400">Your Financial Contribution</h3>
+                        <p id="user-financial-total" class="text-3xl font-bold">R 0.00</p>
+                    </div>
+                    <div class="bg-gray-700 p-6 rounded-lg">
+                        <h3 class="text-lg font-semibold text-teal-400">Your Time Contribution</h3>
+                        <p id="user-time-total" class="text-3xl font-bold">0.0 Hrs</p>
+                    </div>
+                </div>
+
+                <!-- Log New Activity Form -->
+                <div class="bg-gray-900 p-8 rounded-xl shadow-lg mb-8">
+                    <h3 class="text-2xl font-bold mb-4">Log a New Activity</h3>
+                    <form id="activity-log-form" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="md:col-span-2">
+                            <label for="activity-title" class="block text-sm font-medium text-gray-300">Activity / Contribution</label>
+                            <input type="text" id="activity-title" placeholder="e.g., Paid for school shoes" required class="mt-1 block w-full rounded-md form-input">
                         </div>
+                        <div>
+                            <label for="activity-date" class="block text-sm font-medium text-gray-300">Date</label>
+                            <input type="date" id="activity-date" required class="mt-1 block w-full rounded-md form-input text-white">
+                        </div>
+                        <div>
+                             <label for="activity-type" class="block text-sm font-medium text-gray-300">Type</label>
+                             <select id="activity-type" class="mt-1 block w-full rounded-md form-input">
+                                <option value="financial">Financial (ZAR)</option>
+                                <option value="time">Time/Duty (Hours)</option>
+                                <option value="general">General Note</option>
+                             </select>
+                        </div>
+                        <div id="value-input-container">
+                            <label for="activity-value" class="block text-sm font-medium text-gray-300">Value</label>
+                            <input type="number" id="activity-value" placeholder="e.g., 250.00" class="mt-1 block w-full rounded-md form-input" step="0.01">
+                        </div>
+                        <div class="md:col-span-3">
+                             <label class="block text-sm font-medium text-gray-300">Who made this contribution?</label>
+                             <div class="mt-2 flex items-center gap-4 bg-gray-800 p-2 rounded-lg">
+                                <span id="user-name-label" class="font-semibold text-green-400">You</span>
+                                <input id="contribution-slider" type="range" min="0" max="100" value="100" class="w-full">
+                                <span id="co-parent-name-label" class="font-semibold text-gray-400">Co-Parent</span>
+                             </div>
+                        </div>
+                        <div class="md:col-span-3">
+                            <button type="submit" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">Save Activity</button>
+                        </div>
+                    </form>
+                </div>
+                
+                <!-- Activity Log Feed -->
+                <div>
+                    <h3 class="text-2xl font-bold mb-4">Your Private Activity Log</h3>
+                    <div id="log-entries-container" class="space-y-4">
+                        <div id="logs-placeholder" class="text-center text-gray-500 py-8">Your logged activities will appear here.</div>
                     </div>
                 </div>
+            </div>
 
-                <div id="tracker-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
-                    <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
-                    <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
-                    <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Dispute Tracker.</p>
-                </div>
+            <div id="tracker-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
+                <i class="fas fa-lock text-6xl text-blue-500"></i>
+                <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
+                <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Family Activity Tracker.</p>
             </div>
         </main>
     </div>
 
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-    </script>
-    <script src="assets/js/main.js"></script>
+    <!-- Report Generation Modal -->
+    <div id="report-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center p-4 z-50">
+        <div class="bg-gray-800 rounded-lg shadow-xl p-8 max-w-2xl w-full">
+            <h2 class="text-2xl font-bold mb-4">Create Cooperation Report</h2>
+            <div class="space-y-4">
+                <div>
+                    <label for="report-start-date" class="block text-sm font-medium text-gray-300">Start Date</label>
+                    <input type="date" id="report-start-date" class="mt-1 block w-full rounded-md form-input text-white">
+                </div>
+                <div>
+                    <label for="report-end-date" class="block text-sm font-medium text-gray-300">End Date</label>
+                    <input type="date" id="report-end-date" class="mt-1 block w-full rounded-md form-input text-white">
+                </div>
+                <div>
+                    <label for="report-comments" class="block text-sm font-medium text-gray-300">Add Personal Comments (Optional)</label>
+                    <textarea id="report-comments" rows="4" placeholder="Add context or a personal note to your co-parent..." class="mt-1 block w-full rounded-md form-input"></textarea>
+                </div>
+            </div>
+            <div class="mt-6 flex justify-end gap-4">
+                <button id="cancel-report-btn" class="bg-gray-600 py-2 px-4 rounded-lg">Cancel</button>
+                <button id="confirm-generate-report-btn" class="bg-green-600 py-2 px-4 rounded-lg">Download Report PDF</button>
+            </div>
+        </div>
+    </div>
+
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/dispute-tracker.js"></script>
 </body>
