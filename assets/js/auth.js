@@ -12,27 +12,24 @@ import { auth } from './firebase-config.js';
 // --- Global Auth State Manager ---
 onAuthStateChanged(auth, (user) => {
     const authLinksDesktop = document.getElementById('auth-links-desktop');
-    const dashboardContainer = document.getElementById('dashboard-container');
-    const loginPrompt = document.getElementById('dashboard-login-prompt');
     const authReminder = document.getElementById('auth-reminder');
 
     if (user) {
         const displayName = user.displayName || user.email.split('@')[0];
         if (authLinksDesktop) {
             authLinksDesktop.innerHTML = `
-                <div class="text-white text-sm">Welcome, ${displayName}</div>
-                <a href="#" id="logout-btn" class="text-red-400 hover:underline text-sm">Logout</a>
+                <div class="text-white text-sm mb-2">Welcome, ${displayName}</div>
+                <div>
+                    <a href="dashboard.html" class="text-green-400 hover:underline text-sm mr-4">My Dashboard</a>
+                    <a href="#" id="logout-btn" class="text-red-400 hover:underline text-sm">Logout</a>
+                </div>
             `;
             document.getElementById('logout-btn').addEventListener('click', handleLogout);
         }
-        if (authReminder) authReminder.style.display = 'none';
-        
-        // For dashboard page
-        if(dashboardContainer && loginPrompt) {
-            dashboardContainer.classList.remove('hidden');
-            loginPrompt.classList.add('hidden');
+        if (authReminder) {
+            authReminder.style.display = 'none';
         }
-
+        // Expose user object globally for other scripts to use
         if (!window.flamea) window.flamea = {};
         window.flamea.user = user;
 
@@ -44,15 +41,10 @@ onAuthStateChanged(auth, (user) => {
                 </a>
             `;
         }
-        if (authReminder) authReminder.style.display = 'block';
-
-        // For dashboard page
-         if(dashboardContainer && loginPrompt) {
-            dashboardContainer.classList.add('hidden');
-            loginPrompt.classList.remove('hidden');
+        if (authReminder) {
+            authReminder.style.display = 'block';
         }
-
-        if (window.flamea) window.flamea.user = null;
+         if (window.flamea) window.flamea.user = null;
     }
 });
 
@@ -62,7 +54,8 @@ const handleLogout = (e) => {
     e.preventDefault();
     signOut(auth).then(() => {
         console.log('User signed out');
-        if (window.location.pathname.includes('dashboard.html')) {
+        // Redirect to homepage after logout if not already there
+        if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('index.html')) {
             window.location.href = 'index.html';
         }
     }).catch((error) => {
@@ -70,18 +63,22 @@ const handleLogout = (e) => {
     });
 };
 
+
 // --- Login/Register Page Logic ---
 document.addEventListener('DOMContentLoaded', () => {
+    // Check if we are on the login page before proceeding
     const loginForm = document.getElementById('login-form');
+    if (!loginForm) return; 
+
     const registerForm = document.getElementById('register-form');
     const googleBtn = document.getElementById('google-signin-btn');
     const messageDiv = document.getElementById('auth-message');
 
-    if (!loginForm) return; // Exit if not on the login page
-
     const showMessage = (message, isError = false) => {
-        messageDiv.textContent = message;
-        messageDiv.className = `p-2 text-center ${isError ? 'text-red-400' : 'text-green-400'}`;
+        if (messageDiv) {
+            messageDiv.textContent = message;
+            messageDiv.className = `p-2 text-center rounded ${isError ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`;
+        }
     };
     
     loginForm.addEventListener('submit', (e) => {
@@ -101,9 +98,12 @@ document.addEventListener('DOMContentLoaded', () => {
         const password = e.target.password.value;
         
         createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => updateProfile(auth.currentUser, { displayName: name }))
+            .then((userCredential) => {
+                // Now update the profile
+                return updateProfile(auth.currentUser, { displayName: name });
+            })
             .then(() => {
-                 showMessage('Registration successful! Redirecting...');
+                 showMessage('Registration successful! Redirecting to your new dashboard...');
                  setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
             })
             .catch((error) => showMessage(error.message.replace('Firebase: ', ''), true));

@@ -21,6 +21,7 @@
         .tab-btn.active { border-bottom-color: #34D399; color: #34D399; }
         .feature-check { color: #34D399; }
         .feature-cross { color: #F87171; }
+        .premium-feature { color: #FBBF24; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -85,25 +86,27 @@
                     <!-- Benefits Table -->
                     <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
                         <h3 class="text-2xl font-bold text-center mb-6">Compare Your Benefits</h3>
-                        <table class="w-full text-left">
-                            <thead>
-                                <tr class="border-b-2 border-gray-700">
-                                    <th class="p-3 font-semibold">Feature</th>
-                                    <th class="p-2 text-center font-semibold">Guest</th>
-                                    <th class="p-2 text-center font-semibold text-green-400">Member (Free)</th>
-                                    <th class="p-2 text-center font-semibold text-yellow-400">Premium</th>
-                                </tr>
-                            </thead>
-                            <tbody class="text-gray-300 text-sm">
-                                <tr class="border-b border-gray-700"><td class="p-3">Access All Courses & Tools</td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
-                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3">Full Community Forum Access</td><td class="p-2 text-center">Read-Only</td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
-                                <tr class="border-b border-gray-700"><td class="p-3 font-bold text-white">Save Progress & Documents</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
-                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-white">Build Your "Life CV"</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
-                                <tr class="border-b border-gray-700"><td class="p-3 font-bold text-white">Earn & Save Certificates</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
-                                <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-yellow-400">Sync Profiles with Partners</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-yellow-400">Coming Soon</td></tr>
-                                <tr><td class="p-3 font-bold text-yellow-400">Advanced Profile Sharing</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-yellow-400">Coming Soon</td></tr>
-                            </tbody>
-                        </table>
+                        <div class="overflow-x-auto">
+                            <table class="w-full text-left">
+                                <thead>
+                                    <tr class="border-b-2 border-gray-700">
+                                        <th class="p-3 font-semibold">Feature</th>
+                                        <th class="p-2 text-center font-semibold">Guest</th>
+                                        <th class="p-2 text-center font-semibold text-green-400">Member</th>
+                                        <th class="p-2 text-center font-semibold text-yellow-400">Premium</th>
+                                    </tr>
+                                </thead>
+                                <tbody class="text-gray-300 text-sm">
+                                    <tr class="border-b border-gray-700"><td class="p-3">Access All Courses & Tools</td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                                    <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3">Full Community Forum Access</td><td class="p-2 text-center">Read-Only</td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td><td class="p-2 text-center"><i class="fas fa-check-circle feature-check"></i></td></tr>
+                                    <tr class="border-b border-gray-700"><td class="p-3 font-bold text-white">Save Progress & Documents</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                    <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-white">Build Your "Life CV"</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                    <tr class="border-b border-gray-700"><td class="p-3 font-bold text-white">Earn & Save Certificates</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td><td class="p-2 text-center font-bold text-green-400"><i class="fas fa-check-circle"></i></td></tr>
+                                    <tr class="border-b border-gray-700 bg-gray-800"><td class="p-3 font-bold text-yellow-400">Sync Profiles with Co-Parent</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold premium-feature">Coming Soon</td></tr>
+                                    <tr><td class="p-3 font-bold text-yellow-400">Share Profile with Partners</td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center"><i class="fas fa-times-circle feature-cross"></i></td><td class="p-2 text-center font-bold premium-feature">Coming Soon</td></tr>
+                                </tbody>
+                            </table>
+                        </div>
                         <div class="text-center mt-6">
                             <button id="register-now-btn" class="bg-green-500 text-white font-bold py-3 px-6 rounded-lg hover:bg-green-600 transition-transform hover:scale-105">
                                 Register for Free to Unlock
@@ -140,8 +143,7 @@
         registerTab.addEventListener('click', () => showTab('register'));
         document.getElementById('register-now-btn').addEventListener('click', () => showTab('register'));
         
-        // Default to login tab
-        showTab('login');
+        showTab('login'); // Default to login tab
     </script>
     <script type="module" src="assets/js/auth.js"></script>
 </body>
