@@ -77,3 +77,14 @@ document.addEventListener('DOMContentLoaded', function() {
         currentYearSpan.textContent = new Date().getFullYear();
     }
 });
+<style>
+    /* Default logo text color for light backgrounds */
+    .flamea-logo .logo-text {
+        fill: #2d3748; /* Dark Gray */
+    }
+
+    /* Logo text color for dark backgrounds */
+    .flamea-logo.dark .logo-text {
+        fill: white;
+    }
+</style>
