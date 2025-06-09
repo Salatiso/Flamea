@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Forms & Documents Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; scroll-behavior: smooth; }
+        .sidebar-direct-link { transition: all 0.3s ease; }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
+        .form-card-details { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="index.html" class="block mb-12 text-center"><img src="assets/images/flamea-logo.png" alt="Flamea Logo" class="h-12 mx-auto"></a>
+            <nav id="main-nav" class="flex flex-col space-y-2 flex-grow">
+                <a href="dashboard.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tachometer-alt w-6 text-center mr-3"></i> Dashboard</a>
+                <a href="tools.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg bg-blue-600"><i class="fas fa-tools w-6 text-center mr-3"></i> Our Tools</a>
+                <!-- Other links -->
+            </nav>
+            <div id="auth-container" class="mt-auto"></div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-6xl mx-auto">
+                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Forms & Documents Hub</h2>
+                <p class="text-lg text-gray-400 mb-8">Find, understand, and fill out the legal forms you need.</p>
+                
+                <!-- Wizard vs Manual Toggle -->
+                <div class="bg-gray-900 rounded-lg p-6 mb-10">
+                    <h3 class="text-2xl font-bold text-white mb-4">Choose Your Path</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                        <a href="#simple-wizard" class="block bg-gray-800 hover:bg-gray-700 p-6 rounded-lg text-center transition">
+                            <i class="fas fa-magic text-4xl text-teal-400 mb-3"></i>
+                            <h4 class="text-xl font-bold">Simple Start Wizard</h4>
+                            <p class="text-gray-400">Not sure where to begin? We'll guide you to the right form.</p>
+                        </a>
+                        <a href="#manual-explorer" class="block bg-gray-800 hover:bg-gray-700 p-6 rounded-lg text-center transition">
+                             <i class="fas fa-search text-4xl text-blue-400 mb-3"></i>
+                            <h4 class="text-xl font-bold">Manual Explorer</h4>
+                            <p class="text-gray-400">Know what you're looking for? Browse all forms by category.</p>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Simple Start Wizard Section -->
+                <section id="simple-wizard" class="bg-gray-900 rounded-lg p-6 mb-10">
+                    <h3 class="text-2xl font-bold text-white mb-4">Simple Start Wizard</h3>
+                    <div class="space-y-4">
+                        <div>
+                            <label for="wizard-step1" class="block text-sm font-medium text-gray-300">What is your general situation?</label>
+                            <select id="wizard-step1" class="w-full mt-1 p-2 bg-gray-700 rounded border border-gray-600">
+                                <option value="">-- Select a situation --</option>
+                                <option value="parental">It's about my child/paternity</option>
+                                <option value="marriage">It's about marriage/divorce</option>
+                                <option value="court">I need to go to court</option>
+                                <option value="criminal">It's a criminal matter</option>
+                                <option value="equality">I'm facing discrimination</option>
+                            </select>
+                        </div>
+                        <div id="wizard-step2-container" class="hidden">
+                            <label for="wizard-step2" class="block text-sm font-medium text-gray-300">What do you need to do?</label>
+                            <select id="wizard-step2" class="w-full mt-1 p-2 bg-gray-700 rounded border border-gray-600"></select>
+                        </div>
+                         <div id="wizard-results" class="hidden pt-4 border-t border-gray-700">
+                            <h4 class="font-semibold text-lg text-green-400">Recommended Form(s):</h4>
+                            <div id="wizard-form-recommendation" class="mt-2"></div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- Manual Explorer Section -->
+                <section id="manual-explorer">
+                    <h3 class="text-2xl font-bold text-white mb-4">Form Categories</h3>
+                    <div id="forms-container" class="space-y-8">
+                        <!-- Form categories will be dynamically injected here -->
+                    </div>
+                </section>
+            </div>
+        </main>
+    </div>
+    
+    <!-- MODALS for interactive form fillers will go here -->
+
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/forms.js"></script>
+</body>
+</html>
