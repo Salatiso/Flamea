@@ -106,5 +106,22 @@
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/dashboard.js"></script>
     <script type="module" src="assets/js/chatbot.js"></script>
+
+<!-- At the bottom of dashboard.html, before </body> -->
+<div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4">
+    <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-full max-w-lg">
+        <div class="flex justify-between items-center mb-4">
+            <h3 class="text-2xl font-bold">FLAMEA Podcast</h3>
+            <button data-modal-close="podcast-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+        </div>
+        <div id="episode-list" class="episode-list h-96 overflow-y-auto">
+            <!-- Podcast episodes will be loaded here by podcast-player.js -->
+            <p class="text-gray-400">Loading latest episodes...</p>
+        </div>
+    </div>
+</div>
+
+<!-- Make sure you have the podcast player script included at the bottom -->
+<script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
