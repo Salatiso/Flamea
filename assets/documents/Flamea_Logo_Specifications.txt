@@ -1,0 +1,17 @@
+Flamea: Official Logo SpecificationsThis document outlines the official branding guidelines for the Flamea logo. Adhering to these specifications ensures brand consistency across all materials.1. Core Logo ElementsThe Flamea logo consists of three core elements: the logotype, the flame icon, and the underline.Font: Inter (Regular, 400 weight)Text Color (Primary): Charcoal #2d3748Text Color (Reversed): White #FFFFFFAccent Color (Flame & Underline): Vibrant Green #4ade802. Official Logo VariationsThere are two official versions of the logo for use on light and dark backgrounds, respectively.A. Primary Logo (For Light Backgrounds)This is the standard logo and should be used in most cases.Visual Reference:<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#f9fafb"/>
+    <text x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="#2d3748">Flame</text>
+    <g transform="translate(135, 0)">
+        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
+    </g>
+    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+Specifications:Logotype: "Flame" is rendered in Charcoal (#2d3748).Capitalization: The initial 'F' is capitalized.Flame 'A': The stylized 'A' icon is rendered in Vibrant Green (#4ade80).Underline: A solid line in Vibrant Green (#4ade80) extends beneath the full logo.B. Reversed Logo (For Dark Backgrounds)This version provides high contrast and should be used on dark-colored backgrounds.Visual Reference:<svg width="200" height="60" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg">
+    <rect width="100%" height="100%" fill="#2d3748"/>
+    <text x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="#FFFFFF">Flame</text>
+    <g transform="translate(135, 0)">
+        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
+    </g>
+    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+</svg>
+Specifications:Logotype: "Flame" is rendered in White (#FFFFFF).Capitalization: The initial 'F' is capitalized.Flame 'A': The stylized 'A' icon is rendered in Vibrant Green (#4ade80).Underline: A solid line in Vibrant Green (#4ade80) extends beneath the full logo.3. Image Generation Prompt (for PNG Assets)Use the following prompt with an AI image generator to create high-resolution raster assets (PNG format is recommended for its support of transparency).Prompt:"Generate two high-resolution, professional logo images for a brand named 'Flamea'. The output must be in PNG format with a transparent background.The logo features the word 'Flame' in a clean, modern, sans-serif font like Inter. The 'a' at the end is replaced by a simple, stylized capital 'A' shaped like a flame. A thin, solid underline extends across the full width of the logo.Variation 1 (for light backgrounds):Text 'Flame': Use dark charcoal hex code #2d3748.Flame 'A' and underline: Use vibrant green hex code #4ade80.Variation 2 (for dark backgrounds):Text 'Flame': Use white hex code #FFFFFF.Flame 'A' and underline: Use vibrant green hex code #4ade80.Ensure both logos are sharp, clean, and perfectly centered. Do not add any extra text, effects, or backgrounds."
