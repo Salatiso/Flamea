@@ -14,9 +14,9 @@
         body { font-family: 'Open Sans', sans-serif; }
         .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
         .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .option-card { transition: all 0.3s ease; }
+        .sidebar-direct-link { transition: all 0.3s ease; }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
+        .option-card { transition: all 0.3s ease; border: 1px solid #374151; }
         .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
     </style>
 </head>
@@ -26,43 +26,45 @@
         <aside class="bg-gray-900 p-6 flex flex-col">
             <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
             <nav id="main-nav" class="flex flex-col space-y-4">
-                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                 <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                 <a href="tools.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                 <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                 <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                 <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                     <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                 </button>
-                 <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                     <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                 </button>
-                 <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+    <!-- Standard Page Links -->
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+    
+    <!-- Divider -->
+    <div class="border-t border-gray-700 my-2"></div>
+
+    <!-- Interactive Tool Buttons -->
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+                </button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
+                </button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
                     <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
                 </a>
             </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4"></div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            <div class="mt-auto">
+                 <div id="auth-container" class="text-center"></div>
+                 <p class="text-xs text-gray-500 text-center mt-4">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
 
         <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto text-center">
+            <div class="max-w-5xl mx-auto text-center">
                 <h2 class="text-4xl font-bold font-roboto text-white mb-2">The Co-Parenting Compass</h2>
-                <p class="text-lg text-gray-400 mb-8">Build a fair, comprehensive, and legally-informed Parenting Plan.</p>
+                <p class="text-lg text-gray-400 mb-8">Build a fair, comprehensive, and legally-sound Parenting Plan.</p>
                 
                 <!-- Legal Foundation Block -->
                 <div class="text-left bg-gray-900 bg-opacity-75 p-6 rounded-xl shadow-lg border-l-4 border-green-400 mb-10">
                     <h3 class="text-xl font-bold text-green-400 mb-3"><i class="fas fa-landmark mr-2"></i>The Law is Your Foundation</h3>
-                    <p class="text-gray-300 mb-2">
-                        The <strong class="text-white">Constitution of South Africa</strong> is the supreme law. <strong class="text-white">Section 9</strong> guarantees equality, meaning fathers and mothers have equal rights and responsibilities by default. Any bias based on gender is unconstitutional.
-                    </p>
                     <p class="text-gray-300">
-                        Furthermore, <strong class="text-white">Section 28</strong> states that the "best interests of the child" are paramount in every matter concerning a child. A good parenting plan, as outlined in the Children's Act 38 of 2005, is a written agreement that proves both parents are committed to these constitutional principles. It is your roadmap to cooperative and effective co-parenting.
+                        The <strong class="text-white">Constitution's Bill of Rights</strong> is the supreme law. <strong class="text-white">Section 9</strong> guarantees equality, and <strong class="text-white">Section 28</strong> states the "best interests of the child" are paramount. A good parenting plan, as outlined in the <strong class="text-white">Children's Act 38 of 2005</strong>, is your agreement to uphold these principles. It is the roadmap to cooperative and effective co-parenting.
                     </p>
                 </div>
 
@@ -70,14 +72,14 @@
                 <h3 class="text-2xl font-bold text-white mb-6">Choose Your Starting Point</h3>
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
                     <!-- Option 1: Needs Assessment -->
-                    <a href="assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
+                    <a href="assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center hover:border-teal-500">
                         <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Start with Smart Wizard</h4>
-                        <p class="text-gray-400">Unsure where to begin? Answer a few questions, and we'll recommend the best path for you.</p>
+                        <p class="text-gray-400">Unsure where to begin? Answer a few questions, and we'll recommend a starting point for your plan.</p>
                     </a>
                     
                     <!-- Option 2: Manual Builder -->
-                    <a href="plan-builder.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
+                    <a href="plan-builder.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center hover:border-blue-500">
                         <i class="fas fa-edit text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Build Manually</h4>
                         <p class="text-gray-400">Know what you need? Jump straight into the step-by-step plan builder.</p>
@@ -87,11 +89,8 @@
         </main>
     </div>
     
-    <!-- Modals and other scripts -->
     <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-    <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
+    <!-- Add other global scripts if necessary -->
 </body>
 </html>
