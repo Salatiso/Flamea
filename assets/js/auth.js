@@ -1,121 +1,165 @@
-import {
-    createUserWithEmailAndPassword,
-    signInWithEmailAndPassword,
-    signInWithPopup,
-    GoogleAuthProvider,
-    signOut,
-    onAuthStateChanged,
-    updateProfile
-} from "https://www.gstatic.com/firebasejs/9.17.1/firebase-auth.js";
-import { auth } from './firebase-config.js';
+// assets/js/auth.js
 
-// --- Global Auth State Manager ---
+import {
+    getAuth,
+    onAuthStateChanged,
+    signInWithEmailAndPassword,
+    createUserWithEmailAndPassword,
+    signInWithPopup,
+    signOut,
+    GoogleAuthProvider // Import GoogleAuthProvider directly
+} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+import {
+    getFirestore,
+    doc,
+    setDoc,
+    getDoc
+} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
+import { app, db } from './firebase-config.js'; // Use the direct exports
+
+// --- Initialize Auth and Provider ---
+const auth = getAuth(app);
+const googleProvider = new GoogleAuthProvider(); // Create a new instance of the provider
+
+// --- DOM Elements ---
+const loginForm = document.getElementById('login-form');
+const signupForm = document.getElementById('signup-form');
+const googleSignInButton = document.getElementById('google-signin');
+const logoutButtons = document.querySelectorAll('.logout-button'); // Use querySelectorAll to catch all instances
+
+// --- Event Listeners ---
+
+// Login Form Submission
+if (loginForm) {
+    loginForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = loginForm.email.value;
+        const password = loginForm.password.value;
+        try {
+            await signInWithEmailAndPassword(auth, email, password);
+            console.log("User logged in successfully with email.");
+            // Redirect is handled by onAuthStateChanged
+        } catch (error) {
+            console.error("Login Error:", error);
+            alert(`Login Failed: ${error.message}`);
+        }
+    });
+}
+
+// Signup Form Submission
+if (signupForm) {
+    signupForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        const email = signupForm.email.value;
+        const password = signupForm.password.value;
+        const name = signupForm.name.value; // Assuming you have a 'name' field in your signup form
+        try {
+            const userCredential = await createUserWithEmailAndPassword(auth, email, password);
+            const user = userCredential.user;
+            console.log("User signed up successfully:", user.uid);
+            
+            // Create a user profile document in Firestore
+            await createUserProfile(user, { name: name || 'New Member' });
+            // Redirect is handled by onAuthStateChanged
+        } catch (error) {
+            console.error("Signup Error:", error);
+            alert(`Signup Failed: ${error.message}`);
+        }
+    });
+}
+
+// Google Sign-In
+if (googleSignInButton) {
+    googleSignInButton.addEventListener('click', async () => {
+        try {
+            const result = await signInWithPopup(auth, googleProvider);
+            const user = result.user;
+            console.log("User signed in with Google:", user.uid);
+            
+            // Check if user profile already exists, if not, create one
+            const userDocRef = doc(db, "users", user.uid);
+            const userDoc = await getDoc(userDocRef);
+            if (!userDoc.exists()) {
+                 await createUserProfile(user);
+            }
+            // Redirect is handled by onAuthStateChanged
+        } catch (error) {
+            console.error("Google Sign-In Error:", error);
+            if (error.code !== 'auth/popup-closed-by-user') {
+               alert(`Google Sign-In Failed: ${error.message}`);
+            }
+        }
+    });
+}
+
+// Logout Buttons
+logoutButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        signOut(auth).then(() => {
+            console.log("User logged out.");
+            window.location.replace('/index.html');
+        }).catch((error) => {
+            console.error("Logout Error:", error);
+        });
+    });
+});
+
+// --- User Profile Management ---
+async function createUserProfile(user, additionalData = {}) {
+    try {
+        const userRef = doc(db, "users", user.uid);
+        await setDoc(userRef, {
+            uid: user.uid,
+            name: user.displayName || additionalData.name || 'New Member',
+            email: user.email,
+            photoURL: user.photoURL || '/assets/images/default-avatar.png',
+            createdAt: new Date(),
+            skills: [],
+            cvUrl: '',
+        }, { merge: true });
+        console.log("User profile created/updated in Firestore for:", user.uid);
+    } catch (error) {
+        console.error("Error creating user profile:", error);
+    }
+}
+
+// --- Auth State Observer ---
 onAuthStateChanged(auth, (user) => {
-    const authLinksDesktop = document.getElementById('auth-links-desktop');
-    const authReminder = document.getElementById('auth-reminder');
+    const currentPage = window.location.pathname.split("/").pop();
+    const protectedPages = ['dashboard.html', 'parenting-plan.html', 'forms.html', 'tools.html', 'book-reader.html'];
+    const isAuthPage = ['login.html', 'signup.html'].includes(currentPage);
 
     if (user) {
-        const displayName = user.displayName || user.email.split('@')[0];
-        if (authLinksDesktop) {
-            authLinksDesktop.innerHTML = `
-                <div class="text-white text-sm mb-2">Welcome, ${displayName}</div>
-                <div>
-                    <a href="dashboard.html" class="text-green-400 hover:underline text-sm mr-4">My Dashboard</a>
-                    <a href="#" id="logout-btn" class="text-red-400 hover:underline text-sm">Logout</a>
-                </div>
-            `;
-            document.getElementById('logout-btn').addEventListener('click', handleLogout);
+        // User is signed in.
+        if (isAuthPage) {
+            window.location.replace('/dashboard.html');
         }
-        if (authReminder) {
-            authReminder.style.display = 'none';
-        }
-        // Expose user object globally for other scripts to use
-        if (!window.flamea) window.flamea = {};
-        window.flamea.user = user;
-
     } else {
-        if (authLinksDesktop) {
-            authLinksDesktop.innerHTML = `
-                <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded">
-                    Login / Register
-                </a>
-            `;
+        // User is signed out.
+        if (protectedPages.includes(currentPage)) {
+            window.location.replace('/login.html');
         }
-        if (authReminder) {
-            authReminder.style.display = 'block';
-        }
-         if (window.flamea) window.flamea.user = null;
     }
 });
 
+// --- Update UI based on Auth State ---
+function updateUserUI(user) {
+    const userWelcome = document.getElementById('user-welcome');
+    const loginLink = document.getElementById('login-link');
+    const logoutLink = document.querySelectorAll('.logout-button');
 
-// --- Logout Handler ---
-const handleLogout = (e) => {
-    e.preventDefault();
-    signOut(auth).then(() => {
-        console.log('User signed out');
-        // Redirect to homepage after logout if not already there
-        if (!window.location.pathname.endsWith('/') && !window.location.pathname.endsWith('index.html')) {
-            window.location.href = 'index.html';
-        }
-    }).catch((error) => {
-        console.error('Sign out error', error);
-    });
-};
+    if (user) {
+        if(userWelcome) userWelcome.textContent = `Welcome, ${user.displayName || user.email}`;
+        if(loginLink) loginLink.style.display = 'none';
+        logoutLink.forEach(b => b.style.display = 'block');
+    } else {
+        if(userWelcome) userWelcome.textContent = '';
+        if(loginLink) loginLink.style.display = 'block';
+        logoutLink.forEach(b => b.style.display = 'none');
+    }
+}
 
-
-// --- Login/Register Page Logic ---
-document.addEventListener('DOMContentLoaded', () => {
-    // Check if we are on the login page before proceeding
-    const loginForm = document.getElementById('login-form');
-    if (!loginForm) return; 
-
-    const registerForm = document.getElementById('register-form');
-    const googleBtn = document.getElementById('google-signin-btn');
-    const messageDiv = document.getElementById('auth-message');
-
-    const showMessage = (message, isError = false) => {
-        if (messageDiv) {
-            messageDiv.textContent = message;
-            messageDiv.className = `p-2 text-center rounded ${isError ? 'bg-red-900 text-red-300' : 'bg-green-900 text-green-300'}`;
-        }
-    };
-    
-    loginForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        signInWithEmailAndPassword(auth, e.target.email.value, e.target.password.value)
-            .then(() => {
-                showMessage('Login successful! Redirecting...');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
-            })
-            .catch((error) => showMessage(error.message.replace('Firebase: ', ''), true));
-    });
-
-    registerForm.addEventListener('submit', (e) => {
-        e.preventDefault();
-        const name = e.target.name.value;
-        const email = e.target.email.value;
-        const password = e.target.password.value;
-        
-        createUserWithEmailAndPassword(auth, email, password)
-            .then((userCredential) => {
-                // Now update the profile
-                return updateProfile(auth.currentUser, { displayName: name });
-            })
-            .then(() => {
-                 showMessage('Registration successful! Redirecting to your new dashboard...');
-                 setTimeout(() => { window.location.href = 'dashboard.html'; }, 2000);
-            })
-            .catch((error) => showMessage(error.message.replace('Firebase: ', ''), true));
-    });
-    
-    googleBtn.addEventListener('click', () => {
-        const provider = new GoogleAuthProvider();
-        signInWithPopup(auth, provider)
-            .then((result) => {
-                showMessage('Google sign-in successful! Redirecting...');
-                setTimeout(() => { window.location.href = 'dashboard.html'; }, 1500);
-            })
-            .catch((error) => showMessage(error.message.replace('Firebase: ', ''), true));
-    });
+// Final check on page load
+onAuthStateChanged(auth, user => {
+    updateUserUI(user);
 });
