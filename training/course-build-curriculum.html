@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA Training - Building Your Own Curriculum</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <style>
+        /* Re-using the same styles from the master course template with a new color scheme */
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #10B981; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #34D399; padding-bottom: 0.5rem; color: #6EE7B7;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #A7F3D0;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #A7F3D0; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #059669; border-color: #10B981; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #10B981; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: white; }
+    </style>
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-emerald-400">A</span></a>
+             <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Why Create Your Own?</a>
+                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Core Components</a>
+                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Learning Through Life</a>
+            </nav>
+            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
+                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+             <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-emerald-400">Building Your Own Curriculum</h1>
+                    <p class="text-lg text-gray-400 mt-2">A father's guide to practical, values-based education, inspired by "The Homeschooling Father."</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #10B981;"></div>
+                </div>
+
+                 <!-- Course Content Area -->
+                <div class="prose max-w-none prose-invert">
+                    <!-- Module 1 -->
+                    <div id="module1" class="module active">
+                        <section>
+                            <h2>Module 1: Why Create Your Own Curriculum?</h2>
+                            <p>The formal schooling system often fails our children. As highlighted in *The Homeschooling Father*, it prioritizes memorization over critical thinking and standardized tests over practical skills. By creating your own curriculum, you take back control and provide an education that is truly tailored to your child and your family's values.</p>
+                            
+                            <h3>A. The Failure of the "One-Size-Fits-All" Model</h3>
+                            <p>Every child learns differently. One child may thrive with hands-on projects, while another may excel with reading and research. The formal school system cannot cater to these individual differences. The result? Children are either bored or overwhelmed, and their natural curiosity is often extinguished. You, as a father, know your child best. You are uniquely positioned to create a learning environment where they can flourish.</p>
+                            
+                            <h3>B. Education Rooted in Reality and Culture</h3>
+                            <p>Building your own curriculum allows you to integrate lessons that matter. This is your chance to pass on your cultural heritage, whether you are Xhosa, Zulu, Venda, or Afrikaans. Teach your child about their ancestors, their traditions, and their history. Furthermore, you can focus on practical, real-world skills:</p>
+                            <ul>
+                                <li><strong>Financial Literacy:</strong> How to budget, save, and invest.</li>
+                                <li><strong>Practical Skills:</strong> Basic carpentry, car maintenance, gardening, and cooking.</li>
+                                <li><strong>Entrepreneurship:</strong> How to identify a need in the community and build something to meet it.</li>
+                            </ul>
+                            <p>This is an education for self-reliance, not just for employment.</p>
+                        </section>
+                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+                    </div>
+                    <!-- Other modules and quizzes would be added here -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <!-- Modal and Scripts -->
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
+</body>
+</html>
