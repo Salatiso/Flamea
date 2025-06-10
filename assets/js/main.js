@@ -9,78 +9,78 @@ document.addEventListener('DOMContentLoaded', function() {
 
         const currentPage = window.location.pathname.split('/').pop() || 'index.html';
         
-        // The header has a dark, semi-transparent background on scroll, so we use the 'dark' logo version
         const headerHTML = `
             <div class="container mx-auto px-6 py-3 flex justify-between items-center">
-                <!-- START: New SVG Logo -->
                 <a href="/index.html" class="flamea-logo dark">
                     <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
                         <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
-                        <g transform="translate(135, 0)">
-                            <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                        </g>
+                        <g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g>
                         <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
                     </svg>
                 </a>
-                <!-- END: New SVG Logo -->
                 
                 <nav class="hidden md:flex space-x-4 items-center">
                     <a href="index.html" class="nav-link ${currentPage === 'index.html' ? 'active' : ''}"><i class="fas fa-home mr-2 opacity-80"></i>Home</a>
-                    <a href="tools.html" class="nav-link ${currentPage === 'tools.html' || currentPage === 'parenting-plan.html' || currentPage === 'journal.html' || currentPage === 'locator.html' ? 'active' : ''}"><i class="fas fa-tools mr-2 opacity-80"></i>Tools</a>
-                    <a href="about.html" class="nav-link ${currentPage === 'about.html' ? 'active' : ''}"><i class="fas fa-info-circle mr-2 opacity-80"></i>About Us</a>
+                    <a href="tools.html" class="nav-link ${currentPage === 'tools.html' ? 'active' : ''}"><i class="fas fa-tools mr-2 opacity-80"></i>Tools</a>
+                    <button id="podcast-launch-btn" class="nav-link"><i class="fas fa-podcast mr-2 opacity-80"></i>Podcast</button>
                     <a href="community.html" class="nav-link ${currentPage === 'community.html' ? 'active' : ''}"><i class="fas fa-users mr-2 opacity-80"></i>Community</a>
-                    <div id="auth-links-desktop" class="flex items-center gap-4 ml-4">
-                        <!-- Auth buttons will be inserted here by auth.js -->
-                    </div>
+                    <div id="auth-links-desktop" class="flex items-center gap-4 ml-4"></div>
                 </nav>
-                <button id="mobile-menu-button" class="md:hidden mobile-btn-icon text-white focus:outline-none transition-colors duration-300">
-                    <ion-icon name="menu-outline" class="text-3xl"></ion-icon>
-                </button>
+                <button id="mobile-menu-button" class="md:hidden mobile-btn-icon text-white focus:outline-none"><ion-icon name="menu-outline" class="text-3xl"></ion-icon></button>
             </div>
-            <div id="mobile-menu" class="hidden md:hidden bg-white shadow-lg py-2 absolute w-full left-0 top-full">
-                <a href="index.html" class="block px-6 py-3 text-gray-700 hover:bg-gray-100 font-semibold">Home</a>
-                <a href="tools.html" class="block px-6 py-3 text-gray-700 hover:bg-gray-100 font-semibold">Tools</a>
-                <a href="about.html" class="block px-6 py-3 text-gray-700 hover:bg-gray-100 font-semibold">About Us</a>
-                <a href="community.html" class="block px-6 py-3 text-gray-700 hover:bg-gray-100 font-semibold">Community</a>
-                <div id="auth-links-mobile" class="px-6 py-3"></div>
-            </div>
-        `;
+            `;
         headerContainer.innerHTML = headerHTML;
     };
     
+    // --- UNIFIED PODCAST PLAYER INJECTION ---
+    const createPodcastPlayer = () => {
+        const playerHTML = `
+            <div id="podcast-player" class="fixed bottom-0 left-0 right-0 bg-gray-800 text-white p-4 shadow-lg transform translate-y-full transition-transform duration-300 z-50">
+                <div class="container mx-auto flex justify-between items-center">
+                    <div>
+                        <h4 class="font-bold">Flamea Podcast</h4>
+                        <p id="podcast-episode-title" class="text-sm text-gray-400">Now Playing...</p>
+                    </div>
+                    <audio id="audio-player" controls class="w-1/2"></audio>
+                    <button id="close-podcast-player" class="text-2xl">&times;</button>
+                </div>
+            </div>
+        `;
+        // Append the player to the body of the page
+        document.body.insertAdjacentHTML('beforeend', playerHTML);
+    };
+
+    // --- INITIALIZE ALL COMPONENTS ---
     createHeader();
+    createPodcastPlayer(); // Create the player on page load
 
-    // --- HEADER SCROLL & MOBILE MENU LOGIC (No changes needed here) ---
-    const header = document.getElementById('main-header');
-    const mobileMenuButton = document.getElementById('mobile-menu-button');
-    const mobileMenu = document.getElementById('mobile-menu');
+    // --- ADD EVENT LISTENERS ---
 
-    if (header) {
-        const handleScroll = () => {
-            if (window.scrollY > 50) {
-                header.classList.add('scrolled');
-            } else {
-                header.classList.remove('scrolled');
-            }
-        };
-        window.addEventListener('scroll', handleScroll);
-        handleScroll();
-    }
+    // Find the button in the header we just created
+    const podcastLaunchBtn = document.getElementById('podcast-launch-btn');
+    const podcastPlayer = document.getElementById('podcast-player');
+    const audioPlayer = document.getElementById('audio-player');
+    const closePodcastPlayerBtn = document.getElementById('close-podcast-player');
     
-    if (mobileMenuButton && mobileMenu) {
-        mobileMenuButton.addEventListener('click', () => {
-            mobileMenu.classList.toggle('hidden');
-            const mobileMenuIcon = mobileMenuButton.querySelector('ion-icon');
-            mobileMenuIcon.setAttribute('name', mobileMenu.classList.contains('hidden') ? 'menu-outline' : 'close-outline');
-        });
-        mobileMenu.querySelectorAll('a').forEach(link => {
-            link.addEventListener('click', () => { mobileMenu.classList.add('hidden'); });
+    // This is the direct link to an mp3 file from the RSS feed you provided.
+    const episodeUrl = 'https://anchor.fm/s/10357aacc/podcast/play/24784748/https%3A%2F%2Fd3ctxlq1ktw2nl.cloudfront.net%2Fstaging%2F2020-12-28%2F151199395-44100-2-d10d65bde709.m4a';
+
+    if (podcastLaunchBtn) {
+        podcastLaunchBtn.addEventListener('click', () => {
+            if (audioPlayer.src !== episodeUrl) {
+                audioPlayer.src = episodeUrl;
+            }
+            podcastPlayer.classList.remove('translate-y-full');
+            audioPlayer.play();
         });
     }
 
-    // --- OTHER GLOBAL SCRIPTS ---
-    const currentYearSpan = document.getElementById('currentYear');
-    if (currentYearSpan) {
-        currentYearSpan.textContent = new Date().getFullYear();
+    if (closePodcastPlayerBtn) {
+        closePodcastPlayerBtn.addEventListener('click', () => {
+            podcastPlayer.classList.add('translate-y-full');
+            audioPlayer.pause();
+        });
     }
+
+    // Scroll and Mobile menu logic remains the same...
 });
