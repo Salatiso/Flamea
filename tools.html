@@ -8,62 +8,123 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
-<body class="bg-gray-900 text-white">
-    <header id="main-header" class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40"></header>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <!-- Updated Logo Section -->
+            <div class="mb-12 flex justify-center">
+                <!-- START: Paste the new logo here -->
+                <a href="/dashboard.html" class="flamea-logo dark">
+                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+                        <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
+                        <g transform="translate(135, 0)">
+                            <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
+                        </g>
+                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+                    </svg>
+                </a>
+                <!-- END: New logo -->
+            </div>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <!-- Standard Page Links -->
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                
+                <!-- Divider -->
+                <div class="border-t border-gray-700 my-2"></div>
 
-    <main class="container mx-auto px-6 py-12">
-        <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">Flamea Toolkit</h1>
-        <p class="text-center text-lg text-gray-400 mb-12">Your digital resources for empowered co-parenting.</p>
+                <!-- Interactive Tool Buttons -->
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+                </button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
+                </button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
+                </a>
+            </nav>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+                        Login / Register
+                    </a>
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
 
-        <!-- Category: AI Assistant -->
-        <div class="mb-8">
-            <div class="p-6 bg-green-900/50 rounded-lg shadow-lg flex items-center justify-between">
-                <div class="flex items-center">
-                    <i class="fas fa-robot text-4xl text-green-400 mr-6"></i>
-                    <div>
-                        <h2 class="text-2xl font-bold">AI Legal Assistant</h2>
-                        <p class="text-gray-300">Get instant, AI-powered answers to your family law questions.</p>
+        <main class="container mx-auto px-6 py-12">
+            <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">Flamea Toolkit</h1>
+            <p class="text-center text-lg text-gray-400 mb-12">Your digital resources for empowered co-parenting.</p>
+
+            <!-- Category: AI Assistant -->
+            <div class="mb-8">
+                <div class="p-6 bg-green-900/50 rounded-lg shadow-lg flex items-center justify-between">
+                    <div class="flex items-center">
+                        <i class="fas fa-robot text-4xl text-green-400 mr-6"></i>
+                        <div>
+                            <h2 class="text-2xl font-bold">AI Legal Assistant</h2>
+                            <p class="text-gray-300">Get instant, AI-powered answers to your family law questions.</p>
+                        </div>
+                    </div>
+                    <a href="#" id="ai-assistant-launch-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Launch Assistant</a>
+                </div>
+            </div>
+
+            <!-- Category: Core Planning Tools -->
+            <div class="mb-8">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700">
+                    <span class="text-2xl font-bold">🛠️ Core Planning & Tracking Tools</span>
+                    <i class="fas fa-chevron-down transform transition-transform"></i>
+                </button>
+                <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
+                        <a href="assessment.html" class="tool-card"><i class="fas fa-clipboard-check text-blue-400"></i><h3>Needs Assessment</h3><p>Start here to get a personalized action plan.</p></a>
+                        <a href="parenting-plan.html" class="tool-card"><i class="fas fa-file-signature text-blue-400"></i><h3>Parenting Plan Builder</h3><p>Create a comprehensive, court-ready parenting plan.</p></a>
+                        <a href="activity-tracker.html" class="tool-card"><i class="fas fa-people-arrows text-blue-400"></i><h3>Family Activity Tracker</h3><p>Log contributions, schedules, and important events.</p></a>
+                        <a href="forms.html" class="tool-card"><i class="fas fa-folder-open text-blue-400"></i><h3>Forms & Wizards</h3><p>Access legal templates and guided forms.</p></a>
                     </div>
                 </div>
-                <a href="#" id="ai-assistant-launch-btn" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Launch Assistant</a>
             </div>
-        </div>
 
-        <!-- Category: Core Planning Tools -->
-        <div class="mb-8">
-            <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700">
-                <span class="text-2xl font-bold">🛠️ Core Planning & Tracking Tools</span>
-                <i class="fas fa-chevron-down transform transition-transform"></i>
-            </button>
-            <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-500">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
-                    <a href="assessment.html" class="tool-card"><i class="fas fa-clipboard-check text-blue-400"></i><h3>Needs Assessment</h3><p>Start here to get a personalized action plan.</p></a>
-                    <a href="parenting-plan.html" class="tool-card"><i class="fas fa-file-signature text-blue-400"></i><h3>Parenting Plan Builder</h3><p>Create a comprehensive, court-ready parenting plan.</p></a>
-                    <a href="activity-tracker.html" class="tool-card"><i class="fas fa-people-arrows text-blue-400"></i><h3>Family Activity Tracker</h3><p>Log contributions, schedules, and important events.</p></a>
-                    <a href="forms.html" class="tool-card"><i class="fas fa-folder-open text-blue-400"></i><h3>Forms & Wizards</h3><p>Access legal templates and guided forms.</p></a>
+            <!-- Category: Media & Publications -->
+            <div class="mb-8">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700">
+                    <span class="text-2xl font-bold">📚 Media & Publications</span>
+                    <i class="fas fa-chevron-down transform transition-transform"></i>
+                </button>
+                <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-yellow-500">
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
+                        <a href="publications.html" class="tool-card"><i class="fas fa-book-open text-yellow-400"></i><h3>Read Our Books</h3><p>Access exclusive books on fatherhood and the law.</p></a>
+                        <a href="#" id="tools-podcast-btn" class="tool-card"><i class="fas fa-podcast text-yellow-400"></i><h3>Flamea Podcast</h3><p>Listen to discussions on key topics for fathers.</p></a>
+                        <a href="https://www.youtube.com/@Flamea2024" target="_blank" class="tool-card"><i class="fab fa-youtube text-yellow-400"></i><h3>YouTube Channel</h3><p>Watch video guides, tutorials, and interviews.</p></a>
+                        <a href="community.html" class="tool-card"><i class="fas fa-comments text-yellow-400"></i><h3>Community & Contact</h3><p>Vote on topics, share your story, and get in touch.</p></a>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <!-- Category: Media & Publications -->
-        <div class="mb-8">
-            <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700">
-                <span class="text-2xl font-bold">📚 Media & Publications</span>
-                <i class="fas fa-chevron-down transform transition-transform"></i>
-            </button>
-            <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-yellow-500">
-                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 py-6">
-                    <a href="publications.html" class="tool-card"><i class="fas fa-book-open text-yellow-400"></i><h3>Read Our Books</h3><p>Access exclusive books on fatherhood and the law.</p></a>
-                    <a href="#" id="tools-podcast-btn" class="tool-card"><i class="fas fa-podcast text-yellow-400"></i><h3>Flamea Podcast</h3><p>Listen to discussions on key topics for fathers.</p></a>
-                    <a href="https://www.youtube.com/@Flamea2024" target="_blank" class="tool-card"><i class="fab fa-youtube text-yellow-400"></i><h3>YouTube Channel</h3><p>Watch video guides, tutorials, and interviews.</p></a>
-                    <a href="community.html" class="tool-card"><i class="fas fa-comments text-yellow-400"></i><h3>Community & Contact</h3><p>Vote on topics, share your story, and get in touch.</p></a>
-                </div>
-            </div>
-        </div>
-    </main>
+        </main>
+    </div>
 
     <!-- AI Assistant Modal Snippet -->
-    <div id="ai-assistant-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50"><div class="absolute bottom-0 right-0 mb-4 mr-4 w-full max-w-lg"><div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl flex flex-col h-[70vh]"><div class="p-4 border-b dark:border-gray-700 flex justify-between items-center"><h3 class="font-bold text-lg">Flamea AI Legal Assistant</h3><button id="close-ai-modal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button></div><div class="p-4 flex-grow"><p>AI Assistant content will load here.</p></div></div></div></div>
+    <div id="ai-assistant-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50">
+        <div class="absolute bottom-0 right-0 mb-4 mr-4 w-full max-w-lg">
+            <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl flex flex-col h-[70vh]">
+                <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                    <h3 class="font-bold text-lg">Flamea AI Legal Assistant</h3>
+                    <button id="close-ai-modal" class="text-gray-500 hover:text-gray-800 text-2xl">&times;</button>
+                </div>
+                <div class="p-4 flex-grow">
+                    <p>AI Assistant content will load here.</p>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <script type="module" src="assets/js/main.js"></script>
     <script>
