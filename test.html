@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Fatherhood Tools - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar Navigation (Maintained from original) -->
+        <aside class="sidebar bg-gray-900 p-6 flex flex-col"></aside>
+
+        <main class="main-content-area container mx-auto px-6 py-12">
+            <header class="page-header">
+                <h1>Flamea Toolkit</h1>
+                <p>Your digital resources for empowered co-parenting.</p>
+            </header>
+
+            <!-- Tool cards now styled to match training.html while keeping original structure -->
+            <div class="tool-cards-container">
+
+                <div class="course-card" onclick="location.href='assessment.html';">
+                    <div class="card-icon"><i class="fas fa-clipboard-check"></i></div>
+                    <h3>Needs Assessment</h3>
+                    <p>Start here to get a personalized action plan.</p>
+                    <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="course-card" onclick="location.href='parenting-plan.html';">
+                    <div class="card-icon"><i class="fas fa-file-signature"></i></div>
+                    <h3>Parenting Plan Builder</h3>
+                    <p>Create a comprehensive, court-ready parenting plan.</p>
+                    <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+                
+                <div class="course-card" onclick="location.href='activity-tracker.html';">
+                    <div class="card-icon"><i class="fas fa-people-arrows"></i></div>
+                    <h3>Family Activity Tracker</h3>
+                    <p>Log contributions, schedules, and important events.</p>
+                    <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="course-card" onclick="location.href='forms.html';">
+                    <div class="card-icon"><i class="fas fa-folder-open"></i></div>
+                    <h3>Forms & Wizards</h3>
+                    <p>Access legal templates and guided forms.</p>
+                    <div class="card-arrow"><i class="fas fa-arrow-right"></i></div>
+                </div>
+
+                <div class="course-card" id="ai-assistant-card">
+                    <div class="card-icon"><i class="fas fa-robot text-purple-400"></i></div>
+                    <h3>AI Legal Assistant</h3>
+                    <p>Get instant answers to your family law questions.</p>
+                    <button class="btn btn-secondary mt-2" id="open-chatbot">Launch Assistant</button>
+                </div>
+
+                <div class="course-card" id="podcast-card">
+                    <div class="card-icon"><i class="fas fa-podcast text-pink-400"></i></div>
+                    <h3>Flamea Podcast</h3>
+                    <p>Listen to key topics for fathers. Browse while you listen.</p>
+                    <button class="btn btn-secondary mt-2" id="launch-podcast-player-tools">Launch Player</button>
+                </div>
+
+            </div>
+        </main>
+    </div>
+
+    <!-- Modals and other elements from your original file -->
+    <div id="chatbot-container" class="hidden"></div>
+    <div id="podcast-player-container"></div>
+
+    <!-- Scripts -->
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/chatbot.js"></script>
+    <script src="assets/js/podcast-player.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            // Event listener for the podcast player button on this page
+            const podcastBtn = document.getElementById('launch-podcast-player-tools');
+            if(podcastBtn) {
+                podcastBtn.addEventListener('click', () => {
+                     // This function should be available from podcast-player.js
+                    if (typeof showPodcastPlayer === 'function') {
+                        showPodcastPlayer();
+                    }
+                });
+            }
+
+            // The AI assistant button with id 'open-chatbot' will be handled by the global
+            // event listener in main.js, which we will fix next.
+        });
+    </script>
+</body>
+</html>
