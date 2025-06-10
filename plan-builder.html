@@ -1,61 +1,114 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parenting Plan Builder - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .step-content { display: none; }
-        .step-content.active { display: block; }
+        .step-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        .form-label { @apply block text-sm font-medium text-gray-400 mb-1; }
+        .form-input { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500; }
+        .step-indicator { @apply px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-300; }
     </style>
 </head>
 <body class="bg-gray-900 text-white">
 
-<div class="container mx-auto p-8">
+<div class="container mx-auto p-4 md:p-8 max-w-5xl">
     <h1 class="text-3xl font-bold text-center mb-8">The Co-Parenting Compass: Build Your Plan</h1>
 
-    <div class="flex justify-center items-center mb-12 space-x-4">
-        <div id="step-indicator-1" class="step-indicator active">1. Parties</div>
-        <div id="step-indicator-2" class="step-indicator">2. Residence</div>
+    <!-- Step Indicator -->
+    <div class="flex justify-center items-center mb-12 flex-wrap gap-2">
+        <div id="step-indicator-1" class="step-indicator">1. The Parties</div>
+        <div class="text-gray-600">&rarr;</div>
+        <div id="step-indicator-2" class="step-indicator">2. Residence & Custody</div>
+        <div class="text-gray-600">&rarr;</div>
         <div id="step-indicator-3" class="step-indicator">3. Contributions</div>
+        <div class="text-gray-600">&rarr;</div>
         <div id="step-indicator-4" class="step-indicator">4. Schedule</div>
+        <div class="text-gray-600">&rarr;</div>
         <div id="step-indicator-5" class="step-indicator">5. Review</div>
     </div>
     
-    <form id="plan-builder-form">
+    <form id="plan-builder-form" class="bg-gray-800 p-8 rounded-lg shadow-xl">
+        <!-- Step 1: Parties & Children -->
         <div id="step-1" class="step-content active">
-            <h2 class="text-2xl font-semibold mb-6">Step 1: Who is involved?</h2>
-            <p class="text-gray-400 italic">Functionality to be added: Dynamic fields for adding multiple children.</p>
+            <h2 class="text-2xl font-bold mb-6 text-green-400">Step 1: Who is involved?</h2>
+            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">The Father (or Parent A)</h3>
+                    <label class="form-label">Full Legal Name</label><input type="text" class="form-input">
+                </div>
+                <div>
+                    <h3 class="font-semibold text-lg mb-4">The Mother (or Parent B)</h3>
+                    <label class="form-label">Full Legal Name</label><input type="text" class="form-input">
+                </div>
+            </div>
+            <h3 class="font-semibold text-lg mb-4">The Child / Children</h3>
+            <div id="children-container" class="space-y-4">
+                <!-- Child block -->
+                <div class="p-4 border border-gray-700 rounded-lg">
+                    <label class="form-label">Child's Full Name</label><input type="text" class="form-input">
+                    <div class="grid md:grid-cols-2 gap-4 mt-4">
+                        <div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div>
+                        <div><label class="form-label">Relationship</label><select class="form-input"><option>Biological</option><option>Adopted</option></select></div>
+                    </div>
+                </div>
+            </div>
+            <button type="button" id="add-child-btn" class="mt-4 text-green-500 hover:text-green-400">+ Add Another Child</button>
         </div>
 
+        <!-- Step 2: Residence & Custody -->
         <div id="step-2" class="step-content">
-            <h2 class="text-2xl font-semibold mb-6">Step 2: Where will the child live?</h2>
-            <p class="text-gray-400 italic">Functionality to be added: Google Maps address lookup and distance calculation dashboard.</p>
+            <h2 class="text-2xl font-bold mb-6 text-green-400">Step 2: Residence & Custody</h2>
+            <p class="text-gray-400 italic">Future functionality: Google Maps address lookup, distance calculator.</p>
         </div>
 
+        <!-- Step 3: Financial Contributions -->
         <div id="step-3" class="step-content">
-            <h2 class="text-2xl font-semibold mb-6">Step 3: How will expenses be shared?</h2>
-             <p class="text-gray-400 italic">Functionality to be added: The live contribution summary with color-coded balancing and dynamic expense rows.</p>
+            <h2 class="text-2xl font-bold mb-6 text-green-400">Step 3: Financial Contributions</h2>
+             <p class="text-gray-400 italic">Future functionality: Live contribution dashboard, dynamic expense rows, import/export with Activity Tracker.</p>
         </div>
 
+        <!-- Step 4: Visitation & Contact Schedule -->
         <div id="step-4" class="step-content">
-            <h2 class="text-2xl font-semibold mb-6">Step 4: Create the contact schedule.</h2>
-             <p class="text-gray-400 italic">Functionality to be added: Interactive calendar for scheduling recurring visits and events. Option to import/export to visitation-calendar.html.</p>
+            <h2 class="text-2xl font-bold mb-6 text-green-400">Step 4: Contact Schedule</h2>
+             <p class="text-gray-400 italic">Future functionality: Interactive calendar for scheduling, import/export with Visitation Calendar.</p>
         </div>
         
+        <!-- Step 5: Review & Generate -->
         <div id="step-5" class="step-content">
-             <h2 class="text-2xl font-semibold mb-6">Step 5: Review and finalize your plan.</h2>
-             <p class="text-gray-400 italic">Functionality to be added: Preview of the final document with seamless editing links and the checkout/download process.</p>
+             <h2 class="text-2xl font-bold mb-6 text-green-400">Step 5: Review & Finalize</h2>
+             <p class="text-gray-400 italic">Future functionality: Full document preview with seamless editing links and checkout process.</p>
         </div>
 
-        <div class="mt-12 flex justify-between">
-            <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500">Previous</button>
-            <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-500">Next Step</button>
+        <!-- Navigation -->
+        <div class="mt-12 pt-6 border-t border-gray-700 flex justify-between items-center">
+             <button type="button" id="quit-btn" class="text-sm text-red-500 hover:text-red-400">Quit to Main Page</button>
+            <div>
+                <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 mr-4">Back</button>
+                <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-500">Next Step</button>
+            </div>
         </div>
     </form>
 </div>
 
-<script src="assets/js/plan-builder.js"></script>
+<!-- Quit Confirmation Modal -->
+<div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center hidden z-50">
+    <div class="bg-white dark:bg-gray-800 p-8 rounded-lg text-center max-w-sm w-full">
+        <h2 class="text-xl font-bold mb-4">Are you sure you want to quit?</h2>
+        <p class="text-gray-600 dark:text-gray-400 mb-6">Your progress will be lost unless you have saved it. (Save feature coming soon for members).</p>
+        <div class="flex justify-center gap-4">
+            <button id="resume-btn" class="py-2 px-6 rounded-lg bg-gray-300 dark:bg-gray-600 hover:bg-gray-400 text-gray-800 dark:text-gray-200">Stay</button>
+            <a href="parenting-plan.html" class="py-2 px-6 rounded-lg bg-red-600 text-white hover:bg-red-700">Quit</a>
+        </div>
+    </div>
+</div>
+
+<script type="module" src="assets/js/plan-builder.js"></script>
 </body>
 </html>

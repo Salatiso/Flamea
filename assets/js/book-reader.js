@@ -1,137 +1,113 @@
 // assets/js/book-reader.js
-import { getFirestore, doc, getDoc, setDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!window.flamea || !window.flamea.auth) {
-        console.error("Firebase is not initialized.");
-        return;
-    }
-    const auth = window.flamea.auth;
-    const db = window.flamea.db;
-
-    const bookTitleEl = document.getElementById('book-title');
-    const chapterTitleEl = document.getElementById('chapter-title');
+    // --- DOM ELEMENTS ---
+    const bookSelect = document.getElementById('book-select');
+    const bookCover = document.getElementById('book-cover');
+    const bookTitle = document.getElementById('book-title');
     const contentContainer = document.getElementById('book-content-container');
-    const prevBtn = document.getElementById('prev-btn');
-    const nextBtn = document.getElementById('next-btn');
-    const pageNumEl = document.getElementById('page-num');
-    const totalPagesEl = document.getElementById('total-pages');
-    const printBtn = document.getElementById('print-excerpt-btn');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageIndicator = document.getElementById('page-indicator');
 
+    // --- STATE MANAGEMENT ---
+    let currentBook = 'goliath';
     let fullBookText = '';
-    let paginatedContent = [];
-    let currentPage = 0;
-    let bookId = '';
+    let totalPages = 0;
+    let currentPage = 1;
+    const isUserRegistered = false; // Placeholder for user auth status
 
-    const fetchBookContent = async (bookFileName) => {
-        try {
-            const response = await fetch(`assets/documents/${bookFileName}.txt`);
-            if (!response.ok) throw new Error('Book file not found');
-            return await response.text();
-        } catch (error) {
-            console.error("Error fetching book:", error);
-            contentContainer.innerHTML = '<p class="text-red-400">Could not load book content. Please ensure the link is correct.</p>';
-            return '';
+    const bookData = {
+        goliath: {
+            title: "Goliath's Stand",
+            author: "By Salatiso Mdeni",
+            cover: "assets/images/goliath.jpg",
+            textFile: "assets/documents/BK-Goliaths_Stand.txt"
+        },
+        homeschooling: {
+            title: "The Homeschooling Father",
+            author: "By Salatiso Mdeni",
+            cover: "assets/images/homeschooling_father.jpg",
+            textFile: "assets/documents/BK-HomeSchooling_Father.txt"
+        },
+        redress: {
+            title: "Beyond Redress",
+            author: "By Salatiso Mdeni",
+            cover: "assets/images/redress.jpg",
+            textFile: "assets/documents/BK-Beyond_Redress.txt"
         }
-    };
-
-    const paginate = () => {
-        paginatedContent = [];
-        const words = fullBookText.split(/\s+/);
-        let pageText = '';
-        const maxCharsPerPage = 1500; // Increased for a better reading experience
-
-        for (let i = 0; i < words.length; i++) {
-            if (pageText.length + words[i].length > maxCharsPerPage) {
-                paginatedContent.push(pageText);
-                pageText = '';
-            }
-            pageText += words[i] + ' ';
-        }
-        paginatedContent.push(pageText);
-        totalPagesEl.textContent = paginatedContent.length;
-    };
-
-    const displayPage = (pageNumber) => {
-        if (pageNumber >= 0 && pageNumber < paginatedContent.length) {
-            currentPage = pageNumber;
-            contentContainer.innerHTML = `<p>${paginatedContent[currentPage].replace(/\n/g, '</p><p>')}</p>`;
-            pageNumEl.textContent = currentPage + 1;
-
-            prevBtn.disabled = currentPage === 0;
-            nextBtn.disabled = currentPage === paginatedContent.length - 1;
-
-            saveProgress();
-        }
-    };
-
-    const saveProgress = async () => {
-        const user = auth.currentUser;
-        if (user && bookId) {
-            try {
-                const userProgressRef = doc(db, "users", user.uid, "readingProgress", bookId);
-                await setDoc(userProgressRef, { page: currentPage });
-            } catch (error) { console.error("Error saving progress:", error); }
-        } else if (bookId) {
-            sessionStorage.setItem(bookId, currentPage);
-        }
-    };
-
-    const loadProgress = async () => {
-        const user = auth.currentUser;
-        let savedPage = 0;
-        if (user && bookId) {
-            try {
-                const userProgressRef = doc(db, "users", user.uid, "readingProgress", bookId);
-                const docSnap = await getDoc(userProgressRef);
-                if (docSnap.exists()) savedPage = docSnap.data().page;
-                if (printBtn) printBtn.classList.remove('hidden');
-            } catch (error) { console.error("Error loading progress:", error); }
-        } else if (bookId) {
-            const pageFromSession = sessionStorage.getItem(bookId);
-            if (pageFromSession) savedPage = parseInt(pageFromSession, 10);
-            if (printBtn) printBtn.classList.add('hidden');
-        }
-        displayPage(savedPage);
     };
     
-    const initializeReader = async () => {
-        const urlParams = new URLSearchParams(window.location.search);
-        bookId = urlParams.get('book');
+    // --- EVENT LISTENERS ---
+    bookSelect.addEventListener('change', (e) => {
+        loadBook(e.target.value);
+    });
+    
+    // Note: Pagination logic will be more complex and will be implemented next.
+    // This is a placeholder for the concept.
+    prevPageBtn.addEventListener('click', () => alert("Previous page functionality coming soon!"));
+    nextPageBtn.addEventListener('click', () => alert("Next page functionality coming soon!"));
 
-        if (!bookId) {
-            bookTitleEl.textContent = "No Book Selected";
-            contentContainer.innerHTML = '<p>Please select a book from the <a href="publications.html" class="underline">Publications</a> page.</p>';
+
+    // --- CORE FUNCTIONS ---
+
+    /**
+     * Fetches and loads the content for a selected book.
+     * @param {string} bookKey - The key for the book in the bookData object.
+     */
+    async function loadBook(bookKey) {
+        currentBook = bookKey;
+        const book = bookData[bookKey];
+        
+        if (!book) {
+            console.error("Book not found:", bookKey);
+            contentContainer.innerHTML = "<p>Sorry, this book could not be loaded.</p>";
             return;
         }
 
-        fullBookText = await fetchBookContent(bookId);
-        if (fullBookText) {
-            bookTitleEl.textContent = "Now Reading";
-            chapterTitleEl.textContent = bookId.replace(/_/g, ' ').replace('BK-', '');
-            paginate();
-            await loadProgress();
-        }
-    };
+        // Update UI
+        bookTitle.textContent = book.title;
+        bookCover.src = book.cover;
+        contentContainer.innerHTML = "<p>Loading...</p>";
 
-    prevBtn.addEventListener('click', () => displayPage(currentPage - 1));
-    nextBtn.addEventListener('click', () => displayPage(currentPage + 1));
-
-    if (printBtn) {
-        printBtn.addEventListener('click', () => {
-            if (!auth.currentUser) {
-                alert("You must be registered to print excerpts.");
-                return;
+        try {
+            const response = await fetch(book.textFile);
+            if (!response.ok) {
+                throw new Error(`HTTP error! status: ${response.status}`);
             }
-            const excerptChars = Math.floor(fullBookText.length * 0.30);
-            const excerptText = fullBookText.substring(0, excerptChars);
-            const printableArea = document.getElementById('printable-excerpt');
-            printableArea.innerHTML = `<h1 style="font-size: 24px; font-weight: bold; margin-bottom: 1rem;">${chapterTitleEl.textContent} - Excerpt</h1><div style="font-size: 14px; line-height: 1.6;">${excerptText.replace(/\n/g, '<br>')}</div>`;
-            window.print();
-        });
+            fullBookText = await response.text();
+            
+            // FUTURE: Paginate text here. For now, display a preview.
+            displayBookContent();
+
+        } catch (error) {
+            console.error("Error fetching book content:", error);
+            contentContainer.innerHTML = "<p>Error loading book content. Please try again.</p>";
+        }
     }
 
-    auth.onAuthStateChanged((user) => {
-        initializeReader();
-    });
+    /**
+     * Displays the book content, respecting user registration status.
+     */
+    function displayBookContent() {
+        let contentToShow = fullBookText;
+
+        if (!isUserRegistered) {
+            // Show only first 30% for non-registered users
+            const previewLength = Math.floor(fullBookText.length * 0.3);
+            contentToShow = fullBookText.substring(0, previewLength) + 
+            `<br><br><div class="text-center p-4 bg-gray-700 rounded-lg">
+                <p class="font-bold">You've reached the end of the free preview.</p>
+                <a href="login.html" class="text-green-400 font-bold hover:underline">Register for free</a> to read the full book, save your progress, and more.
+            </div>`;
+        }
+        
+        // Simple display for now. True pagination is a future step.
+        contentContainer.innerHTML = contentToShow.replace(/\n/g, '<br>');
+        contentContainer.scrollTop = 0; // Scroll to top
+        pageIndicator.textContent = `Preview`; // Update later with actual pages
+    }
+
+    // --- INITIALIZATION ---
+    loadBook(currentBook);
 });
