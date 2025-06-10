@@ -113,6 +113,27 @@
         <!-- Podcast player content -->
     </div>
     <!-- Other modals -->
+
+    <div id="ai-assistant-modal" class="fixed inset-0 bg-black bg-opacity-60 hidden z-50">
+    <div class="absolute bottom-0 right-0 mb-4 mr-4 w-full max-w-lg">
+        <div class="bg-white dark:bg-gray-800 rounded-lg shadow-2xl flex flex-col h-[70vh]">
+            <div class="p-4 border-b dark:border-gray-700 flex justify-between items-center">
+                <h3 class="font-bold text-lg">Flamea AI Legal Assistant</h3>
+                <button id="close-ai-modal" class="text-gray-500 hover:text-gray-800">&times;</button>
+            </div>
+            <iframe src="chatbot.html" class="w-full flex-grow"></iframe>
+        </div>
+    </div>
+</div>
+
+<script>
+    const aiAssistantBtn = document.getElementById('your-ai-assistant-button-id');
+    const aiModal = document.getElementById('ai-assistant-modal');
+    const closeAiModalBtn = document.getElementById('close-ai-modal');
+
+    aiAssistantBtn.addEventListener('click', () => aiModal.classList.remove('hidden'));
+    closeAiModalBtn.addEventListener('click', () => aiModal.classList.add('hidden'));
+</script>
     
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>

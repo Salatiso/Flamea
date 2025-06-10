@@ -3,192 +3,59 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Co-Parenting Compass: Plan Builder - Flamea</title>
+    <title>Parenting Plan Builder - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script> <!-- Library to render Markdown -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script> <!-- Library for PDF generation -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> <!-- jsPDF dependency -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        
-        /* --- CORE LAYOUT FIX --- */
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
-        
-        /* --- WIZARD STYLES --- */
-        .step { display: none; animation: fadeIn 0.5s; }
-        .step.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-        
-        /* Custom styles for the interactive slider */
-        input[type="range"] { -webkit-appearance: none; appearance: none; width: 100%; height: 8px; background: #d1d5db; border-radius: 5px; outline: none; }
-        input[type="range"]::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 24px; height: 24px; background: #3b82f6; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.3); margin-top: -8px; }
-        input[type="range"]::-moz-range-thumb { width: 24px; height: 24px; background: #3b82f6; border-radius: 50%; cursor: pointer; border: 3px solid white; box-shadow: 0 0 5px rgba(0,0,0,0.3); }
-        .table-cell-thin { padding: 8px 4px; }
+        .step-content { display: none; }
+        .step-content.active { display: block; }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-<aside class="bg-gray-900 p-6 flex flex-col">
-    <!-- Updated Logo Section -->
-    <div class="mb-12 flex justify-center">
-        <!-- START: Paste the new logo here -->
-        <a href="/dashboard.html" class="flamea-logo dark">
-            <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
-                <g transform="translate(135, 0)">
-                    <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                </g>
-                <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </a>
-        <!-- END: New logo -->
-    </div>
-    <!-- ... rest of the sidebar links -->
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
+<body class="bg-gray-900 text-white">
 
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <!-- In your sidebar navigation -->
-<button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
-</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
-            </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
-                </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
+<div class="container mx-auto p-8">
+    <h1 class="text-3xl font-bold text-center mb-8">The Co-Parenting Compass: Build Your Plan</h1>
 
-        <!-- Main Content Area -->
-        <main class="main-content bg-gray-100 text-gray-800 p-4 md:p-6">
-            <div id="plan-builder-wizard">
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-200 rounded-full h-2.5 mb-6 shadow-inner">
-                    <div id="progress-bar" class="bg-blue-600 h-2.5 rounded-full transition-all duration-500" style="width: 20%"></div>
-                </div>
-
-                <div class="bg-white p-6 md:p-8 rounded-xl shadow-lg">
-                    
-                    <!-- Step 1: Parties & Children -->
-                    <section id="step-1" class="step active">
-                        <h2 class="text-2xl font-bold mb-6 border-b pb-3">Step 1: The People Involved</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div>
-                                <label for="parentA_name" class="block text-sm font-medium text-gray-700 mb-1">Parent A: Full Legal Name</label>
-                                <input type="text" id="parentA_name" placeholder="e.g., Jane Naledi Doe" class="w-full p-2 border border-gray-300 rounded-md shadow-sm">
-                            </div>
-                            <div>
-                                <label for="parentB_name" class="block text-sm font-medium text-gray-700 mb-1">Parent B: Full Legal Name</label>
-                                <input type="text" id="parentB_name" placeholder="e.g., John Vusumzi Smith" class="w-full p-2 border border-gray-300 rounded-md shadow-sm">
-                            </div>
-                        </div>
-                         <div class="mt-8">
-                            <h3 class="text-lg font-semibold text-gray-800 mb-2">The Child / Children</h3>
-                            <div id="children-container" class="space-y-4"></div>
-                            <button id="add-child-btn" class="mt-4 text-blue-600 hover:text-blue-800 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Child</button>
-                        </div>
-                    </section>
-
-                    <!-- Step 2: Residence & Custody -->
-                    <section id="step-2" class="step">
-                        <h2 class="text-2xl font-bold mb-6 border-b pb-3">Step 2: Residence & Custody</h2>
-                        <p>Content for this step will be added here...</p>
-                    </section>
-
-                    <!-- Step 3: Responsibilities & Benefits Engine -->
-                    <section id="step-3" class="step">
-                        <h2 class="text-2xl font-bold mb-1">Step 3: Responsibilities & Benefits</h2>
-                        <p class="mb-6 text-gray-600">Allocate financial costs, duties, and time with the child. Default is 50/50.</p>
-                        <div class="space-y-10">
-                            <div id="financial-category"></div>
-                            <div id="duties-category"></div>
-                            <div id="benefits-category"></div>
-                        </div>
-                        <div class="mt-8 p-4 bg-blue-50 rounded-lg border border-blue-200">
-                            <h3 class="text-xl font-bold text-blue-800">Live Contribution Summary</h3>
-                            <div id="summary-output" class="mt-2 text-gray-700"></div>
-                        </div>
-                    </section>
-
-                    <!-- Step 4: Visitation & Calendar -->
-                    <section id="step-4" class="step">
-                        <h2 class="text-2xl font-bold mb-6 border-b pb-3">Step 4: Visitation & Calendar</h2>
-                        <p>Define the contact schedule for school terms, holidays, and special days.</p>
-                         <button id="generate-calendar-btn" class="mt-4 bg-green-600 text-white font-bold py-2 px-4 rounded hover:bg-green-700 disabled:bg-gray-400" disabled title="Complete schedule to enable">
-                            <i class="fas fa-calendar-alt mr-2"></i>Download Calendar File (.ics)
-                        </button>
-                    </section>
-                    
-                    <!-- Step 5: Review & Finalize -->
-                    <section id="step-5" class="step">
-                         <h2 class="text-2xl font-bold mb-6 border-b pb-3">Step 5: Review, Download & Finalize</h2>
-                         <p class="text-gray-600 mb-4">Your document is ready. Please review the live preview carefully before finalizing.</p>
-                         <div class="grid grid-cols-1 lg:grid-cols-5 gap-8">
-                            <div class="lg:col-span-3">
-                                <h3 class="text-xl font-semibold mb-2">Live Document Preview</h3>
-                                <div id="live-preview" class="border p-4 h-[600px] overflow-y-auto bg-gray-50 rounded-md shadow-inner prose max-w-none">
-                                    <p class="text-gray-500">Your generated plan will appear here...</p>
-                                </div>
-                            </div>
-                            <div class="lg:col-span-2">
-                                <h3 class="text-xl font-semibold mb-2">Final Actions</h3>
-                                <div class="space-y-4">
-                                    <div class="bg-yellow-100 border-l-4 border-yellow-500 text-yellow-800 p-4 rounded-md" role="alert">
-                                        <p class="font-bold">User Accountability Notice</p>
-                                        <p class="text-sm mt-1">You are responsible for the accuracy of this document. FLAMEA is a tool to assist you, not a legal service. For legal advice, please consult a professional from our <a href="resources.html" class="font-semibold underline">Resource Directory</a>.</p>
-                                    </div>
-                                    <div class="flex items-start p-3 bg-gray-50 rounded-md border">
-                                        <input id="declaration" type="checkbox" class="h-5 w-5 text-blue-600 border-gray-300 rounded mt-1 focus:ring-blue-500">
-                                        <label for="declaration" class="ml-3 text-sm text-gray-700">I declare the information provided is true to the best of my knowledge, I have reviewed the entire document, and I understand it is my responsibility to ensure it is legally compliant.</label>
-                                    </div>
-                                    <div id="final-actions-buttons">
-                                        <button id="download-draft-btn" class="w-full text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-gray-600 hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"><i class="fas fa-print mr-2"></i>Download Watermarked Draft</button>
-                                        <button id="finalize-btn" disabled class="mt-2 w-full text-center py-2 px-4 border border-transparent rounded-md shadow-sm text-sm font-medium text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 disabled:bg-gray-400 disabled:cursor-not-allowed"><i class="fas fa-signature mr-2"></i>Save & Proceed to Sign</button>
-                                    </div>
-                                </div>
-                            </div>
-                         </div>
-                    </section>
-
-                    <!-- Navigation Buttons -->
-                    <div class="mt-8 pt-6 border-t flex justify-between items-center">
-                        <button id="prev-btn" class="bg-gray-200 text-gray-700 font-bold py-2 px-6 rounded-md hover:bg-gray-300 disabled:opacity-50" disabled>Previous</button>
-                        <p id="doc-ref-display" class="text-xs text-gray-600 font-mono"></p>
-                        <button id="next-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-md hover:bg-blue-700">Next</button>
-                    </div>
-                </div>
-            </div>
-        </main>
+    <div class="flex justify-center items-center mb-12 space-x-4">
+        <div id="step-indicator-1" class="step-indicator active">1. Parties</div>
+        <div id="step-indicator-2" class="step-indicator">2. Residence</div>
+        <div id="step-indicator-3" class="step-indicator">3. Contributions</div>
+        <div id="step-indicator-4" class="step-indicator">4. Schedule</div>
+        <div id="step-indicator-5" class="step-indicator">5. Review</div>
     </div>
     
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script src="assets/js/plan-builder.js" type="module"></script>
+    <form id="plan-builder-form">
+        <div id="step-1" class="step-content active">
+            <h2 class="text-2xl font-semibold mb-6">Step 1: Who is involved?</h2>
+            <p class="text-gray-400 italic">Functionality to be added: Dynamic fields for adding multiple children.</p>
+        </div>
+
+        <div id="step-2" class="step-content">
+            <h2 class="text-2xl font-semibold mb-6">Step 2: Where will the child live?</h2>
+            <p class="text-gray-400 italic">Functionality to be added: Google Maps address lookup and distance calculation dashboard.</p>
+        </div>
+
+        <div id="step-3" class="step-content">
+            <h2 class="text-2xl font-semibold mb-6">Step 3: How will expenses be shared?</h2>
+             <p class="text-gray-400 italic">Functionality to be added: The live contribution summary with color-coded balancing and dynamic expense rows.</p>
+        </div>
+
+        <div id="step-4" class="step-content">
+            <h2 class="text-2xl font-semibold mb-6">Step 4: Create the contact schedule.</h2>
+             <p class="text-gray-400 italic">Functionality to be added: Interactive calendar for scheduling recurring visits and events. Option to import/export to visitation-calendar.html.</p>
+        </div>
+        
+        <div id="step-5" class="step-content">
+             <h2 class="text-2xl font-semibold mb-6">Step 5: Review and finalize your plan.</h2>
+             <p class="text-gray-400 italic">Functionality to be added: Preview of the final document with seamless editing links and the checkout/download process.</p>
+        </div>
+
+        <div class="mt-12 flex justify-between">
+            <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500">Previous</button>
+            <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-500">Next Step</button>
+        </div>
+    </form>
+</div>
+
+<script src="assets/js/plan-builder.js"></script>
 </body>
 </html>

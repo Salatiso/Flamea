@@ -11,8 +11,9 @@
     <style>
         body { font-family: 'Inter', sans-serif; }
         .wizard-step { display: none; }
-        .wizard-step.active { display: block; }
-        .progress-bar-fill { transition: width 0.3s ease-in-out; }
+        .wizard-step.active { display: block; animation: fadeIn 0.5s; }
+        .progress-bar-fill { transition: width 0.4s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
@@ -21,13 +22,12 @@
         <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Your Journey to Co-Parenting Excellence</h1>
         <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Answer a few questions to get a personalised action plan.</p>
 
-        <!-- Progress Bar -->
         <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-8">
             <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 25%"></div>
         </div>
 
-        <div id="assessment-wizard" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl">
-            <!-- Step 1: Relationship Status -->
+        <div id="assessment-wizard" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl relative">
+            
             <div id="step-1" class="wizard-step active">
                 <h2 class="text-2xl font-semibold mb-6">What is the current status of your co-parenting relationship?</h2>
                 <div class="space-y-4">
@@ -38,9 +38,8 @@
                 </div>
             </div>
 
-            <!-- Step 2: Main Challenge -->
             <div id="step-2" class="wizard-step">
-                <h2 class="text-2xl font-semibold mb-6">What is your biggest challenge right now?</h2>
+                 <h2 class="text-2xl font-semibold mb-6">What is your biggest challenge right now?</h2>
                 <div class="space-y-4">
                     <button data-next="3" data-answer="finances" class="wizard-option w-full text-left p-4 rounded-lg border">Creating a fair financial plan for maintenance.</button>
                     <button data-next="3" data-answer="schedule" class="wizard-option w-full text-left p-4 rounded-lg border">Arranging a consistent visitation schedule.</button>
@@ -49,7 +48,6 @@
                 </div>
             </div>
 
-            <!-- Step 3: Legal Status -->
             <div id="step-3" class="wizard-step">
                 <h2 class="text-2xl font-semibold mb-6">Do you have an existing court order or legal agreement?</h2>
                 <div class="space-y-4">
@@ -59,22 +57,32 @@
                 </div>
             </div>
 
-            <!-- Results Screen -->
             <div id="step-results" class="wizard-step text-center">
                  <h2 class="text-2xl font-semibold mb-4">Thank You! Here is Your Personalised Action Plan:</h2>
-                 <div id="recommendation-text" class="text-left bg-gray-50 dark:bg-gray-700 p-6 rounded-lg space-y-3">
-                    <!-- Recommendations will be injected here by JS -->
-                 </div>
+                 <div id="recommendation-text" class="text-left bg-gray-50 dark:bg-gray-700 p-6 rounded-lg space-y-3"></div>
                  <button id="get-certificate-btn" class="mt-8 bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-colors">Claim Your "SuperDad" Achievement!</button>
+            </div>
+            
+             <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
+                <button id="back-btn" class="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">&larr; Back</button>
+                <button id="quit-btn" class="text-sm text-red-500 hover:text-red-700 dark:hover:text-red-400">Quit Assessment</button>
             </div>
         </div>
     </div>
 
-    <!-- Certificate Modal -->
-    <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
-        <div id="certificate-content" class="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-2xl w-full text-center">
-            <!-- Certificate will be generated here -->
+    <div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg text-center max-w-sm w-full">
+            <h2 class="text-xl font-bold mb-4">Are you sure?</h2>
+            <p class="text-gray-600 dark:text-gray-400 mb-6">If you quit now, all your progress will be lost.</p>
+            <div class="flex justify-center gap-4">
+                <button id="resume-btn" class="py-2 px-6 rounded-lg bg-gray-300 dark:bg-gray-600 hover:bg-gray-400">Stay & Continue</button>
+                <a href="assessment.html" class="py-2 px-6 rounded-lg bg-red-600 text-white hover:bg-red-700">Quit & Lose Progress</a>
+            </div>
         </div>
+    </div>
+    
+    <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+        <div id="certificate-content" class="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-3xl w-full text-center"></div>
     </div>
 
     <script type="module" src="assets/js/assessment.js"></script>
