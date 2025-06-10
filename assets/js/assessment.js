@@ -1,135 +1,128 @@
 // assets/js/assessment.js
+
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('assessment-form');
-    const resultsContainer = document.getElementById('results-container');
-    const recommendationsList = document.getElementById('recommendations-list');
-    const formContainer = document.getElementById('assessment-form-container');
+    const wizard = document.getElementById('assessment-wizard');
+    const progressBar = document.getElementById('progress-bar');
+    const wizardOptions = document.querySelectorAll('.wizard-option');
+    const getCertificateBtn = document.getElementById('get-certificate-btn');
+    const certificateModal = document.getElementById('certificate-modal');
 
-    const allRecommendations = {
-        planning: {
-            title: "Plan for Great Fatherhood",
-            text: "It's fantastic that you are planning ahead! This is the most powerful step you can take. Arm yourself with knowledge to build a strong foundation for your family.",
-            icon: "fa-baby-carriage",
-            color: "text-green-400",
-            links: [
-                { name: "Start 'Fatherhood & Financial Fitness' Training", url: "training.html" },
-                { name: "Build a 'Prospective' Parenting Plan", url: "parenting-plan.html?mode=wizard" },
-                { name: "Read 'The Homeschooling Father'", url: "book-reader.html?book=BK-HomeSchooling_Father" }
-            ]
-        },
-        create_plan: {
-            title: "Create Your Co-Parenting Compass",
-            text: "You're taking a vital step towards clarity and stability for your child. A written parenting plan is the best tool to prevent future misunderstandings.",
-            icon: "fa-file-signature",
-            color: "text-blue-400",
-            links: [
-                { name: "Use the Parenting Plan Builder", url: "parenting-plan.html" },
-                { name: "Take the 'Constructive Co-Parenting' Training", url: "training.html" },
-                { name: "Read 'Goliath's Stand' for legal insights", url: "book-reader.html?book=BK-Goliaths_Stand" }
-            ]
-        },
-        communication: {
-            title: "Improve Communication & Reduce Conflict",
-            text: "Difficult communication is stressful for everyone, especially children. Congratulations on seeking tools to manage this. Documenting everything is your first and most powerful step.",
-            icon: "fa-comments",
-            color: "text-yellow-400",
-            links: [
-                { name: "Use the Family Activity Tracker", url: "dispute-tracker.html" },
-                { name: "Consult the AI Legal Assistant for communication tips", url: "#" , modal: "chatbot-modal"},
-                { name: "Join the Community Forum for support", url: "community.html" }
-            ]
-        },
-        dispute_resolution: {
-            title: "Navigate Your Dispute with Strength",
-            text: "Facing a dispute is tough, but you are not alone. FLAMEA is here to support you with resources to navigate this challenging time. Stay strong and focused on the best interests of your child.",
-            icon: "fa-balance-scale-left",
-            color: "text-red-400",
-            links: [
-                { name: "Find the Family Advocate in your area", url: "locator.html" },
-                { name: "Use the Family Activity Tracker daily", url: "dispute-tracker.html" },
-                { name: "Find the right Legal Forms", url: "forms.html" }
-            ]
-        }
-    };
+    const userAnswers = {};
+    const totalSteps = 3; // Total number of question steps
 
-    form.addEventListener('submit', (e) => {
-        e.preventDefault();
-        
-        const answers = {
-            q1: document.getElementById('q1').value,
-            q2: document.getElementById('q2').value,
-            q3: document.getElementById('q3').value,
-            q4: document.getElementById('q4').value,
-            q5: document.getElementById('q5').value
-        };
+    wizardOptions.forEach(button => {
+        button.addEventListener('click', () => {
+            const currentStepEl = button.closest('.wizard-step');
+            const currentStep = currentStepEl.id.split('-')[1];
+            const nextStep = button.dataset.next;
+            const answer = button.dataset.answer;
 
-        let recommendations = new Set(); // Use a Set to avoid duplicate recommendations
+            // Store the answer
+            userAnswers[currentStep] = answer;
 
-        // Logic to add recommendations based on answers
-        if (answers.q1 === 'planning' || answers.q2 === 'not_conceived') {
-            recommendations.add(allRecommendations.planning);
-        }
-        
-        if (answers.q3 === 'no' || answers.q3 === 'outdated') {
-            recommendations.add(allRecommendations.create_plan);
-        }
-
-        if (answers.q4 === 'difficult' || answers.q4 === 'none') {
-            recommendations.add(allRecommendations.communication);
-        }
-
-        if (answers.q1 === 'dispute' || answers.q5 === 'considering' || answers.q5 === 'yes_mediation' || answers.q5 === 'yes_court') {
-            recommendations.add(allRecommendations.dispute_resolution);
-        }
-        
-        // Default recommendation if no others match
-        if(recommendations.size === 0) {
-            recommendations.add(allRecommendations.create_plan);
-        }
-
-        displayResults(Array.from(recommendations));
+            // Move to the next step or show results
+            if (nextStep === 'results') {
+                showResults();
+            } else {
+                goToStep(nextStep);
+            }
+        });
     });
+    
+    getCertificateBtn.addEventListener('click', showCertificateNameForm);
 
-    const displayResults = (recs) => {
-        formContainer.classList.add('hidden');
-        resultsContainer.classList.remove('hidden');
-        recommendationsList.innerHTML = '';
-
-        recs.forEach(rec => {
-            const recElement = document.createElement('div');
-            recElement.className = 'bg-gray-900 bg-opacity-75 p-6 rounded-lg border-l-4';
-            recElement.style.borderColor = `var(--${rec.color.replace('text-', 'color-')})`; // Needs CSS variables set up for colors or use Tailwind classes
-            
-            let linksHtml = rec.links.map(link => 
-                `<li><a href="${link.url}" ${link.modal ? `data-modal-target="${link.modal}"` : ''} class="text-blue-300 hover:underline">${link.name}</a></li>`
-            ).join('');
-
-            recElement.innerHTML = `
-                <div class="flex items-start">
-                    <i class="fas ${rec.icon} ${rec.color} text-3xl mr-4 mt-1"></i>
-                    <div>
-                        <h3 class="text-xl font-bold">${rec.title}</h3>
-                        <p class="text-gray-400 mt-1 mb-3">${rec.text}</p>
-                        <ul class="list-disc list-inside space-y-1">
-                            ${linksHtml}
-                        </ul>
-                    </div>
-                </div>
-            `;
-            recommendationsList.appendChild(recElement);
-        });
+    function goToStep(stepNumber) {
+        document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
+        document.getElementById(`step-${stepNumber}`).classList.add('active');
         
-        // Re-initialize modal triggers for the new links
-        const modalTriggers = recommendationsList.querySelectorAll('[data-modal-target]');
-        modalTriggers.forEach(trigger => {
-            trigger.addEventListener('click', (e) => {
-                e.preventDefault();
-                const modalId = trigger.dataset.modalTarget;
-                const modal = document.getElementById(modalId);
-                if(modal) {
-                    modal.classList.add('flex');
-                }
-            });
+        // Update progress bar
+        const progress = (parseInt(stepNumber) / (totalSteps + 1)) * 100;
+        progressBar.style.width = `${progress}%`;
+    }
+
+    function showResults() {
+        document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
+        document.getElementById('step-results').classList.add('active');
+        progressBar.style.width = '100%';
+
+        generateRecommendations();
+    }
+
+    function generateRecommendations() {
+        const recommendationEl = document.getElementById('recommendation-text');
+        let html = '<p>Based on your answers, we recommend the following:</p><ul class="list-disc list-inside mt-4 space-y-2">';
+
+        if (userAnswers['1'] === 'conflict' || userAnswers['1'] === 'tense') {
+            html += `<li><strong>Focus on De-escalation:</strong> Since communication is tense, we strongly recommend our "Co-Parenting 101" course to learn conflict resolution techniques.</li>`;
+        }
+        
+        if (userAnswers['3'] === 'no' || userAnswers['3'] === 'informal') {
+             html += `<li class="font-bold text-green-600 dark:text-green-400"><strong>Priority Action - Formalise Your Agreement:</strong> Your most important next step is creating a formal, written agreement. This protects both you and your child.</li>`;
+        }
+        
+        // The main call to action
+        html += `<li><a href="plan-builder.html" class="text-blue-500 hover:underline font-bold">Start with the Parenting Plan Builder</a> &mdash; This tool will guide you through every critical area, including finances, schedules, and decision-making, based on your specific needs.</li>`;
+        
+        html += '</ul>';
+        recommendationEl.innerHTML = html;
+    }
+
+    function showCertificateNameForm() {
+        const certificateContent = document.getElementById('certificate-content');
+        certificateContent.innerHTML = `
+            <h2 class="text-2xl font-bold mb-4">One Last Step, Dad!</h2>
+            <p class="mb-6">Enter your name as you'd like it to appear on your certificate.</p>
+            <form id="certificate-form">
+                <div class="mb-4">
+                    <label for="fullName" class="block text-left font-semibold mb-1">Full Name</label>
+                    <input type="text" id="fullName" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600" required>
+                </div>
+                <div class="mb-6">
+                    <label for="nickname" class="block text-left font-semibold mb-1">Nickname (Optional, e.g., "The Rock", "Papa Bear")</label>
+                    <input type="text" id="nickname" class="w-full p-2 rounded bg-gray-100 dark:bg-gray-700 border border-gray-300 dark:border-gray-600">
+                </div>
+                <button type="submit" class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-colors">Generate My Certificate</button>
+            </form>
+        `;
+        certificateModal.classList.remove('hidden');
+
+        document.getElementById('certificate-form').addEventListener('submit', (e) => {
+            e.preventDefault();
+            const fullName = document.getElementById('fullName').value;
+            const nickname = document.getElementById('nickname').value;
+            generateCertificate(fullName, nickname);
         });
-    };
+    }
+
+    function generateCertificate(name, nickname) {
+        const certificateContent = document.getElementById('certificate-content');
+        const today = new Date().toLocaleDateString('en-ZA', { year: 'numeric', month: 'long', day: 'numeric' });
+        
+        let nicknameHTML = '';
+        if (nickname) {
+            nicknameHTML = `<p class="text-xl text-gray-600 dark:text-gray-300">also known as</p>
+            <p class="text-4xl font-bold font-roboto-slab text-yellow-500 tracking-wider">"${nickname}"</p>`;
+        }
+
+        certificateContent.innerHTML = `
+            <div class="border-4 border-yellow-400 p-6 rounded-lg relative">
+                <div class="text-center">
+                    <h2 class="text-sm font-bold uppercase tracking-widest text-gray-500 dark:text-gray-400">Certificate of Achievement</h2>
+                    <h1 class="text-3xl font-bold my-4 text-green-600 dark:text-green-400">SuperDad Foundation Award</h1>
+                    <p class="text-lg">This certificate is proudly awarded to</p>
+                    <p class="text-4xl font-bold my-4 font-roboto-slab">${name}</p>
+                    ${nicknameHTML}
+                    <p class="text-lg mt-4">for taking the first crucial step towards co-parenting excellence by completing the Flamea Fatherhood Assessment.</p>
+                    <p class="mt-8 text-sm">Awarded on this day, ${today}</p>
+                </div>
+                 <div class="absolute top-4 right-4 font-bold text-lg text-gray-800 dark:text-white">Flame<span class="text-green-500">a</span></div>
+            </div>
+            <p class="mt-6 text-sm text-gray-600 dark:text-gray-400">Share your achievement! Then, <a href="login.html" class="font-bold text-blue-500 hover:underline">register for free</a> to save your progress and build your parenting plan.</p>
+             <button id="close-modal" class="mt-4 text-xs text-gray-500 hover:underline">Close</button>
+        `;
+        
+        document.getElementById('close-modal').addEventListener('click', () => {
+             certificateModal.classList.add('hidden');
+        });
+    }
 });
