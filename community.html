@@ -1,170 +1,68 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Community Forum</title>
+    <title>Community & Contact - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto;
-        }
-        .sidebar-link, .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-link:hover, .sidebar-direct-link:hover {
-            background-color: #2563EB;
-            color: white;
-            transform: translateX(10px);
-        }
-        .sidebar-direct-link.active {
-             background-color: #2563EB;
-             color: white;
-             transform: translateX(10px);
-        }
-        .post-item:hover {
-            background-color: #374151; /* gray-700 */
-        }
-    </style>
 </head>
-<body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-<aside class="bg-gray-900 p-6 flex flex-col">
-    <!-- Updated Logo Section -->
-    <div class="mb-12 flex justify-center">
-        <!-- START: Paste the new logo here -->
-        <a href="/dashboard.html" class="flamea-logo dark">
-            <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
-                <g transform="translate(135, 0)">
-                    <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                </g>
-                <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </a>
-        <!-- END: New logo -->
-    </div>
-    <!-- ... rest of the sidebar links -->
-    <!-- ... rest of the sidebar links -->
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
+<body class="bg-gray-900 text-white">
+    <header id="main-header" class="bg-gray-900/80 backdrop-blur-sm sticky top-0 z-40"></header>
 
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <!-- In your sidebar navigation -->
-<button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
-</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
-            </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
-                </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+    <main class="container mx-auto px-6 py-12">
+        <!-- Countdown Section -->
+        <div class="bg-green-900/50 p-8 rounded-lg text-center mb-12 shadow-lg">
+            <h2 class="text-3xl font-bold text-green-400">The Flamea Forum is Coming!</h2>
+            <p class="text-gray-300 mt-2">A safe space for fathers to connect, share, and support each other. Launching on 1 August 2025.</p>
+            <div id="countdown" class="flex justify-center gap-4 md:gap-8 mt-6 text-white">
+                <div><span id="days" class="text-4xl font-bold">00</span><p class="text-sm">Days</p></div>
+                <div><span id="hours" class="text-4xl font-bold">00</span><p class="text-sm">Hours</p></div>
+                <div><span id="minutes" class="text-4xl font-bold">00</span><p class="text-sm">Minutes</p></div>
+                <div><span id="seconds" class="text-4xl font-bold">00</span><p class="text-sm">Seconds</p></div>
             </div>
-        </aside>
+            <div id="countdown-message" class="mt-4 text-yellow-400 font-semibold"></div>
+        </div>
 
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-5xl mx-auto">
-                <div class="text-center">
-                    <h2 class="text-4xl font-bold font-roboto text-white">The Brotherhood</h2>
-                    <p class="mt-2 text-lg text-gray-400">A space for fathers to connect, share experiences, and support one another.</p>
-                </div>
-    
-                <!-- This section is for logged-in users to create a new post -->
-                <div id="create-post-container" class="mt-10 hidden">
-                    <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-                        <h3 class="text-2xl font-bold text-white mb-4">Start a New Discussion</h3>
-                        <form id="create-post-form" class="space-y-4">
-                            <div>
-                                <label for="post-title" class="block text-sm font-medium text-gray-300">Topic Title</label>
-                                <input type="text" id="post-title" placeholder="A clear and engaging title for your topic" required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500">
-                            </div>
-                            <div>
-                                <label for="post-content" class="block text-sm font-medium text-gray-300">Your Post</label>
-                                <textarea id="post-content" rows="5" placeholder="Share your story, ask a question, or offer advice..." required class="mt-1 block w-full rounded-md bg-gray-800 border-gray-600 text-white focus:border-blue-500 focus:ring-blue-500"></textarea>
-                            </div>
-                            <button type="submit" class="w-full bg-blue-600 text-white py-2.5 px-4 rounded-lg font-semibold hover:bg-blue-700 transition">Submit Topic</button>
-                        </form>
-                    </div>
-                </div>
-    
-                <!-- This section is for logged-out users -->
-                <div id="forum-login-prompt" class="mt-10 bg-blue-900 bg-opacity-50 border-l-4 border-blue-500 text-white p-6 rounded-r-lg shadow">
-                    <h3 class="font-bold text-xl">Join the Conversation</h3>
-                    <p class="mt-2">To create new topics and reply to discussions, please <a href="login.html" class="font-bold underline hover:text-blue-300">log in or register</a> for your free account.</p>
-                </div>
-    
-                <!-- Discussion Topics List -->
-                <div class="mt-12">
-                     <h3 class="text-2xl font-bold text-white mb-4">Active Discussions</h3>
-                     <div id="posts-list-container" class="space-y-1 bg-gray-900 bg-opacity-50 rounded-lg">
-                        <p class="text-center text-gray-400 p-8">Loading discussions...</p>
-                        <!-- Example Post Item (to be generated by JS) -->
-                        <div class="post-item flex justify-between items-center p-4 border-b border-gray-700 cursor-pointer transition-colors">
-                           <div>
-                                <h4 class="font-bold text-lg text-green-400">Navigating the Family Advocate for the first time?</h4>
-                                <p class="text-sm text-gray-400">by u/TataOnAMission - 2 hours ago</p>
-                           </div>
-                           <div class="text-right">
-                               <p class="font-semibold">12 Replies</p>
-                               <p class="text-sm text-gray-500">25 Upvotes</p>
-                           </div>
-                        </div>
-                         <div class="post-item flex justify-between items-center p-4 border-b border-gray-700 cursor-pointer transition-colors">
-                           <div>
-                                <h4 class="font-bold text-lg text-green-400">Tips for co-parenting with a difficult ex?</h4>
-                                <p class="text-sm text-gray-400">by u/UnbreakableDad - 1 day ago</p>
-                           </div>
-                           <div class="text-right">
-                               <p class="font-semibold">34 Replies</p>
-                               <p class="text-sm text-gray-500">78 Upvotes</p>
-                           </div>
-                        </div>
-                     </div>
+        <!-- Polling Section -->
+        <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
+            <div>
+                <h2 class="text-3xl font-bold mb-4">Vote on Our First Discussion Topics</h2>
+                <p class="text-gray-400 mb-6">Your voice matters. Tell us what you want to talk about first when the forums launch. The results are updated live for everyone.</p>
+                <div id="poll-options" class="space-y-3">
+                    <!-- Poll options will be generated by JS -->
                 </div>
             </div>
-        </main>
-    </div>
+            <div>
+                <canvas id="poll-chart"></canvas>
+            </div>
+        </div>
 
-    <!-- Scripts -->
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-    </script>
-    <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
+        <!-- Contact Form & Info -->
+        <div class="bg-gray-800 p-8 rounded-lg shadow-xl">
+             <h2 class="text-3xl font-bold text-center mb-8">Get In Touch</h2>
+             <div class="grid md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-xl font-semibold mb-4">Share Your Story or Feedback</h3>
+                     <p class="text-gray-400 mb-6">We want to hear from you. Whether you have a suggestion, a story to share, or need to get in touch, use the form below.</p>
+                    <form id="contact-form">
+                        <!-- Form fields will go here -->
+                        <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-500">Submit Message</button>
+                    </form>
+                </div>
+                <div>
+                     <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+                     <a href="mailto:salatiso@flamea.org" class="contact-link"><i class="fas fa-envelope"></i> salatiso@flamea.org</a>
+                     <a href="https://twitter.com/flamea2024" target="_blank" class="contact-link"><i class="fab fa-twitter"></i> @flamea2024</a>
+                     <a href="https://youtube.com/@Flamea2024" target="_blank" class="contact-link"><i class="fab fa-youtube"></i> @Flamea2024</a>
+                </div>
+             </div>
+        </div>
+    </main>
+    
+    <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/community.js"></script>
 </body>
 </html>
