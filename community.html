@@ -11,7 +11,6 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles from index.html for consistency */
         body { font-family: 'Open Sans', sans-serif; }
         .main-container {
             display: grid;
@@ -20,56 +19,33 @@
             width: 100vw;
             overflow: hidden;
         }
-        .main-content-area {
-            overflow-y: auto;
-        }
-        .sidebar-link, .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-link.active, .sidebar-link:hover, .sidebar-direct-link:hover {
-            background-color: #2563EB; /* blue-600 */
+        .main-content-area { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active {
+            background-color: #2563EB;
             color: white;
             transform: translateX(10px);
         }
         .contact-link {
-            display: inline-flex;
-            align-items: center;
-            margin-bottom: 1rem;
-            padding: 0.75rem;
-            border-radius: 0.5rem;
-            transition: all 0.2s ease-in-out;
+            display: inline-flex; align-items: center; margin-bottom: 1rem;
+            padding: 0.75rem; border-radius: 0.5rem; transition: all 0.2s ease-in-out;
         }
-        .contact-link:hover {
-            background-color: #374151; /* gray-700 */
-            color: #34D399; /* emerald-400 */
+        .contact-link:hover { background-color: #374151; color: #34D399; }
+        .contact-link i { margin-right: 1rem; font-size: 1.5rem; }
+        
+        /* Custom modal styles */
+        .custom-modal {
+            display: none; position: fixed; z-index: 100; left: 0; top: 0; width: 100%; height: 100%;
+            overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(4px);
+            animation: fadeIn 0.4s;
         }
-        .contact-link i {
-            margin-right: 1rem;
-            font-size: 1.5rem;
-        }
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-            animation: fadeIn 0.5s;
-        }
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
-        }
+        .custom-modal.active { display: flex; align-items: center; justify-content: center; }
+        .custom-modal-content { animation: slideUp 0.5s ease-out; }
+        @keyframes fadeIn { from {opacity: 0;} to {opacity: 1;} }
+        @keyframes slideUp { from {transform: translateY(30px); opacity: 0;} to {transform: translateY(0); opacity: 1;} }
+
+        /* Input validation styles */
+        input:invalid { border-color: #F87171; }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
@@ -77,46 +53,21 @@
         <!-- Sidebar Navigation -->
         <aside class="bg-gray-900 p-6 flex flex-col">
             <div class="mb-12 flex justify-center">
-                <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                        <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
-                        <g transform="translate(135, 0)">
-                            <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                        </g>
-                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </a>
+                <a href="index.html"><svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg></a>
             </div>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                <!-- Standard Page Links -->
+            <nav class="flex flex-col space-y-2">
                 <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
                 <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
                 <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
                 <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
                 <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg bg-blue-600 text-white"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-            
-                <!-- Divider -->
+                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg active"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
                 <div class="border-t border-gray-700 my-2"></div>
-
-                <!-- Interactive Tool Buttons -->
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
+                <button onclick="document.getElementById('chatbot-modal-placeholder').classList.add('active')" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
             </nav>
             <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
-                </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+                 <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
+                <p class="text-xs text-gray-500 mt-4">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
 
@@ -125,7 +76,7 @@
             <!-- Countdown Section -->
             <div class="bg-gray-900 p-8 rounded-lg text-center mb-12 shadow-lg">
                 <h2 class="text-3xl font-bold text-green-400">The Flamea Forum is Coming!</h2>
-                <p class="text-gray-300 mt-2">A safe space for fathers to connect, share, and support each other. Launching soon.</p>
+                <p class="text-gray-300 mt-2">A safe space for fathers to connect, share, and support each other.</p>
                 <div id="countdown" class="flex justify-center gap-4 md:gap-8 mt-6 text-white">
                     <div><span id="days" class="text-4xl font-bold">00</span><p class="text-sm">Days</p></div>
                     <div><span id="hours" class="text-4xl font-bold">00</span><p class="text-sm">Hours</p></div>
@@ -139,107 +90,104 @@
             <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
                 <div>
                     <h2 class="text-3xl font-bold mb-4">Vote on Our First Discussion Topics</h2>
-                    <p class="text-gray-400 mb-6">Your voice matters. Tell us what you want to talk about first when the forums launch. Results are updated live.</p>
-                    <div id="poll-options" class="space-y-3">
-                        <!-- Poll options will be generated by JS -->
-                        <p class="text-gray-500">Loading poll...</p>
-                    </div>
-                     <p id="poll-status" class="text-sm text-yellow-400 mt-4"></p>
+                    <p class="text-gray-400 mb-6">Your voice matters. Tell us what you want to talk about first. Results are updated live.</p>
+                    <div id="poll-options" class="space-y-3"><p class="text-gray-500">Loading poll...</p></div>
+                    <p id="poll-status" class="text-sm text-yellow-400 mt-4"></p>
                 </div>
-                <div class="bg-gray-900 p-4 rounded-lg">
-                    <canvas id="poll-chart"></canvas>
-                </div>
+                <div class="bg-gray-900 p-4 rounded-lg"><canvas id="poll-chart"></canvas></div>
             </div>
 
             <!-- Contact Form & Info -->
             <div class="bg-gray-900 p-8 rounded-lg shadow-xl">
-                 <h2 class="text-3xl font-bold text-center mb-8">Get In Touch</h2>
-                 <div class="grid md:grid-cols-2 gap-12">
-                     <div>
-                         <h3 class="text-xl font-semibold mb-4">Share Your Story or Suggest a Topic</h3>
-                         <p class="text-gray-400 mb-6">We want to hear from you. Your feedback helps us build better tools and a stronger community.</p>
-                         <form id="contact-form" novalidate>
-                             <div class="mb-4">
-                                 <label for="contact-name" class="block text-sm font-bold mb-2">Your Name:</label>
-                                 <input type="text" id="contact-name" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required>
-                             </div>
-                             <div class="mb-4">
-                                 <label for="contact-email" class="block text-sm font-bold mb-2">Your Email:</label>
-                                 <input type="email" id="contact-email" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required>
-                             </div>
-                             <div class="mb-4">
-                                 <label for="contact-category" class="block text-sm font-bold mb-2">Category:</label>
-                                 <select id="contact-category" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
-                                     <option>General Feedback</option>
-                                     <option>Tool Suggestion</option>
-                                     <option>Training Topic Request</option>
-                                     <option>Share My Story</option>
-                                 </select>
-                             </div>
-                             <div class="mb-4">
-                                 <label for="contact-message" class="block text-sm font-bold mb-2">Message:</label>
-                                 <textarea id="contact-message" rows="5" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required></textarea>
-                             </div>
-                             <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-500 transition-transform transform hover:scale-105">Submit Message</button>
-                         </form>
-                         <p id="form-status" class="text-center mt-4 h-6"></p>
-                     </div>
-                     <div class="flex flex-col justify-center">
-                         <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
-                         <a href="mailto:salatiso@flamea.org" class="contact-link"><i class="fas fa-envelope"></i> salatiso@flamea.org</a>
-                         <a href="https://twitter.com/flamea2024" target="_blank" class="contact-link"><i class="fab fa-twitter"></i> @flamea2024</a>
-                         <a href="https://youtube.com/@Flamea2024" target="_blank" class="contact-link"><i class="fab fa-youtube"></i> @Flamea2024</a>
-                     </div>
-                 </div>
+                <h2 class="text-3xl font-bold text-center mb-8">Get In Touch</h2>
+                <div class="grid md:grid-cols-2 gap-12">
+                    <div>
+                        <h3 class="text-xl font-semibold mb-4">Share Your Story or Suggest a Topic</h3>
+                        <form id="contact-form" novalidate>
+                            <div class="mb-4">
+                                <label for="contact-category" class="block text-sm font-bold mb-2">Category:</label>
+                                <select id="contact-category" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
+                                    <option>General Feedback</option><option>Tool Suggestion</option><option>Training Topic Request</option>
+                                    <option>Share My Story</option><option>Collaborate, Contribute, or Donate</option><option value="other">Other (Please specify)</option>
+                                </select>
+                            </div>
+                             <div id="other-category-wrapper" class="hidden mb-4">
+                                <label for="other-category-input" class="block text-sm font-bold mb-2">Please Specify Category:</label>
+                                <input type="text" id="other-category-input" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-message" class="block text-sm font-bold mb-2">Message:</label>
+                                <textarea id="contact-message" rows="5" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required></textarea>
+                            </div>
+                            <div class="mb-4 border-t border-gray-700 pt-4">
+                                <label class="flex items-center">
+                                    <input type="checkbox" id="anonymous-checkbox" class="h-4 w-4 bg-gray-700 border-gray-600 text-blue-600 focus:ring-blue-500 rounded">
+                                    <span class="ml-2 text-sm text-gray-300">Submit Anonymously</span>
+                                </label>
+                            </div>
+                            <div id="personal-info-fields">
+                                <div class="mb-4">
+                                    <label for="contact-name" class="block text-sm font-bold mb-2">Your Name:</label>
+                                    <input type="text" id="contact-name" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="contact-email" class="block text-sm font-bold mb-2">Your Email:</label>
+                                    <input type="email" id="contact-email" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white" required>
+                                </div>
+                                <div class="mb-4">
+                                    <label for="contact-whatsapp" class="block text-sm font-bold mb-2">WhatsApp Number (Optional):</label>
+                                    <input type="tel" id="contact-whatsapp" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
+                                </div>
+                            </div>
+                            <button type="submit" class="w-full bg-green-600 text-white font-bold py-3 rounded-lg hover:bg-green-500 transition-transform transform hover:scale-105">Submit Message</button>
+                        </form>
+                        <p id="form-status" class="text-center mt-4 h-6"></p>
+                    </div>
+                    <div class="flex flex-col justify-center">
+                        <h3 class="text-xl font-semibold mb-4">Connect With Us</h3>
+                        <a href="mailto:salatiso@flamea.org" class="contact-link"><i class="fas fa-envelope"></i> salatiso@flamea.org</a>
+                        <a href="https://twitter.com/flamea2024" target="_blank" class="contact-link"><i class="fab fa-twitter"></i> @flamea2024</a>
+                        <a href="https://youtube.com/@Flamea2024" target="_blank" class="contact-link"><i class="fab fa-youtube"></i> @Flamea2024</a>
+                    </div>
+                </div>
             </div>
         </main>
     </div>
 
-    <!-- Modals -->
-    <!-- AI Assistant Modal -->
-    <div id="chatbot-modal" class="modal">
-        <div class="bg-gray-800 rounded-lg shadow-2xl flex flex-col h-[70vh] w-11/12 max-w-lg relative">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-white">Flamea AI Legal Assistant</h3>
-                <button data-modal-close="chatbot-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="custom-modal">
+        <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl w-11/12 max-w-lg p-6 text-center">
+            <h3 class="text-2xl font-bold mb-4">Confirm Submission</h3>
+            <div class="text-left text-sm text-gray-300 space-y-3 mb-6">
+                <p><i class="fas fa-shield-alt text-green-400 mr-2"></i><span class="font-bold">Personal Information:</span> By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you regarding your submission.</p>
+                <p><i class="fas fa-lightbulb text-yellow-400 mr-2"></i><span class="font-bold">Content Originality:</span> By sharing your story, you confirm it is your own original work and grant Flamea the right to share it (anonymously if requested) to support the community.</p>
             </div>
-            <div class="p-4 flex-grow overflow-y-auto">
-                <p class="text-gray-300">AI Assistant content will load here. This is a placeholder for the chatbot interface.</p>
-            </div>
-             <div class="p-4 border-t border-gray-700">
-                <input type="text" placeholder="Ask a question..." class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
-            </div>
-        </div>
-    </div>
-
-    <!-- Podcast Player Modal -->
-    <div id="podcast-modal" class="modal">
-        <div class="bg-gray-800 rounded-lg shadow-2xl flex flex-col w-11/12 max-w-md relative">
-             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-white">FLAMEA Podcast</h3>
-                <button data-modal-close="podcast-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
-            </div>
-            <div class="p-6">
-                 <p class="text-gray-300">Podcast player content would load here. This is a placeholder.</p>
+            <div class="flex flex-col sm:flex-row justify-center gap-4">
+                <button id="confirm-send-btn" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Confirm & Send</button>
+                <button id="confirm-anonymous-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors">Submit Anonymously</button>
+                <button id="cancel-btn" class="w-full sm:w-auto bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 transition-colors">Cancel</button>
             </div>
         </div>
     </div>
     
-    <!-- Firebase and page specific scripts -->
-    <script type="module">
-        // Import Firebase modules
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, signInAnonymously, signInWithCustomToken, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, addDoc, onSnapshot, collection, runTransaction } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+    <!-- Placeholder for modals from other pages to prevent script errors -->
+    <div id="chatbot-modal-placeholder" class="custom-modal"></div>
 
-        // ---SECTION: CONFIGURATION ---
-        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : { apiKey: "YOUR_API_KEY", authDomain: "YOUR_AUTH_DOMAIN", projectId: "YOUR_PROJECT_ID" };
-        const appId = typeof __app_id !== 'undefined' ? __app_id : 'flamea-dev';
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-        
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, addDoc, onSnapshot, collection, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+        };
+        const appId = 'flamea-prod';
         let db, auth, userId, pollChart;
+        let pendingSubmission = null; // Store form data before final confirmation
         
-        // ---SECTION: INITIALIZATION ---
+        // --- SECTION: INITIALIZATION ---
         function initializeFirebase() {
             try {
                 const app = initializeApp(firebaseConfig);
@@ -252,24 +200,13 @@
             }
         }
         
-        async function handleAuthentication() {
-            onAuthStateChanged(auth, async (user) => {
+        function handleAuthentication() {
+            onAuthStateChanged(auth, (user) => {
                 if (user) {
                     userId = user.uid;
-                    console.log("Authenticated User ID:", userId);
-                    // Once authenticated, initialize page features
                     initializeCommunityFeatures();
                 } else {
-                     try {
-                        if(initialAuthToken) {
-                            await signInWithCustomToken(auth, initialAuthToken);
-                        } else {
-                            await signInAnonymously(auth);
-                        }
-                    } catch (error) {
-                        console.error("Anonymous sign-in failed:", error);
-                        document.getElementById('poll-options').innerHTML = `<p class="text-red-500">Authentication failed. Polling disabled.</p>`;
-                    }
+                     signInAnonymously(auth).catch(error => console.error("Anonymous sign-in failed:", error));
                 }
             });
         }
@@ -281,245 +218,191 @@
             initContactForm();
         }
 
-        // ---SECTION: COUNTDOWN TIMER ---
+        // --- SECTION: COUNTDOWN TIMER ---
         function initCountdown() {
-            const countdownDate = new Date("2025-09-01T00:00:00").getTime();
-            const countdownElement = document.getElementById('countdown');
-            const messageElement = document.getElementById('countdown-message');
+            const countdownDate = new Date("2025-09-16T00:00:00").getTime();
+            const countdownEl = document.getElementById('countdown'), msgEl = document.getElementById('countdown-message');
             
             const interval = setInterval(() => {
-                const now = new Date().getTime();
-                const distance = countdownDate - now;
-
+                const distance = countdownDate - new Date().getTime();
                 if (distance < 0) {
                     clearInterval(interval);
-                    countdownElement.classList.add('hidden');
-                    messageElement.classList.remove('hidden');
+                    countdownEl.classList.add('hidden');
+                    msgEl.classList.remove('hidden');
                     return;
                 }
-
-                document.getElementById('days').innerText = Math.floor(distance / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
-                document.getElementById('hours').innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
-                document.getElementById('minutes').innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-                document.getElementById('seconds').innerText = Math.floor((distance % (1000 * 60)) / 1000).toString().padStart(2, '0');
+                document.getElementById('days').innerText = Math.floor(distance / 86400000).toString().padStart(2, '0');
+                document.getElementById('hours').innerText = Math.floor((distance % 86400000) / 3600000).toString().padStart(2, '0');
+                document.getElementById('minutes').innerText = Math.floor((distance % 3600000) / 60000).toString().padStart(2, '0');
+                document.getElementById('seconds').innerText = Math.floor((distance % 60000) / 1000).toString().padStart(2, '0');
             }, 1000);
         }
 
-        // ---SECTION: POLLING ---
+        // --- SECTION: POLLING ---
         async function initPoll() {
             const pollRef = doc(db, `artifacts/${appId}/public/data/poll`, "main_poll");
-            const pollDoc = await getDoc(pollRef);
-
-            // If poll doesn't exist, create it with default values
-            if (!pollDoc.exists()) {
+            if (!(await getDoc(pollRef)).exists()) {
                 await setDoc(pollRef, {
                     title: "First Discussion Topics",
-                    options: {
-                        "Navigating Co-Parenting": 0,
-                        "Understanding Family Law": 0,
-                        "Mental Health for Fathers": 0,
-                        "Financial Planning": 0,
-                    }
+                    options: { "Navigating Co-Parenting": 0, "Understanding Family Law": 0, "Mental Health for Fathers": 0, "Financial Planning": 0 }
                 });
             }
-            
-            setupPollSnapshot(pollRef);
+            onSnapshot(pollRef, (doc) => { if(doc.exists()) { renderPoll(doc.data()); renderChart(doc.data()); } });
         }
         
-        function setupPollSnapshot(pollRef) {
-             onSnapshot(pollRef, (doc) => {
-                const pollData = doc.data();
-                if (pollData) {
-                    renderPoll(pollData);
-                    renderChart(pollData);
-                }
-            });
-        }
-
         async function renderPoll(pollData) {
-            const pollOptionsContainer = document.getElementById('poll-options');
-            pollOptionsContainer.innerHTML = '';
-            
-            const voterRef = doc(db, `artifacts/${appId}/public/data/poll/main_poll/voters`, userId);
-            const voterDoc = await getDoc(voterRef);
-            const userVote = voterDoc.exists() ? voterDoc.data().vote : null;
+            const container = document.getElementById('poll-options');
+            container.innerHTML = '';
+            const userVote = (await getDoc(doc(db, `artifacts/${appId}/public/data/poll/main_poll/voters`, userId))).data()?.vote;
 
             for (const option in pollData.options) {
                 const isSelected = userVote === option;
                 const button = document.createElement('button');
                 button.className = `w-full text-left p-3 rounded-lg border-2 transition-colors ${isSelected ? 'bg-blue-600 border-blue-400' : 'bg-gray-700 border-gray-600 hover:bg-gray-600'}`;
                 button.textContent = option;
-                if (!userVote) {
-                     button.onclick = () => castVote(option);
-                } else {
-                    button.disabled = true;
-                }
-                pollOptionsContainer.appendChild(button);
+                if (!userVote) { button.onclick = () => castVote(option); } 
+                else { button.disabled = true; }
+                container.appendChild(button);
             }
-            
-            if (userVote) {
-                 document.getElementById('poll-status').textContent = `You voted for: ${userVote}. Results are live.`;
-            }
+            if (userVote) { document.getElementById('poll-status').textContent = `You voted for: ${userVote}.`; }
         }
 
         async function castVote(option) {
-            const pollRef = doc(db, `artifacts/${appId}/public/data/poll`, "main_poll");
-            const voterRef = doc(db, `artifacts/${appId}/public/data/poll/main_poll/voters`, userId);
-
-            try {
+             const pollRef = doc(db, `artifacts/${appId}/public/data/poll`, "main_poll");
+             const voterRef = doc(db, `artifacts/${appId}/public/data/poll/main_poll/voters`, userId);
+             try {
                 await runTransaction(db, async (transaction) => {
-                    const voterDoc = await transaction.get(voterRef);
-                    if (voterDoc.exists()) {
-                        // This user has already voted.
-                        document.getElementById('poll-status').textContent = 'You have already voted in this poll.';
-                        console.log("User has already voted.");
-                        return; 
-                    }
-
+                    if ((await transaction.get(voterRef)).exists()) { throw "User has already voted."; }
                     const pollDoc = await transaction.get(pollRef);
-                    if (!pollDoc.exists()) {
-                        throw "Poll document does not exist!";
-                    }
-
-                    const newVotes = pollDoc.data().options[option] + 1;
-                    const fieldToUpdate = `options.${option}`;
-                    
-                    transaction.update(pollRef, { [fieldToUpdate]: newVotes });
-                    transaction.set(voterRef, { vote: option, timestamp: new Date() });
+                    if (!pollDoc.exists()) { throw "Poll document does not exist!"; }
+                    const newVotes = (pollDoc.data().options[option] || 0) + 1;
+                    transaction.update(pollRef, { [`options.${option}`]: newVotes });
+                    transaction.set(voterRef, { vote: option, timestamp: serverTimestamp() });
                 });
-
-                console.log("Vote successfully cast for:", option);
             } catch (e) {
                 console.error("Vote transaction failed: ", e);
-                document.getElementById('poll-status').textContent = 'An error occurred while casting your vote.';
+                document.getElementById('poll-status').textContent = typeof e === 'string' ? e : 'Error casting vote.';
             }
         }
-        
+
         function renderChart(pollData) {
             const ctx = document.getElementById('poll-chart').getContext('2d');
             const labels = Object.keys(pollData.options);
             const data = Object.values(pollData.options);
-
             if (pollChart) {
                 pollChart.data.labels = labels;
                 pollChart.data.datasets[0].data = data;
                 pollChart.update();
             } else {
-                 pollChart = new Chart(ctx, {
+                pollChart = new Chart(ctx, {
                     type: 'doughnut',
-                    data: {
-                        labels: labels,
-                        datasets: [{
-                            label: 'Votes',
-                            data: data,
-                            backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6'],
-                            borderColor: '#1F2937', // gray-800
-                            borderWidth: 4
-                        }]
-                    },
-                    options: {
-                        responsive: true,
-                        plugins: {
-                            legend: {
-                                position: 'top',
-                                labels: {
-                                    color: '#D1D5DB' // gray-300
-                                }
-                            },
-                            title: {
-                                display: true,
-                                text: 'Live Poll Results',
-                                color: '#F9FAFB' // gray-50
-                            }
-                        }
-                    }
+                    data: { labels, datasets: [{ data, backgroundColor: ['#3B82F6', '#10B981', '#F59E0B', '#8B5CF6', '#EF4444'], borderColor: '#111827', borderWidth: 4 }] },
+                    options: { responsive: true, plugins: { legend: { position: 'top', labels: { color: '#D1D5DB' } }, title: { display: true, text: 'Live Poll Results', color: '#F9FAFB' } } }
                 });
             }
         }
-
-        // ---SECTION: CONTACT FORM ---
+        
+        // --- SECTION: ADVANCED CONTACT FORM ---
         function initContactForm() {
             const form = document.getElementById('contact-form');
-            const statusEl = document.getElementById('form-status');
+            const categorySelect = document.getElementById('contact-category');
+            const otherCategoryWrapper = document.getElementById('other-category-wrapper');
+            const anonymousCheckbox = document.getElementById('anonymous-checkbox');
+            const personalInfoFields = document.getElementById('personal-info-fields');
+
+            categorySelect.addEventListener('change', () => {
+                otherCategoryWrapper.classList.toggle('hidden', categorySelect.value !== 'other');
+            });
+
+            anonymousCheckbox.addEventListener('change', () => {
+                const isAnonymous = anonymousCheckbox.checked;
+                personalInfoFields.classList.toggle('hidden', isAnonymous);
+                document.getElementById('contact-name').required = !isAnonymous;
+                document.getElementById('contact-email').required = !isAnonymous;
+            });
             
-            form.addEventListener('submit', async (e) => {
+            form.addEventListener('submit', (e) => {
                 e.preventDefault();
-                statusEl.textContent = 'Sending...';
-                statusEl.classList.remove('text-green-500', 'text-red-500');
-
-                const name = document.getElementById('contact-name').value;
-                const email = document.getElementById('contact-email').value;
-                const category = document.getElementById('contact-category').value;
-                const message = document.getElementById('contact-message').value;
-
-                if (!name || !email || !message) {
-                    statusEl.textContent = 'Please fill out all required fields.';
-                    statusEl.classList.add('text-red-500');
+                if (!form.checkValidity()) {
+                    form.reportValidity();
                     return;
                 }
-
-                try {
-                    const contactsCollection = collection(db, `artifacts/${appId}/public/data/contacts`);
-                    await addDoc(contactsCollection, {
-                        name,
-                        email,
-                        category,
-                        message,
-                        submittedAt: new Date(),
-                        userId: userId,
-                    });
-
-                    statusEl.textContent = 'Message sent successfully!';
-                    statusEl.classList.add('text-green-500');
-                    form.reset();
-                } catch(error) {
-                    console.error("Error sending message:", error);
-                    statusEl.textContent = 'Failed to send message. Please try again.';
-                    statusEl.classList.add('text-red-500');
-                } finally {
-                    setTimeout(() => statusEl.textContent = '', 5000);
+                
+                let category = categorySelect.value;
+                if (category === 'other') {
+                    category = document.getElementById('other-category-input').value.trim() || 'Other';
                 }
+
+                pendingSubmission = {
+                    category,
+                    message: document.getElementById('contact-message').value,
+                    name: document.getElementById('contact-name').value,
+                    email: document.getElementById('contact-email').value,
+                    whatsapp: document.getElementById('contact-whatsapp').value,
+                    isAnonymous: anonymousCheckbox.checked,
+                };
+                
+                document.getElementById('confirmation-modal').classList.add('active');
             });
+
+            // Modal button listeners
+            document.getElementById('cancel-btn').onclick = () => {
+                document.getElementById('confirmation-modal').classList.remove('active');
+                pendingSubmission = null;
+            };
+            document.getElementById('confirm-send-btn').onclick = () => {
+                if(pendingSubmission) {
+                    pendingSubmission.isAnonymous = false; // User confirmed to send with details
+                    submitFormData(pendingSubmission);
+                }
+            };
+            document.getElementById('confirm-anonymous-btn').onclick = () => {
+                 if(pendingSubmission) {
+                    pendingSubmission.isAnonymous = true;
+                    submitFormData(pendingSubmission);
+                }
+            };
+        }
+
+        async function submitFormData(data) {
+            const statusEl = document.getElementById('form-status');
+            statusEl.textContent = 'Sending...';
+            document.getElementById('confirmation-modal').classList.remove('active');
+
+            let submissionData = {
+                category: data.category,
+                message: data.message,
+                submittedAt: serverTimestamp(),
+                userId: userId, // Associate with anonymous or logged-in user
+                isAnonymous: data.isAnonymous,
+            };
+
+            if (!data.isAnonymous) {
+                submissionData.name = data.name;
+                submissionData.email = data.email;
+                if(data.whatsapp) submissionData.whatsapp = data.whatsapp;
+            }
+
+            try {
+                await addDoc(collection(db, `artifacts/${appId}/public/data/contacts`), submissionData);
+                statusEl.textContent = 'Message sent successfully!';
+                statusEl.className = 'text-center mt-4 h-6 text-green-500';
+                document.getElementById('contact-form').reset();
+                document.getElementById('other-category-wrapper').classList.add('hidden');
+                document.getElementById('personal-info-fields').classList.remove('hidden');
+
+            } catch(error) {
+                console.error("Error sending message:", error);
+                statusEl.textContent = 'Failed to send message.';
+                statusEl.className = 'text-center mt-4 h-6 text-red-500';
+            } finally {
+                pendingSubmission = null;
+                setTimeout(() => statusEl.textContent = '', 6000);
+            }
         }
         
-        // ---SECTION: GENERAL PAGE SCRIPTS & MODALS ---
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set current year in footer
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // Generic Modal Logic
-            const openModalButtons = document.querySelectorAll('[data-modal-target]');
-            const closeModalButtons = document.querySelectorAll('[data-modal-close]');
-
-            openModalButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const modalId = button.getAttribute('data-modal-target');
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.classList.add('active');
-                    }
-                });
-            });
-
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const modalId = button.getAttribute('data-modal-close');
-                    const modal = document.getElementById(modalId);
-                     if (modal) {
-                        modal.classList.remove('active');
-                    }
-                });
-            });
-            
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                    event.target.classList.remove('active');
-                }
-            });
-
-            // Initialize Firebase which then triggers other features
-            initializeFirebase();
-        });
+        // --- START SCRIPT ---
+        document.addEventListener('DOMContentLoaded', initializeFirebase);
     </script>
 </body>
 </html>
