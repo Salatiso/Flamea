@@ -1,140 +1,224 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Empowerment Tools</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Tools - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
-    <script src="https://unpkg.com/rss-parser@3.13.0/dist/rss-parser.min.js"></script>
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .tool-card { transition: all 0.3s ease; border: 1px solid #374151; }
-        .tool-card:hover { transform: translateY(-8px); border-color: #34D399; box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1); }
-        .modal-container { display: none; }
-        .modal-container.flex { display: flex; }
-        .modal-box { height: 80vh; max-height: 700px; }
-        #episode-list::-webkit-scrollbar { width: 6px; }
-        #episode-list::-webkit-scrollbar-thumb { background-color: #4B5563; border-radius: 10px; }
-    </style>
 </head>
-<body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
 
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
+<body class="bg-gray-100 font-sans">
+
+    <!-- Header -->
+    <header class="bg-white shadow-md">
+        <div class="container mx-auto px-4">
+            <nav class="flex justify-between items-center py-4">
+                <div>
+                    <a href="index.html" class="text-2xl font-bold text-gray-800">Flamea</a>
+                </div>
+                <div class="hidden md:flex items-center space-x-4">
+                    <a href="about.html" class="text-gray-600 hover:text-gray-800">About</a>
+                    <a href="tools.html" class="text-gray-600 hover:text-gray-800">Tools</a>
+                    <a href="training.html" class="text-gray-600 hover:text-gray-800">Training</a>
+                    <a href="community.html" class="text-gray-600 hover:text-gray-800">Community</a>
+                    <a href="resources.html" class="text-gray-600 hover:text-gray-800">Resources</a>
+                    <a href="contact.html" class="text-gray-600 hover:text-gray-800">Contact</a>
+                </div>
+                <div class="flex items-center space-x-4">
+                    <a href="login.html" class="text-gray-600 hover:text-gray-800">Login</a>
+                    <button id="ai-assistant-btn-header" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-robot"></i>
+                    </button>
+                    <button id="podcast-player-btn-header" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-podcast"></i>
+                    </button>
+                </div>
+                <div class="md:hidden">
+                    <button id="mobile-menu-btn" class="text-gray-600 hover:text-gray-800">
+                        <i class="fas fa-bars"></i>
+                    </button>
+                </div>
             </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4"></div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+        </div>
+    </header>
+
+    <!-- Mobile Menu -->
+    <div id="mobile-menu" class="hidden md:hidden bg-white p-4">
+        <a href="about.html" class="block text-gray-600 hover:text-gray-800 py-2">About</a>
+        <a href="tools.html" class="block text-gray-600 hover:text-gray-800 py-2">Tools</a>
+        <a href="training.html" class="block text-gray-600 hover:text-gray-800 py-2">Training</a>
+        <a href="community.html" class="block text-gray-600 hover:text-gray-800 py-2">Community</a>
+        <a href="resources.html" class="block text-gray-600 hover:text-gray-800 py-2">Resources</a>
+        <a href="contact.html" class="block text-gray-600 hover:text-gray-800 py-2">Contact</a>
+    </div>
+
+    <!-- Main Content -->
+    <div class="main-container container mx-auto flex flex-wrap py-6">
+
+        <!-- Sidebar -->
+        <aside class="w-full md:w-1/4 px-4">
+             <div class="sticky top-6">
+                <div class="bg-white p-4 rounded-lg shadow-md">
+                    <h3 class="text-xl font-bold mb-4">Navigation</h3>
+                    <ul class="space-y-2">
+                        <li><a href="dashboard.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-tachometer-alt mr-3"></i>Dashboard</a></li>
+                        <li><a href="assessment.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-clipboard-check mr-3"></i>Needs Assessment</a></li>
+                        <li><a href="parenting-plan.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-file-alt mr-3"></i>Parenting Plan</a></li>
+                        <li><a href="visitation-calendar.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-calendar-alt mr-3"></i>Visitation Calendar</a></li>
+                        <li><a href="activity-tracker.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-running mr-3"></i>Activity Tracker</a></li>
+                        <li><a href="locator.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fas fa-map-marker-alt mr-3"></i>Resource Locator</a></li>
+                        <li><a href="forms.html" class="flex items-center text-gray-600 hover:text-gray-800"><i class="fab fa-wpforms mr-3"></i>Form Generator</a></li>
+                         <li><button id="ai-assistant-btn-sidebar" class="flex items-center text-gray-600 hover:text-gray-800 w-full text-left"><i class="fas fa-robot mr-3"></i>AI Assistant</button></li>
+                    </ul>
+                </div>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Empowerment Tools & Media</h2>
-                <p class="text-lg text-gray-400 mb-8">Practical resources, knowledge, and insights to give you clarity and control.</p>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                    <!-- AI Assistant -->
-                    <div id="ai-tool-card" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center cursor-pointer">
-                        <i class="fas fa-robot text-5xl text-purple-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">AI Legal Assistant</h3>
-                        <p class="text-gray-400 flex-grow">Ask questions and get informational guidance on family law topics.</p>
+        <!-- Tools Section -->
+        <section class="w-full md:w-3/4 px-4">
+            <div class="bg-white p-6 rounded-lg shadow-md">
+                <h1 class="text-3xl font-bold text-gray-800 mb-4">Our Tools</h1>
+                <p class="text-gray-600 mb-6">A suite of tools designed to empower fathers and streamline the legal and co-parenting process.</p>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- Tool Card: Needs Assessment -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-clipboard-check text-4xl text-blue-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Needs Assessment</h3>
+                            <p class="text-gray-600 mb-4">Identify and prioritize your legal, financial, and emotional needs.</p>
+                            <a href="assessment.html" class="text-blue-500 hover:underline">Start Assessment</a>
+                        </div>
                     </div>
-
-                    <!-- Publications -->
-                    <a href="publications.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
-                        <i class="fas fa-book-reader text-5xl text-orange-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">Publications</h3>
-                        <p class="text-gray-400 flex-grow">Access our library of books and articles on fatherhood and the law.</p>
-                    </a>
-
-                    <!-- Forms & Wizards -->
-                     <a href="forms.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
-                        <i class="fas fa-file-invoice text-5xl text-teal-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">Forms & Wizards</h3>
-                        <p class="text-gray-400 flex-grow">Find and populate essential legal and administrative forms with ease.</p>
-                    </a>
-                    
-                    <!-- YouTube -->
-                    <a href="https://www.youtube.com/@Salatiso" target="_blank" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
-                        <i class="fab fa-youtube text-5xl text-red-500 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">YouTube Channel</h3>
-                        <p class="text-gray-400 flex-grow">Watch interviews, discussions, and tutorials on our official channel.</p>
-                    </a>
-
-                    <!-- Podcast -->
-                    <div id="podcast-tool-card" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center cursor-pointer">
-                        <i class="fas fa-podcast text-5xl text-pink-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">FLAMEA Podcast</h3>
-                        <p class="text-gray-400 flex-grow">Listen to the latest episodes for insights and stories from the front lines.</p>
+                    <!-- Tool Card: Parenting Plan Builder -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-file-alt text-4xl text-green-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Parenting Plan Builder</h3>
+                            <p class="text-gray-600 mb-4">Create a comprehensive, legally-sound parenting plan.</p>
+                            <a href="parenting-plan.html" class="text-green-500 hover:underline">Build Your Plan</a>
+                        </div>
                     </div>
-
-                    <!-- Other tool cards -->
-                    <a href="parenting-plan.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
-                        <i class="fas fa-file-signature text-5xl text-blue-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">Parenting Plan Builder</h3>
-                        <p class="text-gray-400 flex-grow">Create a comprehensive, legally-informed parenting plan.</p>
-                    </a>
-                    <a href="dispute-tracker.html" class="tool-card bg-gray-900 p-6 rounded-xl flex flex-col text-center items-center">
-                        <i class="fas fa-shield-alt text-5xl text-green-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-3">Family Dispute Tracker</h3>
-                        <p class="text-gray-400 flex-grow">Securely log events, communications, and documents.</p>
-                    </a>
+                    <!-- Tool Card: Visitation Calendar -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-calendar-alt text-4xl text-red-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Visitation Calendar</h3>
+                            <p class="text-gray-600 mb-4">Manage and track visitation schedules with ease.</p>
+                            <a href="visitation-calendar.html" class="text-red-500 hover:underline">View Calendar</a>
+                        </div>
+                    </div>
+                     <!-- Tool Card: Activity Tracker -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-running text-4xl text-purple-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Family Activity Tracker</h3>
+                            <p class="text-gray-600 mb-4">Log and manage important family activities and milestones.</p>
+                            <a href="activity-tracker.html" class="text-purple-500 hover:underline">Track Activities</a>
+                        </div>
+                    </div>
+                    <!-- Tool Card: Resource Locator -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-map-marker-alt text-4xl text-yellow-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Resource Locator</h3>
+                            <p class="text-gray-600 mb-4">Find lawyers, mediators, and support groups in your area.</p>
+                            <a href="locator.html" class="text-yellow-500 hover:underline">Find Resources</a>
+                        </div>
+                    </div>
+                    <!-- Tool Card: Form Generator -->
+                    <div class="course-card border border-gray-200 rounded-lg shadow-sm hover:shadow-lg transition-shadow duration-300">
+                        <div class="p-6">
+                            <i class="fab fa-wpforms text-4xl text-indigo-500 mb-4"></i>
+                            <h3 class="text-xl font-bold mb-2">Form Generator</h3>
+                            <p class="text-gray-600 mb-4">Generate legal forms and documents for your case.</p>
+                            <a href="forms.html" class="text-indigo-500 hover:underline">Generate Forms</a>
+                        </div>
+                    </div>
                 </div>
             </div>
-        </main>
+        </section>
+
+    </div>
+
+    <!-- Chatbot -->
+    <div id="chatbot-container" class="fixed bottom-0 right-0 mb-4 mr-4 z-50 hidden">
+        <div class="bg-white rounded-lg shadow-xl w-80">
+            <div id="chatbot-header" class="bg-gray-800 text-white p-4 rounded-t-lg cursor-pointer flex justify-between items-center">
+                <span>AI Assistant</span>
+                <button id="close-chatbot" class="text-white">&times;</button>
+            </div>
+            <div id="chatbot-body" class="p-4 h-64 overflow-y-auto">
+                <!-- Chat messages will be appended here -->
+            </div>
+            <div id="chatbot-input-container" class="p-4 border-t border-gray-200">
+                <input type="text" id="chatbot-input" class="w-full p-2 border border-gray-300 rounded" placeholder="Ask a question...">
+                <button id="chatbot-send" class="w-full bg-blue-500 text-white p-2 mt-2 rounded">Send</button>
+            </div>
+        </div>
     </div>
     
-    <!-- Modals will be placed here -->
-    <div id="chatbot-modal" class="modal-container fixed inset-0 bg-black bg-opacity-70 items-center justify-center z-50"> <!-- Chatbot modal content will be loaded by chatbot.js --> </div>
-    <div id="podcast-modal" class="modal-container fixed inset-0 bg-black bg-opacity-70 items-center justify-center z-50">
-        <div class="modal-box bg-gray-800 rounded-2xl shadow-2xl flex flex-col w-full max-w-2xl border-2 border-pink-500">
-            <div class="bg-gray-900 text-white p-4 rounded-t-xl flex justify-between items-center">
-                <h3 class="font-bold text-lg flex items-center"><i class="fas fa-podcast text-pink-400 mr-3"></i> FLAMEA Podcast</h3>
-                <button id="close-podcast" class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+    <!-- Podcast Player -->
+    <div id="podcast-player-container" class="hidden fixed bottom-0 left-0 w-full bg-gray-900 text-white p-4 z-50">
+         <div class="container mx-auto flex items-center justify-between">
+            <div class="flex items-center">
+                <img id="podcast-artwork" src="" alt="Podcast Artwork" class="w-16 h-16 mr-4 rounded">
+                <div>
+                    <h3 id="podcast-title" class="font-bold"></h3>
+                    <p id="podcast-artist"></p>
+                </div>
             </div>
-            <div id="episode-list" class="flex-1 p-4 overflow-y-auto space-y-4">
-                <p>Loading episodes...</p>
+            <div class="flex items-center">
+                <button id="prev-track" class="mx-2"><i class="fas fa-backward"></i></button>
+                <button id="play-pause" class="mx-2"><i class="fas fa-play"></i></button>
+                <button id="next-track" class="mx-2"><i class="fas fa-forward"></i></button>
+            </div>
+            <div class="w-1/3">
+                 <div id="waveform"></div>
+            </div>
+            <div>
+                 <button id="close-podcast-player" class="text-white">&times;</button>
             </div>
         </div>
     </div>
 
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
+
+    <!-- Footer -->
+    <footer class="bg-gray-800 text-white mt-auto">
+        <div class="container mx-auto py-6 px-4">
+            <div class="flex justify-between items-center">
+                <p>&copy; 2024 Flamea. All rights reserved.</p>
+                <div>
+                    <a href="terms-of-service.html" class="text-gray-400 hover:text-white mr-4">Terms of Service</a>
+                    <a href="privacy-policy.html" class="text-gray-400 hover:text-white">Privacy Policy</a>
+                </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/wavesurfer.js/2.0.4/wavesurfer.min.js"></script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/chatbot.js"></script>
+    <script src="assets/js/podcast-player.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            // AI Assistant Button functionality
+            const aiAssistantBtnHeader = document.getElementById('ai-assistant-btn-header');
+            const aiAssistantBtnSidebar = document.getElementById('ai-assistant-btn-sidebar');
+            const chatbotContainer = document.getElementById('chatbot-container');
+            const closeChatbot = document.getElementById('close-chatbot');
+
+            function toggleChatbot() {
+                chatbotContainer.classList.toggle('hidden');
+            }
+
+            if (aiAssistantBtnHeader) aiAssistantBtnHeader.addEventListener('click', toggleChatbot);
+            if (aiAssistantBtnSidebar) aiAssistantBtnSidebar.addEventListener('click', toggleChatbot);
+            if (closeChatbot) closeChatbot.addEventListener('click', toggleChatbot);
+        });
+    </script>
 </body>
+
 </html>
