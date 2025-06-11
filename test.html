@@ -1,173 +1,64 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea - Comprehensive Parenting Plan</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
-    <style>
-        :root {
-            --watermark-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cg transform='rotate(-30 200 200)'%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Roboto Slab, serif' font-size='60' font-weight='bold' fill='%23000000' opacity='0.05'%3EFlame%3Ctspan fill='%234ade80'%3Ea%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E");
-        }
-        body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; -webkit-print-color-adjust: exact; }
-        .page { background: white; width: 210mm; min-height: 297mm; height:auto; margin: 20px auto; padding: 20mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; page-break-after: always; }
-        .page::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: var(--watermark-svg); background-repeat: no-repeat; background-position: center; z-index: 0; }
-        .page > * { z-index: 1; }
-        .cover-page, .back-cover-page { justify-content: center; align-items: center; text-align: center; }
-        .cover-page::after, .back-cover-page::after { display: none; }
-        .content-body { flex-grow: 1; }
-        .page-header, .page-footer { position: absolute; left: 20mm; right: 20mm; font-size: 9pt; color: #4a5568; }
-        .page-header { top: 10mm; text-align: right; }
-        .page-footer { bottom: 10mm; display: flex; justify-content: space-between; }
-        h1 { font-family: 'Roboto Slab', serif; font-size: 28pt; color: #1a202c; text-align: center; }
-        h2 { font-family: 'Roboto Slab', serif; font-size: 16pt; color: #1a202c; border-bottom: 2px solid #a0aec0; padding-bottom: 6px; margin-top: 1.5rem; margin-bottom: 1rem; }
-        h3 { font-family: 'Roboto Slab', serif; font-size: 13pt; color: #2d3748; margin-top: 1.25rem; margin-bottom: 0.5rem; }
-        p, li { font-size: 11pt; line-height: 1.6; color: #2d3748; }
-        .form-label { display: block; font-size: 9pt; color: #718096; margin-bottom: 2px; font-weight: 500;}
-        .editable { background-color: #f1f5f9; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; min-height: 40px; white-space: pre-wrap; word-wrap: break-word; }
-        .editable:focus { outline: 2px solid #3b82f6; background-color: white; }
-        .editable-inline { background-color: #f1f5f9; padding: 2px 4px; border-radius: 3px; border-bottom: 1px dashed #94a3b8; }
-        .editable-inline:focus { outline: 1px solid #3b82f6; background-color: white;}
-        .add-btn { background-color: #16a34a; color: white; padding: 4px 12px; font-size: 10pt; border-radius: 5px; cursor: pointer; border: none; margin-top: 10px; }
-        .add-btn:hover { background-color: #15803d; }
-        .remove-btn { background-color: #dc2626; color: white; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-weight: bold; margin-left: 10px; line-height: 20px; text-align: center; font-size: 12px; }
-        .remove-btn:hover { background-color: #b91c1c; }
-        .dynamic-block { border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
-        @media print {
-            body { background-color: white; }
-            .page { margin: 0; box-shadow: none; height: auto; min-height: 290mm; }
-            .editable, .editable-inline { background-color: transparent !important; border-color: transparent; -webkit-print-color-adjust: exact; color-adjust: exact; padding: 2px 0;}
-            .hide-on-print { display: none; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flamea - SAPS Complaint Affidavit</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Roboto', sans-serif; background-color: #e5e7eb; -webkit-print-color-adjust: exact; }
+    .page { background: white; width: 210mm; min-height: 297mm; margin: 2rem auto; box-shadow: 0 0 10px rgba(0,0,0,0.1); padding: 2.5cm 2cm; position: relative; page-break-after: always; display: flex; flex-direction: column; }
+    h1 { font-family: 'Roboto Slab', serif; font-size: 22pt; color: #1f2937; text-align: center; margin-bottom: 1rem; }
+    .content { flex-grow: 1; }
+    .footer, .header { font-size: 10pt; color: #6b7280; text-align: right; margin-top: 1rem; }
+    .editable, .editable-inline { background-color: #f3f4f6; border: 1px dashed #94a3b8; padding: 6px; border-radius: 4px; min-height: 20px; }
+    .editable-inline { display: inline-block; min-width: 80px; }
+    .editable:focus, .editable-inline:focus { background-color: white; outline: 1px solid #3b82f6; }
+    .section-title { font-weight: bold; font-size: 13pt; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+    @media print {
+      body { background-color: white; }
+      .editable, .editable-inline { background-color: transparent; border: none; }
+    }
+  </style>
 </head>
-<body class="bg-gray-200">
+<body>
 
-    <!-- Cover Page -->
-    <div class="page cover-page bg-gray-900">
-        <div class="content-body">
-            <div class="flamea-logo dark my-auto">
-                <svg width="240" height="72" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg>
-            </div>
-            <h1 class="text-white text-4xl md:text-5xl">Comprehensive Parenting Plan</h1>
-            <p class="text-gray-300 text-xl mt-4">A legally-informed agreement crafted in the best interests of the child.</p>
-        </div>
-        <div class="page-footer text-gray-400">
-            <span>Doc ID: <span class="editable-inline" contenteditable="true">FLAMEA-CPP-202506120042</span></span>
-            <span>Version: 1.0</span>
-            <span>Generated: <span class="editable-inline" contenteditable="true">12 June 2025</span></span>
-        </div>
-    </div>
-    
-    <!-- Main Content Pages -->
-    <div id="main-content-container">
-        <div class="page" data-page-number="1">
-            <div class="page-header">Comprehensive Parenting Plan</div>
-            <div class="content-body">
-                <h2>SECTION 1: PARTICULARS</h2>
-                 <div class="grid grid-cols-2 gap-8">
-                    <div>
-                        <h3 class="font-bold mb-2">1.1 The Father (or Parent A)</h3>
-                        <label class="form-label">Full Legal Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
-                        <label class="form-label">ID Number</label><div contenteditable="true" class="editable mb-2">[Enter ID Number]</div>
-                        <label class="form-label">Residential Address</label><div contenteditable="true" class="editable mb-2">[Enter Address]</div>
-                    </div>
-                     <div>
-                        <h3 class="font-bold mb-2">1.2 The Mother (or Parent B)</h3>
-                        <label class="form-label">Full Legal Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
-                        <label class="form-label">ID Number</label><div contenteditable="true" class="editable mb-2">[Enter ID Number]</div>
-                        <label class="form-label">Residential Address</label><div contenteditable="true" class="editable mb-2">[Enter Address]</div>
-                    </div>
-                </div>
-                <h3 class="font-bold mt-6 mb-2">1.3 The Child / Children</h3>
-                <div id="children-container" class="space-y-4">
-                    <div class="dynamic-block child-block">
-                        <label class="form-label">Child's Full Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
-                        <label class="form-label">Date of Birth</label><div contenteditable="true" class="editable mb-2">[Enter DOB]</div>
-                        <button class="remove-btn hide-on-print float-right" onclick="this.closest('.dynamic-block').remove()">×</button>
-                    </div>
-                </div>
-                <button id="add-child-btn" class="add-btn hide-on-print">+ Add Child</button>
-            </div>
-            <div class="page-footer">
-                <span>&copy; 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number-display">Page 1</span>
-            </div>
-        </div>
-    </div>
-    
-    <div class="text-center my-8 hide-on-print"><button id="add-page-btn" class="add-btn">Add Continuation Page</button></div>
+<div class="page">
+  <div class="header">Document ID: FLAMEA-SAPS-AFF-<span class="editable-inline" contenteditable="true">[AUTO]</span> | Version: 1.0 | Date: <span class="editable-inline" contenteditable="true">[DD/MM/YYYY]</span></div>
 
-    <!-- Back Cover Page -->
-    <div class="page back-cover-page">
-        <div class="content">
-             <div class="flamea-logo dark mb-8"><svg width="160" height="48" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
-            <div class="max-w-2xl">
-                <h2 class="text-green-400 text-2xl font-bold">OUR MISSION</h2>
-                <p class="text-gray-200 mt-2 text-lg">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
-                <h2 class="text-green-400 text-2xl font-bold mt-8">THE BUILDER'S ETHOS: OUR CORE VALUES</h2>
-                <div class="mt-4 text-center">
-                    <div class="inline-block text-left text-gray-200 space-y-2 text-lg">
-                        <div><span class="text-green-400 font-bold">STRUCTURE:</span> 🛡️ We build organised, logical, and robust systems.</div>
-                        <div><span class="text-green-400 font-bold">ASSEMBLE:</span> 🧩 We bring together disparate parts to create a cohesive whole.</div>
-                        <div><span class="text-green-400 font-bold">LEGACY:</span> 🦅 We build upon the work of our predecessors.</div>
-                        <div><span class="text-green-400 font-bold">ARCHITECT:</span> 🏛️ We design with vision and purpose for the future.</div>
-                        <div><span class="text-green-400 font-bold">TOOL-UP:</span> 🛠️ We empower users with the right tools and knowledge.</div>
-                        <div><span class="text-green-400 font-bold">INNOVATE:</span> 💡 We constantly seek better ways to solve problems.</div>
-                        <div><span class="text-green-400 font-bold">SUSTAIN:</span> 🌱 We build things that are meant to last.</div>
-                        <div><span class="text-green-400 font-bold">OBSERVE:</span> 👁️ We pay close attention to identify needs and find solutions.</div>
-                    </div>
-                </div>
-            </div>
-        </div>
-        <div class="page-footer text-gray-400"><span>https://flamea.org</span><span>salatiso@flamea.org</span><span>&copy; 2025 Flamea</span></div>
-    </div>
-    
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            function updatePageNumbers() {
-                const pages = document.querySelectorAll('#main-content-container .page');
-                pages.forEach((page, index) => {
-                    let pageNumEl = page.querySelector('.page-number-display');
-                    if (pageNumEl) pageNumEl.textContent = `Page ${index + 1}`;
-                });
-            }
+  <h1>SAPS Complaint Affidavit</h1>
+  
+  <p>I, <span contenteditable="true" class="editable-inline">[Your Full Name]</span>, ID number <span contenteditable="true" class="editable-inline">[ID Number]</span>, residing at <span contenteditable="true" class="editable">[Full Residential Address]</span>, do hereby make oath and say:</p>
 
-            function createNewPage() {
-                const pageCount = document.querySelectorAll('#main-content-container .page').length + 1;
-                const newPage = document.createElement('div');
-                newPage.className = 'page';
-                newPage.setAttribute('data-page-number', pageCount);
-                newPage.innerHTML = `
-                    <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
-                    <div class="page-header">Comprehensive Parenting Plan (Continuation)</div>
-                    <div class="content-body">
-                         <div contenteditable="true" class="editable" style="width: 100%; height: 250mm;">[Continue your content here...]</div>
-                    </div>
-                    <div class="page-footer"><span>&copy; 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number-display">Page ${pageCount}</span></div>
-                `;
-                document.getElementById('main-content-container').appendChild(newPage);
-                updatePageNumbers();
-            }
+  <p class="section-title">1. Statement of Facts</p>
+  <p class="editable" contenteditable="true">[Detail the incident(s) being reported to SAPS, include dates, times, locations, persons involved, nature of events, etc.]</p>
 
-            document.getElementById('add-page-btn').addEventListener('click', createNewPage);
-            
-            document.getElementById('add-child-btn').addEventListener('click', () => {
-                const container = document.getElementById('children-container');
-                const newChildBlock = document.createElement('div');
-                newChildBlock.className = 'dynamic-block child-block';
-                newChildBlock.innerHTML = `
-                    <label class="form-label">Child's Full Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
-                    <label class="form-label">Date of Birth</label><div contenteditable="true" class="editable mb-2">[Enter DOB]</div>
-                    <button class="remove-btn hide-on-print float-right" onclick="this.closest('.dynamic-block').remove()">×</button>
-                `;
-                container.appendChild(newChildBlock);
-            });
+  <p class="section-title">2. Supporting Information</p>
+  <p class="editable" contenteditable="true">[Mention any evidence you have or are submitting (photos, documents, recordings), and indicate whether there were witnesses.]</p>
 
-             updatePageNumbers();
-        });
-    </script>
+  <p class="section-title">3. Relief or Action Requested</p>
+  <p class="editable" contenteditable="true">[State what you are asking SAPS to do: e.g., open a case, investigate, intervene, etc.]</p>
+
+  <p class="mt-6">Signed at <span class="editable-inline" contenteditable="true">[Location]</span> on this <span class="editable-inline" contenteditable="true">[Day]</span> day of <span class="editable-inline" contenteditable="true">[Month]</span> <span class="editable-inline" contenteditable="true">[Year]</span>.</p>
+
+  <div class="mt-8">
+    <p>__________________________</p>
+    <p>Deponent Signature</p>
+  </div>
+
+  <div class="mt-6">
+    <p>I certify that the deponent has acknowledged that he/she understands the contents of this affidavit and that it is true to the best of his/her knowledge and belief.</p>
+    <p>Signed and sworn before me at <span class="editable-inline" contenteditable="true">[City/Town]</span> on <span class="editable-inline" contenteditable="true">[Date]</span>.</p>
+    <p class="mt-4">__________________________</p>
+    <p>Commissioner of Oaths</p>
+    <p>Name: <span class="editable-inline" contenteditable="true">[Full Name]</span></p>
+    <p>Designation: <span class="editable-inline" contenteditable="true">[Designation]</span></p>
+    <p>Business Address: <span class="editable" contenteditable="true">[Commissioner's Address]</span></p>
+  </div>
+
+  <div class="footer">&copy; 2025 Flamea.org | Fathers. Leaders. Legacy.</div>
+</div>
+
 </body>
 </html>
