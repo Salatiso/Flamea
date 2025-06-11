@@ -1,93 +1,167 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Publications - Flamea</title>
+    <title>FLAMEA - Publications</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .book-content { font-family: 'Literata', serif; line-height: 1.8; }
+        /* Base font for the site */
+        body { font-family: 'Open Sans', sans-serif; }
+        
+        /* Main grid layout for sidebar and content */
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+
+        /* The main content area that will scroll if content overflows */
+        .content-scroll-area {
+            overflow-y: auto;
+            height: 100%;
+        }
+
+        /* Animation for content panels fading in */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .content-panel { 
+            animation: fadeIn 0.6s forwards;
+        }
+
+        /* Sidebar link styling and transitions */
+        .sidebar-direct-link {
+            transition: all 0.3s ease;
+            transform: translateX(0);
+        }
+
+        /* Styling for the active or hovered sidebar link */
+        .sidebar-direct-link.active, .sidebar-direct-link:hover {
+            background-color: #2563EB; /* blue-600 */
+            color: white;
+            transform: translateX(10px);
+        }
     </style>
 </head>
 <body class="bg-gray-800 text-white">
     <div class="main-container">
-        <!-- Sidebar Navigation -->
+        <!-- Sidebar Navigation: This structure is consistent across all pages -->
         <aside class="bg-gray-900 p-6 flex flex-col">
-            <div class="mb-12 flex justify-center">
-                 <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
-                </a>
-            </div>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+                <!-- Links to all main pages of the site -->
+                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                <a href="publications.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Publications</a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                
                 <div class="border-t border-gray-700 my-2"></div>
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+
+                <!-- Interactive elements for modals and other tools -->
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+                </button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
+                </button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg">
+                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
+                </a>
             </nav>
-             <div class="mt-auto text-center">
+            <div class="mt-auto text-center">
+                <!-- Login/Register button -->
                 <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+                        Login / Register
+                    </a>
                 </div>
+                <!-- Copyright notice with dynamic year -->
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
 
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <h1 class="text-4xl font-bold text-center mb-12">Our Publications</h1>
-            <div class="bg-gray-900 p-4 md:p-8 rounded-lg shadow-2xl">
-                <div class="grid md:grid-cols-3 gap-8">
-                    <!-- Left Column: Book Cover & Details -->
-                    <div class="md:col-span-1">
-                        <img id="book-cover" src="assets/images/goliath.jpg" alt="Book Cover" class="rounded-lg shadow-lg w-full mb-6">
-                        <h2 id="book-title" class="text-2xl font-bold">Goliath's Stand</h2>
-                        <p id="book-author" class="text-lg text-gray-400">By Salatiso Mdeni</p>
-                        <div class="mt-4">
-                            <label for="book-select" class="block text-sm font-medium text-gray-400">Select a Book:</label>
-                            <select id="book-select" class="mt-1 block w-full pl-3 pr-10 py-2 text-base border-gray-600 bg-gray-800 focus:outline-none focus:ring-green-500 focus:border-green-500 sm:text-sm rounded-md">
-                                <option value="goliath" selected>Goliath's Stand</option>
-                                <option value="homeschooling">The Homeschooling Father</option>
-                                <option value="redress">Beyond Redress</option>
-                            </select>
+        <!-- Main Content Area for Publications -->
+        <main class="content-scroll-area">
+            <div id="publications" class="content-panel p-6 md:p-12">
+                <h2 class="text-4xl md:text-5xl font-bold font-roboto mb-8 text-white">Our Publications</h2>
+                <p class="text-lg text-gray-300 mb-12 max-w-4xl">
+                    Explore our collection of books and guides, written to empower and educate fathers on their rights, responsibilities, and the journey of fatherhood.
+                </p>
+
+                <!-- Grid for displaying publication cards -->
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                    <!-- Publication Card: Goliath's Stand -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-balance-scale text-4xl text-green-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold font-roboto mb-3">Goliath's Stand</h3>
+                            <p class="text-gray-400 mb-4">A father's guide to navigating the legal system and fighting for your rights.</p>
+                            <a href="book-reader.html?book=BK-Goliaths_Stand" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
                         </div>
                     </div>
 
-                    <!-- Right Column: Book Content -->
-                    <div class="md:col-span-2 bg-gray-100 dark:bg-gray-800 text-gray-800 dark:text-gray-200 p-6 rounded-lg">
-                        <div id="book-content-container" class="book-content text-lg h-[60vh] overflow-y-auto pr-2">
-                            <p>Loading book...</p>
-                        </div>
-                        <div class="mt-6 pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <button id="prev-page" class="nav-button">Previous Page</button>
-                            <span id="page-indicator" class="text-sm text-gray-500">Page 1 / ?</span>
-                            <button id="next-page" class="nav-button">Next Page</button>
+                    <!-- Publication Card: Beyond Redress -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-gavel text-4xl text-green-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold font-roboto mb-3">Beyond Redress</h3>
+                            <p class="text-gray-400 mb-4">Exploring restorative justice and alternative dispute resolution for family matters.</p>
+                            <a href="book-reader.html?book=BK-Beyond_Redress" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
                         </div>
                     </div>
+
+                    <!-- Publication Card: The Homeschooling Father -->
+                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
+                        <div class="p-6">
+                            <i class="fas fa-school text-4xl text-green-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold font-roboto mb-3">The Homeschooling Father</h3>
+                            <p class="text-gray-400 mb-4">A practical guide for fathers taking an active role in their children's education.</p>
+                            <a href="book-reader.html?book=BK-HomeSchooling_Father" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
+                        </div>
+                    </div>
+                    
                 </div>
             </div>
         </main>
     </div>
+    
+    <!-- General purpose scripts for site-wide functionality -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set current year in the footer
+            const yearSpan = document.getElementById('currentYear');
+            if(yearSpan) {
+                yearSpan.textContent = new Date().getFullYear();
+            }
 
-    <!-- Modals -->
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
-
-    <!-- Scripts -->
-    <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/book-reader.js"></script>
+            // Automatically highlight the active link in the sidebar
+            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
+            const navLinks = document.querySelectorAll('#main-nav a.sidebar-direct-link');
+            
+            navLinks.forEach(link => {
+                const linkPage = link.getAttribute('href');
+                if (linkPage === currentPage) {
+                    link.classList.add('active');
+                }
+            });
+        });
+    </script>
+    <!-- These scripts handle auth, chatbot modals, and other dynamic features -->
+    <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
