@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,69 +10,29 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .form-input { background-color: #374151; border-color: #4B5563; }
-        .form-input:focus { --tw-ring-color: #3B82F6; border-color: #3B82F6; }
-        details > summary { list-style: none; cursor: pointer; }
-        details > summary::-webkit-details-marker { display: none; }
-        details summary .icon { transition: transform 0.3s; }
-        details[open] summary .icon { transform: rotate(90deg); }
-        .resource-card { border-left-width: 4px; }
-    </style>
 </head>
 <body class="bg-gray-800 text-white">
     <div class="main-container">
         <!-- Sidebar Navigation -->
-<aside class="bg-gray-900 p-6 flex flex-col">
-    <!-- Updated Logo Section -->
-    <div class="mb-12 flex justify-center">
-        <!-- START: Paste the new logo here -->
-        <a href="/dashboard.html" class="flamea-logo dark">
-            <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
-                <g transform="translate(135, 0)">
-                    <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                </g>
-                <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-            </svg>
-        </a>
-        <!-- END: New logo -->
-    </div>
-    <!-- ... rest of the sidebar links -->
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
-
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <!-- In your sidebar navigation -->
-<button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
-</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <div class="mb-12 flex justify-center">
+                 <a href="index.html" class="flamea-logo dark"><svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg></a>
+            </div>
+            <nav id="main-nav" class="flex flex-col space-y-2">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                <a href="resources.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                <div class="border-t border-gray-700 my-2"></div>
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast</button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
             </nav>
             <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
+                 <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
                 </div>
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
@@ -82,17 +42,10 @@
         <main class="main-content p-8 md:p-12">
             <div class="max-w-4xl mx-auto">
                 <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Resource Directory</h2>
-                <p class="text-lg text-gray-400 mb-8">A comprehensive directory of courts, advocacy groups, and support services for fathers and families in South Africa and beyond.</p>
-                
-                <!-- Introduction -->
-                <div class="bg-gray-900 bg-opacity-50 p-6 rounded-lg mb-10 border border-gray-700">
-                    <p class="text-gray-300">Navigating the legal and support systems can be daunting. This directory is designed to be your compass, connecting you with the vital services you need. Whether you're looking for a court, a social worker, legal aid, or a community of fellow fathers, the help you need is here. Remember that organisations like <strong>FLAMEA</strong> are here to support you online, providing a digital community and resources accessible no matter where you are. For international matters, global organisations are listed to assist South Africans abroad.</p>
-                </div>
-
-                <!-- Locator Wizard -->
+                <p class="text-lg text-gray-400 mb-8">A comprehensive directory of courts, advocacy groups, and support services.</p>
                 <div class="bg-gray-900 p-8 rounded-xl shadow-lg mb-12">
                     <h3 class="text-2xl font-bold text-teal-400 mb-4">Find Help Near You</h3>
-                    <div class="grid md:grid-cols-2 gap-6 items-end">
+                     <div class="grid md:grid-cols-2 gap-6 items-end">
                         <div>
                             <label for="address-input" class="block mb-2 font-semibold">Enter your address or town:</label>
                             <input type="text" id="address-input" placeholder="e.g., 123 Main Street, Johannesburg" class="w-full p-3 rounded-md form-input text-white">
@@ -117,28 +70,22 @@
                      </div>
                      <div id="locator-status" class="text-center mt-4 text-yellow-400"></div>
                 </div>
-
-                <!-- Results Section -->
-                <div id="results-section" class="space-y-6">
-                    <!-- Dynamic results will be injected here -->
-                </div>
-                
-                <!-- Manual Directory -->
-                <div id="manual-directory" class="mt-12">
-                    <h3 class="text-2xl font-bold text-teal-400 mb-6">Or, Browse the Full Directory</h3>
-                    <!-- The accordion for manual browsing will be generated by JS -->
-                </div>
-
+                <div id="results-section" class="space-y-6"></div>
+                <div id="manual-directory" class="mt-12"></div>
             </div>
         </main>
     </div>
     
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-    </script>
-    <!-- IMPORTANT: Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key -->
+    <!-- Modals -->
+    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
+    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
+
+    <!-- Scripts -->
     <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry" async defer></script>
+    <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/locator.js"></script>
+    <script type="module" src="assets/js/chatbot.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
