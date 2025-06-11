@@ -1,201 +1,557 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - The Father's Armoury Training Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .option-card, .course-card { transition: all 0.3s ease; }
-        .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.1), 0 4px 6px -2px rgba(52, 211, 153, 0.05); border-color: #34D399; }
-    </style>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FLAMEA - The Father's Armoury Training Hub</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="assets/css/style.css">
+
+    <style>
+
+        body { font-family: 'Open Sans', sans-serif; }
+
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+
+        .main-content { overflow-y: auto; }
+
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
+
+        .option-card, .course-card { transition: all 0.3s ease; }
+
+        .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+
+        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.1), 0 4px 6px -2px rgba(52, 211, 153, 0.05); border-color: #34D399; }
+
+    </style>
+
 </head>
+
 <body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-            <nav id="main-nav" class="flex flex-col space-y-4">
-                 <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                 <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                 <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                 <a href="training.html" class="sidebar-direct-link active flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                 <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                 <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
-                 <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast</button>
-                 <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
-            </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4"></div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
 
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center">
-                    <h2 class="text-4xl font-bold font-roboto text-white">The Father's Armoury</h2>
-                    <p class="text-lg text-gray-400 mb-8">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
-                </div>
+    <div class="main-container">
 
-                <!-- Wizard vs Manual Path vs Game Selection -->
+        <!-- Sidebar Navigation -->
+
+<aside class="bg-gray-900 p-6 flex flex-col">
+
+    <!-- Updated Logo Section -->
+
+    <div class="mb-12 flex justify-center">
+
+        <!-- START: Paste the new logo here -->
+
+        <a href="/dashboard.html" class="flamea-logo dark">
+
+            <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+
+                <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
+
+                <g transform="translate(135, 0)">
+
+                    <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
+
+                </g>
+
+                <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+
+            </svg>
+
+        </a>
+
+        <!-- END: New logo -->
+
+    </div>
+
+    <!-- ... rest of the sidebar links -->
+
+            <nav id="main-nav" class="flex flex-col space-y-4">
+
+    <!-- Standard Page Links -->
+
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+
+   
+
+    <!-- Divider -->
+
+    <div class="border-t border-gray-700 my-2"></div>
+
+
+
+    <!-- Interactive Tool Buttons -->
+
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+
+                </button>
+
+                <!-- In your sidebar navigation -->
+
+<button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+
+    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
+
+</button>
+
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+
+                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
+
+                </a>
+
+            </nav>
+
+            <div class="mt-auto text-center">
+
+                <div id="auth-links-desktop" class="mb-4">
+
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+
+                        Login / Register
+
+                    </a>
+
+                </div>
+
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- Main Content -->
+
+        <main class="main-content p-8 md:p-12">
+
+            <div class="max-w-7xl mx-auto">
+
+                <div class="text-center">
+
+                    <h2 class="text-4xl font-bold font-roboto text-white">The Father's Armoury</h2>
+
+                    <p class="text-lg text-gray-400 mb-8">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
+
+                </div>
+
+
+
+                <!-- Wizard vs Manual Path vs Game Selection -->
+
 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Option 1: Needs Assessment -->
-    <a href="training-assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
-        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
-        <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
-        <p class="text-gray-400">New here? Answer a few questions and get a personalized training plan.</p>
-    </a>
-    
-    <!-- Option 2: Manual Builder -->
-    <a href="#course-catalogue" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
-        <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
-        <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
-        <p class="text-gray-400">Know what you're looking for? Browse our full catalogue of courses.</p>
-    </a>
 
-    <!-- Option 3: Play a Game -->
-    <a href="games/constitution-defender.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
-        <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
-        <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
-        <p class="text-gray-400">Test your knowledge in an interactive arcade game. Defend your rights!</p>
-    </a>
+    <!-- Option 1: Needs Assessment -->
+
+    <a href="training-assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
+
+        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
+
+        <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
+
+        <p class="text-gray-400">New here? Answer a few questions and get a personalized training plan.</p>
+
+    </a>
+
+   
+
+    <!-- Option 2: Manual Builder -->
+
+    <a href="#course-catalogue" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
+
+        <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
+
+        <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
+
+        <p class="text-gray-400">Know what you're looking for? Browse our full catalogue of courses.</p>
+
+    </a>
+
+
+
+    <!-- Option 3: Play a Game -->
+
+    <a href="games/constitution-defender.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
+
+        <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
+
+        <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
+
+        <p class="text-gray-400">Test your knowledge in an interactive arcade game. Defend your rights!</p>
+
+    </a>
+
 </div>
 
-                <!-- Membership Banner -->
-                 <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
-                    <i class="fas fa-user-shield text-5xl text-blue-300"></i>
-                    <div>
-                        <h3 class="font-bold text-xl">Become a FLAMEA Member</h3>
-                        <p class="mt-1 text-blue-200">
-                            <a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your course progress, earn completion certificates with unique QR codes, and build your "Superdad" Life CV.
-                        </p>
-                    </div>
-                </div>
 
 
-                <!-- Course Catalogue -->
-                <div id="course-catalogue">
-                    <!-- === CATEGORY 1: LEGAL & CONSTITUTIONAL FOUNDATIONS === -->
-<h3 class="text-3xl font-bold font-roboto text-green-400 border-b-2 border-green-400 pb-2 mb-6">🎓 Legal & Constitutional Foundations</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Course 1: Constitution -->
-    <a href="training/course-constitution.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-landmark text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The SA Constitution</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Understand your foundational rights as a father and a citizen under South Africa's supreme law.</p>
-        <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 2: Children's Act -->
-    <a href="training/course-childrens-act.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-child text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The Children's Act</h4></div>
-        <p class="text-gray-400 mb-4 h-20">A deep dive into parental rights, responsibilities, care, and contact. Know the law that governs your relationship with your child.</p>
-        <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 3: Family Law Overview -->
-    <a href="training/course-family-law.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-balance-scale text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">Family Law Overview</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Navigate the Marriage, Divorce, and Maintenance Acts with confidence.</p>
-        <span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
+                <!-- Membership Banner -->
+
+                 <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
+
+                    <i class="fas fa-user-shield text-5xl text-blue-300"></i>
+
+                    <div>
+
+                        <h3 class="font-bold text-xl">Become a FLAMEA Member</h3>
+
+                        <p class="mt-1 text-blue-200">
+
+                            <a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your course progress, earn completion certificates with unique QR codes, and build your "Superdad" Life CV.
+
+                        </p>
+
+                    </div>
+
+                </div>
+
+
+
+
+
+                <!-- Course Catalogue -->
+
+                <div id="course-catalogue">
+
+                    <!-- === CATEGORY 1: LEGAL & CONSTITUTIONAL FOUNDATIONS === -->
+
+<div class="mb-8">
+
+        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-green-400 transition-colors duration-300">
+
+            <span class="text-xl md:text-2xl font-bold text-white">🎓 Legal & Constitutional Foundations</span>
+
+            <svg class="w-6 h-6 transform text-gray-300 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+        </button>
+
+        <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-green-400">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+
+                <!-- Course Cards for this category go here -->
+
+                <a href="training/course-constitution.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-green-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-landmark text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The SA Constitution</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">Understand your foundational rights as a father and a citizen under South Africa's supreme law.</p>
+
+                </a>
+
+                <a href="training/course-childrens-act.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-green-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-child text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The Children's Act</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">A deep dive into parental rights, responsibilities, care, and contact.</p>
+
+                </a>
+
+                <a href="training/course-family-law.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-green-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-balance-scale text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">Family Law Overview</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">Navigate the Marriage, Divorce, and Maintenance Acts with confidence.</p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+    <!-- === CATEGORY 2: PRACTICAL PARENTING SKILLS === -->
+
+    <div class="mb-8">
+
+        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300">
+
+            <span class="text-xl md:text-2xl font-bold text-white">👨‍👧‍👦 Practical Parenting Skills</span>
+
+            <svg class="w-6 h-6 transform text-gray-300 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+        </button>
+
+        <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-400">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+
+                <!-- Course Cards for this category go here -->
+
+                <a href="training/course-coparenting.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-blue-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-hands-helping text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Co-Parenting 101</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">Master communication, conflict resolution, and building effective parenting plans.</p>
+
+                </a>
+
+                 <a href="training/course-newborn-daily-care.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-blue-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-baby-carriage text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Newborn & Daily Care</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">From changing diapers to installing car seats, gain confidence in daily tasks.</p>
+
+                </a>
+
+                 <a href="training/course-build-curriculum.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-blue-400 transition-all duration-300">
+
+                    <div class="flex items-center mb-4"><i class="fas fa-pencil-ruler text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Building Your Own Curriculum</h4></div>
+
+                    <p class="text-gray-400 mb-4 h-20">A guide for the homeschooling father. Move beyond the formal system.</p>
+
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+
+
+   
+
 </div>
 
-<!-- === CATEGORY 2: PRACTICAL PARENTING SKILLS === -->
-<h3 class="text-3xl font-bold font-roboto text-blue-400 border-b-2 border-blue-400 pb-2 mb-6">👨‍👧‍👦 Practical Parenting Skills</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Course 4: Co-Parenting 101 -->
-    <a href="training/course-coparenting.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-hands-helping text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Co-Parenting 101</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Master communication, conflict resolution, and building effective parenting plans. Learn to work with your co-parent for the child's benefit.</p>
-        <span class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 5: Newborn & Daily Care -->
-    <a href="training/course-newborn-daily-care.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-       <div class="flex items-center mb-4"><i class="fas fa-baby-carriage text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Newborn & Daily Care</h4></div>
-        <p class="text-gray-400 mb-4 h-20">From changing diapers to installing car seats, gain confidence in daily tasks. Lean on your family for support.</p>
-        <span class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 6: Building Your Own Curriculum -->
-    <a href="training/course-build-curriculum.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-       <div class="flex items-center mb-4"><i class="fas fa-pencil-ruler text-3xl text-blue-400 mr-4"></i><h4 class="text-xl font-bold">Building Your Own Curriculum</h4></div>
-        <p class="text-gray-400 mb-4 h-20">A guide for the homeschooling father. Move beyond the formal system to create a practical, values-based education.</p>
-        <span class="bg-blue-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-</div>
+
 
 <!-- === CATEGORY 3: CULTURAL & ANCESTRAL WISDOM === -->
-<h3 class="text-3xl font-bold font-roboto text-yellow-400 border-b-2 border-yellow-400 pb-2 mb-6"> 🦅 Cultural & Ancestral Wisdom</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Course 7: Unbroken Chain -->
-    <a href="training/course-unbroken-chain.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-link text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">The Unbroken Chain</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Successor vs. Heir in Xhosa Tradition. Understand your profound duty as `indlalifa` beyond mere inheritance.</p>
-        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 8: Ancestors Within -->
-    <a href="training/course-ancestors-within.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-       <div class="flex items-center mb-4"><i class="fas fa-dna text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">Finding Your Ancestors Within</h4></div>
-        <p class="text-gray-400 mb-4 h-20">A guide to modern spirituality, blending science with Xhosa tradition to connect with your ancestral wisdom anywhere.</p>
-        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 9: Extended Family -->
-    <a href="training/course-extended-family.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-       <div class="flex items-center mb-4"><i class="fas fa-users text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">The Power of the Extended Family</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Champion the resilient household. Learn how your family structure is a core strength in raising children.</p>
-        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
+
+    <div class="mb-8">
+
+        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300">
+
+            <span class="text-xl md:text-2xl font-bold text-white"> 🦅 Cultural & Ancestral Wisdom</span>
+
+            <svg class="w-6 h-6 transform text-gray-300 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+        </button>
+
+        <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-400">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+
+    <a href="training/course-unbroken-chain.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+        <div class="flex items-center mb-4"><i class="fas fa-link text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">The Unbroken Chain</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">Successor vs. Heir in Xhosa Tradition. Understand your profound duty as `indlalifa` beyond mere inheritance.</p>
+
+        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+
+    </a>
+
+    <a href="training/course-ancestors-within.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+       <div class="flex items-center mb-4"><i class="fas fa-dna text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">Finding Your Ancestors Within</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">A guide to modern spirituality, blending science with Xhosa tradition to connect with your ancestral wisdom anywhere.</p>
+
+        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+
+    </a>
+
+    <a href="training/course-extended-family.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+       <div class="flex items-center mb-4"><i class="fas fa-users text-3xl text-yellow-400 mr-4"></i><h4 class="text-xl font-bold">The Power of the Extended Family</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">Champion the resilient household. Learn how your family structure is a core strength in raising children.</p>
+
+        <span class="bg-yellow-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+
+    </a>
+
+        </div>
+
+    </div>
+
 </div>
+
+
 
 <!-- === CATEGORY 4: ADVANCED ADVOCACY & SELF-SUFFICIENCY === -->
-<h3 class="text-3xl font-bold font-roboto text-red-400 border-b-2 border-red-400 pb-2 mb-6">🔥 Advanced Advocacy & Self-Sufficiency</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Course 10: Father's Shield -->
-    <a href="training/course-fathers-shield.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-gavel text-3xl text-red-400 mr-4"></i><h4 class="text-xl font-bold">A Father's Shield</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Use the 'Best Interests of the Child' principle (Sec 28) to challenge discriminatory policies and advocate for your child.</p>
-        <span class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
-    <!-- Course 11: Risk Management -->
-     <a href="training/course-risk-management.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-shield-alt text-3xl text-red-400 mr-4"></i><h4 class="text-xl font-bold">Risk Management for Fathers</h4></div>
-        <p class="text-gray-400 mb-4 h-20">Apply OHS principles to family life. Identify and mitigate risks to your family's physical, emotional, and financial well-being.</p>
-        <span class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
-    </a>
+
+     <div class="mb-8">
+
+        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300">
+
+            <span class="text-xl md:text-2xl font-bold text-white">🔥 Advanced Advocacy & Self-Sufficiency</span>
+
+            <svg class="w-6 h-6 transform text-gray-300 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+        </button>
+
+        <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-400">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+
+                <!-- Course Cards for this category go here -->
+
+    <a href="training/course-fathers-shield.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+        <div class="flex items-center mb-4"><i class="fas fa-gavel text-3xl text-red-400 mr-4"></i><h4 class="text-xl font-bold">A Father's Shield</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">Use the 'Best Interests of the Child' principle (Sec 28) to challenge discriminatory policies and advocate for your child.</p>
+
+        <span class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+
+    </a>
+
+     <a href="training/course-risk-management.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+        <div class="flex items-center mb-4"><i class="fas fa-shield-alt text-3xl text-red-400 mr-4"></i><h4 class="text-xl font-bold">Risk Management for Fathers</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">Apply OHS principles to family life. Identify and mitigate risks to your family's physical, emotional, and financial well-being.</p>
+
+        <span class="bg-red-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+
+    </a>
+
+        </div>
+
+    </div>
+
 </div>
+
+
 
 <!-- === CATEGORY 5: INTERACTIVE GAMES === -->
-<h3 class="text-3xl font-bold font-roboto text-pink-400 border-b-2 border-pink-400 pb-2 mb-6"><i class="fas fa-gamepad"></i> Interactive Games</h3>
-<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-    <!-- Game 1: Constitution Defender -->
-    <a href="games/constitution-defender.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
-        <div class="flex items-center mb-4"><i class="fas fa-fist-raised text-3xl text-pink-400 mr-4"></i><h4 class="text-xl font-bold">Constitution Defender</h4></div>
-        <p class="text-gray-400 mb-4 h-20">An arcade shooter where you destroy legal myths and falsehoods. Based on the SA Constitution course.</p>
-        <span class="bg-pink-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Play Game</span>
-    </a>
+
+    <div class="mb-8">
+
+        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-400 transition-colors duration-300">
+
+            <span class="text-xl md:text-2xl font-bold text-white">🏆  Interactive Games</span>
+
+            <svg class="w-6 h-6 transform text-gray-300 transition-transform duration-300" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+
+        </button>
+
+        <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-400">
+
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+
+                <!-- Course Cards for this category go here -->
+
+    <a href="games/constitution-defender.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+
+        <div class="flex items-center mb-4"><i class="fas fa-fist-raised text-3xl text-pink-400 mr-4"></i><h4 class="text-xl font-bold">Constitution Defender</h4></div>
+
+        <p class="text-gray-400 mb-4 h-20">An arcade shooter where you destroy legal myths and falsehoods. Based on the SA Constitution course.</p>
+
+        <span class="bg-pink-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Play Game</span>
+
+    </a>
+
+        </div>
+
+    </div>
+
 </div>
 
-                     <!-- Other Categories... -->
-                </div>
-            </div>
-        </main>
-    </div>
+                     <!-- Other Categories... -->
 
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-    <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+
+    <script src="assets/js/main.js"></script>
+
+    <script type="module" src="assets/js/auth.js"></script>
+
+    <script type="module" src="assets/js/chatbot.js"></script>
+
+
+
+<script>
+
+document.addEventListener('DOMContentLoaded', () => {
+
+    // Find all the category buttons we created
+
+    const accordionToggles = document.querySelectorAll('.accordion-toggle');
+
+
+
+    accordionToggles.forEach(button => {
+
+        button.addEventListener('click', () => {
+
+            // Get the content panel that is the next sibling of the button
+
+            const content = button.nextElementSibling;
+
+           
+
+            // Get the icon inside the button
+
+            const icon = button.querySelector('svg');
+
+
+
+            // Toggle the visibility of the content
+
+            content.classList.toggle('hidden');
+
+
+
+            // Toggle the rotation of the icon
+
+            if (icon) {
+
+                icon.classList.toggle('rotate-180');
+
+            }
+
+        });
+
+    });
+
+});
+
+</script>
+
 </body>
+
 </html>

@@ -1,69 +1,175 @@
 <!DOCTYPE html>
+
 <html lang="en">
+
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Visitation Scheduler</title>
-    <!-- Head content same as other pages -->
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>FLAMEA - Visitation Scheduler</title>
+
+    <!-- Head content same as other pages -->
+
 </head>
+
 <body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-            <nav id="main-nav" class="flex flex-col space-y-4">
-    <!-- Standard Page Links -->
-    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-    
-    <!-- Divider -->
-    <div class="border-t border-gray-700 my-2"></div>
 
-    <!-- Interactive Tool Buttons -->
-    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
-            </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4"></div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
+    <div class="main-container">
 
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Visitation & Activity Scheduler</h2>
-                <p class="text-lg text-gray-400 mb-8">Keep track of visitation schedules, school events, and important activities.</p>
+        <!-- Sidebar Navigation -->
 
-                <div id="scheduler-tool-container" class="hidden">
-                     <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-                        <p class="text-gray-300">The full calendar and event scheduling tool is under development and will be available here soon.</p>
-                    </div>
-                </div>
+<aside class="bg-gray-900 p-6 flex flex-col">
 
-                <div id="scheduler-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
-                    <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
-                    <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
-                    <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Scheduler.</p>
-                </div>
-            </div>
-        </main>
-    </div>
+    <!-- Updated Logo Section -->
 
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-    <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/scheduler.js"></script>
+    <div class="mb-12 flex justify-center">
+
+        <!-- START: Paste the new logo here -->
+
+        <a href="/dashboard.html" class="flamea-logo dark">
+
+            <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+
+                <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400">Flame</text>
+
+                <g transform="translate(135, 0)">
+
+                    <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
+
+                </g>
+
+                <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
+
+            </svg>
+
+        </a>
+
+        <!-- END: New logo -->
+
+    </div>
+
+    <!-- ... rest of the sidebar links -->
+
+            <nav id="main-nav" class="flex flex-col space-y-4">
+
+    <!-- Standard Page Links -->
+
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+
+   
+
+    <!-- Divider -->
+
+    <div class="border-t border-gray-700 my-2"></div>
+
+
+
+    <!-- Interactive Tool Buttons -->
+
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+
+                </button>
+
+                <!-- In your sidebar navigation -->
+
+<button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+
+    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
+
+</button>
+
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+
+                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
+
+                </a>
+
+            </nav>
+
+            <div class="mt-auto text-center">
+
+                <div id="auth-links-desktop" class="mb-4">
+
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
+
+                        Login / Register
+
+                    </a>
+
+                </div>
+
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+
+            </div>
+
+        </aside>
+
+
+
+        <!-- Main Content Area -->
+
+        <main class="main-content p-8 md:p-12">
+
+            <div class="max-w-4xl mx-auto">
+
+                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Visitation & Activity Scheduler</h2>
+
+                <p class="text-lg text-gray-400 mb-8">Keep track of visitation schedules, school events, and important activities.</p>
+
+
+
+                <div id="scheduler-tool-container" class="hidden">
+
+                     <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+
+                        <p class="text-gray-300">The full calendar and event scheduling tool is under development and will be available here soon.</p>
+
+                    </div>
+
+                </div>
+
+
+
+                <div id="scheduler-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
+
+                    <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
+
+                    <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
+
+                    <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Scheduler.</p>
+
+                </div>
+
+            </div>
+
+        </main>
+
+    </div>
+
+
+
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
+
+    <script src="assets/js/main.js"></script>
+
+    <script type="module" src="assets/js/auth.js"></script>
+
+    <script type="module" src="assets/js/scheduler.js"></script>
+
 </body>
+
 </html>
