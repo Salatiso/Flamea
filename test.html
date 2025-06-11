@@ -1,262 +1,172 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Fatherhood Tools - Flamea</title>
+    <title>Flamea - Comprehensive Parenting Plan</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles from index.html for consistency */
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+        :root {
+            --watermark-svg: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 400 400'%3E%3Cg transform='rotate(-30 200 200)'%3E%3Ctext x='50%' y='50%' dominant-baseline='middle' text-anchor='middle' font-family='Roboto Slab, serif' font-size='60' font-weight='bold' fill='%23000000' opacity='0.05'%3EFlame%3Ctspan fill='%234ade80'%3Ea%3C/tspan%3E%3C/text%3E%3C/g%3E%3C/svg%3E");
         }
-        .main-content-area {
-            overflow-y: auto;
-        }
-        .sidebar-link, .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-link.active, .sidebar-link:hover, .sidebar-direct-link:hover {
-            background-color: #2563EB; /* blue-600 */
-            color: white;
-            transform: translateX(10px);
-        }
-        .tool-card {
-            display: block;
-            padding: 1.5rem;
-            background-color: #1F2937; /* gray-800 */
-            border-radius: 0.5rem;
-            transition: all 0.3s ease;
-            border-left: 4px solid transparent;
-        }
-        .tool-card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.1), 0 4px 6px -2px rgba(0,0,0,0.05);
-            border-left-color: #3B82F6; /* blue-500 */
-        }
-        .tool-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            margin-bottom: 0.5rem;
-        }
-        .tool-card i {
-            font-size: 1.75rem;
-            margin-bottom: 1rem;
-            display: block;
-        }
-        /* Modal styles */
-        .modal {
-            display: none; /* Hidden by default */
-            position: fixed;
-            z-index: 100;
-            left: 0;
-            top: 0;
-            width: 100%;
-            height: 100%;
-            overflow: auto;
-            background-color: rgba(0,0,0,0.6);
-            animation: fadeIn 0.5s;
-        }
-        .modal.active {
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-        @keyframes fadeIn {
-            from {opacity: 0;}
-            to {opacity: 1;}
+        body { font-family: 'Inter', sans-serif; background-color: #e2e8f0; -webkit-print-color-adjust: exact; }
+        .page { background: white; width: 210mm; min-height: 297mm; height:auto; margin: 20px auto; padding: 20mm; box-shadow: 0 0 10px rgba(0,0,0,0.1); position: relative; display: flex; flex-direction: column; page-break-after: always; }
+        .page::after { content: ''; position: absolute; top: 0; left: 0; width: 100%; height: 100%; background-image: var(--watermark-svg); background-repeat: no-repeat; background-position: center; z-index: 0; }
+        .page > * { z-index: 1; }
+        .cover-page, .back-cover-page { justify-content: center; align-items: center; text-align: center; }
+        .cover-page::after, .back-cover-page::after { display: none; }
+        .content-body { flex-grow: 1; }
+        .page-header, .page-footer { position: absolute; left: 20mm; right: 20mm; font-size: 9pt; color: #4a5568; }
+        .page-header { top: 10mm; text-align: right; }
+        .page-footer { bottom: 10mm; display: flex; justify-content: space-between; }
+        h1 { font-family: 'Roboto Slab', serif; font-size: 28pt; color: #1a202c; text-align: center; }
+        h2 { font-family: 'Roboto Slab', serif; font-size: 16pt; color: #1a202c; border-bottom: 2px solid #a0aec0; padding-bottom: 6px; margin-top: 1.5rem; margin-bottom: 1rem; }
+        h3 { font-family: 'Roboto Slab', serif; font-size: 13pt; color: #2d3748; margin-top: 1.25rem; margin-bottom: 0.5rem; }
+        p, li { font-size: 11pt; line-height: 1.6; color: #2d3748; }
+        .form-label { display: block; font-size: 9pt; color: #718096; margin-bottom: 2px; font-weight: 500;}
+        .editable { background-color: #f1f5f9; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; min-height: 40px; white-space: pre-wrap; word-wrap: break-word; }
+        .editable:focus { outline: 2px solid #3b82f6; background-color: white; }
+        .editable-inline { background-color: #f1f5f9; padding: 2px 4px; border-radius: 3px; border-bottom: 1px dashed #94a3b8; }
+        .editable-inline:focus { outline: 1px solid #3b82f6; background-color: white;}
+        .add-btn { background-color: #16a34a; color: white; padding: 4px 12px; font-size: 10pt; border-radius: 5px; cursor: pointer; border: none; margin-top: 10px; }
+        .add-btn:hover { background-color: #15803d; }
+        .remove-btn { background-color: #dc2626; color: white; border: none; width: 20px; height: 20px; border-radius: 50%; cursor: pointer; font-weight: bold; margin-left: 10px; line-height: 20px; text-align: center; font-size: 12px; }
+        .remove-btn:hover { background-color: #b91c1c; }
+        .dynamic-block { border: 1px solid #e2e8f0; padding: 1rem; border-radius: 8px; margin-bottom: 1rem; }
+        @media print {
+            body { background-color: white; }
+            .page { margin: 0; box-shadow: none; height: auto; min-height: 290mm; }
+            .editable, .editable-inline { background-color: transparent !important; border-color: transparent; -webkit-print-color-adjust: exact; color-adjust: exact; padding: 2px 0;}
+            .hide-on-print { display: none; }
         }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <div class="mb-12 flex justify-center">
-                <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                        <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
-                        <g transform="translate(135, 0)">
-                            <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                        </g>
-                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </a>
-            </div>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                <!-- Standard Page Links -->
-                <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg bg-blue-600 text-white"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-            
-                <!-- Divider -->
-                <div class="border-t border-gray-700 my-2"></div>
+<body class="bg-gray-200">
 
-                <!-- Interactive Tool Buttons -->
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
-            </nav>
-            <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">
-                        Login / Register
-                    </a>
-                </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+    <!-- Cover Page -->
+    <div class="page cover-page bg-gray-900">
+        <div class="content-body">
+            <div class="flamea-logo dark my-auto">
+                <svg width="240" height="72" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg>
             </div>
-        </aside>
-
-        <!-- Main Content Area -->
-        <main class="main-content-area px-6 py-12 md:px-12">
-            <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">Flamea Toolkit</h1>
-            <p class="text-center text-lg text-gray-400 mb-12">Your digital resources for empowered co-parenting.</p>
-
-            <!-- Category: AI Assistant -->
-            <div class="mb-8">
-                <div class="p-6 bg-gray-900 rounded-lg shadow-lg flex flex-col md:flex-row items-center justify-between">
-                    <div class="flex items-center mb-4 md:mb-0">
-                        <i class="fas fa-robot text-4xl text-green-400 mr-6"></i>
-                        <div>
-                            <h2 class="text-2xl font-bold">AI Legal Assistant</h2>
-                            <p class="text-gray-300">Get instant, AI-powered answers to your family law questions.</p>
-                        </div>
-                    </div>
-                    <button data-modal-target="chatbot-modal" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full md:w-auto">Launch Assistant</button>
-                </div>
-            </div>
-
-            <!-- Category: Core Planning Tools -->
-            <div class="mb-8">
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-900 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                    <span class="text-2xl font-bold">🛠️ Core Planning & Tracking Tools</span>
-                    <i class="fas fa-chevron-down transform transition-transform"></i>
-                </button>
-                <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-blue-500">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-                        <a href="assessment.html" class="tool-card"><i class="fas fa-clipboard-check text-blue-400"></i><h3>Needs Assessment</h3><p>Start here to get a personalized action plan.</p></a>
-                        <a href="parenting-plan.html" class="tool-card"><i class="fas fa-file-signature text-blue-400"></i><h3>Parenting Plan Builder</h3><p>Create a comprehensive, court-ready parenting plan.</p></a>
-                        <a href="activity-tracker.html" class="tool-card"><i class="fas fa-people-arrows text-blue-400"></i><h3>Family Activity Tracker</h3><p>Log contributions, schedules, and important events.</p></a>
-                        <a href="forms.html" class="tool-card"><i class="fas fa-folder-open text-blue-400"></i><h3>Forms & Wizards</h3><p>Access legal templates and guided forms.</p></a>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Category: Media & Publications -->
-            <div class="mb-8">
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-900 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                    <span class="text-2xl font-bold">📚 Media & Publications</span>
-                    <i class="fas fa-chevron-down transform transition-transform"></i>
-                </button>
-                <div class="accordion-content hidden mt-4 pl-4 border-l-4 border-yellow-500">
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-                        <a href="publications.html" class="tool-card"><i class="fas fa-book-open text-yellow-400"></i><h3>Read Our Books</h3><p>Access exclusive books on fatherhood and the law.</p></a>
-                        <button data-modal-target="podcast-modal" class="tool-card text-left"><i class="fas fa-podcast text-yellow-400"></i><h3>Flamea Podcast</h3><p>Listen to discussions on key topics for fathers.</p></button>
-                        <a href="https://www.youtube.com/@Flamea2024" target="_blank" class="tool-card"><i class="fab fa-youtube text-yellow-400"></i><h3>YouTube Channel</h3><p>Watch video guides, tutorials, and interviews.</p></a>
-                        <a href="community.html" class="tool-card"><i class="fas fa-comments text-yellow-400"></i><h3>Community & Contact</h3><p>Vote on topics, share your story, and get in touch.</p></a>
-                    </div>
-                </div>
-            </div>
-        </main>
+            <h1 class="text-white text-4xl md:text-5xl">Comprehensive Parenting Plan</h1>
+            <p class="text-gray-300 text-xl mt-4">A legally-informed agreement crafted in the best interests of the child.</p>
+        </div>
+        <div class="page-footer text-gray-400">
+            <span>Doc ID: <span class="editable-inline" contenteditable="true">FLAMEA-CPP-202506120042</span></span>
+            <span>Version: 1.0</span>
+            <span>Generated: <span class="editable-inline" contenteditable="true">12 June 2025</span></span>
+        </div>
     </div>
-
-    <!-- Modals -->
-    <!-- AI Assistant Modal -->
-    <div id="chatbot-modal" class="modal">
-        <div class="bg-gray-800 rounded-lg shadow-2xl flex flex-col h-[70vh] w-11/12 max-w-lg relative">
-            <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-white">Flamea AI Legal Assistant</h3>
-                <button data-modal-close="chatbot-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+    
+    <!-- Main Content Pages -->
+    <div id="main-content-container">
+        <div class="page" data-page-number="1">
+            <div class="page-header">Comprehensive Parenting Plan</div>
+            <div class="content-body">
+                <h2>SECTION 1: PARTICULARS</h2>
+                 <div class="grid grid-cols-2 gap-8">
+                    <div>
+                        <h3 class="font-bold mb-2">1.1 The Father (or Parent A)</h3>
+                        <label class="form-label">Full Legal Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
+                        <label class="form-label">ID Number</label><div contenteditable="true" class="editable mb-2">[Enter ID Number]</div>
+                        <label class="form-label">Residential Address</label><div contenteditable="true" class="editable mb-2">[Enter Address]</div>
+                    </div>
+                     <div>
+                        <h3 class="font-bold mb-2">1.2 The Mother (or Parent B)</h3>
+                        <label class="form-label">Full Legal Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
+                        <label class="form-label">ID Number</label><div contenteditable="true" class="editable mb-2">[Enter ID Number]</div>
+                        <label class="form-label">Residential Address</label><div contenteditable="true" class="editable mb-2">[Enter Address]</div>
+                    </div>
+                </div>
+                <h3 class="font-bold mt-6 mb-2">1.3 The Child / Children</h3>
+                <div id="children-container" class="space-y-4">
+                    <div class="dynamic-block child-block">
+                        <label class="form-label">Child's Full Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
+                        <label class="form-label">Date of Birth</label><div contenteditable="true" class="editable mb-2">[Enter DOB]</div>
+                        <button class="remove-btn hide-on-print float-right" onclick="this.closest('.dynamic-block').remove()">×</button>
+                    </div>
+                </div>
+                <button id="add-child-btn" class="add-btn hide-on-print">+ Add Child</button>
             </div>
-            <div class="p-4 flex-grow overflow-y-auto">
-                <p class="text-gray-300">AI Assistant content will load here. This is a placeholder for the chatbot interface.</p>
-                <!-- Chatbot interface would go here -->
-            </div>
-            <div class="p-4 border-t border-gray-700">
-                <input type="text" placeholder="Ask a question..." class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 focus:border-green-500 text-white">
+            <div class="page-footer">
+                <span>&copy; 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number-display">Page 1</span>
             </div>
         </div>
     </div>
+    
+    <div class="text-center my-8 hide-on-print"><button id="add-page-btn" class="add-btn">Add Continuation Page</button></div>
 
-    <!-- Podcast Player Modal -->
-    <div id="podcast-modal" class="modal">
-        <div class="bg-gray-800 rounded-lg shadow-2xl flex flex-col w-11/12 max-w-md relative">
-             <div class="p-4 border-b border-gray-700 flex justify-between items-center">
-                <h3 class="font-bold text-lg text-white">FLAMEA Podcast</h3>
-                <button data-modal-close="podcast-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
-            </div>
-            <div class="p-6">
-                 <p class="text-gray-300">Podcast player content would load here. This is a placeholder.</p>
-                 <!-- Podcast player interface would go here -->
+    <!-- Back Cover Page -->
+    <div class="page back-cover-page">
+        <div class="content">
+             <div class="flamea-logo dark mb-8"><svg width="160" height="48" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <div class="max-w-2xl">
+                <h2 class="text-green-400 text-2xl font-bold">OUR MISSION</h2>
+                <p class="text-gray-200 mt-2 text-lg">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
+                <h2 class="text-green-400 text-2xl font-bold mt-8">THE BUILDER'S ETHOS: OUR CORE VALUES</h2>
+                <div class="mt-4 text-center">
+                    <div class="inline-block text-left text-gray-200 space-y-2 text-lg">
+                        <div><span class="text-green-400 font-bold">STRUCTURE:</span> 🛡️ We build organised, logical, and robust systems.</div>
+                        <div><span class="text-green-400 font-bold">ASSEMBLE:</span> 🧩 We bring together disparate parts to create a cohesive whole.</div>
+                        <div><span class="text-green-400 font-bold">LEGACY:</span> 🦅 We build upon the work of our predecessors.</div>
+                        <div><span class="text-green-400 font-bold">ARCHITECT:</span> 🏛️ We design with vision and purpose for the future.</div>
+                        <div><span class="text-green-400 font-bold">TOOL-UP:</span> 🛠️ We empower users with the right tools and knowledge.</div>
+                        <div><span class="text-green-400 font-bold">INNOVATE:</span> 💡 We constantly seek better ways to solve problems.</div>
+                        <div><span class="text-green-400 font-bold">SUSTAIN:</span> 🌱 We build things that are meant to last.</div>
+                        <div><span class="text-green-400 font-bold">OBSERVE:</span> 👁️ We pay close attention to identify needs and find solutions.</div>
+                    </div>
+                </div>
             </div>
         </div>
+        <div class="page-footer text-gray-400"><span>https://flamea.org</span><span>salatiso@flamea.org</span><span>&copy; 2025 Flamea</span></div>
     </div>
-
-
+    
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // Set current year in footer
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-            // Accordion Logic
-            document.querySelectorAll('.accordion-toggle').forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.nextElementSibling;
-                    const icon = button.querySelector('i.fa-chevron-down');
-                    content.classList.toggle('hidden');
-                    icon.classList.toggle('rotate-180');
+        document.addEventListener('DOMContentLoaded', () => {
+            function updatePageNumbers() {
+                const pages = document.querySelectorAll('#main-content-container .page');
+                pages.forEach((page, index) => {
+                    let pageNumEl = page.querySelector('.page-number-display');
+                    if (pageNumEl) pageNumEl.textContent = `Page ${index + 1}`;
                 });
-            });
+            }
 
-            // Generic Modal Logic
-            const openModalButtons = document.querySelectorAll('[data-modal-target]');
-            const closeModalButtons = document.querySelectorAll('[data-modal-close]');
+            function createNewPage() {
+                const pageCount = document.querySelectorAll('#main-content-container .page').length + 1;
+                const newPage = document.createElement('div');
+                newPage.className = 'page';
+                newPage.setAttribute('data-page-number', pageCount);
+                newPage.innerHTML = `
+                    <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+                    <div class="page-header">Comprehensive Parenting Plan (Continuation)</div>
+                    <div class="content-body">
+                         <div contenteditable="true" class="editable" style="width: 100%; height: 250mm;">[Continue your content here...]</div>
+                    </div>
+                    <div class="page-footer"><span>&copy; 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number-display">Page ${pageCount}</span></div>
+                `;
+                document.getElementById('main-content-container').appendChild(newPage);
+                updatePageNumbers();
+            }
 
-            openModalButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const modalId = button.getAttribute('data-modal-target');
-                    const modal = document.getElementById(modalId);
-                    if (modal) {
-                        modal.classList.add('active');
-                    }
-                });
-            });
-
-            closeModalButtons.forEach(button => {
-                button.addEventListener('click', () => {
-                    const modalId = button.getAttribute('data-modal-close');
-                    const modal = document.getElementById(modalId);
-                     if (modal) {
-                        modal.classList.remove('active');
-                    }
-                });
-            });
+            document.getElementById('add-page-btn').addEventListener('click', createNewPage);
             
-            // Close modal if user clicks outside of the modal content
-            window.addEventListener('click', (event) => {
-                if (event.target.classList.contains('modal')) {
-                    event.target.classList.remove('active');
-                }
+            document.getElementById('add-child-btn').addEventListener('click', () => {
+                const container = document.getElementById('children-container');
+                const newChildBlock = document.createElement('div');
+                newChildBlock.className = 'dynamic-block child-block';
+                newChildBlock.innerHTML = `
+                    <label class="form-label">Child's Full Name</label><div contenteditable="true" class="editable mb-2">[Enter Name]</div>
+                    <label class="form-label">Date of Birth</label><div contenteditable="true" class="editable mb-2">[Enter DOB]</div>
+                    <button class="remove-btn hide-on-print float-right" onclick="this.closest('.dynamic-block').remove()">×</button>
+                `;
+                container.appendChild(newChildBlock);
             });
+
+             updatePageNumbers();
         });
     </script>
 </body>
