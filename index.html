@@ -9,6 +9,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
         .main-container {
@@ -18,28 +19,30 @@
             width: 100vw;
             overflow: hidden;
         }
-        .content-panel { 
-            display: none; 
-            animation: slideIn 0.6s forwards;
-            overflow-y: auto; /* Allow content to scroll if it overflows */
-        }
+        .content-panel { display: none; animation: slideIn 0.6s forwards; }
         .content-panel.active { display: flex; }
         @keyframes slideIn {
             from { opacity: 0; transform: translateX(30px); }
             to { opacity: 1; transform: translateX(0); }
         }
-        .sidebar-link, .sidebar-direct-link {
+        .sidebar-link {
             transition: all 0.3s ease;
             transform: translateX(0);
         }
-        .sidebar-direct-link.active, .sidebar-direct-link:hover {
+        .sidebar-link.active, .sidebar-link:hover {
             background-color: #2563EB; /* blue-600 */
             color: white;
             transform: translateX(10px);
         }
-        .buildup-box {
-            min-height: 120px; /* Ensure a consistent height for the content area */
-            transition: all 0.5s ease-in-out;
+        /* New styling for direct links to look like sidebar links */
+        .sidebar-direct-link {
+             transition: all 0.3s ease;
+             transform: translateX(0);
+        }
+         .sidebar-direct-link:hover {
+            background-color: #2563EB; /* blue-600 */
+            color: white;
+            transform: translateX(10px);
         }
     </style>
 </head>
@@ -47,37 +50,27 @@
     <div class="main-container">
         <!-- Sidebar Navigation -->
         <aside class="bg-gray-900 p-6 flex flex-col">
-            <div class="mb-12 flex justify-center">
-                <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                        <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
-                        <g transform="translate(135, 0)">
-                            <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/>
-                        </g>
-                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </a>
-            </div>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                <!-- Use data-target for SPA-like navigation -->
-                <a href="#" data-target="home" class="sidebar-direct-link active flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                <a href="#" data-target="mission" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                
-                <!-- Direct links to other pages -->
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-            
-                <div class="border-t border-gray-700 my-2"></div>
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+    <!-- Standard Page Links -->
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+    
+    <!-- Divider -->
+    <div class="border-t border-gray-700 my-2"></div>
 
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
+    <!-- Interactive Tool Buttons -->
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
                     <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
                 </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
                 </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg">
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
                     <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
                 </a>
             </nav>
@@ -94,25 +87,9 @@
         <!-- Main Content Area -->
         <main class="bg-gray-800 bg-cover bg-center" style="background-image: linear-gradient(rgba(31, 41, 55, 0.8), rgba(31, 41, 55, 0.8)), url('https://images.unsplash.com/photo-1594541337994-399a5e3a890b?q=80&w=2070');">
             <!-- Home Panel -->
-            <div id="home" class="content-panel active w-full h-full flex-col justify-center items-center p-6 md:p-12 text-center">
+            <div id="home" class="content-panel active w-full h-full flex-col justify-center items-center p-12 text-center">
                 <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
-                <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mb-8">Empowering South African fathers to reclaim their role.</p>
-                
-                <!-- Marketing Buildup Box -->
-                <div id="marketing-buildup-container" class="max-w-3xl w-full mx-auto bg-white/90 backdrop-blur-sm text-gray-800 rounded-lg shadow-xl p-6">
-                    <div id="buildup-content" class="buildup-box flex items-center justify-center">
-                        <!-- Dynamic message will be loaded here -->
-                        <p>Loading weekly insights...</p>
-                    </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <button id="prev-message" class="text-gray-500 hover:text-gray-900 p-2 rounded-full transition-colors duration-200"><i class="fas fa-arrow-left"></i></button>
-                        <div id="buildup-theme" class="text-center">
-                            <p class="font-bold text-lg">Weekly Theme:</p>
-                            <p id="theme-name" class="text-md"></p>
-                        </div>
-                        <button id="next-message" class="text-gray-500 hover:text-gray-900 p-2 rounded-full transition-colors duration-200"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
+                <p class="text-xl md:text-2xl text-gray-300 max-w-2xl">Empowering South African fathers to reclaim their role.</p>
             </div>
             
             <!-- Mission Panel -->
@@ -128,100 +105,25 @@
 
     <!-- Scripts -->
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Panel switching logic
-            document.querySelectorAll('[data-target]').forEach(link => {
-                link.addEventListener('click', function(e) {
-                    // Only process links with a data-target attribute
-                    if (this.dataset.target) {
-                        e.preventDefault();
-                        const targetId = this.dataset.target;
-                        
-                        // Update active link in the sidebar
-                        document.querySelectorAll('[data-target]').forEach(l => l.classList.remove('active'));
-                        this.classList.add('active');
-                        
-                        // Switch content panels
-                        document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
-                        document.getElementById(targetId)?.classList.add('active');
-                    }
-                });
-            });
+        document.getElementById('main-nav').addEventListener('click', function(e) {
+            const link = e.target.closest('.sidebar-link');
+            // Only prevent default for panel-switching links
+            if (link && link.dataset.target) {
+                e.preventDefault();
+                const targetId = link.dataset.target;
 
-            // Set current year
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
+                document.querySelectorAll('.sidebar-link').forEach(l => l.classList.remove('active'));
+                link.classList.add('active');
 
-            // Marketing Buildup Logic
-            const weeklyThemes = {
-                1: {
-                    name: "Know Your Rights",
-                    messages: [
-                        { text: "The Constitution is your shield. Understand its power in your fight for fairness.", link: "training/course-constitution.html" },
-                        { text: "The Children's Act champions the 'best interests of the child'. Learn how to make it work for you.", link: "training/course-childrens-act.html" },
-                        { text: "Don't just fight, fight smart. Our Needs Assessment tool helps you build a winning strategy.", link: "assessment.html" },
-                        { text: "A solid Parenting Plan is your roadmap to stability. Build yours with our guided tool.", link: "parenting-plan.html" },
-                        { text: "Knowledge is power. Dive into our Resources to understand the legal landscape.", link: "resources.html" }
-                    ]
-                }
-                // Add more weekly themes here as needed
-            };
-
-            const currentWeek = 1; // This could be determined dynamically
-            const theme = weeklyThemes[currentWeek];
-            let currentMessageIndex = Math.floor(Math.random() * (theme.messages.length + 1)); // Include CTA
-
-            const contentContainer = document.getElementById('buildup-content');
-            const themeNameEl = document.getElementById('theme-name');
-            const prevBtn = document.getElementById('prev-message');
-            const nextBtn = document.getElementById('next-message');
-
-            function displayMessage() {
-                const messageData = theme.messages[currentMessageIndex];
-                contentContainer.innerHTML = `
-                    <div class="text-center" style="animation: fadeIn 0.5s;">
-                        <p class="text-xl italic mb-4">"${messageData.text}"</p>
-                        <a href="${messageData.link}" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Learn More</a>
-                    </div>
-                `;
+                document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
+                document.getElementById(targetId).classList.add('active');
             }
-
-            function displayCTA() {
-                contentContainer.innerHTML = `
-                    <div class="text-center" style="animation: fadeIn 0.5s;">
-                        <p class="text-xl font-bold mb-4">Your Voice Matters. Your Legacy Awaits.</p>
-                        <p class="mb-4">Join the community, share your ideas, and let's build a better future for our children, together.</p>
-                        <a href="community.html" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors mr-2">Join the Community</a>
-                        <a href="login.html" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors">Sign Up Now</a>
-                    </div>
-                `;
-            }
-
-            function updateMessage() {
-                if (currentMessageIndex === theme.messages.length) {
-                    displayCTA();
-                } else {
-                    displayMessage();
-                }
-            }
-
-            prevBtn.addEventListener('click', () => {
-                currentMessageIndex = (currentMessageIndex - 1 + theme.messages.length + 1) % (theme.messages.length + 1);
-                updateMessage();
-            });
-
-            nextBtn.addEventListener('click', () => {
-                currentMessageIndex = (currentMessageIndex + 1) % (theme.messages.length + 1);
-                updateMessage();
-            });
-
-            if (themeNameEl) {
-                themeNameEl.textContent = theme.name;
-            }
-            // Initial display
-            updateMessage();
         });
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+    <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+    <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/chatbot.js"></script>
 </body>

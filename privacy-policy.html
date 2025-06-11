@@ -1,45 +1,41 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA - Privacy Policy</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <!-- Head content same as other pages -->
 </head>
 <body class="bg-gray-800 text-white">
     <div class="main-container">
         <!-- Sidebar Navigation -->
         <aside class="bg-gray-900 p-6 flex flex-col">
-            <div class="mb-12 flex justify-center">
-                <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                        <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
-                        <g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g>
-                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
+            <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
+            <nav id="main-nav" class="flex flex-col space-y-4">
+    <!-- Standard Page Links -->
+    <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+    <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+    <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+    <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+    <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+    <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+    
+    <!-- Divider -->
+    <div class="border-t border-gray-700 my-2"></div>
+
+    <!-- Interactive Tool Buttons -->
+    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
+                </button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
+                </button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
+                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
                 </a>
-            </div>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-                <div class="border-t border-gray-700 my-2"></div>
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
             </nav>
             <div class="mt-auto text-center">
-                <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
-                </div>
+                <div id="auth-links-desktop" class="mb-4"></div>
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
@@ -48,7 +44,7 @@
         <main class="main-content p-8 md:p-12">
             <div class="max-w-4xl mx-auto">
                 <div class="prose prose-invert lg:prose-xl max-w-none">
-                    <h1 class="text-4xl font-bold font-roboto text-white">Privacy Policy</h1>
+                    <h2 class="text-4xl font-bold font-roboto text-white">Privacy Policy</h2>
                     <p class="text-sm text-gray-500">Last updated: June 7, 2025</p>
                     <p>FLAMEA ("us", "we", or "our") operates the https://flamea.org website (the "Service"). This page informs you of our policies regarding the collection, use, and disclosure of personal data when you use our Service and the choices you have associated with that data. Our policy is designed to comply with South Africa's Protection of Personal Information Act (POPIA).</p>
                     
@@ -57,23 +53,15 @@
 
                     <h3>Data Storage and Security</h3>
                     <p>Your information is stored using Google's Firebase platform. We take robust measures to protect your data, but no method of transmission over the Internet is 100% secure.</p>
+
+                    <!-- Add other policy sections as needed -->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modals -->
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50">
-        <!-- Content will be same as tools.html -->
-    </div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50">
-       <!-- Content will be same as tools.html -->
-    </div>
-
-    <!-- Scripts -->
+    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
     <script src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
