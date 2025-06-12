@@ -3,195 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goliath's Reckoning: The Father's Legal Journey</title>
+    <title>Goliath's Reckoning: A Legal Journey</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Bungee&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <style>
-        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
-        header { background-color: #333; color: #fff; padding: 10px 0; text-align: center; }
-        nav ul { list-style-type: none; padding: 0; text-align: center; }
-        nav ul li { display: inline; margin-right: 20px; }
-        nav ul li a { color: #fff; text-decoration: none; }
-       .container { max-width: 960px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
-       .game-area { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #e9e9e9; }
-       .scenario,.choices,.feedback,.resources,.suggestions { margin-bottom: 20px; padding: 10px; border: 1px dashed #ccc; }
-        h2 { color: #333; }
-        button { padding: 10px 15px; background-color: #5cb85c; color: white; border: none; border-radius: 5px; cursor: pointer; }
-        button:hover { background-color: #4cae4c; }
-        textarea { width: 95%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
-        footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.9em; }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #111827;
+        }
+        .game-title {
+            font-family: 'Bungee', cursive;
+        }
+        .resource-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        .choice-btn {
+            background-color: #374151;
+            border-left: 4px solid #4b5563;
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-btn:hover {
+            background-color: #4f46e5;
+            border-left-color: #a5b4fc;
+            transform: translateX(10px);
+        }
+        .modal {
+            background-color: rgba(17, 24, 39, 0.9);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
-<body>
-    <header>
-        <h1>Goliath's Reckoning: The Father's Legal Journey</h1>
-        <nav>
-            <ul>
-                <li><a href="#home">Home</a></li>
-                <li><a href="#about">About the Game</a></li>
-                <li><a href="https://flamea.org/tools.html" target="_blank">Flamea.org Tools</a></li>
-            </ul>
-        </nav>
-    </header>
+<body class="bg-gray-900 text-gray-200">
 
-    <div class="container">
-        <div id="game-start-screen" class="game-area">
-            <h2>Welcome, Father!</h2>
-            <p>This simulator is designed to help you prepare for legal challenges in South Africa. Navigate various court processes, understand your rights, and learn how to advocate for yourself and your children.</p>
-            <p>This game aligns with the values of Justice, Family, Community, and Awareness promoted by Flamea.org.</p>
-            <button onclick="startGame()">Start Game</button>
-        </div>
-
-        <div id="case-selection-screen" class="game-area" style="display:none;">
-            <h2>Select Your Legal Path</h2>
-            <p>Choose a court level to begin your journey:</p>
-            <button onclick="selectCaseType('small_claims')">Small Claims Court</button>
-            <button onclick="selectCaseType('childrens_court')">Children’s Court</button>
-            <button onclick="selectCaseType('magistrates_court_civil')">Magistrate's Court (Civil)</button>
-            <button onclick="selectCaseType('magistrates_court_criminal')">Magistrate's Court (Criminal)</button>
-            <button onclick="selectCaseType('high_court')">High Court (Appeal/Review)</button>
-            <button onclick="selectCaseType('constitutional_court')">Constitutional Court Challenge</button>
-        </div>
-
-        <div id="game-play-area" class="game-area" style="display:none;">
-            <div class="scenario">
-                <h3>Scenario: <span id="scenario-title"></span></h3>
-                <p id="scenario-description"></p>
+    <!-- Start Screen -->
+    <div id="start-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="text-center max-w-3xl">
+            <h1 class="game-title text-5xl md:text-6xl text-amber-400">Goliath's Reckoning</h1>
+            <h2 class="text-2xl text-gray-300 mt-2 mb-8">A Father's Legal Journey</h2>
+            <div class="bg-gray-800 p-6 rounded-lg text-gray-300 space-y-4 mb-8 text-left">
+                <h3 class="text-xl font-bold text-amber-300 border-b border-gray-700 pb-2 mb-3">Choose Your Battle:</h3>
+                <p>Select the situation that best describes your starting point. This will determine the path of your legal simulation.</p>
+                <div id="path-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <button data-path="contact" class="choice-btn p-4 rounded-md">I am being denied fair contact with my child.</button>
+                    <button data-path="paternity" class="choice-btn p-4 rounded-md">I need to formally establish paternity and my parental rights.</button>
+                    <button data-path="allegations" class="choice-btn p-4 rounded-md">I am facing false allegations that impact my relationship with my child.</button>
+                    <button data-path="constitutional" class="choice-btn p-4 rounded-md">I believe a law or policy is violating my constitutional rights as a father.</button>
+                </div>
             </div>
-
-            <div class="choices">
-                <h4>Your Options:</h4>
-                <div id="player-choices">
-                    </div>
-            </div>
-
-            <div class="feedback">
-                <h4>Outcome/Feedback:</h4>
-                <p id="game-feedback"></p>
-            </div>
-
-            <div class="resources">
-                <h4>Legal Resources & Training Modules:</h4>
-                <p>Based on your current scenario, you might find these Flamea.org resources helpful:</p>
-                <ul id="flamea-links">
-                    <li><a href="httpsa://flamea.org/training/general-legal-principles" target="_blank">General Legal Principles</a></li>
-                </ul>
-                <p><strong>Key Legal Concepts Covered:</strong> <span id="legal-concepts"></span></p>
-                <p><strong>Cost Implications:</strong> <span id="cost-implications"></span></p>
-            </div>
-        </div>
-
-        <div class="suggestions game-area">
-            <h3>Suggest New Content</h3>
-            <p>Have an idea for a new scenario or a feature you'd like to see? Let us know!</p>
-            <textarea id="user-suggestion" rows="4" placeholder="Type your suggestion here..."></textarea>
-            <button onclick="submitSuggestion()">Submit Suggestion</button>
-            <p id="suggestion-feedback" style="margin-top:10px;"></p>
+            <p class="text-sm text-gray-500">This game is a simulator designed for educational purposes. It is not legal advice. For real-world assistance, consult Flamea.org and a qualified legal professional.</p>
         </div>
     </div>
 
-    <footer>
-        <p>&copy; <span id="currentYear"></span> Flamea.org - Empowering Fathers. All Rights Reserved.</p>
-        <p><a href="https://flamea.org/our-work.html" target="_blank">Learn more about Flamea.org's mission</a></p>
-    </footer>
+    <!-- Main Game UI -->
+    <div id="game-container" class="hidden w-full max-w-7xl mx-auto p-4 md:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            
+            <!-- Dashboard (Left Panel) -->
+            <aside class="lg:col-span-1 bg-gray-800 p-4 rounded-2xl border-2 border-gray-700 flex flex-col h-fit">
+                <h2 class="game-title text-xl text-amber-400 text-center mb-4">Case File</h2>
+                
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Case Strength</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="strength-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-green-400 to-green-600" style="width: 50%;"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Financial Resources</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="finance-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Time Wasted</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="time-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-red-500 to-red-700" style="width: 0%;"></div>
+                    </div>
+                </div>
 
-    <script>
-        // Basic JavaScript for game flow - Placeholder
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+                <div class="border-t border-gray-700 pt-4 mt-4">
+                    <h3 class="font-bold text-lg text-gray-300 mb-2">Inventory</h3>
+                    <ul id="inventory-list" class="text-sm text-gray-400 space-y-1">
+                        <!-- Inventory items will be added here -->
+                    </ul>
+                </div>
+                 <div class="mt-6 text-center">
+                    <button id="flamea-assist-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm tooltip">
+                        <i class="fas fa-question-circle mr-2"></i> Flamea AI Assist
+                        <span class="tooltiptext">Get hints, explanations, and links to Flamea.org resources for your current step.</span>
+                    </button>
+                </div>
+            </aside>
 
-        function startGame() {
-            document.getElementById('game-start-screen').style.display = 'none';
-            document.getElementById('case-selection-screen').style.display = 'block';
-        }
+            <!-- Game Content (Right Panel) -->
+            <main class="lg:col-span-4 bg-gray-800 p-6 rounded-2xl border-2 border-gray-700 flex flex-col">
+                <div id="scenario-display" class="flex-grow">
+                    <h2 id="scenario-title" class="text-2xl font-bold mb-4"></h2>
+                    <div id="scenario-text" class="prose prose-invert max-w-none text-gray-300 space-y-4"></div>
+                </div>
+                <div id="choices-area" class="mt-6 pt-6 border-t border-gray-700">
+                    <h3 class="text-lg font-bold mb-3">What do you do?</h3>
+                    <div id="choices-container" class="space-y-3">
+                        <!-- Choices will be generated by JS -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Outcome Modal -->
+    <div id="outcome-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-2xl w-full">
+            <h2 id="outcome-title" class="text-3xl font-bold mb-4 text-center"></h2>
+            <div id="outcome-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
+            <div id="resource-changes" class="text-center font-bold text-md mb-6 space-y-1"></div>
+            <button id="next-step-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Continue</button>
+        </div>
+    </div>
 
-        function selectCaseType(caseType) {
-            document.getElementById('case-selection-screen').style.display = 'none';
-            document.getElementById('game-play-area').style.display = 'block';
-            loadScenario(caseType);
-        }
+    <!-- AI Assist Modal -->
+    <div id="ai-assist-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-3xl w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-blue-400"><i class="fas fa-robot mr-2"></i> Flamea AI Legal Assistant</h2>
+                <button id="close-ai-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <div id="ai-assist-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
+            <div id="ai-links-container" class="space-y-2">
+                <!-- Links to resources will be added here -->
+            </div>
+        </div>
+    </div>
 
-        function loadScenario(caseType) {
-            // Placeholder: This function would load specific scenarios based on caseType
-            // It would update scenario-title, scenario-description, player-choices, flamea-links, legal-concepts, and cost-implications
-            let scenarioTitle = '';
-            let scenarioDescription = '';
-            let choicesHtml = '';
-            let flameaLinksHtml = '';
-            let legalConcepts = '';
-            let costImplicationsText = 'Varies depending on case complexity and legal representation.';
 
-            switch(caseType) {
-                case 'small_claims':
-                    scenarioTitle = "The Shared Expense Dispute";
-                    scenarioDescription = "You paid for a significant child-related expense (e.g., R10,000 for emergency medical care) based on a verbal agreement to share costs with the mother, who now refuses to pay her share. You need to recover this through the Small Claims Court.";
-                    choicesHtml = `
-                        <button onclick="makeChoice('send_demand_letter')">Send Letter of Demand</button>
-                        <button onclick="makeChoice('file_scc_claim')">File Claim with SCC Clerk</button>
-                        <button onclick="makeChoice('represent_self')">Prepare for Self-Representation</button>
-                    `;
-                    flameaLinksHtml = `<li><a href="httpsa://flamea.org/training/small-claims-court-guide" target="_blank">Guide to Small Claims Court</a></li>`;
-                    legalConcepts = "Small Claims Court procedure, letter of demand, burden of proof, self-representation.";
-                    costImplicationsText = "Low. Minimal court fees, no lawyers typically involved.";
-                    break;
-                case 'childrens_court':
-                    scenarioTitle = "The Fight for Meaningful Contact";
-                    scenarioDescription = "You are being denied reasonable and regular contact with your child. The mother makes vague excuses. You need to apply to the Children's Court for defined contact rights.";
-                    choicesHtml = `
-                        <button onclick="makeChoice('file_childrens_court_application')">File Application for Contact</button>
-                        <button onclick="makeChoice('attend_mediation')">Attend Mediation</button>
-                        <button onclick="makeChoice('present_evidence_best_interest')">Present Evidence of Child's Best Interest</button>
-                    `;
-                    flameaLinksHtml = `
-                        <li><a href="httpsa://flamea.org/training/childrens-court-contact" target="_blank">Securing Contact via Children's Court</a></li>
-                        <li><a href="httpsa://flamea.org/training/best-interest-child" target="_blank">Arguing 'Best Interests of the Child'</a></li>
-                    `;
-                    legalConcepts = "Children's Act, Section 28 (Best Interests of the Child), contact orders, role of Family Advocate.";
-                    break;
-                // Add more cases here based on the report's scenario blueprints
-                default:
-                    scenarioTitle = "Select a Case";
-                    scenarioDescription = "Please select a case type to begin.";
-            }
+    <script src="legal-simulator.js"></script>
 
-            document.getElementById('scenario-title').textContent = scenarioTitle;
-            document.getElementById('scenario-description').textContent = scenarioDescription;
-            document.getElementById('player-choices').innerHTML = choicesHtml;
-            document.getElementById('flamea-links').innerHTML = flameaLinksHtml; // Assuming this is the correct ID
-            document.getElementById('legal-concepts').textContent = legalConcepts;
-            document.getElementById('cost-implications').textContent = costImplicationsText;
-            document.getElementById('game-feedback').textContent = 'Make your choice to proceed.';
-        }
-
-        function makeChoice(choice) {
-            // Placeholder: This function would handle player's choice and update the game state
-            let feedback = '';
-            switch(choice) {
-                case 'send_demand_letter':
-                    feedback = "You've drafted and sent a letter of demand. Wait 14 days for a response. What's next if they don't pay?";
-                    // Potentially update choices or scenario
-                    break;
-                case 'file_childrens_court_application':
-                    feedback = "Application filed. You've received a court date and the other party has been subpoenaed. Prepare your arguments focusing on the child's best interests.";
-                    break;
-                // Add more choice outcomes
-                default:
-                    feedback = "Choice processed.";
-            }
-            document.getElementById('game-feedback').textContent = feedback;
-        }
-
-        function submitSuggestion() {
-            const suggestion = document.getElementById('user-suggestion').value;
-            if (suggestion.trim() === "") {
-                document.getElementById('suggestion-feedback').textContent = "Please enter a suggestion.";
-                return;
-            }
-            // In a real application, this would send the suggestion to a server
-            console.log("User suggestion:", suggestion);
-            document.getElementById('suggestion-feedback').textContent = "Thank you for your suggestion!";
-            document.getElementById('user-suggestion').value = ""; // Clear the textarea
-        }
-
-        // Initialize the first screen (optional, if you want to start with case selection directly)
-        // startGame(); // Or call directly if no intro screen
-    </script>
 </body>
 </html>
