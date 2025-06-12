@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea - Comprehensive Parenting Plan</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;700&display=swap');
+        body { font-family: 'Roboto', sans-serif; -webkit-print-color-adjust: exact; background-color: #e2e8f0; }
+        .page { width: 210mm; min-height: 297mm; height: auto; page-break-after: always; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 2rem auto; overflow: hidden; display: flex; flex-direction: column; background: white; }
+        .header, .footer { padding: 1cm; position: absolute; left: 0; right: 0; font-size: 10pt; color: #4a5568;}
+        .header { top: 0; text-align: right; }
+        .footer { bottom: 0; display: flex; justify-content: space-between; }
+        .content { padding: 2.5cm 2cm; flex-grow: 1; }
+        h1 { font-family: 'Roboto Slab', serif; font-size: 20pt; color: #1a202c; text-align: center; text-transform: uppercase; margin-bottom: 2rem; }
+        h2 { font-family: 'Roboto', sans-serif; font-size: 14pt; color: #1a202c; margin-bottom: 1rem; }
+        p, li { font-size: 11pt; line-height: 1.6; color: #2d3748; margin-bottom: 1rem; }
+        .editable { background-color: #f1f5f9; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; min-height: 40px; white-space: pre-wrap; word-wrap: break-word; }
+        .editable:focus { outline: 2px solid #3b82f6; background-color: white; }
+        .editable-inline { background-color: #f1f5f9; padding: 2px 4px; border-radius: 3px; border-bottom: 1px dashed #94a3b8; }
+        .editable-inline:focus { outline: 1px solid #3b82f6; background-color: white;}
+        .cover-page, .back-cover-page { background-color: #111827; color: white; }
+        .cover-page .content, .back-cover-page .content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex-grow: 1; padding: 2cm; }
+        .cover-page .footer, .back-cover-page .footer { color: #9ca3af; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.05; z-index: 0; pointer-events: none; }
+        .page > * { z-index: 1; }
+        .add-btn { background-color: #16a34a; color: white; padding: 4px 12px; font-size: 10pt; border-radius: 5px; cursor: pointer; border: none; margin-top: 10px; }
+        .add-btn:hover { background-color: #15803d; }
+        .remove-btn { background-color: #dc2626; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; margin-left: 10px; line-height: 24px; text-align: center; }
+        .remove-btn:hover { background-color: #b91c1c; }
+        .child-container, .witness-container { display: flex; align-items: flex-start; margin-bottom: 1rem; }
+        .child-content, .witness-content { flex-grow: 1; }
+        table { width: 100%; border-collapse: collapse; margin-bottom: 1rem; }
+        th, td { border: 1px solid #cbd5e1; padding: 8px; text-align: left; }
+        th { background-color: #f1f5f9; }
+        .balanced { background-color: #d1fae5; }
+        .unbalanced { background-color: #fee2e2; }
+        @media print { 
+            body { margin: 0; background-color: white;} 
+            .page { box-shadow: none; margin: 0; height: 297mm; } 
+            .editable, .editable-inline { background-color: transparent !important; padding: 0; border: none; font-style: normal; } 
+            .hide-on-print { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+
+    <!-- Cover Page -->
+    <div class="page cover-page">
+        <div class="content">
+            <div class="flamea-logo dark mb-8"><svg width="240" height="72" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <h1 class="text-white text-5xl font-bold font-roboto-slab mt-4">Comprehensive Parenting Plan</h1>
+            <p class="text-gray-300 text-2xl mt-4">A Legally-Informed Agreement Crafted in the Best Interests of the Child</p>
+            <p class="text-gray-400 mt-2">FATHERS. LEADERS. LEGACY.</p>
+        </div>
+        <div class="footer"><span>Doc ID: <span class="editable-inline" contenteditable="true">FLAMEA-PP-202506120201</span></span><span>Version: 1.0</span><span>Generated: <span class="editable-inline" contenteditable="true">12 June 2025</span></span></div>
+    </div>
+
+    <!-- Main Content - Parenting Plan -->
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Comprehensive Parenting Plan</strong></div>
+        <div class="content">
+            <h1>COMPREHENSIVE PARENTING PLAN</h1>
+            
+            <h2>SECTION 1: PARTICULARS</h2>
+            <h3>1.1 The Father (Parent A)</h3>
+            <p>Full Legal Name: <span contenteditable="true" class="editable-inline">Father's Full Name</span></p>
+            <p>Nickname: <span contenteditable="true" class="editable-inline">Father's Nickname</span></p>
+            <p>ID Number: <span contenteditable="true" class="editable-inline">Father's ID Number</span></p>
+            <p>Residential Address: <div contenteditable="true" class="editable">Father's Address</div></p>
+            <p>Contact Number: <span contenteditable="true" class="editable-inline">Father's Contact Number</span></p>
+            <p>Email Address: <span contenteditable="true" class="editable-inline">Father's Email</span></p>
+
+            <h3>1.2 The Mother (Parent B)</h3>
+            <p>Full Legal Name: <span contenteditable="true" class="editable-inline">Mother's Full Name</span></p>
+            <p>Nickname: <span contenteditable="true" class="editable-inline">Mother's Nickname</span></p>
+            <p>ID Number: <span contenteditable="true" class="editable-inline">Mother's ID Number</span></p>
+            <p>Residential Address: <div contenteditable="true" class="editable">Mother's Address</div></p>
+            <p>Contact Number: <span contenteditable="true" class="editable-inline">Mother's Contact Number</span></p>
+            <p>Email Address: <span contenteditable="true" class="editable-inline">Mother's Email</span></p>
+
+            <h3>1.3 The Child/Children</h3>
+            <div id="child-list" class="space-y-2">
+                <div class="child-container">
+                    <div class="child-content">
+                        <p>Full Legal Name: <span contenteditable="true" class="editable-inline">Child's Full Name</span></p>
+                        <p>Date of Birth: <span contenteditable="true" class="editable-inline">Child's DOB</span></p>
+                        <p>Relationship: <select class="editable-inline">
+                            <option value="biological">Biological</option>
+                            <option value="adopted">Adopted</option>
+                            <option value="other">Other (Specify)</option>
+                        </select> <span contenteditable="true" class="editable-inline hide-on-print">Specify if Other</span></p>
+                    </div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>
+                </div>
+            </div>
+            <button id="add-child-btn" class="add-btn hide-on-print">+ Add Child</button>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 1</span></div>
+    </div>
+
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Comprehensive Parenting Plan</strong></div>
+        <div class="content">
+            <h2>SECTION 2: RESIDENCE & CONTACT</h2>
+            <h3>2.1 Primary Residence</h3>
+            <p>The child/children shall primarily reside with: <select class="editable-inline">
+                <option value="father">Father</option>
+                <option value="mother">Mother</option>
+                <option value="shared">Shared</option>
+            </select></p>
+            <p>Details: <div contenteditable="true" class="editable">Describe residence arrangements</div></p>
+
+            <h3>2.2 Contact Schedule</h3>
+            <p>School Term: <div contenteditable="true" class="editable">Describe weekly contact schedule during school terms</div></p>
+            <p>Holidays: <div contenteditable="true" class="editable">Describe holiday contact schedule</div></p>
+            <p>Special Days (e.g., Birthdays, Father’s/Mother’s Day): <div contenteditable="true" class="editable">Describe arrangements for special days</div></p>
+
+            <h2>SECTION 3: FINANCIAL CONTRIBUTIONS</h2>
+            <p>Source of Agreement: <select class="editable-inline">
+                <option value="mutual">Mutual Agreement</option>
+                <option value="court">Court Order</option>
+                <option value="other">Other (Specify)</option>
+            </select> <span contenteditable="true" class="editable-inline hide-on-print">Specify if Other</span></p>
+            <table id="contribution-table">
+                <thead>
+                    <tr>
+                        <th>Expense</th>
+                        <th>Father’s Contribution (ZAR)</th>
+                        <th>Mother’s Contribution (ZAR)</th>
+                        <th>Balance Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td contenteditable="true" class="editable">e.g., School Fees</td>
+                        <td contenteditable="true" class="editable" data-type="father-amount">0</td>
+                        <td contenteditable="true" class="editable" data-type="mother-amount">0</td>
+                        <td class="balance-status">Balanced</td>
+                    </tr>
+                </tbody>
+            </table>
+            <button id="add-contribution-btn" class="add-btn hide-on-print">+ Add Expense</button>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 2</span></div>
+    </div>
+
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Comprehensive Parenting Plan</strong></div>
+        <div class="content">
+            <h2>SECTION 4: DECISION-MAKING</h2>
+            <p>Education: <div contenteditable="true" class="editable">Describe how decisions about schooling are made</div></p>
+            <p>Healthcare: <div contenteditable="true" class="editable">Describe how healthcare decisions are made</div></p>
+            <p>Cultural/Religious Upbringing: <div contenteditable="true" class="editable">Describe how cultural/religious decisions are made</div></p>
+
+            <h2>SECTION 5: COMMUNICATION</h2>
+            <p>Communication Method: <div contenteditable="true" class="editable">Describe preferred methods (e.g., email, phone, co-parenting app)</div></p>
+            <p>Dispute Resolution: <div contenteditable="true" class="editable">Describe process for resolving disagreements (e.g., mediation)</div></p>
+
+            <h2>SECTION 6: DECLARATION & SIGNATURES</h2>
+            <p>By signing below, the parties acknowledge that they understand and agree to the terms herein, affirming this plan is in the best interests of the child/children.</p>
+            <p>Signed at <span contenteditable="true" class="editable-inline">City/Town</span> on this <span contenteditable="true" class="editable-inline">Day</span> day of <span contenteditable="true" class="editable-inline">Month</span> <span contenteditable="true" class="editable-inline">Year</span>.</p>
+            <div class="grid grid-cols-2 gap-8">
+                <div>
+                    <div style="width: 250px; border-bottom: 1px solid #2d3748; height: 30px;"></div>
+                    <p><strong>THE FATHER (Parent A)</strong></p>
+                </div>
+                <div>
+                    <div style="width: 250px; border-bottom: 1px solid #2d3748; height: 30px;"></div>
+                    <p><strong>THE MOTHER (Parent B)</strong></p>
+                </div>
+            </div>
+
+            <h3 class="font-bold mt-8 mb-2">WITNESSES</h3>
+            <div id="witness-list" class="space-y-4">
+                <div class="witness-container">
+                    <div class="witness-content grid grid-cols-2 gap-8 mb-4 border-t pt-4">
+                        <div>
+                            <div style="width: 250px; border-bottom: 1px solid #2d3748; height: 30px;"></div>
+                            <p><strong>WITNESS NAME:</strong> <span contenteditable="true" class="editable-inline">Witness Full Name</span></p>
+                        </div>
+                        <div>
+                            <p><strong>ON BEHALF OF:</strong> <select class="editable-inline">
+                                <option value="father">The Father</option>
+                                <option value="mother">The Mother</option>
+                                <option value="both">Both Parties</option>
+                            </select></p>
+                        </div>
+                    </div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>
+                </div>
+            </div>
+            <button id="add-witness-btn" class="add-btn hide-on-print">+ Add Witness</button>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 3</span></div>
+    </div>
+
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Comprehensive Parenting Plan</strong></div>
+        <div class="content">
+            <h2>ANNEXURE A: DEFINITIONS & KEY LEGAL PRINCIPLES</h2>
+            <h3>Best Interests of the Child</h3>
+            <p>The core principle of South African family law. It means that in any matter concerning a child, their welfare, safety, and well-being are the most important consideration, above the interests of the parents or any other party.</p>
+            
+            <h3>Parental Responsibilities and Rights</h3>
+            <p>A bundle of legal duties and powers held by parents, including the duty to care for the child, maintain contact, act as their guardian, and contribute to their maintenance.</p>
+            
+            <h3>Constitution of the Republic of South Africa, 1996</h3>
+            <p>Section 9: Equality. (1) Everyone is equal before the law and has the right to equal protection and benefit of the law. (3) The state may not unfairly discriminate... on grounds including... sex, gender, marital status, ...birth.</p>
+            <p>Section 28: Children. (2) A child’s best interests are of paramount importance in every matter concerning the child.</p>
+            
+            <h3>The Children's Act 38 of 2005</h3>
+            <p>Section 20: Acquisition of parental responsibilities and rights by father. An unmarried father acquires full parental responsibilities and rights if he consents to be identified as the father, contributes to the child's upbringing and maintenance in good faith.</p>
+            <p>Section 33: Parenting plans. Co-holders of parental responsibilities and rights may agree on a parenting plan to regulate the exercise of their respective responsibilities and rights.</p>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 4</span></div>
+    </div>
+
+    <div id="page-container"></div>
+    <div class="text-center my-8 hide-on-print"><button id="add-page-btn" class="add-btn">Add Continuation Page</button></div>
+
+    <!-- Back Cover Page -->
+    <div class="page back-cover-page">
+        <div class="content">
+            <div class="flamea-logo dark mb-8"><svg width="160" height="48" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <div class="max-w-2xl">
+                <h2 class="text-green-400 text-2xl font-bold">OUR MISSION</h2>
+                <p class="text-gray-200 mt-2 text-lg">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
+                <h2 class="text-green-400 text-2xl font-bold mt-8">THE BUILDER'S ETHOS: OUR CORE VALUES</h2>
+                <div class="mt-4 text-center">
+                    <div class="text-white space-y-2 text-base">
+                        <div><span class="text-green-400 font-bold">STRUCTURE:</span> 🛡️ We build organised, logical, and robust systems.</div>
+                        <div><span class="text-green-400 font-bold">ASSEMBLE:</span> 🧩 We bring together disparate parts to create a cohesive whole.</div>
+                        <div><span class="text-green-400 font-bold">LEGACY:</span> 🦅 We build upon the work of our predecessors.</div>
+                        <div><span class="text-green-400 font-bold">ARCHITECT:</span> 🏛️ We design with vision and purpose for the future.</div>
+                        <div><span class="text-green-400 font-bold">TOOL-UP:</span> 🛠️ We empower users with the right tools and knowledge.</div>
+                        <div><span class="text-green-400 font-bold">INNOVATE:</span> 💡 We constantly seek better ways to solve problems.</div>
+                        <div><span class="text-green-400 font-bold">SUSTAIN:</span> 🌱 We build things that are meant to last.</div>
+                        <div><span class="text-green-400 font-bold">OBSERVE:</span> 👁️ We pay close attention to identify needs and find solutions.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer"><span>https://flamea.org</span><span>salatiso@flamea.org</span><span>© 2025 Flamea</span></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const childList = document.getElementById('child-list');
+            const addChildBtn = document.getElementById('add-child-btn');
+            const contributionTable = document.getElementById('contribution-table').querySelector('tbody');
+            const addContributionBtn = document.getElementById('add-contribution-btn');
+            const witnessList = document.getElementById('witness-list');
+            const addWitnessBtn = document.getElementById('add-witness-btn');
+            const pageContainer = document.getElementById('page-container');
+            const addPageBtn = document.getElementById('add-page-btn');
+            let pageCounter = 4;
+
+            // Add new child
+            addChildBtn.addEventListener('click', () => {
+                const newChild = document.createElement('div');
+                newChild.className = 'child-container';
+                newChild.innerHTML = `
+                    <div class="child-content">
+                        <p>Full Legal Name: <span contenteditable="true" class="editable-inline">Child's Full Name</span></p>
+                        <p>Date of Birth: <span contenteditable="true" class="editable-inline">Child's DOB</span></p>
+                        <p>Relationship: <select class="editable-inline">
+                            <option value="biological">Biological</option>
+                            <option value="adopted">Adopted</option>
+                            <option value="other">Other (Specify)</option>
+                        </select> <span contenteditable="true" class="editable-inline hide-on-print">Specify if Other</span></p>
+                    </div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>`;
+                childList.appendChild(newChild);
+            });
+
+            // Add new contribution
+            addContributionBtn.addEventListener('click', () => {
+                const newRow = document.createElement('tr');
+                newRow.innerHTML = `
+                    <td contenteditable="true" class="editable">New Expense</td>
+                    <td contenteditable="true" class="editable" data-type="father-amount">0</td>
+                    <td contenteditable="true" class="editable" data-type="mother-amount">0</td>
+                    <td class="balance-status">Balanced</td>`;
+                contributionTable.appendChild(newRow);
+                updateBalanceStatus();
+            });
+
+            // Update balance status
+            function updateBalanceStatus() {
+                const rows = contributionTable.querySelectorAll('tr');
+                rows.forEach(row => {
+                    const fatherAmount = parseFloat(row.querySelector('[data-type="father-amount"]').innerText) || 0;
+                    const motherAmount = parseFloat(row.querySelector('[data-type="mother-amount"]').innerText) || 0;
+                    const statusCell = row.querySelector('.balance-status');
+                    if (fatherAmount === motherAmount) {
+                        statusCell.innerText = 'Balanced';
+                        statusCell.classList.add('balanced');
+                        statusCell.classList.remove('unbalanced');
+                    } else {
+                        statusCell.innerText = 'Unbalanced';
+                        statusCell.classList.add('unbalanced');
+                        statusCell.classList.remove('balanced');
+                    }
+                });
+            }
+
+            // Add new witness
+            addWitnessBtn.addEventListener('click', () => {
+                const newWitness = document.createElement('div');
+                newWitness.className = 'witness-container';
+                newWitness.innerHTML = `
+                    <div class="witness-content grid grid-cols-2 gap-8 mb-4 border-t pt-4">
+                        <div>
+                            <div style="width: 250px; border-bottom: 1px solid #2d3748; height: 30px;"></div>
+                            <p><strong>WITNESS NAME:</strong> <span contenteditable="true" class="editable-inline">Witness Full Name</span></p>
+                        </div>
+                        <div>
+                            <p><strong>ON BEHALF OF:</strong> <select class="editable-inline">
+                                <option value="father">The Father</option>
+                                <option value="mother">The Mother</option>
+                                <option value="both">Both Parties</option>
+                            </select></p>
+                        </div>
+                    </div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>`;
+                witnessList.appendChild(newWitness);
+            });
+
+            // Add new page
+            addPageBtn.addEventListener('click', () => {
+                pageCounter++;
+                const newPage = document.createElement('div');
+                newPage.className = 'page';
+                newPage.innerHTML = `
+                    <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+                    <div class="header"><strong>Comprehensive Parenting Plan (Continuation)</strong></div>
+                    <div class="content">
+                        <div contenteditable="true" class="editable" style="width: 100%; height: 250mm;">Continue your plan here...</div>
+                    </div>
+                    <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page ${pageCounter}</span></div>
+                `;
+                pageContainer.appendChild(newPage);
+                updatePageNumbers();
+            });
+
+            function updatePageNumbers() {
+                const pages = document.querySelectorAll('.page:not(.cover-page):not(.back-cover-page)');
+                pages.forEach((page, index) => {
+                    const pageNumElement = page.querySelector('.page-number');
+                    if (pageNumElement) {
+                        pageNumElement.textContent = `Page ${index + 1}`;
+                    }
+                });
+            }
+            updatePageNumbers();
+
+            // Initialize balance status
+            contributionTable.addEventListener('input', updateBalanceStatus);
+        });
+    </script>
+</body>
+</html>
