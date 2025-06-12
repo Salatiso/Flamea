@@ -3,127 +3,168 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Modern, Broke, and Confused - Flamea</title>
+    <title>Modern, Broke, and Confused - A Flamea Game</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Open Sans', sans-serif; background-color: #1F2937; color: white; }
-        .game-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: #374151; border-radius: 0.5rem; }
-        .option { padding: 1rem; margin: 0.5rem 0; background-color: #4B5563; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; }
-        .option:hover { background-color: #6B7280; transform: translateX(5px); }
-        .score-bar { height: 1rem; background-color: #D97706; border-radius: 0.5rem; transition: width 0.5s ease; }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #111827; /* gray-900 */
+            color: #F3F4F6; /* gray-100 */
+        }
+        .game-title {
+            font-family: 'Bungee', cursive;
+        }
+        .progress-bar-fill {
+            background: linear-gradient(90deg, #60A5FA, #3B82F6);
+            transition: width 0.5s ease-in-out;
+        }
+        .sanity-bar-fill {
+            background: linear-gradient(90deg, #4ADE80, #16A34A);
+            transition: width 0.5s ease-in-out;
+        }
+        .option-btn {
+            background-color: #374151; /* gray-700 */
+            border: 2px solid #4B5563; /* gray-600 */
+            transition: all 0.2s ease-in-out;
+        }
+        .option-btn:hover {
+            background-color: #4f46e5;
+            border-color: #6366f1;
+            transform: translateY(-2px);
+        }
+        .super-scenario {
+            border: 3px dashed #FBBF24; /* amber-300 */
+            animation: pulse-border 2s infinite;
+            background-color: rgba(251, 191, 36, 0.05);
+        }
+        @keyframes pulse-border {
+            0% { border-color: #FBBF24; }
+            50% { border-color: #F87171; } /* red-400 */
+            100% { border-color: #FBBF24; }
+        }
+        .modal {
+            background-color: rgba(17, 24, 39, 0.9);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
     </style>
 </head>
-<body>
-    <div class="game-container">
-        <h1 class="text-3xl font-bold text-center mb-6">Modern, Broke, and Confused</h1>
-        <p class="text-center text-gray-300 mb-6">Navigate the absurdities of the legal system in this satirical adventure!</p>
-        <div id="score" class="mb-6">
-            <p>Sanity Score: <span id="score-text">100%</span></p>
-            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                <div id="score-bar" class="score-bar" style="width: 100%;"></div>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- Main Game Wrapper -->
+    <div id="game-wrapper" class="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full max-w-7xl mx-auto hidden">
+        
+        <!-- Dashboard -->
+        <aside id="dashboard" class="lg:col-span-1 bg-gray-800 p-6 rounded-2xl border-2 border-gray-700 flex flex-col">
+            <h2 class="game-title text-2xl text-blue-400 text-center mb-6">Status Report</h2>
+            
+            <div class="mb-6">
+                <h3 class="font-bold text-lg text-gray-300 mb-2">Progress</h3>
+                <div class="w-full bg-gray-700 rounded-full h-4">
+                    <div id="progress-bar" class="progress-bar-fill h-4 rounded-full" style="width: 0%;"></div>
+                </div>
+                <p id="progress-text" class="text-sm text-center mt-1 text-gray-400">0/25 Scenarios</p>
+            </div>
+
+            <div class="mb-6">
+                <h3 class="font-bold text-lg text-gray-300 mb-2">Sanity Meter</h3>
+                <div class="w-full bg-gray-700 rounded-full h-6">
+                    <div id="sanity-bar" class="sanity-bar-fill h-6 rounded-full flex items-center justify-center font-bold text-gray-900" style="width: 100%;">100%</div>
+                </div>
+                 <p class="text-xs text-center text-gray-500 mt-1">Don't let this hit zero.</p>
+            </div>
+
+            <div>
+                <h3 class="font-bold text-lg text-gray-300 mb-4">Achievements</h3>
+                <div id="achievements-list" class="space-y-3 text-gray-500">
+                    <p data-achievement="Survivor"><i class="fas fa-award mr-2"></i> Survivor (10)</p>
+                    <p data-achievement="Cynic"><i class="fas fa-award mr-2"></i> Cynic (20)</p>
+                    <p data-achievement="Enlightened"><i class="fas fa-award mr-2"></i> Enlightened (25)</p>
+                </div>
+            </div>
+
+             <div class="mt-auto text-center p-4 bg-gray-900 rounded-lg">
+                <p class="text-gray-300 mb-2">Save your descent into madness?</p>
+                <a href="#" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm">Register to Save Progress</a>
+            </div>
+        </aside>
+
+        <!-- Game Area -->
+        <main id="game-area" class="lg:col-span-3 bg-gray-800 p-8 rounded-2xl border-2 border-gray-700 flex flex-col">
+            <div id="scenario-area" class="flex-grow flex flex-col justify-center">
+                 <div id="scenario-content" class="p-6 rounded-lg">
+                    <h2 id="scenario-title" class="text-3xl font-bold mb-4 text-center">Scenario #1</h2>
+                    <p id="scenario-text" class="text-xl text-gray-300 min-h-[150px] flex items-center justify-center text-center"></p>
+                 </div>
+                 <div id="choices-container" class="mt-6 space-y-4">
+                     <!-- Choices will be generated here by JS -->
+                 </div>
+            </div>
+             <!-- Navigation -->
+            <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
+                <button id="back-btn-satire" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded-lg transition-colors disabled:opacity-50" disabled>
+                    <i class="fas fa-arrow-left mr-2"></i> Back
+                </button>
+                <button id="quit-btn-satire" class="bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-lg transition-colors">
+                    <i class="fas fa-times mr-2"></i> Quit
+                </button>
+            </div>
+        </main>
+    </div>
+
+    <!-- Start Screen -->
+    <div id="start-screen-satire" class="w-full max-w-3xl mx-auto bg-gray-800 p-8 rounded-2xl text-center">
+        <h1 class="game-title text-4xl md:text-5xl text-blue-400 mb-2">Modern, Broke, and Confused</h1>
+        <h2 class="text-xl text-gray-300 text-center mt-2 mb-6">The Game of Systemic Absurdity</h2>
+        <div class="bg-gray-900 p-6 rounded-lg text-gray-300 space-y-3 text-left mb-8">
+            <h3 class="text-xl font-bold text-blue-300 border-b border-gray-700 pb-2 mb-3">Rules of the Rat Race:</h3>
+            <p><i class="fas fa-brain text-green-400 mr-2"></i> Navigate 25 scenarios of modern madness. Keep your "Sanity Meter" from dropping to 0%.</p>
+            <p><i class="fas fa-exclamation-triangle text-yellow-400 mr-2"></i> Some logical choices are punished. Some absurd ones are rewarded. That's the point.</p>
+            <p><i class="fas fa-star text-red-400 mr-2"></i> Super-Scenarios are high-stakes. A "correct" answer boosts your sanity. A "wrong" one costs you dearly.</p>
+            <p><i class="fas fa-info-circle text-blue-400 mr-2"></i> The goal isn't to win, but to understand the absurdity. Good luck. You'll need it.</p>
+        </div>
+        <button id="start-btn-satire" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-2xl transition-transform hover:scale-105">Begin the Descent</button>
+    </div>
+
+    <!-- Outcome Modal -->
+    <div id="outcome-modal" class="modal fixed inset-0 z-50 items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-700 max-w-2xl w-full">
+            <h2 id="outcome-title" class="text-4xl font-bold mb-4 text-center"></h2>
+            <p id="outcome-text" class="text-md text-gray-300 mb-6 text-left leading-relaxed"></p>
+            <p id="sanity-change" class="text-center font-bold text-xl mb-6"></p>
+            <button id="next-scenario-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Understood...</button>
+        </div>
+    </div>
+    
+    <!-- Quit Modal -->
+     <div id="quit-modal-satire" class="modal fixed inset-0 z-50 items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-700 max-w-md w-full text-center">
+             <h2 class="text-2xl font-bold mb-4">Abandon Hope?</h2>
+            <p class="text-gray-400 mb-6">Quitting now means the system wins. Are you sure?</p>
+            <div class="flex justify-center gap-4">
+                <button id="resume-btn-satire" class="py-3 px-8 rounded-lg bg-gray-600 hover:bg-gray-500">Keep Suffering</button>
+                <button id="confirm-quit-btn-satire" class="py-3 px-8 rounded-lg bg-red-700 text-white hover:bg-red-600">Yes, I'm Done</button>
             </div>
         </div>
-        <div id="scenario" class="mb-6">
-            <h2 class="text-xl font-bold">Scenario</h2>
-            <p id="scenario-text">You’re a father fighting for custody. The court assumes you’re less capable because you’re a man. How do you respond?</p>
-        </div>
-        <div id="options">
-            <h2 class="text-xl font-bold">What’s your move?</h2>
-            <div id="option-list" class="mt-2"></div>
-        </div>
-        <button id="restart" class="mt-6 bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-500 transition-colors hidden">Restart Game</button>
     </div>
-    <script>
-        const scenarios = [
-            {
-                text: "You’re a father fighting for custody. The court assumes you’re less capable because you’re a man. How do you respond?",
-                options: [
-                    { text: "Present evidence of your parenting skills", next: 1, score: -10 },
-                    { text: "Argue that gender stereotypes are unfair", next: 2, score: -20 },
-                    { text: "Give up and pay maintenance instead", next: 3, score: -50 }
-                ]
-            },
-            {
-                text: "The judge nods but says, 'Men don’t nurture like women do.' Your rebuttal?",
-                options: [
-                    { text: "Cite studies showing equal parenting competence", next: 4, score: -10 },
-                    { text: "Scream about discrimination", next: 5, score: -30 }
-                ]
-            },
-            {
-                text: "The court laughs off your argument as 'modern nonsense.' Now what?",
-                options: [
-                    { text: "File an appeal with a higher court", next: 4, score: -20 },
-                    { text: "Accept the bias and move on", next: 6, score: -40 }
-                ]
-            },
-            {
-                text: "You’ve lost all sanity and become a legal system meme.",
-                options: [],
-                end: "Game Over! The system broke you."
-            },
-            {
-                text: "The higher court agrees the bias was unfair. You win, but you’re broke and confused!",
-                options: [],
-                end: "Victory! Sort of. You’ve exposed the irony."
-            },
-            {
-                text: "The judge throws you out for 'disrupting court order.'",
-                options: [],
-                end: "Game Over! Sanity gone, lesson learned."
-            },
-            {
-                text: "You’re ordered to pay double maintenance for 'wasting time.'",
-                options: [],
-                end: "Game Over! The system wins again."
-            }
-        ];
+    
+    <script src="satirical-game.js"></script>
 
-        let currentScenario = 0;
-        let score = 100;
-
-        function loadScenario(index) {
-            const scenario = scenarios[index];
-            document.getElementById('scenario-text').textContent = scenario.text;
-            const optionList = document.getElementById('option-list');
-            optionList.innerHTML = '';
-            if (scenario.options.length === 0) {
-                optionList.innerHTML = `<p class="text-gray-300">${scenario.end}</p>`;
-                document.getElementById('restart').classList.remove('hidden');
-            } else {
-                scenario.options.forEach((option, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'option';
-                    div.textContent = option.text;
-                    div.onclick = () => {
-                        score += option.score;
-                        updateScore();
-                        loadScenario(option.next);
-                    };
-                    optionList.appendChild(div);
-                });
-            }
-        }
-
-        function updateScore() {
-            const scoreBar = document.getElementById('score-bar');
-            const scoreText = document.getElementById('score-text');
-            score = Math.max(score, 0);
-            scoreBar.style.width = `${score}%`;
-            scoreText.textContent = `${score}%`;
-        }
-
-        document.getElementById('restart').onclick = () => {
-            currentScenario = 0;
-            score = 100;
-            updateScore();
-            loadScenario(0);
-            document.getElementById('restart').classList.add('hidden');
-        };
-
-        loadScenario(0);
-    </script>
 </body>
 </html>
