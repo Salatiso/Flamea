@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern, Broke, and Confused - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background-color: #1F2937; color: white; }
+        .game-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: #374151; border-radius: 0.5rem; }
+        .option { padding: 1rem; margin: 0.5rem 0; background-color: #4B5563; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; }
+        .option:hover { background-color: #6B7280; transform: translateX(5px); }
+        .score-bar { height: 1rem; background-color: #D97706; border-radius: 0.5rem; transition: width 0.5s ease; }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <h1 class="text-3xl font-bold text-center mb-6">Modern, Broke, and Confused</h1>
+        <p class="text-center text-gray-300 mb-6">Navigate the absurdities of the legal system in this satirical adventure!</p>
+        <div id="score" class="mb-6">
+            <p>Sanity Score: <span id="score-text">100%</span></p>
+            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                <div id="score-bar" class="score-bar" style="width: 100%;"></div>
+            </div>
+        </div>
+        <div id="scenario" class="mb-6">
+            <h2 class="text-xl font-bold">Scenario</h2>
+            <p id="scenario-text">You’re a father fighting for custody. The court assumes you’re less capable because you’re a man. How do you respond?</p>
+        </div>
+        <div id="options">
+            <h2 class="text-xl font-bold">What’s your move?</h2>
+            <div id="option-list" class="mt-2"></div>
+        </div>
+        <button id="restart" class="mt-6 bg-yellow-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-yellow-500 transition-colors hidden">Restart Game</button>
+    </div>
+    <script>
+        const scenarios = [
+            {
+                text: "You’re a father fighting for custody. The court assumes you’re less capable because you’re a man. How do you respond?",
+                options: [
+                    { text: "Present evidence of your parenting skills", next: 1, score: -10 },
+                    { text: "Argue that gender stereotypes are unfair", next: 2, score: -20 },
+                    { text: "Give up and pay maintenance instead", next: 3, score: -50 }
+                ]
+            },
+            {
+                text: "The judge nods but says, 'Men don’t nurture like women do.' Your rebuttal?",
+                options: [
+                    { text: "Cite studies showing equal parenting competence", next: 4, score: -10 },
+                    { text: "Scream about discrimination", next: 5, score: -30 }
+                ]
+            },
+            {
+                text: "The court laughs off your argument as 'modern nonsense.' Now what?",
+                options: [
+                    { text: "File an appeal with a higher court", next: 4, score: -20 },
+                    { text: "Accept the bias and move on", next: 6, score: -40 }
+                ]
+            },
+            {
+                text: "You’ve lost all sanity and become a legal system meme.",
+                options: [],
+                end: "Game Over! The system broke you."
+            },
+            {
+                text: "The higher court agrees the bias was unfair. You win, but you’re broke and confused!",
+                options: [],
+                end: "Victory! Sort of. You’ve exposed the irony."
+            },
+            {
+                text: "The judge throws you out for 'disrupting court order.'",
+                options: [],
+                end: "Game Over! Sanity gone, lesson learned."
+            },
+            {
+                text: "You’re ordered to pay double maintenance for 'wasting time.'",
+                options: [],
+                end: "Game Over! The system wins again."
+            }
+        ];
+
+        let currentScenario = 0;
+        let score = 100;
+
+        function loadScenario(index) {
+            const scenario = scenarios[index];
+            document.getElementById('scenario-text').textContent = scenario.text;
+            const optionList = document.getElementById('option-list');
+            optionList.innerHTML = '';
+            if (scenario.options.length === 0) {
+                optionList.innerHTML = `<p class="text-gray-300">${scenario.end}</p>`;
+                document.getElementById('restart').classList.remove('hidden');
+            } else {
+                scenario.options.forEach((option, i) => {
+                    const div = document.createElement('div');
+                    div.className = 'option';
+                    div.textContent = option.text;
+                    div.onclick = () => {
+                        score += option.score;
+                        updateScore();
+                        loadScenario(option.next);
+                    };
+                    optionList.appendChild(div);
+                });
+            }
+        }
+
+        function updateScore() {
+            const scoreBar = document.getElementById('score-bar');
+            const scoreText = document.getElementById('score-text');
+            score = Math.max(score, 0);
+            scoreBar.style.width = `${score}%`;
+            scoreText.textContent = `${score}%`;
+        }
+
+        document.getElementById('restart').onclick = () => {
+            currentScenario = 0;
+            score = 100;
+            updateScore();
+            loadScenario(0);
+            document.getElementById('restart').classList.add('hidden');
+        };
+
+        loadScenario(0);
+    </script>
+</body>
+</html>
