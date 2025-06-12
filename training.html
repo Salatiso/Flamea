@@ -94,91 +94,17 @@
                         </p>
                     </div>
                 </div>
-
-
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - The Father's Armoury Training Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; background-color: #111827; }
-        .sidebar-link, .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-link:hover, .sidebar-direct-link:hover, .sidebar-link.active, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .option-card { transition: all 0.3s ease; }
-        .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .course-card { transition: all 0.3s ease; }
-        .course-card:hover { transform: translateY(-5px); box-shadow: 0 10px 15px -3px rgba(52, 211, 153, 0.1), 0 4px 6px -2px rgba(52, 211, 153, 0.05); }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        .rotate-180 { transform: rotate(180deg); }
-    </style>
-</head>
-<body class="bg-gray-800 text-white">
-   
-<div class="mt-auto text-center">
-    <div id="auth-links-desktop" class="mb-4">
-        <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
-    </div>
-    <p class="text-xs text-gray-500">© <span id="currentYear"></span> Flamea.org</p>
-</div>
-</aside>
-
-<!-- Main Content -->
-<main class="main-content p-8 md:p-12">
-    <div class="max-w-7xl mx-auto">
-        <div class="text-center">
-            <h1 class="text-4xl font-bold font-roboto-slab text-white">The Father's Armoury</h1>
-            <p class="text-lg text-gray-400 mb-8 mt-2">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
-        </div>
-
-        <!-- Wizard vs Manual Path vs Game Selection -->
-        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-            <a href="training-assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
-                <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
-                <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
-                <p class="text-gray-400">New here? Answer a few questions and get a personalized training plan.</p>
-            </a>
-            <a href="#course-catalogue" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
-                <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
-                <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
-                <p class="text-gray-400">Know what you're looking for? Browse our full catalogue of courses.</p>
-            </a>
-            <a href="#course-catalogue-games" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
-                <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
-                <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
-                <p class="text-gray-400">Test your knowledge in an interactive arcade game. Defend your rights!</p>
-            </a>
-        </div>
-
-        <!-- Membership Banner -->
-        <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
-            <i class="fas fa-user-shield text-5xl text-blue-300"></i>
-            <div>
-                <h3 class="font-bold text-xl">Become a Flamea Member</h3>
-                <p class="mt-1 text-blue-200">
-                    <a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your course progress, earn completion certificates with unique QR codes, and build your "Superdad" Life CV.
-                </p>
             </div>
-        </div>
 
-        <!-- Course Catalogue -->
-        <div id="course-catalogue">
-            <!-- Legal & Constitutional Foundations -->
-            <div class="mb-8">
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600">
-                    <span class="text-xl md:text-2xl font-bold">🎓 Legal & Constitutional Foundations</span>
-                    <i class="fas fa-chevron-down transform transition-transform"></i>
-                </button>
-                <div class="accordion-content mt-4 pl-4 border-l-4 border-green-500">
+            <!-- Course Catalogue -->
+            <div id="course-catalogue">
+                <!-- Legal & Constitutional Foundations -->
+                <div class="mb-8">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600">
+                        <span class="text-xl md:text-2xl font-bold">🎓 Legal & Constitutional Foundations</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="accordion-content mt-4 pl-4 border-l-4 border-green-500">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
                         <a href="training/course-constitution.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
                             <div class="flex items-center mb-4"><i class="fas fa-landmark text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The SA Constitution</h4></div>
