@@ -3,134 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Simulator - Flamea</title>
+    <title>Goliath's Reckoning: A Legal Journey</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Bungee&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Open Sans', sans-serif; background-color: #1F2937; color: white; }
-        .game-container { max-width: 800px; margin: 2rem auto; padding: 2rem; background-color: #374151; border-radius: 0.5rem; }
-        .option { padding: 1rem; margin: 0.5rem 0; background-color: #4B5563; border-radius: 0.5rem; cursor: pointer; transition: all 0.3s ease; }
-        .option:hover { background-color: #6B7280; transform: translateX(5px); }
-        .progress-bar { height: 1rem; background-color: #2563EB; border-radius: 0.5rem; transition: width 0.5s ease; }
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #111827;
+        }
+        .game-title {
+            font-family: 'Bungee', cursive;
+        }
+        .resource-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        .choice-btn {
+            background-color: #374151;
+            border-left: 4px solid #4b5563;
+            transition: all 0.2s ease-in-out;
+        }
+        .choice-btn:hover {
+            background-color: #4f46e5;
+            border-left-color: #a5b4fc;
+            transform: translateX(10px);
+        }
+        .modal {
+            background-color: rgba(17, 24, 39, 0.9);
+            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+            opacity: 0;
+            visibility: hidden;
+        }
+        .modal.active {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            transform: scale(0.95);
+            transition: transform 0.3s ease-in-out;
+        }
+        .modal.active .modal-content {
+            transform: scale(1);
+        }
+        .tooltip {
+            position: relative;
+            display: inline-block;
+        }
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 200px;
+            background-color: #1f2937;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -100px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
     </style>
 </head>
-<body>
-    <div class="game-container">
-        <h1 class="text-3xl font-bold text-center mb-6">Legal Simulator</h1>
-        <p class="text-center text-gray-300 mb-6">Prepare for your legal case with this interactive simulator.</p>
-        <div id="progress" class="mb-6">
-            <p>Progress: <span id="progress-text">0%</span></p>
-            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                <div id="progress-bar" class="progress-bar" style="width: 0%;"></div>
+<body class="bg-gray-900 text-gray-200">
+
+    <!-- Start Screen -->
+    <div id="start-screen" class="min-h-screen flex items-center justify-center p-4">
+        <div class="text-center max-w-3xl">
+            <h1 class="game-title text-5xl md:text-6xl text-amber-400">Goliath's Reckoning</h1>
+            <h2 class="text-2xl text-gray-300 mt-2 mb-8">A Father's Legal Journey</h2>
+            <div class="bg-gray-800 p-6 rounded-lg text-gray-300 space-y-4 mb-8 text-left">
+                <h3 class="text-xl font-bold text-amber-300 border-b border-gray-700 pb-2 mb-3">Choose Your Battle:</h3>
+                <p>Select the situation that best describes your starting point. This will determine the path of your legal simulation.</p>
+                <div id="path-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
+                    <button data-path="contact" class="choice-btn p-4 rounded-md">I am being denied fair contact with my child.</button>
+                    <button data-path="paternity" class="choice-btn p-4 rounded-md">I need to formally establish paternity and my parental rights.</button>
+                    <button data-path="allegations" class="choice-btn p-4 rounded-md">I am facing false allegations that impact my relationship with my child.</button>
+                    <button data-path="constitutional" class="choice-btn p-4 rounded-md">I believe a law or policy is violating my constitutional rights as a father.</button>
+                </div>
+            </div>
+            <p class="text-sm text-gray-500">This game is a simulator designed for educational purposes. It is not legal advice. For real-world assistance, consult Flamea.org and a qualified legal professional.</p>
+        </div>
+    </div>
+
+    <!-- Main Game UI -->
+    <div id="game-container" class="hidden w-full max-w-7xl mx-auto p-4 md:p-6">
+        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
+            
+            <!-- Dashboard (Left Panel) -->
+            <aside class="lg:col-span-1 bg-gray-800 p-4 rounded-2xl border-2 border-gray-700 flex flex-col h-fit">
+                <h2 class="game-title text-xl text-amber-400 text-center mb-4">Case File</h2>
+                
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Case Strength</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="strength-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-green-400 to-green-600" style="width: 50%;"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Financial Resources</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="finance-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: 100%;"></div>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <h3 class="font-bold text-sm text-gray-400 mb-1">Time Wasted</h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4">
+                        <div id="time-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-red-500 to-red-700" style="width: 0%;"></div>
+                    </div>
+                </div>
+
+                <div class="border-t border-gray-700 pt-4 mt-4">
+                    <h3 class="font-bold text-lg text-gray-300 mb-2">Inventory</h3>
+                    <ul id="inventory-list" class="text-sm text-gray-400 space-y-1">
+                        <!-- Inventory items will be added here -->
+                    </ul>
+                </div>
+                 <div class="mt-6 text-center">
+                    <button id="flamea-assist-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm tooltip">
+                        <i class="fas fa-question-circle mr-2"></i> Flamea AI Assist
+                        <span class="tooltiptext">Get hints, explanations, and links to Flamea.org resources for your current step.</span>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Game Content (Right Panel) -->
+            <main class="lg:col-span-4 bg-gray-800 p-6 rounded-2xl border-2 border-gray-700 flex flex-col">
+                <div id="scenario-display" class="flex-grow">
+                    <h2 id="scenario-title" class="text-2xl font-bold mb-4"></h2>
+                    <div id="scenario-text" class="prose prose-invert max-w-none text-gray-300 space-y-4"></div>
+                </div>
+                <div id="choices-area" class="mt-6 pt-6 border-t border-gray-700">
+                    <h3 class="text-lg font-bold mb-3">What do you do?</h3>
+                    <div id="choices-container" class="space-y-3">
+                        <!-- Choices will be generated by JS -->
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    
+    <!-- Outcome Modal -->
+    <div id="outcome-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-2xl w-full">
+            <h2 id="outcome-title" class="text-3xl font-bold mb-4 text-center"></h2>
+            <div id="outcome-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
+            <div id="resource-changes" class="text-center font-bold text-md mb-6 space-y-1"></div>
+            <button id="next-step-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Continue</button>
+        </div>
+    </div>
+
+    <!-- AI Assist Modal -->
+    <div id="ai-assist-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
+        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-3xl w-full">
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-2xl font-bold text-blue-400"><i class="fas fa-robot mr-2"></i> Flamea AI Legal Assistant</h2>
+                <button id="close-ai-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
+            </div>
+            <div id="ai-assist-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
+            <div id="ai-links-container" class="space-y-2">
+                <!-- Links to resources will be added here -->
             </div>
         </div>
-        <div id="scenario" class="mb-6">
-            <h2 class="text-xl font-bold">Scenario</h2>
-            <p id="scenario-text">You are a father preparing for a custody case in South Africa. Your first step is to understand your rights under the Constitution.</p>
-        </div>
-        <div id="options">
-            <h2 class="text-xl font-bold">What will you do?</h2>
-            <div id="option-list" class="mt-2"></div>
-        </div>
-        <button id="restart" class="mt-6 bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-500 transition-colors hidden">Restart Game</button>
     </div>
-    <script>
-        const scenarios = [
-            {
-                text: "You are a father preparing for a custody case in South Africa. Your first step is to understand your rights under the Constitution.",
-                options: [
-                    { text: "Study Section 28 of the Constitution (Children’s Rights)", next: 1, progress: 20 },
-                    { text: "Hire a lawyer immediately", next: 2, progress: 10 },
-                    { text: "Do nothing and hope for the best", next: 3, progress: 0 }
-                ]
-            },
-            {
-                text: "You’ve learned that Section 28 ensures the child’s best interests are paramount. Now, you need to gather evidence for your case.",
-                options: [
-                    { text: "Collect proof of your involvement in your child’s life", next: 4, progress: 40 },
-                    { text: "File a court application without evidence", next: 5, progress: 20 },
-                    { text: "Ask your ex-partner for cooperation", next: 6, progress: 30 }
-                ]
-            },
-            {
-                text: "The lawyer advises you to prepare thoroughly before filing. What’s your next step?",
-                options: [
-                    { text: "Research court processes in South Africa", next: 4, progress: 30 },
-                    { text: "Trust the lawyer to handle everything", next: 7, progress: 20 }
-                ]
-            },
-            {
-                text: "You’ve lost the case due to lack of preparation. Try again?",
-                options: [],
-                end: "Try again to improve your outcome."
-            },
-            {
-                text: "You’ve submitted strong evidence and understand the court process. The judge is impressed. You win your case!",
-                options: [],
-                end: "Congratulations! You’ve successfully prepared for your legal case."
-            },
-            {
-                text: "The court rejects your application due to insufficient evidence.",
-                options: [],
-                end: "Try again to strengthen your case."
-            },
-            {
-                text: "Your ex-partner agrees to mediate, but you still need a court order.",
-                options: [
-                    { text: "Proceed to court with mediation agreement", next: 4, progress: 50 }
-                ]
-            },
-            {
-                text: "The lawyer files the case, but you’re unprepared for the hearing.",
-                options: [],
-                end: "Try again with better preparation."
-            }
-        ];
 
-        let currentScenario = 0;
-        let progress = 0;
 
-        function loadScenario(index) {
-            const scenario = scenarios[index];
-            document.getElementById('scenario-text').textContent = scenario.text;
-            const optionList = document.getElementById('option-list');
-            optionList.innerHTML = '';
-            if (scenario.options.length === 0) {
-                optionList.innerHTML = `<p class="text-gray-300">${scenario.end}</p>`;
-                document.getElementById('restart').classList.remove('hidden');
-            } else {
-                scenario.options.forEach((option, i) => {
-                    const div = document.createElement('div');
-                    div.className = 'option';
-                    div.textContent = option.text;
-                    div.onclick = () => {
-                        progress += option.progress;
-                        updateProgress();
-                        loadScenario(option.next);
-                    };
-                    optionList.appendChild(div);
-                });
-            }
-        }
+    <script src="legal-simulator.js"></script>
 
-        function updateProgress() {
-            const progressBar = document.getElementById('progress-bar');
-            const progressText = document.getElementById('progress-text');
-            progress = Math.min(progress, 100);
-            progressBar.style.width = `${progress}%`;
-            progressText.textContent = `${progress}%`;
-        }
-
-        document.getElementById('restart').onclick = () => {
-            currentScenario = 0;
-            progress = 0;
-            updateProgress();
-            loadScenario(0);
-            document.getElementById('restart').classList.add('hidden');
-        };
-
-        loadScenario(0);
-    </script>
 </body>
 </html>
