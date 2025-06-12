@@ -1,153 +1,152 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FLAMEA - Parenting Plan Builder</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    body { font-family: 'Open Sans', sans-serif; }
-    .main-container {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-    .main-content { overflow-y: auto; }
-    .sidebar-direct-link {
-      transition: all 0.3s ease;
-      transform: translateX(0);
-    }
-    .sidebar-direct-link:hover, .sidebar-direct-link.active {
-      background-color: #2563EB;
-      color: white;
-      transform: translateX(10px);
-    }
-    .form-input {
-      background-color: #374151;
-      border-color: #4B5563;
-    }
-    .form-input:focus {
-      --tw-ring-color: #3B82F6;
-      border-color: #3B82F6;
-    }
-    .form-step { display: none; animation: fadeIn 0.5s; }
-    .form-step.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .legal-ref {
-      background-color: #1f2937;
-      padding: 1rem;
-      border-left: 4px solid #10b981;
-      margin-bottom: 1rem;
-      border-radius: 0.5rem;
-    }
-    .legal-ref i {
-      color: #10b981;
-      margin-right: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goliath's Stand: The Absurdity Fair</title>
+    <style>
+        body { font-family: 'Comic Sans MS', cursive, sans-serif; margin: 0; padding: 0; background-color: #f0e68c; color: #4b0082; text-align: center; }
+        header { background-color: #ff69b4; color: #fff; padding: 20px; border-bottom: 5px dashed #fff; }
+        header h1 { margin: 0; font-size: 2.5em; text-shadow: 2px 2px #000; }
+       .container { padding: 20px; }
+       .game-area { background-color: #fffaf0; border: 3px solid #ffb6c1; border-radius: 15px; padding: 20px; margin: 20px auto; max-width: 800px; box-shadow: 5px 5px 15px rgba(0,0,0,0.2); }
+       .scenario-title { font-size: 1.8em; color: #800080; margin-bottom: 10px; }
+       .scenario-description { font-size: 1.1em; line-height: 1.6; margin-bottom: 20px; }
+       .choices button { background-color: #add8e6; color: #000080; border: 2px solid #000080; padding: 10px 20px; margin: 5px; font-size: 1em; border-radius: 10px; cursor: pointer; transition: transform 0.2s; }
+       .choices button:hover { background-color: #87ceeb; transform: scale(1.1); }
+       .feedback { margin-top: 20px; font-style: italic; color: #d2691e; }
+       .score-board { margin-top: 30px; background-color: #eee8aa; padding: 15px; border-radius: 10px; border: 2px solid #daa520; }
+       .score-board h3 { margin-top: 0; color: #8b4513; }
+       .flamea-link { display: block; margin-top: 30px; padding: 10px; background-color: #90ee90; color: #006400; text-decoration: none; border-radius: 8px; font-weight: bold; }
+       .flamea-link:hover { background-color: #32cd32; }
+        footer { background-color: #ffb6c1; color: #4b0082; padding: 15px; margin-top: 30px; font-size: 0.9em; }
+        /* Additional styling for satirical elements */
+       .irony-highlight { color: #ff4500; font-weight: bold; }
+       .bureaucracy-maze { border: 5px dotted #808080; padding: 10px; background-image: url("data:image/svg+xml,%3Csvg width='52' height='26' viewBox='0 0 52 26' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill-rule='evenodd'%3E%3Cg fill='%239C92AC' fill-opacity='0.4'%3E%3Cpath d='M10 10c0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6h2c0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4 3.314 0 6 2.686 6 6 0 2.21 1.79 4 4 4v2c-3.314 0-6-2.686-6-6 0-2.21-1.79-4-4-4-3.314 0-6-2.686-6-6zm25.464-1.95l8.486 8.486-1.414 1.414-8.486-8.486 1.414-1.414z' /%3E%3C/g%3E%3C/g%3E%3C/svg%3E"); }
+    </style>
 </head>
-<body class="bg-gray-800 text-white">
-  <div class="main-container">
-    <aside class="bg-gray-900 p-6 flex flex-col">
-      <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-      <nav id="main-nav" class="flex flex-col space-y-4">
-        <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-        <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-        <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-        <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-        <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-        <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-        <div class="border-t border-gray-700 my-2"></div>
-        <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-          <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-        </button>
-        <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-          <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-        </button>
-      </nav>
-      <div class="mt-auto text-center">
-        <div id="auth-links-desktop" class="mb-4"></div>
-        <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-      </div>
-    </aside>
+<body>
+    <header>
+        <h1>Goliath's Stand: The Absurdity Fair</h1>
+        <p>"Where logic takes a holiday, and 'fairness' is a roll of the dice!"</p>
+    </header>
 
-    <main class="main-content p-8 md:p-12">
-      <div id="parenting-plan-tool" class="max-w-4xl mx-auto">
-        <h2 class="text-4xl font-bold font-roboto text-white mb-2">Parenting Plan Builder</h2>
-        <p class="text-lg text-gray-400 mb-8">An intuitive tool to assess your parenting situation and create a legally-informed, customised parenting plan.</p>
-
-        <!-- Legal Reference Block -->
-        <div class="legal-ref text-sm text-gray-300">
-          <i class="fas fa-scale-balanced"></i>
-          <strong>Legal Basis:</strong> South African Constitution (Section 28), Children’s Act 38 of 2005, Promotion of Equality and Prevention of Unfair Discrimination Act, and the UN Convention on the Rights of the Child.
+    <div class="container">
+        <div id="game-intro" class="game-area">
+            <h2>Welcome to the Absurdity Fair!</h2>
+            <p>Prepare to navigate the bewildering world of South African family law, where good intentions pave the road to... well, you'll see. This game is inspired by the critiques in "Goliath's Stand," "Beyond Redress," and "Modern Broke and Confused."</p>
+            <p class="irony-highlight">Warning: May contain traces of factual absurdity and systemic irony. Player discretion is advised (but where's the fun in that?).</p>
+            <button onclick="startSatireGame()">Enter the Fair!</button>
         </div>
 
-        <!-- Assessment Option -->
-        <div class="flex flex-col md:flex-row gap-6 mb-10">
-          <button class="bg-green-600 hover:bg-green-700 w-full py-4 rounded-xl text-lg font-bold">
-            <i class="fas fa-magic mr-2"></i> Start with Smart Wizard</button>
-          <button class="bg-blue-600 hover:bg-blue-700 w-full py-4 rounded-xl text-lg font-bold">
-            <i class="fas fa-edit mr-2"></i> Build Manually</button>
+        <div id="level-selection" class="game-area" style="display:none;">
+            <h2>Choose Your Comical Calamity:</h2>
+            <button onclick="loadSatireLevel('custody_quotas')">Level 1: The Custody Quagmire of Quotas</button>
+            <button onclick="loadSatireLevel('empowerment_paradox')">Level 2: The Empowerment Echelon & The Provider's Paradox</button>
+            <button onclick="loadSatireLevel('redress_roulette')">Level 3: Redress Roulette - Spin the Wheel of Woe!</button>
+            <button onclick="loadSatireLevel('circumcision_conundrum')">Level 4: The Shield of Selective Concern</button>
+            <button onclick="loadSatireLevel('dei_dilemma')">Level 5: The 'DEI Hire' Dilemma at Goliath Corp</button>
         </div>
 
-        <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-          <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
-            <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 20%"></div>
-          </div>
-
-          <form id="plan-form">
-            <!-- Step 1 -->
-            <div id="step-1" class="form-step active">
-              <h3 class="text-2xl font-bold text-green-400 mb-6">Step 1: The People Involved</h3>
-              <div class="space-y-4">
-                <div>
-                  <label for="childName" class="block text-sm font-medium text-gray-300">Child's Full Name</label>
-                  <input type="text" id="childName" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="parentA" class="block text-sm font-medium text-gray-300">Parent A's Full Name</label>
-                  <input type="text" id="parentA" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="parentB" class="block text-sm font-medium text-gray-300">Parent B's Full Name</label>
-                  <input type="text" id="parentB" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="relationshipType" class="block text-sm font-medium text-gray-300">Relationship Type</label>
-                  <select id="relationshipType" class="mt-1 block w-full rounded-md form-input p-2">
-                    <option>Unmarried</option>
-                    <option>Married</option>
-                    <option>Divorced</option>
-                    <option>In Relationship</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-              </div>
+        <div id="satire-game-area" class="game-area" style="display:none;">
+            <h3 class="scenario-title" id="satire-scenario-title"></h3>
+            <div class="bureaucracy-maze">
+                <p class="scenario-description" id="satire-scenario-description"></p>
             </div>
-
-            <!-- Navigation -->
-            <div class="mt-10 flex justify-between">
-              <button id="prev-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50" disabled>Previous</button>
-              <button id="next-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Next</button>
-              <div id="final-actions" class="hidden">
-                <button id="save-btn" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700">Download Plan</button>
-              </div>
-            </div>
-          </form>
+            <div class="choices" id="satire-player-choices">
+                </div>
+            <p class="feedback" id="satire-feedback"></p>
         </div>
-      </div>
-    </main>
-  </div>
 
-  <script>
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-  </script>
-  <script src="assets/js/main.js"></script>
-  <script type="module" src="assets/js/auth.js"></script>
-  <script type="module" src="assets/js/parenting-plan.js"></script>
+        <div class="score-board game-area">
+            <h3>The Absurd-O-Meter</h3>
+            <p>Your Irony Score: <span id="irony-score">0</span> points</p>
+            <p>Contradictions Encountered: <span id="contradictions-score">0</span></p>
+            <p>Systemic Facepalms: <span id="facepalm-score">0</span></p>
+        </div>
+
+        <a href="httpsa://flamea.org/tools.html" target="_blank" class="flamea-link">Feeling Confused? Get Real Tools & Training from Flamea.org!</a>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYearSatire"></span> Flamea.org - Fighting for Fairness, One Satirical Scenario at a Time.</p>
+    </footer>
+
+    <script>
+        // Basic JavaScript for satirical game flow - Placeholder
+        document.getElementById('currentYearSatire').textContent = new Date().getFullYear();
+        let ironyScore = 0;
+        let contradictionsScore = 0;
+        let facepalmScore = 0;
+
+        function startSatireGame() {
+            document.getElementById('game-intro').style.display = 'none';
+            document.getElementById('level-selection').style.display = 'block';
+        }
+
+        function loadSatireLevel(level) {
+            document.getElementById('level-selection').style.display = 'none';
+            document.getElementById('satire-game-area').style.display = 'block';
+            
+            let title = '';
+            let description = '';
+            let choicesHtml = '';
+
+            switch(level) {
+                case 'custody_quotas':
+                    title = "The Custody Quagmire of Quotas";
+                    description = "Welcome to the Children's Court! Your case for shared custody is being evaluated by the new 'Fairness Algorithm 3000.' It prioritizes demographic quotas over actual parenting. Good luck making sense of this!";
+                    choicesHtml = `
+                        <button onclick="makeSatireChoice('present_evidence', 5)">Present meticulously gathered evidence of your excellent parenting.</button>
+                        <button onclick="makeSatireChoice('highlight_quota_gap', 10)">Point out how awarding you custody helps meet the 'Underrepresented Fathers in Primary Care' quota.</button>
+                        <button onclick="makeSatireChoice('bribe_algorithm', -5)">Attempt to bribe the Fairness Algorithm 3000 with cookies (it's a long shot).</button>
+                    `;
+                    break;
+                case 'empowerment_paradox':
+                    title = "The Empowerment Echelon & The Provider's Paradox";
+                    description = "Your partner is offered a prestigious 'Women's Empowerment Grant' to deconstruct patriarchal teapot cozies. Meanwhile, the family court expects you, the father, to be the sole provider, despite systemic economic disadvantages. How do you navigate this? ";
+                    choicesHtml = `
+                        <button onclick="makeSatireChoice('support_cozies', -5)">Enthusiastically support the teapot cozy deconstruction for 'empowerment'.</button>
+                        <button onclick="makeSatireChoice('question_logic', 2)">Politely question the logic of it all (at your own peril).</button>
+                        <button onclick="makeSatireChoice('work_three_jobs', 0)">Try to work three jobs simultaneously to meet provider expectations.</button>
+                    `;
+                    break;
+                // Add more satirical levels based on the report's scenario blueprints
+                default:
+                    title = "Choose Your Misadventure";
+                    description = "Select a level to experience the satire.";
+            }
+
+            document.getElementById('satire-scenario-title').textContent = title;
+            document.getElementById('satire-scenario-description').textContent = description;
+            document.getElementById('satire-player-choices').innerHTML = choicesHtml;
+            document.getElementById('satire-feedback').textContent = 'What fresh absurdity will you choose?';
+        }
+
+        function makeSatireChoice(choice, points) {
+            ironyScore += points;
+            if (points > 0) contradictionsScore++;
+            if (points < 0) facepalmScore++;
+
+            document.getElementById('irony-score').textContent = ironyScore;
+            document.getElementById('contradictions-score').textContent = contradictionsScore;
+            document.getElementById('facepalm-score').textContent = facepalmScore;
+
+            let feedbackText = '';
+            // Provide humorous feedback based on choice
+            if (choice === 'present_evidence') {
+                feedbackText = "Your evidence is... 'noted'. The Algorithm 3000 seems more interested in its quota checklist. (+5 Irony Points for trying logic!)";
+            } else if (choice === 'highlight_quota_gap') {
+                feedbackText = "Aha! You speak the Algorithm's language! Quotas are everything! (+10 Irony Points for playing the system!)";
+            } else if (choice === 'bribe_algorithm') {
+                feedbackText = "The Algorithm 3000 does not compute 'cookies.' System error. Penalty! (-5 Irony Points, but A for effort!)";
+            } else {
+                feedbackText = "Your choice has been... processed. The outcome is predictably unpredictable.";
+            }
+            document.getElementById('satire-feedback').textContent = feedbackText;
+
+            // Potentially load next part of scenario or end level
+        }
+    </script>
 </body>
 </html>

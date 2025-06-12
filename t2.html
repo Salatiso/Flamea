@@ -1,161 +1,197 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>FLAMEA - Parenting Plan Builder</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
-  <link rel="stylesheet" href="assets/css/style.css" />
-  <style>
-    body { font-family: 'Open Sans', sans-serif; }
-    .main-container {
-      display: grid;
-      grid-template-columns: 280px 1fr;
-      height: 100vh;
-      width: 100vw;
-      overflow: hidden;
-    }
-    .main-content { overflow-y: auto; }
-    .sidebar-direct-link {
-      transition: all 0.3s ease;
-      transform: translateX(0);
-    }
-    .sidebar-direct-link:hover, .sidebar-direct-link.active {
-      background-color: #2563EB;
-      color: white;
-      transform: translateX(10px);
-    }
-    .form-input {
-      background-color: #374151;
-      border-color: #4B5563;
-    }
-    .form-input:focus {
-      --tw-ring-color: #3B82F6;
-      border-color: #3B82F6;
-    }
-    .form-step { display: none; animation: fadeIn 0.5s; }
-    .form-step.active { display: block; }
-    @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-    .legal-ref {
-      background-color: #1f2937;
-      padding: 1rem;
-      border-left: 4px solid #10b981;
-      margin-bottom: 1rem;
-      border-radius: 0.5rem;
-    }
-    .legal-ref i {
-      color: #10b981;
-      margin-right: 0.5rem;
-    }
-  </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goliath's Reckoning: The Father's Legal Journey</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 20px; background-color: #f4f4f4; color: #333; }
+        header { background-color: #333; color: #fff; padding: 10px 0; text-align: center; }
+        nav ul { list-style-type: none; padding: 0; text-align: center; }
+        nav ul li { display: inline; margin-right: 20px; }
+        nav ul li a { color: #fff; text-decoration: none; }
+       .container { max-width: 960px; margin: auto; background: #fff; padding: 20px; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+       .game-area { margin-top: 20px; padding: 15px; border: 1px solid #ddd; border-radius: 5px; background-color: #e9e9e9; }
+       .scenario,.choices,.feedback,.resources,.suggestions { margin-bottom: 20px; padding: 10px; border: 1px dashed #ccc; }
+        h2 { color: #333; }
+        button { padding: 10px 15px; background-color: #5cb85c; color: white; border: none; border-radius: 5px; cursor: pointer; }
+        button:hover { background-color: #4cae4c; }
+        textarea { width: 95%; padding: 10px; margin-top: 5px; border-radius: 5px; border: 1px solid #ccc; }
+        footer { text-align: center; margin-top: 30px; padding-top: 15px; border-top: 1px solid #eee; font-size: 0.9em; }
+    </style>
 </head>
-<body class="bg-gray-800 text-white">
-  <div class="main-container">
-    <aside class="bg-gray-900 p-6 flex flex-col">
-      <h1 class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></h1>
-      <nav id="main-nav" class="flex flex-col space-y-4">
-                <!-- Standard Page Links -->
-                <a href="index.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                <a href="about.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-                
-                <!-- Divider -->
-                <div class="border-t border-gray-700 my-2"></div>
-            
-                <!-- Interactive Tool Buttons -->
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant
-                </button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-4 rounded-lg w-full text-left">
-                    <i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast
-                </button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-4 rounded-lg">
-                    <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-                </a>
-            </nav>
-      <div class="mt-auto text-center">
-        <div id="auth-links-desktop" class="mb-4"></div>
-        <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-      </div>
-    </aside>
+<body>
+    <header>
+        <h1>Goliath's Reckoning: The Father's Legal Journey</h1>
+        <nav>
+            <ul>
+                <li><a href="#home">Home</a></li>
+                <li><a href="#about">About the Game</a></li>
+                <li><a href="https://flamea.org/tools.html" target="_blank">Flamea.org Tools</a></li>
+            </ul>
+        </nav>
+    </header>
 
-    <main class="main-content p-8 md:p-12">
-      <div id="parenting-plan-tool" class="max-w-4xl mx-auto">
-        <h2 class="text-4xl font-bold font-roboto text-white mb-2">Parenting Plan Builder</h2>
-        <p class="text-lg text-gray-400 mb-8">An intuitive tool to assess your parenting situation and create a legally-informed, customised parenting plan.</p>
-
-        <!-- Legal Reference Block -->
-        <div class="legal-ref text-sm text-gray-300">
-          <i class="fas fa-scale-balanced"></i>
-          <strong>Legal Basis:</strong> South African Constitution (Section 28), Children’s Act 38 of 2005, Promotion of Equality and Prevention of Unfair Discrimination Act, and the UN Convention on the Rights of the Child.
+    <div class="container">
+        <div id="game-start-screen" class="game-area">
+            <h2>Welcome, Father!</h2>
+            <p>This simulator is designed to help you prepare for legal challenges in South Africa. Navigate various court processes, understand your rights, and learn how to advocate for yourself and your children.</p>
+            <p>This game aligns with the values of Justice, Family, Community, and Awareness promoted by Flamea.org.</p>
+            <button onclick="startGame()">Start Game</button>
         </div>
 
-        <!-- Assessment Option -->
-        <div class="flex flex-col md:flex-row gap-6 mb-10">
-          <button class="bg-green-600 hover:bg-green-700 w-full py-4 rounded-xl text-lg font-bold">
-            <i class="fas fa-magic mr-2"></i> Start with Smart Wizard</button>
-          <button class="bg-blue-600 hover:bg-blue-700 w-full py-4 rounded-xl text-lg font-bold">
-            <i class="fas fa-edit mr-2"></i> Build Manually</button>
+        <div id="case-selection-screen" class="game-area" style="display:none;">
+            <h2>Select Your Legal Path</h2>
+            <p>Choose a court level to begin your journey:</p>
+            <button onclick="selectCaseType('small_claims')">Small Claims Court</button>
+            <button onclick="selectCaseType('childrens_court')">Children’s Court</button>
+            <button onclick="selectCaseType('magistrates_court_civil')">Magistrate's Court (Civil)</button>
+            <button onclick="selectCaseType('magistrates_court_criminal')">Magistrate's Court (Criminal)</button>
+            <button onclick="selectCaseType('high_court')">High Court (Appeal/Review)</button>
+            <button onclick="selectCaseType('constitutional_court')">Constitutional Court Challenge</button>
         </div>
 
-        <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-          <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
-            <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 20%"></div>
-          </div>
-
-          <form id="plan-form">
-            <!-- Step 1 -->
-            <div id="step-1" class="form-step active">
-              <h3 class="text-2xl font-bold text-green-400 mb-6">Step 1: The People Involved</h3>
-              <div class="space-y-4">
-                <div>
-                  <label for="childName" class="block text-sm font-medium text-gray-300">Child's Full Name</label>
-                  <input type="text" id="childName" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="parentA" class="block text-sm font-medium text-gray-300">Parent A's Full Name</label>
-                  <input type="text" id="parentA" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="parentB" class="block text-sm font-medium text-gray-300">Parent B's Full Name</label>
-                  <input type="text" id="parentB" class="mt-1 block w-full rounded-md form-input p-2" />
-                </div>
-                <div>
-                  <label for="relationshipType" class="block text-sm font-medium text-gray-300">Relationship Type</label>
-                  <select id="relationshipType" class="mt-1 block w-full rounded-md form-input p-2">
-                    <option>Unmarried</option>
-                    <option>Married</option>
-                    <option>Divorced</option>
-                    <option>In Relationship</option>
-                    <option>Other</option>
-                  </select>
-                </div>
-              </div>
+        <div id="game-play-area" class="game-area" style="display:none;">
+            <div class="scenario">
+                <h3>Scenario: <span id="scenario-title"></span></h3>
+                <p id="scenario-description"></p>
             </div>
 
-            <!-- Navigation -->
-            <div class="mt-10 flex justify-between">
-              <button id="prev-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50" disabled>Previous</button>
-              <button id="next-btn" class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-700">Next</button>
-              <div id="final-actions" class="hidden">
-                <button id="save-btn" class="bg-green-600 text-white py-2 px-6 rounded-lg hover:bg-green-700">Download Plan</button>
-              </div>
+            <div class="choices">
+                <h4>Your Options:</h4>
+                <div id="player-choices">
+                    </div>
             </div>
-          </form>
-        </div>
-      </div>
-    </main>
-  </div>
 
-  <script>
-    document.getElementById('currentYear').textContent = new Date().getFullYear();
-  </script>
-  <script src="assets/js/main.js"></script>
-  <script type="module" src="assets/js/auth.js"></script>
-  <script type="module" src="assets/js/parenting-plan.js"></script>
+            <div class="feedback">
+                <h4>Outcome/Feedback:</h4>
+                <p id="game-feedback"></p>
+            </div>
+
+            <div class="resources">
+                <h4>Legal Resources & Training Modules:</h4>
+                <p>Based on your current scenario, you might find these Flamea.org resources helpful:</p>
+                <ul id="flamea-links">
+                    <li><a href="httpsa://flamea.org/training/general-legal-principles" target="_blank">General Legal Principles</a></li>
+                </ul>
+                <p><strong>Key Legal Concepts Covered:</strong> <span id="legal-concepts"></span></p>
+                <p><strong>Cost Implications:</strong> <span id="cost-implications"></span></p>
+            </div>
+        </div>
+
+        <div class="suggestions game-area">
+            <h3>Suggest New Content</h3>
+            <p>Have an idea for a new scenario or a feature you'd like to see? Let us know!</p>
+            <textarea id="user-suggestion" rows="4" placeholder="Type your suggestion here..."></textarea>
+            <button onclick="submitSuggestion()">Submit Suggestion</button>
+            <p id="suggestion-feedback" style="margin-top:10px;"></p>
+        </div>
+    </div>
+
+    <footer>
+        <p>&copy; <span id="currentYear"></span> Flamea.org - Empowering Fathers. All Rights Reserved.</p>
+        <p><a href="https://flamea.org/our-work.html" target="_blank">Learn more about Flamea.org's mission</a></p>
+    </footer>
+
+    <script>
+        // Basic JavaScript for game flow - Placeholder
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+        function startGame() {
+            document.getElementById('game-start-screen').style.display = 'none';
+            document.getElementById('case-selection-screen').style.display = 'block';
+        }
+
+        function selectCaseType(caseType) {
+            document.getElementById('case-selection-screen').style.display = 'none';
+            document.getElementById('game-play-area').style.display = 'block';
+            loadScenario(caseType);
+        }
+
+        function loadScenario(caseType) {
+            // Placeholder: This function would load specific scenarios based on caseType
+            // It would update scenario-title, scenario-description, player-choices, flamea-links, legal-concepts, and cost-implications
+            let scenarioTitle = '';
+            let scenarioDescription = '';
+            let choicesHtml = '';
+            let flameaLinksHtml = '';
+            let legalConcepts = '';
+            let costImplicationsText = 'Varies depending on case complexity and legal representation.';
+
+            switch(caseType) {
+                case 'small_claims':
+                    scenarioTitle = "The Shared Expense Dispute";
+                    scenarioDescription = "You paid for a significant child-related expense (e.g., R10,000 for emergency medical care) based on a verbal agreement to share costs with the mother, who now refuses to pay her share. You need to recover this through the Small Claims Court.";
+                    choicesHtml = `
+                        <button onclick="makeChoice('send_demand_letter')">Send Letter of Demand</button>
+                        <button onclick="makeChoice('file_scc_claim')">File Claim with SCC Clerk</button>
+                        <button onclick="makeChoice('represent_self')">Prepare for Self-Representation</button>
+                    `;
+                    flameaLinksHtml = `<li><a href="httpsa://flamea.org/training/small-claims-court-guide" target="_blank">Guide to Small Claims Court</a></li>`;
+                    legalConcepts = "Small Claims Court procedure, letter of demand, burden of proof, self-representation.";
+                    costImplicationsText = "Low. Minimal court fees, no lawyers typically involved.";
+                    break;
+                case 'childrens_court':
+                    scenarioTitle = "The Fight for Meaningful Contact";
+                    scenarioDescription = "You are being denied reasonable and regular contact with your child. The mother makes vague excuses. You need to apply to the Children's Court for defined contact rights.";
+                    choicesHtml = `
+                        <button onclick="makeChoice('file_childrens_court_application')">File Application for Contact</button>
+                        <button onclick="makeChoice('attend_mediation')">Attend Mediation</button>
+                        <button onclick="makeChoice('present_evidence_best_interest')">Present Evidence of Child's Best Interest</button>
+                    `;
+                    flameaLinksHtml = `
+                        <li><a href="httpsa://flamea.org/training/childrens-court-contact" target="_blank">Securing Contact via Children's Court</a></li>
+                        <li><a href="httpsa://flamea.org/training/best-interest-child" target="_blank">Arguing 'Best Interests of the Child'</a></li>
+                    `;
+                    legalConcepts = "Children's Act, Section 28 (Best Interests of the Child), contact orders, role of Family Advocate.";
+                    break;
+                // Add more cases here based on the report's scenario blueprints
+                default:
+                    scenarioTitle = "Select a Case";
+                    scenarioDescription = "Please select a case type to begin.";
+            }
+
+            document.getElementById('scenario-title').textContent = scenarioTitle;
+            document.getElementById('scenario-description').textContent = scenarioDescription;
+            document.getElementById('player-choices').innerHTML = choicesHtml;
+            document.getElementById('flamea-links').innerHTML = flameaLinksHtml; // Assuming this is the correct ID
+            document.getElementById('legal-concepts').textContent = legalConcepts;
+            document.getElementById('cost-implications').textContent = costImplicationsText;
+            document.getElementById('game-feedback').textContent = 'Make your choice to proceed.';
+        }
+
+        function makeChoice(choice) {
+            // Placeholder: This function would handle player's choice and update the game state
+            let feedback = '';
+            switch(choice) {
+                case 'send_demand_letter':
+                    feedback = "You've drafted and sent a letter of demand. Wait 14 days for a response. What's next if they don't pay?";
+                    // Potentially update choices or scenario
+                    break;
+                case 'file_childrens_court_application':
+                    feedback = "Application filed. You've received a court date and the other party has been subpoenaed. Prepare your arguments focusing on the child's best interests.";
+                    break;
+                // Add more choice outcomes
+                default:
+                    feedback = "Choice processed.";
+            }
+            document.getElementById('game-feedback').textContent = feedback;
+        }
+
+        function submitSuggestion() {
+            const suggestion = document.getElementById('user-suggestion').value;
+            if (suggestion.trim() === "") {
+                document.getElementById('suggestion-feedback').textContent = "Please enter a suggestion.";
+                return;
+            }
+            // In a real application, this would send the suggestion to a server
+            console.log("User suggestion:", suggestion);
+            document.getElementById('suggestion-feedback').textContent = "Thank you for your suggestion!";
+            document.getElementById('user-suggestion').value = ""; // Clear the textarea
+        }
+
+        // Initialize the first screen (optional, if you want to start with case selection directly)
+        // startGame(); // Or call directly if no intro screen
+    </script>
 </body>
 </html>
