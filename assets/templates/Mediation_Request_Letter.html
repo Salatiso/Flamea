@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea - Mediation Request Letter</title>
+    <link href="dist/styles.css" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Roboto:wght@400;700&display=swap');
+        body { font-family: 'Roboto', sans-serif; -webkit-print-color-adjust: exact; background-color: #e2e8f0; }
+        .page { width: 210mm; min-height: 297mm; height: auto; page-break-after: always; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 2rem auto; overflow: hidden; display: flex; flex-direction: column; background: white; }
+        .header, .footer { padding: 1cm; position: absolute; left: 0; right: 0; font-size: 10pt; color: #4a5568; }
+        .header { top: 0; text-align: right; }
+        .footer { bottom: 0; display: flex; justify-content: space-between; }
+        .content { padding: 2.5cm 2cm; flex-grow: 1; }
+        h1 { font-family: 'Roboto Slab', serif; font-size: 20pt; color: #1a202c; text-align: center; text-transform: uppercase; margin-bottom: 2rem; }
+        p, li { font-size: 11pt; line-height: 1.6; color: #2d3748; margin-bottom: 1rem; }
+        .editable { background-color: #f1f5f9; padding: 8px; border-radius: 4px; border: 1px solid #cbd5e1; min-height: 40px; white-space: pre-wrap; word-wrap: break-word; }
+        .editable:focus { outline: 2px solid #3b82f6; background-color: white; }
+        .editable-inline { background-color: #f1f5f9; padding: 2px 4px; border-radius: 3px; border-bottom: 1px dashed #94a3b8; }
+        .editable-inline:focus { outline: 1px solid #3b82f6; background-color: white; }
+        .cover-page, .back-cover-page { background-color: #111827; color: white; }
+        .cover-page .content, .back-cover-page .content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex-grow: 1; padding: 2cm; }
+        .cover-page .footer, .back-cover-page .footer { color: #9ca3af; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.05; z-index: 0; pointer-events: none; }
+        .page > * { z-index: 1; }
+        .add-btn { background-color: #16a34a; color: white; padding: 4px 12px; font-size: 10pt; border-radius: 5px; cursor: pointer; border: none; margin-top: 10px; }
+        .add-btn:hover { background-color: #15803d; }
+        .remove-btn { background-color: #dc2626; color: white; border: none; width: 24px; height: 24px; border-radius: 50%; cursor: pointer; font-weight: bold; margin-left: 10px; line-height: 24px; text-align: center; }
+        .remove-btn:hover { background-color: #b91c1c; }
+        .paragraph-container { display: flex; align-items: flex-start; margin-bottom: 1rem; }
+        .paragraph-content { flex-grow: 1; }
+        @media print { 
+            body { margin: 0; background-color: white; } 
+            .page { box-shadow: none; margin: 0; height: 297mm; } 
+            .editable, .editable-inline { background-color: transparent !important; padding: 0; border: none; font-style: normal; } 
+            .hide-on-print { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-gray-200">
+
+    <!-- Cover Page -->
+    <div class="page cover-page">
+        <div class="content">
+            <div class="flamea-logo dark mb-8"><svg width="240" height="72" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <h1 class="text-white text-5xl font-bold font-roboto-slab mt-4">Mediation Request Letter</h1>
+            <p class="text-gray-300 text-2xl mt-4">Resolving Co-Parenting Disputes</p>
+            <p class="text-gray-400 mt-2">FATHERS. LEADERS. LEGACY.</p>
+        </div>
+        <div class="footer"><span>Doc ID: <span class="editable-inline" contenteditable="true">FLAMEA-MRL-202506120402</span></span><span>Version: 1.0</span><span>Generated: <span class="editable-inline" contenteditable="true">12 June 2025</span></span></div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Mediation Request Letter</strong></div>
+        <div class="content">
+            <h1>MEDIATION REQUEST LETTER</h1>
+            <p><span contenteditable="true" class="editable-inline">Your Full Name</span><br>
+            <span contenteditable="true" class="editable">Your Residential Address</span><br>
+            <span contenteditable="true" class="editable-inline">Your Contact Number</span><br>
+            <span contenteditable="true" class="editable-inline">Your Email Address</span></p>
+            <p><span contenteditable="true" class="editable-inline">Date</span></p>
+            <p><span contenteditable="true" class="editable-inline">Mother’s Full Name</span><br>
+            <span contenteditable="true" class="editable">Mother’s Residential Address</span></p>
+            <p>Dear <span contenteditable="true" class="editable-inline">Mother’s Name</span>,</p>
+            <p>I am writing to propose mediation to resolve issues concerning our co-parenting arrangement for <span contenteditable="true" class="editable-inline">Child’s Name</span>. Despite my efforts, we face challenges, including:</p>
+            <div id="issue-list" class="space-y-2">
+                <div class="paragraph-container">
+                    <div contenteditable="true" class="editable paragraph-content"><span contenteditable="true" class="editable-inline">Issue, e.g., restricted access on Dates</span>.</div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>
+                </div>
+            </div>
+            <button id="add-issue-btn" class="add-btn hide-on-print">+ Add Issue</button>
+            <p>Mediation offers a neutral, constructive process to create a parenting plan that prioritizes <span contenteditable="true" class="editable-inline">Child’s Name</span>’s best interests, as required by Section 28 of the Constitution of South Africa.</p>
+            <p>I propose the following mediation details:</p>
+            <div id="mediation-list" class="space-y-2">
+                <div class="paragraph-container">
+                    <div contenteditable="true" class="editable paragraph-content">Mediator: <span contenteditable="true" class="editable-inline">Mediator Name</span>, Date: <span contenteditable="true" class="editable-inline">Date</span>, Location: <span contenteditable="true" class="editable">Location</span>.</div>
+                    <button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>
+                </div>
+            </div>
+            <button id="add-mediation-btn" class="add-btn hide-on-print">+ Add Mediation Detail</button>
+            <p>Please confirm your participation by <span contenteditable="true" class="editable-inline">Date</span>. Contact me at <span contenteditable="true" class="editable-inline">Your Contact Number</span> or <span contenteditable="true" class="editable-inline">Your Email Address</span>.</p>
+            <p>Yours sincerely,</p>
+            <div style="width: 250px; border-bottom: 1px solid #2d3748; height: 30px;"></div>
+            <p><strong><span contenteditable="true" class="editable-inline">Your Full Name</span></strong></p>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 1</span></div>
+    </div>
+
+    <!-- Annexure Page -->
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Mediation Request Letter</strong></div>
+        <div class="content">
+            <h2>ANNEXURE A: MEDIATION BENEFITS</h2>
+            <h3>Neutral Process</h3>
+            <p>Mediation involves a neutral third party to facilitate agreement, reducing conflict.</p>
+            <h3>Child-Centered</h3>
+            <p>Focuses on the child’s best interests, as mandated by the Constitution.</p>
+            <h3>Resources</h3>
+            <p>Sazi.life (<a href="https://sazi.life">www.sazi.life</a>) offers mediation resources and parenting plan templates.</p>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 2</span></div>
+    </div>
+
+    <div id="page-container"></div>
+    <div class="text-center my-8 hide-on-print"><button id="add-page-btn" class="add-btn">Add Continuation Page</button></div>
+
+    <!-- Back Cover Page -->
+    <div class="page back-cover-page">
+        <div class="content">
+            <div class="flamea-logo dark mb-8"><svg width="160" height="48" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <div class="max-w-2xl">
+                <h2 class="text-green-400 text-2xl font-bold">OUR MISSION</h2>
+                <p class="text-gray-200 mt-2 text-lg">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
+                <h2 class="text-green-400 text-2xl font-bold mt-8">THE BUILDER'S ETHOS: OUR CORE VALUES</h2>
+                <div class="mt-4 text-center">
+                    <div class="text-white space-y-2 text-base">
+                        <div><span class="text-green-400 font-bold">STRUCTURE:</span> 🛡️ We build organised, logical, and robust systems.</div>
+                        <div><span class="text-green-400 font-bold">ASSEMBLE:</span> 🧩 We bring together disparate parts to create a cohesive whole.</div>
+                        <div><span class="text-green-400 font-bold">LEGACY:</span> 🦅 We build upon the work of our predecessors.</div>
+                        <div><span class="text-green-400 font-bold">ARCHITECT:</span> 🏛️ We design with vision and purpose for the future.</div>
+                        <div><span class="text-green-400 font-bold">TOOL-UP:</span> 🛠️ We empower users with the right tools and knowledge.</div>
+                        <div><span class="text-green-400 font-bold">INNOVATE:</span> 💡 We constantly seek better ways to solve problems.</div>
+                        <div><span class="text-green-400 font-bold">SUSTAIN:</span> 🌱 We build things that are meant to last.</div>
+                        <div><span class="text-green-400 font-bold">OBSERVE:</span> 👁️ We pay close attention to identify needs and find solutions.</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="footer"><span>https://flamea.org</span><span>salatiso@flamea.org</span><span>© 2025 Flamea</span></div>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const issueList = document.getElementById('issue-list');
+            const addIssueBtn = document.getElementById('add-issue-btn');
+            const mediationList = document.getElementById('mediation-list');
+            const addMediationBtn = document.getElementById('add-mediation-btn');
+            const pageContainer = document.getElementById('page-container');
+            const addPageBtn = document.getElementById('add-page-btn');
+            let pageCounter = 2;
+
+            // Add new issue
+            addIssueBtn.addEventListener('click', () => {
+                const newPara = document.createElement('div');
+                newPara.className = 'paragraph-container';
+                newPara.innerHTML = `<div contenteditable="true" class="editable paragraph-content">[New issue...]</div><button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>`;
+                issueList.appendChild(newPara);
+            });
+
+            // Add new mediation detail
+            addMediationBtn.addEventListener('click', () => {
+                const newPara = document.createElement('div');
+                newPara.className = 'paragraph-container';
+                newPara.innerHTML = `<div contenteditable="true" class="editable paragraph-content">[New mediation detail...]</div><button class="remove-btn hide-on-print" onclick="this.parentElement.remove()">×</button>`;
+                mediationList.appendChild(newPara);
+            });
+
+            // Add new page
+            addPageBtn.addEventListener('click', () => {
+                pageCounter++;
+                const newPage = document.createElement('div');
+                newPage.className = 'page';
+                newPage.innerHTML = `
+                    <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+                    <div class="header"><strong>Mediation Request Letter (Continuation)</strong></div>
+                    <div class="content">
+                        <div contenteditable="true" class="editable" style="width: 100%; height: 250mm;">Continue your letter here...</div>
+                    </div>
+                    <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page ${pageCounter}</span></div>
+                `;
+                pageContainer.appendChild(newPage);
+                updatePageNumbers();
+            });
+
+            function updatePageNumbers() {
+                const pages = document.querySelectorAll('.page:not(.cover-page):not(.back-cover-page)');
+                pages.forEach((page, index) => {
+                    const pageNumElement = page.querySelector('.page-number');
+                    if (pageNumElement) {
+                        pageNumElement.textContent = `Page ${index + 1}`;
+                    }
+                });
+            }
+            updatePageNumbers();
+        });
+    </script>
+</body>
+</html>
