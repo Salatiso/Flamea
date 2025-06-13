@@ -4,347 +4,276 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flamea - Forms & Documents Hub</title>
+    
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        body { font-family: 'Roboto', sans-serif; -webkit-print-color-adjust: exact; background-color: #f3f4f6; }
-        .timeline { position: fixed; top: 0; right: 0; height: 100vh; width: 80px; background-color: #1a202c; color: white; display: flex; flex-direction: column; align-items: center; padding-top: 20px; }
-        .timeline-item { margin-bottom: 20px; text-align: center; cursor: pointer; }
-        .timeline-item i { font-size: 24px; margin-bottom: 5px; }
-        .timeline-item span { font-size: 12px; }
-        .timeline-panel { position: fixed; top: 0; right: 80px; height: 100vh; width: 300px; background-color: #fff; box-shadow: -2px 0 5px rgba(0,0,0,0.1); transform: translateX(100%); transition: transform 0.3s ease; padding: 20px; overflow-y: auto; }
-        .timeline-panel.active { transform: translateX(0); }
-        .achievement { background-color: #16a34a; color: white; padding: 5px 10px; border-radius: 5px; font-size: 12px; margin-top: 10px; }
-        .progress-bar { width: 100%; background-color: #e5e7eb; height: 10px; border-radius: 5px; margin-top: 10px; }
-        .progress-fill { height: 100%; background-color: #16a34a; border-radius: 5px; transition: width 0.5s ease; }
+        body { font-family: 'Roboto', sans-serif; overflow: hidden; -webkit-print-color-adjust: exact; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr;
+            height: 100vh;
+        }
+        .main-content-area { overflow-y: auto; }
+        .option-card { transition: all 0.3s ease; }
+        .option-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .progress-bar { background-color: #374151; } /* gray-700 */
+        .progress-fill { background-color: #2563EB; } /* blue-600 */
+        .form-link { color: #60A5FA; text-decoration: underline; }
+        .form-link:hover { color: #93C5FD; }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js"></script>
 </head>
-<body class="bg-gray-100 text-gray-900">
-    <header class="bg-white shadow-md">
-        <div class="container mx-auto px-4 py-4 flex justify-between items-center">
-            <div class="text-2xl font-bold text-green-600">Flamea</div>
-            <nav>
-                <a href="index.html" class="text-gray-600 hover:text-green-600 mx-2">Home</a>
-                <a href="about.html" class="text-gray-600 hover:text-green-600 mx-2">About</a>
-                <a href="tools.html" class="text-gray-600 hover:text-green-600 mx-2">Tools</a>
-                <a href="training.html" class="text-gray-600 hover:text-green-600 mx-2">Training</a>
-                <a href="resources.html" class="text-gray-600 hover:text-green-600 mx-2">Resources</a>
-                <a href="community.html" class="text-gray-600 hover:text-green-600 mx-2">Community</a>
-                <a href="login.html" class="text-gray-600 hover:text-green-600 mx-2">Login / Register</a>
+<body class="bg-gray-800 text-gray-200">
+
+    <div class="main-container">
+        <aside class="bg-gray-900 p-6 flex flex-col">
+             <div class="mb-12 flex justify-center">
+                <a href="index.html" class="flamea-logo dark">
+                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
+                </a>
+            </div>
+            <nav id="main-nav" class="flex flex-col space-y-2">
+                <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                <a href="resources.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                <div class="border-t border-gray-700 my-2"></div>
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
             </nav>
-        </div>
-    </header>
-
-    <main class="container mx-auto px-4 py-8">
-        <h1 class="text-3xl font-bold mb-8 text-center">Forms & Documents Hub</h1>
-        <p class="text-center mb-8">Prepare for your journey as a father with the right tools. Even if things go wrong, honest communication and Flamea’s resources can help you salvage everything for your child’s sake.</p>
-
-        <div class="grid md:grid-cols-2 gap-8">
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-bold mb-4">Simple Start Wizard</h2>
-                <p class="mb-4">Not sure where to begin? We’ll guide you to the right form.</p>
-                <button id="start-wizard" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Start Wizard</button>
-            </div>
-            <div class="bg-white p-6 rounded-lg shadow-md">
-                <h2 class="text-xl font-bold mb-4">Manual Explorer</h2>
-                <p class="mb-4">Know what you need? Browse all forms by category.</p>
-                <button id="explore-forms" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Explore Forms</button>
-            </div>
-        </div>
-
-        <div id="wizard-section" class="mt-8 hidden">
-            <h2 class="text-2xl font-bold mb-4">Simple Start Wizard</h2>
-            <div id="wizard-step-1" class="mb-4">
-                <label class="block mb-2">What is your general situation?</label>
-                <select id="situation" class="w-full p-2 border rounded">
-                    <option value="">-- Select a situation --</option>
-                    <option value="child">It’s about my child/paternity</option>
-                    <option value="marriage">It’s about marriage/divorce</option>
-                    <option value="court">I need to go to court</option>
-                    <option value="criminal">It’s a criminal matter</option>
-                    <option value="discrimination">I’m facing discrimination</option>
-                </select>
-            </div>
-            <div id="wizard-step-2" class="mb-4 hidden">
-                <label class="block mb-2">What do you need to do?</label>
-                <select id="action" class="w-full p-2 border rounded">
-                    <option value="">-- Select an action --</option>
-                </select>
-            </div>
-            <div id="wizard-result" class="hidden">
-                <h3 class="text-xl font-bold mb-2">Recommended Form(s):</h3>
-                <ul id="recommended-forms" class="list-disc pl-5"></ul>
-            </div>
-        </div>
-
-        <div id="explorer-section" class="mt-8 hidden">
-            <h2 class="text-2xl font-bold mb-4">Form Categories</h2>
-            <div class="grid md:grid-cols-3 gap-4">
-                <div class="bg-white p-4 rounded shadow">
-                    <h3 class="font-bold mb-2">Family Law</h3>
-                    <ul>
-                        <li><a href="https://www.justice.gov.za/forms/form_cj.html" target="_blank">Form 10 [J779]: Register Parenting Plan</a></li>
-                        <li><a href="templates/Parenting_Plan_Template.html">Parenting Plan Template</a></li>
-                        <li><a href="templates/Child_Support_Agreement.html">Child Support Agreement</a></li>
-                    </ul>
+            <div class="mt-auto text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
                 </div>
-                <div class="bg-white p-4 rounded shadow">
-                    <h3 class="font-bold mb-2">Affidavits</h3>
-                    <ul>
-                        <li><a href="templates/Affidavit_General_Template.html">General Affidavit Template</a></li>
-                        <li><a href="templates/Affidavit-SAPS_Complaint_.html">SAPS Complaint Affidavit</a></li>
-                    </ul>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear">2024</span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <main class="main-content-area p-8 md:p-12">
+            <div class="max-w-4xl mx-auto">
+                <div class="text-center">
+                    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">Forms & Documents Hub</h1>
+                    <p class="text-lg text-gray-400 mb-12">Prepare for your journey with the right tools. Honest communication and our resources can help you salvage everything for your child’s sake.</p>
                 </div>
-                <div class="bg-white p-4 rounded shadow">
-                    <h3 class="font-bold mb-2">Letters</h3>
-                    <ul>
-                        <li><a href="templates/Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html">Informal Parental Rights Letter</a></li>
-                        <li><a href="templates/Damages_Accepting_Letter.html">Damages Accepting Letter</a></li>
-                    </ul>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div id="start-wizard-btn" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer">
+                        <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Simple Start Wizard</h4>
+                        <p class="text-gray-400">Not sure where to begin? We’ll guide you to the right form.</p>
+                    </div>
+                    <div id="explore-forms-btn" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer">
+                        <i class="fas fa-search text-5xl text-blue-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Manual Explorer</h4>
+                        <p class="text-gray-400">Know what you need? Browse all forms by category.</p>
+                    </div>
+                </div>
+
+                <div id="wizard-section" class="hidden bg-gray-900 p-8 rounded-lg mb-12">
+                    <h2 class="text-2xl font-bold mb-6">Simple Start Wizard</h2>
+                    <div id="wizard-step-1" class="mb-4">
+                        <label class="block mb-2 font-semibold">What is your general situation?</label>
+                        <select id="situation" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Select a situation --</option>
+                            <option value="child">It’s about my child/paternity</option>
+                            <option value="marriage">It’s about marriage/divorce</option>
+                            <option value="court">I need to go to court</option>
+                            <option value="criminal">It’s a criminal matter</option>
+                            <option value="discrimination">I’m facing discrimination</option>
+                        </select>
+                    </div>
+                    <div id="wizard-step-2" class="mb-4 hidden">
+                        <label class="block mb-2 font-semibold">What do you need to do?</label>
+                        <select id="action" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-md focus:ring-2 focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">-- Select an action --</option>
+                        </select>
+                    </div>
+                    <div id="wizard-result" class="hidden mt-6 bg-gray-800 p-4 rounded-md">
+                        <h3 class="text-xl font-bold mb-2">Recommended Form:</h3>
+                        <div id="recommended-forms"></div>
+                    </div>
+                </div>
+
+                <div id="explorer-section" class="hidden space-y-4 mb-12">
+                     <h2 class="text-2xl font-bold mb-4">Form Categories</h2>
+                     <div class="space-y-4">
+                         <div class="bg-gray-900 p-4 rounded-lg"><h3 class="font-bold text-xl mb-2 text-blue-400">Family Law</h3><ul class="space-y-2 pl-2"><li><a class="form-link" href="https://www.justice.gov.za/forms/form_cj.html" target="_blank">Form 10 [J779]: Register Parenting Plan</a></li><li><a class="form-link" href="templates/Parenting_Plan_Template.html">Parenting Plan Template</a></li><li><a class="form-link" href="templates/Child_Support_Agreement.html">Child Support Agreement</a></li></ul></div>
+                         <div class="bg-gray-900 p-4 rounded-lg"><h3 class="font-bold text-xl mb-2 text-green-400">Affidavits</h3><ul class="space-y-2 pl-2"><li><a class="form-link" href="templates/Affidavit_General_Template.html">General Affidavit Template</a></li><li><a class="form-link" href="templates/Affidavit-SAPS_Complaint_.html">SAPS Complaint Affidavit</a></li></ul></div>
+                         <div class="bg-gray-900 p-4 rounded-lg"><h3 class="font-bold text-xl mb-2 text-yellow-400">Letters</h3><ul class="space-y-2 pl-2"><li><a class="form-link" href="templates/Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html">Informal Parental Rights Letter</a></li><li><a class="form-link" href="templates/Damages_Accepting_Letter.html">Damages Accepting Letter</a></li></ul></div>
+                     </div>
+                </div>
+
+                <div id="form-actions" class="mt-8 flex flex-wrap justify-center gap-4">
+                    <button id="save-progress" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-save"></i> Save Progress</button>
+                    <button id="send-form" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-paper-plane"></i> Send</button>
+                    <button id="print-form" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-print"></i> Print</button>
+                    <button id="share-form" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-share-alt"></i> Share</button>
+                </div>
+                
+                <div id="superdad-progress" class="mt-16 bg-gray-900 p-8 rounded-lg shadow-lg">
+                    <h2 class="text-2xl font-bold mb-4 text-center">Your SuperDad Journey</h2>
+                    <p id="progress-message" class="mb-4 text-center text-gray-400">Complete forms to make progress!</p>
+                    <div class="progress-bar w-full h-4 rounded-full overflow-hidden">
+                        <div id="progress-fill" class="progress-fill h-full rounded-full" style="width: 0%;"></div>
+                    </div>
                 </div>
             </div>
-        </div>
-
-        <div id="form-actions" class="mt-8 flex justify-center space-x-4">
-            <button id="save-progress" class="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700">Save Progress</button>
-            <button id="send-form" class="bg-green-600 text-white py-2 px-4 rounded hover:bg-green-700">Send</button>
-            <button id="print-form" class="bg-gray-600 text-white py-2 px-4 rounded hover:bg-gray-700">Print</button>
-            <button id="share-form" class="bg-yellow-600 text-white py-2 px-4 rounded hover:bg-yellow-700">Share</button>
-        </div>
-
-        <div id="superdad-progress" class="mt-8 bg-white p-6 rounded-lg shadow-md">
-            <h2 class="text-xl font-bold mb-4">Your SuperDad Journey</h2>
-            <p id="progress-message" class="mb-4">Start your journey to become a SuperDad!</p>
-            <div class="progress-bar">
-                <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
-            </div>
-        </div>
-    </main>
-
-    <!-- Interactive Timeline -->
-    <div class="timeline">
-        <div class="timeline-item" data-stage="preparation">
-            <i class="fas fa-book"></i>
-            <span>Preparation</span>
-        </div>
-        <div class="timeline-item" data-stage="family">
-            <i class="fas fa-users"></i>
-            <span>Family</span>
-        </div>
-        <div class="timeline-item" data-stage="action">
-            <i class="fas fa-tools"></i>
-            <span>Action</span>
-        </div>
-        <div class="timeline-item" data-stage="resolution">
-            <i class="fas fa-check-circle"></i>
-            <span>Resolution</span>
-        </div>
+        </main>
     </div>
 
-    <div class="timeline-panel" id="timeline-panel">
-        <h2 class="text-xl font-bold mb-4" id="stage-title"></h2>
-        <div id="stage-content"></div>
-        <button id="close-panel" class="mt-4 bg-red-600 text-white py-2 px-4 rounded hover:bg-red-700">Close</button>
-    </div>
+    <script type="module">
+        // Import necessary functions from Firebase SDK
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
+        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
 
-    <script>
-        // Firebase Configuration
+        // Main Firebase configuration for this app
         const firebaseConfig = {
-            apiKey: "YOUR_API_KEY",
-            authDomain: "YOUR_AUTH_DOMAIN",
-            projectId: "YOUR_PROJECT_ID",
-            storageBucket: "YOUR_STORAGE_BUCKET",
-            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
-            appId: "YOUR_APP_ID"
-        };
-        firebase.initializeApp(firebaseConfig);
-        const auth = firebase.auth();
-        const db = firebase.firestore();
-
-        // Wizard Logic
-        const situationSelect = document.getElementById('situation');
-        const actionSelect = document.getElementById('action');
-        const recommendedForms = document.getElementById('recommended-forms');
-        const formsData = {
-            child: {
-                actions: ["Register a parenting plan", "File for paternity", "Request child support"],
-                forms: ["Form 10 [J779]", "templates/Parenting_Plan_Template.html", "templates/Child_Support_Agreement.html"]
-            },
-            marriage: {
-                actions: ["File for divorce", "Request spousal support"],
-                forms: ["Divorce Form", "Spousal Support Form"]
-            },
-            court: {
-                actions: ["File a complaint", "Request a hearing"],
-                forms: ["Complaint Form", "Hearing Request Form"]
-            },
-            criminal: {
-                actions: ["Report a crime", "File for protection"],
-                forms: ["Crime Report Form", "Protection Order Form"]
-            },
-            discrimination: {
-                actions: ["File a discrimination complaint"],
-                forms: ["Discrimination Complaint Form"]
-            }
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
         };
 
-        situationSelect.addEventListener('change', (e) => {
-            const situation = e.target.value;
-            if (situation) {
-                document.getElementById('wizard-step-2').classList.remove('hidden');
-                actionSelect.innerHTML = '<option value="">-- Select an action --</option>';
-                formsData[situation].actions.forEach((action, index) => {
-                    actionSelect.innerHTML += `<option value="${index}">${action}</option>`;
-                });
-            } else {
-                document.getElementById('wizard-step-2').classList.add('hidden');
-                document.getElementById('wizard-result').classList.add('hidden');
-            }
-        });
+        // Initialize Firebase
+        const app = initializeApp(firebaseConfig);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-        actionSelect.addEventListener('change', (e) => {
-            const situation = situationSelect.value;
-            const actionIndex = e.target.value;
-            if (actionIndex !== "") {
-                document.getElementById('wizard-result').classList.remove('hidden');
-                recommendedForms.innerHTML = `<li><a href="${formsData[situation].forms[actionIndex]}">${formsData[situation].actions[actionIndex]}</a></li>`;
-            } else {
-                document.getElementById('wizard-result').classList.add('hidden');
-            }
-        });
+        document.addEventListener('DOMContentLoaded', () => {
+            
+            // --- DOM Element References ---
+            const wizardBtn = document.getElementById('start-wizard-btn');
+            const explorerBtn = document.getElementById('explore-forms-btn');
+            const wizardSection = document.getElementById('wizard-section');
+            const explorerSection = document.getElementById('explorer-section');
+            const situationSelect = document.getElementById('situation');
+            const actionSelect = document.getElementById('action');
+            const wizardResultDiv = document.getElementById('wizard-result');
+            const recommendedFormsDiv = document.getElementById('recommended-forms');
+            const saveProgressBtn = document.getElementById('save-progress');
+            const progressFill = document.getElementById('progress-fill');
+            const progressMessage = document.getElementById('progress-message');
 
-        // Show/Hide Sections
-        document.getElementById('start-wizard').addEventListener('click', () => {
-            document.getElementById('wizard-section').classList.remove('hidden');
-            document.getElementById('explorer-section').classList.add('hidden');
-        });
-        document.getElementById('explore-forms').addEventListener('click', () => {
-            document.getElementById('explorer-section').classList.remove('hidden');
-            document.getElementById('wizard-section').classList.add('hidden');
-        });
+            let currentUser = null;
+            let userProgress = { completedForms: [] };
 
-        // Save Progress
-        document.getElementById('save-progress').addEventListener('click', () => {
-            auth.onAuthStateChanged((user) => {
+            // --- Data for the Form Wizard ---
+            const formsData = {
+                child: {
+                    actions: {
+                        "Register a parenting plan": { formName: "Form 10 [J779]", url: "https://www.justice.gov.za/forms/form_cj.html" },
+                        "Create a Parenting Plan": { formName: "Parenting Plan Template", url: "templates/Parenting_Plan_Template.html" },
+                        "Make a Child Support Agreement": { formName: "Child Support Agreement", url: "templates/Child_Support_Agreement.html" }
+                    }
+                },
+                marriage: { actions: { "File for divorce": { formName: "Divorce Form", url: "#" } } },
+                court: { actions: { "File a complaint": { formName: "Complaint Form", url: "#" } } },
+                criminal: { actions: { "Report a crime (SAPS Affidavit)": { formName: "SAPS Complaint Affidavit", url: "templates/Affidavit-SAPS_Complaint_.html" } } },
+                discrimination: { actions: { "File a discrimination complaint": { formName: "Discrimination Complaint Form", url: "#" } } }
+            };
+
+            // --- Authentication Listener ---
+            onAuthStateChanged(auth, (user) => {
+                currentUser = user;
                 if (user) {
-                    const progress = { stage: currentStage, achievements: currentAchievements };
-                    db.collection('users').doc(user.uid).set({
-                        superdadProgress: progress,
-                        timestamp: firebase.firestore.FieldValue.serverTimestamp()
-                    }, { merge: true });
-                    alert('Progress saved successfully!');
+                    loadProgress(user.uid);
+                }
+            });
+
+            // --- UI Event Listeners ---
+            wizardBtn.addEventListener('click', () => {
+                wizardSection.classList.remove('hidden');
+                explorerSection.classList.add('hidden');
+            });
+
+            explorerBtn.addEventListener('click', () => {
+                explorerSection.classList.remove('hidden');
+                wizardSection.classList.add('hidden');
+            });
+
+            situationSelect.addEventListener('change', (e) => {
+                const situation = e.target.value;
+                const step2 = document.getElementById('wizard-step-2');
+                actionSelect.innerHTML = '<option value="">-- Select an action --</option>'; // Reset
+                
+                if (situation && formsData[situation]) {
+                    Object.keys(formsData[situation].actions).forEach(actionText => {
+                        actionSelect.innerHTML += `<option value="${actionText}">${actionText}</option>`;
+                    });
+                    step2.classList.remove('hidden');
                 } else {
-                    alert('Please log in to save your SuperDad progress!');
+                    step2.classList.add('hidden');
+                    wizardResultDiv.classList.add('hidden');
+                }
+            });
+
+            actionSelect.addEventListener('change', (e) => {
+                const situation = situationSelect.value;
+                const action = e.target.value;
+
+                if (action && formsData[situation] && formsData[situation].actions[action]) {
+                    const formInfo = formsData[situation].actions[action];
+                    recommendedFormsDiv.innerHTML = `<a href="${formInfo.url}" class="form-link" target="_blank">${formInfo.formName}</a>`;
+                    wizardResultDiv.classList.remove('hidden');
+                    updateProgress(formInfo.formName); // Update progress when a form is recommended/selected
+                } else {
+                    wizardResultDiv.classList.add('hidden');
+                }
+            });
+            
+            saveProgressBtn.addEventListener('click', () => {
+                if (currentUser) {
+                    saveUserProgress(currentUser.uid);
+                } else {
+                    alert('Please log in to save your progress!');
                     window.location.href = 'login.html';
                 }
             });
-        });
-
-        // SuperDad Achievements and Timeline Logic
-        let currentStage = 'preparation';
-        let currentAchievements = [];
-        const timelineItems = document.querySelectorAll('.timeline-item');
-        const timelinePanel = document.getElementById('timeline-panel');
-        const stageTitle = document.getElementById('stage-title');
-        const stageContent = document.getElementById('stage-content');
-        const closePanel = document.getElementById('close-panel');
-        const progressMessage = document.getElementById('progress-message');
-        const progressFill = document.getElementById('progress-fill');
-
-        const stages = {
-            preparation: {
-                title: "Preparation",
-                content: `
-                    <p>Get ready to be an amazing father before challenges arise.</p>
-                    <ul>
-                        <li><a href="training.html">Take a Co-Parenting Course</a></li>
-                        <li><a href="community.html">Consult Elders & Family</a></li>
-                        <li><a href="resources.html">Talk to Professionals</a></li>
-                    </ul>
-                    <div class="achievement">Achievement: Ready Dad</div>
-                `,
-                achievement: "Ready Dad",
-                progress: 25
-            },
-            family: {
-                title: "Family",
-                content: `
-                    <p>Lean on your extended family—uncles, grandfathers, and relatives—for wisdom.</p>
-                    <ul>
-                        <li><a href="templates/Family_Mediation_Plan.html">Family Mediation Plan</a></li>
-                        <li><a href="community.html">Organize a Family Meeting</a></li>
-                    </ul>
-                    <div class="achievement">Achievement: Family Dad</div>
-                `,
-                achievement: "Family Dad",
-                progress: 50
-            },
-            action: {
-                title: "Action",
-                content: `
-                    <p>Take proactive steps with Flamea’s tools to stay ahead.</p>
-                    <ul>
-                        <li><a href="templates/Parenting_Plan_Template.html">Parenting Plan Template</a></li>
-                        <li><a href="templates/Child_Support_Agreement.html">Child Support Agreement</a></li>
-                    </ul>
-                    <div class="achievement">Achievement: Action Dad</div>
-                `,
-                achievement: "Action Dad",
-                progress: 75
-            },
-            resolution: {
-                title: "Resolution",
-                content: `
-                    <p>Even if things go wrong, honest communication can save the day for your child.</p>
-                    <ul>
-                        <li><a href="training.html">Conflict Resolution Course</a></li>
-                        <li><a href="templates/Resolution_Agreement.html">Resolution Agreement</a></li>
-                    </ul>
-                    <div class="achievement">Achievement: SuperDad</div>
-                `,
-                achievement: "SuperDad",
-                progress: 100
+            
+            // --- Progress & Data Functions ---
+            function updateProgress(formName) {
+                if (formName && !userProgress.completedForms.includes(formName)) {
+                    userProgress.completedForms.push(formName);
+                }
+                const totalForms = 5; // Example total
+                const completedCount = userProgress.completedForms.length;
+                const percentage = Math.min((completedCount / totalForms) * 100, 100);
+                
+                progressFill.style.width = `${percentage}%`;
+                progressMessage.textContent = `You've completed ${completedCount} of ${totalForms} key steps. Keep going!`;
             }
-        };
-
-        function updateProgress() {
-            if (!currentAchievements.includes(stages[currentStage].achievement)) {
-                currentAchievements.push(stages[currentStage].achievement);
+            
+            async function saveUserProgress(uid) {
+                try {
+                    await setDoc(doc(db, 'users', uid), {
+                        formsProgress: userProgress,
+                        lastUpdated: serverTimestamp()
+                    }, { merge: true });
+                    alert('Your progress has been saved!');
+                } catch (error) {
+                    console.error("Error saving progress: ", error);
+                    alert('There was an error saving your progress.');
+                }
             }
-            progressFill.style.width = `${stages[currentStage].progress}%`;
-            progressMessage.textContent = `You’re on your way to SuperDad! Current Achievement: ${stages[currentStage].achievement}`;
-        }
 
-        timelineItems.forEach(item => {
-            item.addEventListener('click', () => {
-                currentStage = item.getAttribute('data-stage');
-                stageTitle.textContent = stages[currentStage].title;
-                stageContent.innerHTML = stages[currentStage].content;
-                timelinePanel.classList.add('active');
-                updateProgress();
-            });
-        });
+            async function loadProgress(uid) {
+                const docRef = doc(db, 'users', uid);
+                const docSnap = await getDoc(docRef);
 
-        closePanel.addEventListener('click', () => {
-            timelinePanel.classList.remove('active');
-        });
-
-        // Load saved progress for members
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                db.collection('users').doc(user.uid).get().then((doc) => {
-                    if (doc.exists && doc.data().superdadProgress) {
-                        currentStage = doc.data().superdadProgress.stage;
-                        currentAchievements = doc.data().superdadProgress.achievements;
-                        updateProgress();
-                    }
-                });
+                if (docSnap.exists() && docSnap.data().formsProgress) {
+                    userProgress = docSnap.data().formsProgress;
+                    updateProgress(); // Update UI with loaded progress
+                }
             }
         });
     </script>
