@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Fun & Games - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+        }
+        .game-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .game-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .game-title-font {
+            font-family: 'Bungee', cursive;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- ===== Standardized Sidebar ===== -->
+        <aside class="bg-gray-900 p-6 flex flex-col justify-between sidebar-container">
+            <div class="sidebar-top">
+                <div class="mb-12 flex justify-center">
+                    <a href="index.html" class="flamea-logo dark">
+                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+                <nav id="main-nav" class="flex flex-col space-y-2">
+                    <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                    <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                    <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                    <div class="relative">
+                        <button class="sidebar-direct-link has-submenu flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content hidden bg-gray-800 rounded-lg mt-2">
+                           <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-book-reader w-6 text-center mr-3"></i> All Courses</a>
+                           <a href="forms.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates Hub</a>
+                        </div>
+                    </div>
+                     <div class="relative">
+                        <button class="sidebar-direct-link has-submenu active flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content hidden bg-gray-800 rounded-lg mt-2">
+                           <a href="chatbot.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-comment-dots w-6 text-center mr-3"></i> AI Chatbot</a>
+                           <a href="games.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Legal Fun & Games</a>
+                        </div>
+                    </div>
+                    <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                    <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                    <div class="border-t border-gray-700 my-2"></div>
+                    <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+                </nav>
+            </div>
+            <div class="sidebar-bottom text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <!-- Auth state will be populated here by auth.js -->
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h1 class="game-title-font text-5xl md:text-7xl font-bold text-white mb-4">Legal Fun & Games</h1>
+                    <p class="text-lg text-gray-400">Learn about your rights and the law in a fun, interactive way. Knowledge is power!</p>
+                </div>
+
+                <!-- Kids' Corner Section -->
+                <div class="mb-20">
+                    <h2 class="game-title-font text-4xl text-yellow-400 mb-8 flex items-center"><i class="fas fa-child text-3xl mr-4"></i> Kids' Corner</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Kid Konstitution Game Card -->
+                        <a href="kid-konstitution.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
+                                <i class="fas fa-landmark text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Kid Konstitution</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 4-12</p>
+                                <p class="text-gray-300">Learn the basics of rights and fairness in a colorful adventure! Match icons to ideas and build a strong foundation.</p>
+                            </div>
+                        </a>
+                        <!-- Add more kids game cards here in the future -->
+                         <div class="game-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
+                                <h3 class="game-title-font text-xl">More Fun Coming Soon!</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games for All Section -->
+                <div>
+                    <h2 class="game-title-font text-4xl text-green-400 mb-8 flex items-center"><i class="fas fa-gamepad text-3xl mr-4"></i> Games for All</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Constitution Defender Game Card -->
+                        <a href="constitution-defender.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                                <i class="fas fa-gavel text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Defender</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
+                                <p class="text-gray-300">Blast away legal myths and defend the principles of the constitution in this retro arcade shooter.</p>
+                            </div>
+                        </a>
+
+                        <!-- MythBuster Quest Game Card -->
+                        <a href="mythbuster-game.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                                <i class="fas fa-question-circle text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">MythBuster Quest</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
+                                <p class="text-gray-300">Test your knowledge against common myths in family law. Can you tell fact from fiction?</p>
+                            </div>
+                        </a>
+
+                        <!-- Goliath's Reckoning Game Card -->
+                        <a href="legal-simulator.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
+                                 <i class="fas fa-balance-scale text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Goliath's Reckoning</h3>
+                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                <p class="text-gray-300">A narrative legal simulator. Make tough choices and see their impact on your resources, time, and family.</p>
+                            </div>
+                        </a>
+
+                        <!-- Satirical Game Card -->
+                        <a href="satirical-game.html" class="game-card rounded-2xl overflow-hidden group">
+                             <div class="h-56 bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center">
+                                 <i class="far fa-grimace text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Modern, Broke & Confused</h3>
+                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                <p class="text-gray-300">A satirical text-adventure about the absurdities of the system. Can you keep your sanity?</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>
