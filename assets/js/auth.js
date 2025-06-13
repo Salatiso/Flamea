@@ -1,165 +1,190 @@
 // assets/js/auth.js
 
 import {
-    getAuth,
     onAuthStateChanged,
     signInWithEmailAndPassword,
     createUserWithEmailAndPassword,
     signInWithPopup,
     signOut,
-    GoogleAuthProvider // Import GoogleAuthProvider directly
-} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-auth.js";
+    GoogleAuthProvider,
+    updateProfile
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import {
-    getFirestore,
     doc,
     setDoc,
-    getDoc
-} from "https://www.gstatic.com/firebasejs/9.6.10/firebase-firestore.js";
-import { app, db } from './firebase-config.js'; // Use the direct exports
+    getDoc,
+    serverTimestamp
+} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// Import the initialized services from our config file
+import { auth, db } from './firebase-config.js';
 
-// --- Initialize Auth and Provider ---
-const auth = getAuth(app);
-const googleProvider = new GoogleAuthProvider(); // Create a new instance of the provider
+// --- Initialize Auth Provider ---
+const googleProvider = new GoogleAuthProvider();
 
 // --- DOM Elements ---
+// Select elements from the login/register page
 const loginForm = document.getElementById('login-form');
-const signupForm = document.getElementById('signup-form');
-const googleSignInButton = document.getElementById('google-signin');
-const logoutButtons = document.querySelectorAll('.logout-button'); // Use querySelectorAll to catch all instances
+// FIX: Changed from 'signup-form' to 'register-form' to match the HTML
+const registerForm = document.getElementById('register-form'); 
+// FIX: Changed from 'google-signin' to 'google-signin-btn' to match the HTML
+const googleSignInButton = document.getElementById('google-signin-btn'); 
+const authMessage = document.getElementById('auth-message');
 
-// --- Event Listeners ---
+// Select logout buttons, which can appear on any page
+const logoutButtons = document.querySelectorAll('.logout-button');
+
+// --- Helper function to display messages ---
+function showMessage(message, isError = false) {
+    if (authMessage) {
+        authMessage.textContent = message;
+        authMessage.className = `mb-4 text-center h-6 ${isError ? 'text-red-400' : 'text-green-400'}`;
+    }
+}
+
+// --- Event Listeners for Auth Forms ---
 
 // Login Form Submission
 if (loginForm) {
     loginForm.addEventListener('submit', async (e) => {
         e.preventDefault();
+        showMessage('Signing in...', false);
         const email = loginForm.email.value;
         const password = loginForm.password.value;
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            console.log("User logged in successfully with email.");
-            // Redirect is handled by onAuthStateChanged
+            // Redirect is handled by onAuthStateChanged listener
         } catch (error) {
-            console.error("Login Error:", error);
-            alert(`Login Failed: ${error.message}`);
+            console.error("Login Error:", error.message);
+            showMessage(error.message, true);
         }
     });
 }
 
-// Signup Form Submission
-if (signupForm) {
-    signupForm.addEventListener('submit', async (e) => {
+// Register Form Submission
+if (registerForm) {
+    registerForm.addEventListener('submit', async (e) => {
         e.preventDefault();
-        const email = signupForm.email.value;
-        const password = signupForm.password.value;
-        const name = signupForm.name.value; // Assuming you have a 'name' field in your signup form
+        showMessage('Creating account...', false);
+        const name = registerForm.name.value;
+        const email = registerForm.email.value;
+        const password = registerForm.password.value;
         try {
             const userCredential = await createUserWithEmailAndPassword(auth, email, password);
-            const user = userCredential.user;
-            console.log("User signed up successfully:", user.uid);
-            
-            // Create a user profile document in Firestore
-            await createUserProfile(user, { name: name || 'New Member' });
-            // Redirect is handled by onAuthStateChanged
+            // Update the new user's profile with their name
+            await updateProfile(userCredential.user, { displayName: name });
+            // Create a document for them in Firestore
+            await createUserProfileDocument(userCredential.user, { displayName: name });
+            // Redirect will be handled by onAuthStateChanged
         } catch (error) {
-            console.error("Signup Error:", error);
-            alert(`Signup Failed: ${error.message}`);
+            console.error("Registration Error:", error.message);
+            showMessage(error.message, true);
         }
     });
 }
 
-// Google Sign-In
+// Google Sign-In Button
 if (googleSignInButton) {
     googleSignInButton.addEventListener('click', async () => {
+        showMessage('Redirecting to Google...', false);
         try {
             const result = await signInWithPopup(auth, googleProvider);
             const user = result.user;
-            console.log("User signed in with Google:", user.uid);
-            
-            // Check if user profile already exists, if not, create one
-            const userDocRef = doc(db, "users", user.uid);
-            const userDoc = await getDoc(userDocRef);
+            // Check if user is new, if so, create a profile doc
+            const userDoc = await getDoc(doc(db, "users", user.uid));
             if (!userDoc.exists()) {
-                 await createUserProfile(user);
+                await createUserProfileDocument(user);
             }
             // Redirect is handled by onAuthStateChanged
         } catch (error) {
-            console.error("Google Sign-In Error:", error);
-            if (error.code !== 'auth/popup-closed-by-user') {
-               alert(`Google Sign-In Failed: ${error.message}`);
-            }
+            console.error("Google Sign-In Error:", error.message);
+            showMessage(error.message, true);
         }
     });
 }
 
-// Logout Buttons
-logoutButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        signOut(auth).then(() => {
-            console.log("User logged out.");
-            window.location.replace('/index.html');
-        }).catch((error) => {
-            console.error("Logout Error:", error);
-        });
-    });
-});
+// --- User Profile Document Creation ---
+async function createUserProfileDocument(user, additionalData = {}) {
+    if (!user) return;
+    const userRef = doc(db, `users/${user.uid}`);
+    const snapshot = await getDoc(userRef);
 
-// --- User Profile Management ---
-async function createUserProfile(user, additionalData = {}) {
-    try {
-        const userRef = doc(db, "users", user.uid);
-        await setDoc(userRef, {
-            uid: user.uid,
-            name: user.displayName || additionalData.name || 'New Member',
-            email: user.email,
-            photoURL: user.photoURL || '/assets/images/default-avatar.png',
-            createdAt: new Date(),
-            skills: [],
-            cvUrl: '',
-        }, { merge: true });
-        console.log("User profile created/updated in Firestore for:", user.uid);
-    } catch (error) {
-        console.error("Error creating user profile:", error);
+    if (!snapshot.exists()) {
+        const { displayName, email, photoURL } = user;
+        const createdAt = serverTimestamp();
+        try {
+            await setDoc(userRef, {
+                displayName,
+                email,
+                photoURL,
+                createdAt,
+                ...additionalData
+            });
+        } catch (error) {
+            console.error("Error creating user profile:", error);
+        }
     }
 }
 
-// --- Auth State Observer ---
+// --- Auth State Observer (Handles Redirects and UI Updates) ---
 onAuthStateChanged(auth, (user) => {
-    const currentPage = window.location.pathname.split("/").pop();
-    const protectedPages = ['dashboard.html', 'parenting-plan.html', 'forms.html', 'tools.html', 'book-reader.html'];
-    const isAuthPage = ['login.html', 'signup.html'].includes(currentPage);
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+    const isAuthPage = ['login.html'].includes(currentPage);
 
     if (user) {
         // User is signed in.
+        console.log(`User logged in: ${user.email}. Current page: ${currentPage}`);
+        // If they are on the login page, redirect them to the dashboard.
         if (isAuthPage) {
-            window.location.replace('/dashboard.html');
+            window.location.replace('dashboard.html');
         }
     } else {
         // User is signed out.
+        console.log(`User logged out. Current page: ${currentPage}`);
+        const protectedPages = ['dashboard.html', 'activity-tracker.html', 'plan-builder.html', 'forms.html'];
+        // If they are on a protected page, redirect them to the login page.
         if (protectedPages.includes(currentPage)) {
-            window.location.replace('/login.html');
+            window.location.replace('login.html');
         }
     }
+    // Update UI elements like login/logout buttons sitewide
+    updateAuthUI(user);
 });
 
-// --- Update UI based on Auth State ---
-function updateUserUI(user) {
-    const userWelcome = document.getElementById('user-welcome');
-    const loginLink = document.getElementById('login-link');
-    const logoutLink = document.querySelectorAll('.logout-button');
+
+// --- Logout Button ---
+logoutButtons.forEach(button => {
+    button.addEventListener('click', () => {
+        signOut(auth).catch(error => console.error("Logout Error:", error));
+    });
+});
+
+
+// --- Function to update UI elements based on auth state ---
+function updateAuthUI(user) {
+    const authLinksDesktop = document.getElementById('auth-links-desktop');
+    const authLinksMobile = document.getElementById('auth-links-mobile');
 
     if (user) {
-        if(userWelcome) userWelcome.textContent = `Welcome, ${user.displayName || user.email}`;
-        if(loginLink) loginLink.style.display = 'none';
-        logoutLink.forEach(b => b.style.display = 'block');
+        // User is logged in: show dashboard and logout buttons
+        const loggedInHTML = `
+            <a href="dashboard.html" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Dashboard</a>
+            <button class="logout-button text-gray-300 hover:text-white">Logout</button>
+        `;
+        if (authLinksDesktop) authLinksDesktop.innerHTML = loggedInHTML;
+        if (authLinksMobile) authLinksMobile.innerHTML = loggedInHTML;
     } else {
-        if(userWelcome) userWelcome.textContent = '';
-        if(loginLink) loginLink.style.display = 'block';
-        logoutLink.forEach(b => b.style.display = 'none');
+        // User is logged out: show login button
+        const loggedOutHTML = `
+            <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
+        `;
+        if (authLinksDesktop) authLinksDesktop.innerHTML = loggedOutHTML;
+        if (authLinksMobile) authLinksMobile.innerHTML = loggedOutHTML;
     }
-}
 
-// Final check on page load
-onAuthStateChanged(auth, user => {
-    updateUserUI(user);
-});
+    // Re-add event listener for newly created logout buttons
+    document.querySelectorAll('.logout-button').forEach(button => {
+        button.addEventListener('click', () => {
+            signOut(auth).catch(error => console.error("Logout Error:", error));
+        });
+    });
+}
