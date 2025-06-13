@@ -1,56 +1,75 @@
 /* /assets/css/style.css */
 
-/* --- IMPROVED HEADER STYLES --- */
-
-/* Style for the header when the user scrolls down */
-#main-header.scrolled {
-    background-color: rgba(31, 41, 55, 0.95); /* A semi-transparent dark gray */
-    backdrop-filter: blur(10px);
-    -webkit-backdrop-filter: blur(10px); /* Safari support */
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-    transition: background-color 0.3s ease-in-out;
+/* --- GLOBAL FONT & BODY --- */
+body {
+    font-family: 'Open Sans', sans-serif;
+    background-color: #111827; /* gray-900 */
 }
 
-/* --- NAVIGATION LINK STYLES --- */
-
-/* Base style for all navigation links in the header */
-.nav-link {
-    padding: 8px 16px;
-    border-radius: 8px;
-    color: #e5e7eb; /* Light gray text */
-    font-weight: 500;
-    transition: background-color 0.3s ease, color 0.3s ease;
-    border: 1px solid transparent;
+/* --- LOGO --- */
+.flamea-logo .logo-text {
+    font-family: 'Roboto Slab', serif;
+    font-weight: 700;
+}
+.flamea-logo.dark .logo-text {
+    fill: white;
+}
+.flamea-logo.light .logo-text {
+    fill: #1F2937; /* gray-800 */
 }
 
-/* Hover effect for links that are NOT the active page */
-.nav-link:hover:not(.active) {
-    background-color: rgba(52, 211, 153, 0.1); /* Light green tint */
-    color: #ffffff; /* White text */
+/* --- MODAL STYLES --- */
+.modal, .custom-modal {
+    display: none; /* Hidden by default */
+    position: fixed;
+    inset: 0;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba(0, 0, 0, 0.7);
+    z-index: 50;
+    -webkit-backdrop-filter: blur(4px);
+    backdrop-filter: blur(4px);
+}
+.modal.active, .custom-modal.active {
+    display: flex;
+}
+.custom-modal-content {
+    background-color: #1f2937; /* gray-800 */
+    padding: 2rem;
+    border-radius: 0.75rem;
+    position: relative;
+    max-width: 90%;
+    max-height: 90vh;
+    overflow-y: auto;
+}
+.close-button {
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+    font-size: 1.5rem;
+    color: #9ca3af; /* gray-400 */
+    background: none;
+    border: none;
+    cursor: pointer;
 }
 
-/* Active link style - makes the current page link stand out */
-.nav-link.active {
-    background-color: #28a745; /* Solid green background */
-    color: #ffffff; /* White text */
-    font-weight: 600;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-}
-
-/* --- MOBILE MENU FIX --- */
-/* Ensures the mobile menu appears above other page content */
-#mobile-menu {
-    z-index: 50; 
-}
-
-/* --- ACCORDION STYLES --- */
-
+/* --- ACCORDION STYLES (CENTRALIZED) --- */
 .accordion-content {
     max-height: 0;
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
+/* This is the key change: the .open class will be toggled by main.js */
 .accordion-content.open {
-    max-height: 1000px; /* Large enough for your content */
+    max-height: 1000px; /* A large enough value to accommodate content */
 }
+
+.accordion-toggle i.fa-chevron-down {
+    transition: transform 0.3s ease;
+}
+
+.accordion-toggle i.rotate-180 {
+    transform: rotate(180deg);
+}
+
