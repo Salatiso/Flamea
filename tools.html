@@ -45,6 +45,9 @@
             overflow: hidden;
             transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
         }
+        .accordion-content.open {
+            max-height: 1000px; /* Large enough for your content */
+        }
         .accordion-toggle i.rotate-180 { transform: rotate(180deg); }
         .modal { display: none; }
         .modal.active { display: flex; animation: fadeIn 0.3s; }
@@ -168,16 +171,8 @@
                 button.addEventListener('click', () => {
                     const content = button.nextElementSibling;
                     const icon = button.querySelector('i.fa-chevron-down');
-                    
-                    if (content.style.maxHeight) {
-                        // Close the accordion
-                        content.style.maxHeight = null;
-                        icon.classList.remove('rotate-180');
-                    } else {
-                        // Open the accordion
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        icon.classList.add('rotate-180');
-                    } 
+                    content.classList.toggle('open');
+                    icon.classList.toggle('rotate-180');
                 });
             });
         });

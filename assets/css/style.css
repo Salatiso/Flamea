@@ -42,3 +42,15 @@
 #mobile-menu {
     z-index: 50; 
 }
+
+/* --- ACCORDION STYLES --- */
+
+.accordion-content {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.accordion-content.open {
+    max-height: 1000px; /* Large enough for your content */
+}
