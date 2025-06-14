@@ -1,0 +1,257 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution Crusaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .speech-bubble {
+            position: absolute;
+            top: 100px;
+            right: 10px;
+            background: white;
+            color: black;
+            padding: 10px;
+            border-radius: 10px;
+            max-width: 200px;
+        }
+        .speech-bubble::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            right: 20px;
+            border-width: 10px;
+            border-style: solid;
+            border-color: white transparent transparent transparent;
+        }
+        .avatar svg, #joey-avatar svg {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body class="bg-gray-800 text-white min-h-screen flex items-center justify-center">
+    <div class="container mx-auto p-6">
+        <!-- Avatar Selection -->
+        <div id="avatar-selection" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
+
+        <!-- Game Screen -->
+        <div id="game-screen" class="hidden">
+            <div class="flex justify-between mb-4">
+                <div id="level-indicator" class="text-xl font-bold">Level 1</div>
+                <div id="score" class="text-xl font-bold">Score: 0</div>
+            </div>
+            <div class="relative">
+                <div id="joey-avatar" class="absolute top-0 right-0 w-20 h-20"></div>
+                <div id="speech-bubble" class="speech-bubble hidden"></div>
+            </div>
+            <div class="question-container text-center mb-8">
+                <h2 id="question-text" class="text-2xl font-bold mb-4"></h2>
+                <div id="options" class="grid grid-cols-2 gap-4"></div>
+            </div>
+            <div id="feedback" class="text-center mb-4 hidden"></div>
+            <button id="next-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg mx-auto block hidden">Next</button>
+            <div class="flex justify-between mt-8">
+                <div id="player-avatar" class="w-20 h-20"></div>
+                <div id="progress-bar" class="w-1/2 bg-gray-700 h-4 rounded-full self-center">
+                    <div class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Complete Screen -->
+        <div id="level-complete" class="hidden text-center">
+            <h2 class="text-3xl font-bold mb-4">Level Complete!</h2>
+            <p id="level-score" class="text-xl mb-4"></p>
+            <button id="next-level-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Next Level</button>
+        </div>
+
+        <!-- Game Complete Screen -->
+        <div id="game-complete" class="hidden text-center">
+            <h2 class="text-3xl font-bold mb-4">Congratulations!</h2>
+            <p class="text-xl mb-4">You’ve completed all levels and become a Constitution Crusader!</p>
+            <p id="total-score" class="text-xl mb-4"></p>
+            <button id="play-again-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Play Again</button>
+        </div>
+    </div>
+
+    <script type="module">
+        import { questionBank } from './questions-database.js';
+        import { AvatarSystem } from './avatar-system.js';
+
+        class Game {
+            constructor() {
+                this.avatars = new AvatarSystem().avatars;
+                this.playerAvatar = null;
+                this.currentLevel = 1;
+                this.totalLevels = 5;
+                this.questionsPerLevel = 5;
+                this.score = 0;
+                this.currentQuestions = [];
+                this.currentQuestionIndex = 0;
+                this.joeyMessages = {
+                    startLevel: "Let’s learn about rules and rights!",
+                    correct: ["Well done!", "You’re a star!", "Keep it up!", "Amazing!"],
+                    incorrect: ["Don’t worry, try again!", "You’ll get it next time!", "Let’s learn from this!"],
+                };
+
+                // DOM Elements
+                this.avatarSelection = document.getElementById('avatar-selection');
+                this.gameScreen = document.getElementById('game-screen');
+                this.levelIndicator = document.getElementById('level-indicator');
+                this.scoreElement = document.getElementById('score');
+                this.joeyAvatar = document.getElementById('joey-avatar');
+                this.speechBubble = document.getElementById('speech-bubble');
+                this.questionText = document.getElementById('question-text');
+                this.optionsContainer = document.getElementById('options');
+                this.feedbackElement = document.getElementById('feedback');
+                this.nextBtn = document.getElementById('next-btn');
+                this.playerAvatarElement = document.getElementById('player-avatar');
+                this.progressBar = document.getElementById('progress-bar').firstElementChild;
+                this.levelCompleteScreen = document.getElementById('level-complete');
+                this.levelScore = document.getElementById('level-score');
+                this.nextLevelBtn = document.getElementById('next-level-btn');
+                this.gameCompleteScreen = document.getElementById('game-complete');
+                this.totalScore = document.getElementById('total-score');
+                this.playAgainBtn = document.getElementById('play-again-btn');
+
+                // Event Listeners
+                this.nextBtn.addEventListener('click', () => this.nextQuestion());
+                this.nextLevelBtn.addEventListener('click', () => this.startNextLevel());
+                this.playAgainBtn.addEventListener('click', () => this.restartGame());
+
+                // Initialize
+                this.renderAvatarSelection();
+                this.joeyAvatar.innerHTML = this.avatars['owl'].svgCode;
+            }
+
+            renderAvatarSelection() {
+                Object.entries(this.avatars).forEach(([key, avatar]) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'avatar-btn p-4 border rounded-lg bg-gray-700 hover:bg-gray-600';
+                    btn.dataset.avatar = key;
+                    btn.innerHTML = `
+                        <div class="avatar w-20 h-20 mx-auto">${avatar.svgCode}</div>
+                        <p class="mt-2">${avatar.name} ${avatar.emoji}</p>
+                    `;
+                    btn.addEventListener('click', () => this.selectAvatar(key));
+                    this.avatarSelection.appendChild(btn);
+                });
+            }
+
+            selectAvatar(key) {
+                this.playerAvatar = this.avatars[key];
+                this.playerAvatarElement.innerHTML = this.playerAvatar.svgCode;
+                this.avatarSelection.classList.add('hidden');
+                this.gameScreen.classList.remove('hidden');
+                this.startLevel(this.currentLevel);
+            }
+
+            startLevel(level) {
+                this.currentLevel = level;
+                this.levelIndicator.textContent = `Level ${level}`;
+                this.currentQuestions = this.getRandomQuestions(level, this.questionsPerLevel);
+                this.currentQuestionIndex = 0;
+                this.updateSpeechBubble(this.joeyMessages.startLevel);
+                this.displayQuestion();
+            }
+
+            getRandomQuestions(level, count) {
+                const levelQuestions = questionBank.filter(q => q.level === level);
+                const shuffled = levelQuestions.sort(() => 0.5 - Math.random());
+                return shuffled.slice(0, count);
+            }
+
+            displayQuestion() {
+                const question = this.currentQuestions[this.currentQuestionIndex];
+                this.questionText.textContent = question.question;
+                this.optionsContainer.innerHTML = '';
+                question.options.forEach((option, index) => {
+                    const btn = document.createElement('button');
+                    btn.className = 'option-btn w-full p-4 rounded-lg text-white font-bold';
+                    btn.style.backgroundColor = ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'][index % 4];
+                    btn.textContent = option;
+                    btn.addEventListener('click', () => this.checkAnswer(option));
+                    this.optionsContainer.appendChild(btn);
+                });
+                this.feedbackElement.classList.add('hidden');
+                this.nextBtn.classList.add('hidden');
+            }
+
+            checkAnswer(selected) {
+                const question = this.currentQuestions[this.currentQuestionIndex];
+                const isCorrect = selected === question.answer;
+                let message;
+                if (isCorrect) {
+                    this.score += question.points;
+                    this.scoreElement.textContent = `Score: ${this.score}`;
+                    const phrase = this.joeyMessages.correct[Math.floor(Math.random() * this.joeyMessages.correct.length)];
+                    message = `${phrase} ${question.explanation}`;
+                } else {
+                    const phrase = this.joeyMessages.incorrect[Math.floor(Math.random() * this.joeyMessages.incorrect.length)];
+                    message = `${phrase} The correct answer is "${question.answer}". ${question.explanation}`;
+                }
+                this.updateSpeechBubble(message);
+                this.feedbackElement.textContent = message;
+                this.feedbackElement.classList.remove('hidden');
+                this.nextBtn.classList.remove('hidden');
+                this.optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
+                    btn.disabled = true;
+                    if (btn.textContent === question.answer) {
+                        btn.classList.add('bg-green-500');
+                    } else if (btn.textContent === selected && !isCorrect) {
+                        btn.classList.add('bg-red-500');
+                    }
+                });
+            }
+
+            nextQuestion() {
+                this.currentQuestionIndexapa
+
+            updateProgressBar() {
+                const progress = (this.currentQuestionIndex / this.questionsPerLevel) * 100;
+                this.progressBar.style.width = `${progress}%`;
+            }
+
+            endLevel() {
+                this.gameScreen.classList.add('hidden');
+                this.levelCompleteScreen.classList.remove('hidden');
+                const levelScore = this.currentQuestions.reduce((sum, q) => sum + q.points, 0);
+                this.levelScore.textContent = `You scored ${this.score - (this.currentLevel - 1) * 50} out of ${levelScore} in this level!`;
+            }
+
+            startNextLevel() {
+                if (this.currentLevel < this.totalLevels) {
+                    this.currentLevel++;
+                    this.startLevel(this.currentLevel);
+                    this.levelCompleteScreen.classList.add('hidden');
+                    this.gameScreen.classList.remove('hidden');
+                } else {
+                    this.endGame();
+                }
+            }
+
+            endGame() {
+                this.levelCompleteScreen.classList.add('hidden');
+                this.gameCompleteScreen.classList.remove('hidden');
+                this.totalScore.textContent = `Your total score is ${this.score} out of ${this.totalLevels * this.questionsPerLevel * 10}!`;
+            }
+
+            restartGame() {
+                this.score = 0;
+                this.currentLevel = 1;
+                this.gameCompleteScreen.classList.add('hidden');
+                this.avatarSelection.classList.remove('hidden');
+            }
+
+            updateSpeechBubble(text) {
+                this.speechBubble.textContent = text;
+                this.speechBubble.classList.remove('hidden');
+            }
+        }
+
+        const game = new Game();
+    </script>
+</body>
+</html>
