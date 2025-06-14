@@ -1,0 +1,358 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kid Konstitution - A Flamea Game</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Roboto+Condensed:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Fredoka One', cursive;
+            background: linear-gradient(135deg, #60A5FA, #3B82F6);
+            touch-action: none;
+        }
+        .draggable {
+            touch-action: none;
+            cursor: grab;
+            transition: transform 0.2s ease-in-out;
+        }
+        .dragging {
+            cursor: grabbing;
+            opacity: 0.7;
+            transform: scale(1.2);
+            z-index: 1000;
+        }
+        .drop-zone {
+            transition: background-color 0.3s, transform 0.3s;
+        }
+        .drop-zone.over {
+            background-color: rgba(255, 255, 255, 0.3);
+            transform: scale(1.05);
+        }
+        .correct-match {
+            animation: pulse-green 0.8s;
+        }
+        .incorrect-match {
+            animation: shake 0.5s;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 20px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+        /* Hide scrollbars */
+        .no-scrollbar::-webkit-scrollbar { display: none; }
+        .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+    </style>
+</head>
+<body class="w-screen h-screen overflow-hidden flex items-center justify-center p-4">
+
+    <!-- Game Container -->
+    <div id="game-world" class="w-full h-full max-w-7xl max-h-[900px] bg-white bg-opacity-20 backdrop-blur-md rounded-3xl shadow-2xl p-6 flex flex-col relative hidden">
+
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <div id="score-display" class="bg-yellow-400 text-white px-6 py-2 rounded-full text-2xl shadow-lg">
+                <i class="fas fa-star"></i> Score: 0
+            </div>
+            <div id="level-display" class="text-white text-3xl font-bold">Level 1</div>
+            <button id="quit-game-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold w-14 h-14 rounded-full text-2xl shadow-lg flex items-center justify-center"><i class="fas fa-times"></i></button>
+        </div>
+
+        <!-- Main Game Area -->
+        <div class="flex-grow grid grid-cols-1 lg:grid-cols-2 gap-6">
+            <!-- Ideas Column -->
+            <div id="ideas-container" class="bg-white/30 rounded-2xl p-6 flex flex-col gap-4 items-center justify-around">
+                <!-- Drop zones will be inserted here -->
+            </div>
+            <!-- Icons Column -->
+            <div id="icons-container" class="bg-white/30 rounded-2xl p-6 flex flex-wrap gap-4 items-center justify-center no-scrollbar overflow-y-auto">
+                <!-- Draggable icons will be inserted here -->
+            </div>
+        </div>
+    </div>
+    
+    <!-- Start Screen -->
+    <div id="start-screen" class="text-center text-white p-8">
+        <h1 style="font-family: 'Fredoka One', cursive;" class="text-6xl md:text-8xl mb-4">Kid Konstitution</h1>
+        <p class="text-2xl mb-8">Match the pictures to the big ideas!</p>
+        <button id="start-game-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-12 rounded-full text-3xl shadow-xl transform hover:scale-105 transition-transform">
+            Let's Play!
+        </button>
+    </div>
+    
+    <!-- Level Complete / Game Over Screen -->
+    <div id="end-screen" class="text-center text-white p-8 hidden">
+        <h2 id="end-title" class="text-7xl mb-4">Level Up!</h2>
+        <p id="end-message" class="text-2xl mb-8">You got them all right! Ready for the next level?</p>
+        <div class="flex gap-4">
+            <button id="next-level-btn" class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-12 rounded-full text-3xl shadow-xl">Next Level</button>
+            <button id="restart-game-btn" class="bg-yellow-500 hover:bg-yellow-600 text-white font-bold py-4 px-12 rounded-full text-3xl shadow-xl">Play Again</button>
+        </div>
+    </div>
+    
+    <!-- Quit Modal -->
+    <div id="quit-modal" class="fixed inset-0 bg-black/60 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-white rounded-2xl p-8 text-center max-w-md w-full">
+            <h2 class="text-3xl font-bold text-gray-800 mb-4">Go back to the start?</h2>
+            <div class="flex justify-center gap-4 mt-6">
+                <button id="confirm-quit-btn" class="bg-red-500 hover:bg-red-600 text-white font-bold py-3 px-8 rounded-full text-xl">Yes, Quit</button>
+                <button id="resume-game-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-3 px-8 rounded-full text-xl">No, Stay</button>
+            </div>
+        </div>
+    </div>
+
+    <script type="module">
+        // --- DOM Elements ---
+        const gameWorld = document.getElementById('game-world');
+        const startScreen = document.getElementById('start-screen');
+        const endScreen = document.getElementById('end-screen');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const nextLevelBtn = document.getElementById('next-level-btn');
+        const restartGameBtn = document.getElementById('restart-game-btn');
+        const scoreDisplay = document.getElementById('score-display');
+        const levelDisplay = document.getElementById('level-display');
+        const ideasContainer = document.getElementById('ideas-container');
+        const iconsContainer = document.getElementById('icons-container');
+        const quitGameBtn = document.getElementById('quit-game-btn');
+        const quitModal = document.getElementById('quit-modal');
+        const confirmQuitBtn = document.getElementById('confirm-quit-btn');
+        const resumeGameBtn = document.getElementById('resume-game-btn');
+        const endTitle = document.getElementById('end-title');
+        const endMessage = document.getElementById('end-message');
+
+        // --- Game Data ---
+        const gameLevels = [
+            // Level 1: Core Concepts
+            {
+                pairs: [
+                    { id: 'fair', idea: 'Everyone is Equal', icon: 'fa-users', color: 'bg-red-400' },
+                    { id: 'voice', idea: 'Everyone Has a Voice', icon: 'fa-bullhorn', color: 'bg-blue-400' },
+                    { id: 'safe', idea: 'Everyone Should Be Safe', icon: 'fa-shield-alt', color: 'bg-green-400' },
+                ]
+            },
+            // Level 2: Basic Rights
+            {
+                pairs: [
+                    { id: 'home', idea: 'A Place to Live', icon: 'fa-home', color: 'bg-indigo-400' },
+                    { id: 'learn', idea: 'A Chance to Learn', icon: 'fa-book-open', color: 'bg-yellow-400' },
+                    { id: 'play', idea: 'A Time to Play', icon: 'fa-futbol', color: 'bg-pink-400' },
+                    { id: 'family', idea: 'A Family to Love Me', icon: 'fa-heart', color: 'bg-rose-400' },
+                ]
+            },
+             // Level 3: Community
+            {
+                pairs: [
+                    { id: 'help', idea: 'We Help Each Other', icon: 'fa-hands-helping', color: 'bg-teal-400' },
+                    { id: 'share', idea: 'We Share With Others', icon: 'fa-gift', color: 'bg-orange-400' },
+                    { id: 'listen', idea: 'We Listen To Each Other', icon: 'fa-assistive-listening-systems', color: 'bg-purple-400' },
+                    { id: 'respect', idea: 'We Respect Each Other', icon: 'fa-handshake', color: 'bg-cyan-400' },
+                ]
+            }
+        ];
+
+        // --- Game State ---
+        let currentLevelIndex = 0;
+        let score = 0;
+        let correctMatches = 0;
+        
+        // --- Sound Effects ---
+        const synth = new Tone.Synth().toDestination();
+        const successSound = () => synth.triggerAttackRelease("C5", "8n", Tone.now());
+        const errorSound = () => synth.triggerAttackRelease("C3", "8n", Tone.now());
+        const levelUpSound = new Tone.PolySynth(Tone.Synth).toDestination();
+        const playLevelUpSound = () => levelUpSound.triggerAttackRelease(["C4", "E4", "G4", "C5"], "0.5s", Tone.now());
+
+
+        // --- Game Logic ---
+        function startGame() {
+            Tone.start();
+            score = 0;
+            currentLevelIndex = 0;
+            startScreen.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            gameWorld.classList.remove('hidden');
+            loadLevel(currentLevelIndex);
+        }
+        
+        function loadLevel(levelIndex) {
+            const level = gameLevels[levelIndex];
+            correctMatches = 0;
+            ideasContainer.innerHTML = '';
+            iconsContainer.innerHTML = '';
+            levelDisplay.textContent = `Level ${levelIndex + 1}`;
+            updateScore();
+            
+            // Create shuffled icons
+            const shuffledIcons = [...level.pairs].sort(() => Math.random() - 0.5);
+
+            level.pairs.forEach(pair => {
+                // Create Drop Zone (Idea)
+                const dropZone = document.createElement('div');
+                dropZone.className = 'drop-zone w-full h-24 bg-white/50 rounded-xl flex items-center justify-center p-4';
+                dropZone.dataset.accepts = pair.id;
+                dropZone.innerHTML = `<h3 class="text-xl md:text-2xl text-gray-700 text-center font-bold">${pair.idea}</h3>`;
+                ideasContainer.appendChild(dropZone);
+            });
+
+            shuffledIcons.forEach(pair => {
+                 // Create Draggable Icon
+                const draggable = document.createElement('div');
+                draggable.className = `draggable w-24 h-24 md:w-28 md:h-28 ${pair.color} rounded-full flex items-center justify-center shadow-lg text-white text-4xl md:text-5xl`;
+                draggable.dataset.type = pair.id;
+                draggable.draggable = true;
+                draggable.innerHTML = `<i class="fas ${pair.icon}"></i>`;
+                iconsContainer.appendChild(draggable);
+            });
+            
+            addDragAndDropListeners();
+        }
+        
+        function updateScore() {
+            scoreDisplay.innerHTML = `<i class="fas fa-star"></i> Score: ${score}`;
+        }
+
+        function handleLevelComplete() {
+            playLevelUpSound();
+            gameWorld.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+
+            if (currentLevelIndex >= gameLevels.length - 1) {
+                // Game complete
+                endTitle.textContent = "You're a Star!";
+                endMessage.textContent = `You finished all the levels! Your final score is ${score}.`;
+                nextLevelBtn.classList.add('hidden');
+                restartGameBtn.textContent = 'Play Again!';
+            } else {
+                // Next level
+                endTitle.textContent = 'Level Up!';
+                endMessage.textContent = 'Great job! Ready for the next challenge?';
+                nextLevelBtn.classList.remove('hidden');
+                restartGameBtn.textContent = 'Replay Level';
+            }
+        }
+        
+        function handleCorrectMatch(element) {
+            successSound();
+            element.classList.add('correct-match');
+            setTimeout(() => {
+                element.innerHTML = '<i class="fas fa-check-circle text-6xl text-white"></i>';
+                element.classList.remove('correct-match');
+            }, 800);
+            
+            score += 10;
+            correctMatches++;
+            updateScore();
+            
+            if (correctMatches === gameLevels[currentLevelIndex].pairs.length) {
+                setTimeout(handleLevelComplete, 1000);
+            }
+        }
+        
+        function handleIncorrectMatch(element) {
+            errorSound();
+            element.classList.add('incorrect-match');
+            setTimeout(() => element.classList.remove('incorrect-match'), 500);
+            if (score > 0) score -= 5;
+            updateScore();
+        }
+
+        // --- Drag and Drop Handlers ---
+        let draggedItem = null;
+
+        function addDragAndDropListeners() {
+            const draggables = document.querySelectorAll('.draggable');
+            const dropZones = document.querySelectorAll('.drop-zone');
+
+            // For Mouse
+            draggables.forEach(draggable => {
+                draggable.addEventListener('dragstart', (e) => {
+                    draggedItem = e.target.closest('.draggable');
+                    setTimeout(() => draggedItem.classList.add('dragging'), 0);
+                });
+                draggable.addEventListener('dragend', () => {
+                    draggedItem.classList.remove('dragging');
+                    draggedItem = null;
+                });
+            });
+            
+             // For Touch
+            draggables.forEach(draggable => {
+                draggable.addEventListener('touchstart', (e) => {
+                    draggedItem = e.target.closest('.draggable');
+                    draggedItem.classList.add('dragging');
+                    // Prevent page scroll
+                    e.preventDefault();
+                }, { passive: false });
+
+                draggable.addEventListener('touchend', () => {
+                    if (draggedItem) {
+                        draggedItem.classList.remove('dragging');
+                         // Find the drop zone under the finger
+                        const touch = e.changedTouches[0];
+                        const dropZone = document.elementFromPoint(touch.clientX, touch.clientY)?.closest('.drop-zone');
+                        if (dropZone) {
+                             handleDrop(dropZone);
+                        }
+                        draggedItem = null;
+                    }
+                });
+            });
+
+            dropZones.forEach(zone => {
+                zone.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    zone.classList.add('over');
+                });
+                zone.addEventListener('dragleave', () => {
+                    zone.classList.remove('over');
+                });
+                zone.addEventListener('drop', (e) => {
+                     e.preventDefault();
+                     handleDrop(zone);
+                });
+            });
+            
+            function handleDrop(dropZone) {
+                dropZone.classList.remove('over');
+                if (draggedItem && dropZone.dataset.accepts === draggedItem.dataset.type) {
+                    draggedItem.remove(); // Remove icon from pool
+                    handleCorrectMatch(dropZone);
+                } else if (draggedItem) {
+                    handleIncorrectMatch(draggedItem);
+                }
+            }
+        }
+
+        // --- Event Listeners ---
+        startGameBtn.addEventListener('click', startGame);
+        restartGameBtn.addEventListener('click', () => {
+            endScreen.classList.add('hidden');
+            loadLevel(currentLevelIndex); // Replay current level
+            gameWorld.classList.remove('hidden');
+        });
+        nextLevelBtn.addEventListener('click', () => {
+            currentLevelIndex++;
+            endScreen.classList.add('hidden');
+            gameWorld.classList.remove('hidden');
+            loadLevel(currentLevelIndex);
+        });
+        
+        // Quit Logic
+        quitGameBtn.addEventListener('click', () => quitModal.classList.remove('hidden'));
+        resumeGameBtn.addEventListener('click', () => quitModal.classList.add('hidden'));
+        confirmQuitBtn.addEventListener('click', () => location.reload());
+
+    </script>
+</body>
+</html>
