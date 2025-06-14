@@ -5,121 +5,228 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA - Your Command Centre</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; scroll-behavior: smooth; }
-        .sidebar-direct-link { transition: all 0.3s ease; }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
-        .tab-button { transition: all 0.2s; border-bottom: 3px solid transparent; }
-        .tab-button.active { border-color: #34D399; color: #6EE7B7; }
-        .tab-content { display: none; animation: fadeIn 0.5s; }
-        .tab-content.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .todo-item.completed label { text-decoration: line-through; color: #6b7280; }
+        .tab-btn.active {
+            border-color: #3B82F6;
+            background-color: #3B82F6;
+            color: white;
+        }
+        .tag {
+            background-color: #374151;
+            color: #d1d5db;
+            padding: 4px 12px;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+        }
+         .profile-pic-upload {
+            position: relative;
+            width: 128px;
+            height: 128px;
+        }
+        .profile-pic-upload img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            border-radius: 50%;
+        }
+        .profile-pic-upload .overlay {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: rgba(0,0,0,0.6);
+            overflow: hidden;
+            width: 100%;
+            height: 0;
+            transition: .3s ease;
+            border-bottom-left-radius: 50%;
+            border-bottom-right-radius: 50%;
+        }
+        .profile-pic-upload:hover .overlay {
+            height: 40%;
+        }
+        .profile-pic-upload .overlay-text {
+            color: white;
+            font-size: 14px;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-800 text-gray-200">
+
     <div class="main-container">
-        <!-- Sidebar Navigation -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <div class="mb-12 flex justify-center">
-                <a href="index.html" class="flamea-logo dark">
-                    <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                        <text class="logo-text" x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text>
-                        <g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g>
-                        <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/>
-                    </svg>
-                </a>
+        <!-- ===== Standardized Sidebar ===== -->
+        <aside class="bg-gray-900 p-6 flex flex-col justify-between sidebar-container">
+            <div class="sidebar-top">
+                <div class="mb-12 flex justify-center">
+                    <a href="index.html" class="flamea-logo dark">
+                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+                <nav id="main-nav" class="flex flex-col space-y-2">
+                    <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                    <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                    <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                    <div class="relative">
+                        <button class="sidebar-direct-link has-submenu flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content hidden bg-gray-800 rounded-lg mt-2">
+                           <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-book-reader w-6 text-center mr-3"></i> All Courses</a>
+                           <a href="forms.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates Hub</a>
+                        </div>
+                    </div>
+                     <div class="relative">
+                        <button class="sidebar-direct-link has-submenu flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content hidden bg-gray-800 rounded-lg mt-2">
+                           <a href="chatbot.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-comment-dots w-6 text-center mr-3"></i> AI Chatbot</a>
+                           <a href="games.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Legal Fun & Games</a>
+                        </div>
+                    </div>
+                    <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                    <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                    <div class="border-t border-gray-700 my-2"></div>
+                    <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+                </nav>
             </div>
-            <nav id="main-nav" class="flex flex-col space-y-2 flex-grow">
-                <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-3"></i> Home</a>
-                <a href="dashboard.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg bg-blue-600"><i class="fas fa-tachometer-alt w-6 text-center mr-3"></i> Dashboard</a>
-                <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-3"></i> Our Tools</a>
-                <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-chalkboard-teacher w-6 text-center mr-3"></i> Training Hub</a>
-                <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-3"></i> Resources</a>
-                <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-3"></i> Community</a>
-                <div class="border-t border-gray-700 my-2"></div>
-                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-3 text-purple-400"></i> AI Legal Assistant</button>
-                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast</button>
-                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-3 text-teal-400"></i> Needs Assessment</a>
-            </nav>
-            <div class="mt-auto text-center">
+            <div class="sidebar-bottom text-center">
                 <div id="auth-links-desktop" class="mb-4">
-                    <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
+                    <!-- Auth state will be populated here by auth.js -->
                 </div>
                 <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
         </aside>
 
-        <!-- Main Content -->
+        <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
             <!-- Loading State -->
             <div id="loading-state" class="text-center mt-20">
-                <i class="fas fa-spinner fa-spin text-4xl text-green-400"></i>
-                <p class="text-lg mt-4">Loading Your Command Centre...</p>
+                <i class="fas fa-spinner fa-spin text-6xl text-blue-500"></i>
+                <p class="mt-4 text-lg text-gray-400">Loading Your Command Centre...</p>
             </div>
-            
-            <!-- Main Dashboard Container (hidden by default) -->
-            <div id="dashboard-container" class="max-w-7xl mx-auto hidden">
-                <div class="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-8 gap-4">
-                    <div>
-                        <h2 id="dashboard-welcome" class="text-4xl font-bold font-roboto-slab text-white">My Command Centre</h2>
-                        <p id="dashboard-email" class="text-lg text-gray-400">Your central hub for growth.</p>
-                    </div>
-                    <div class="flex items-center gap-4">
-                        <img id="user-avatar" src="https://placehold.co/64x64/374151/9ca3af?text=Avatar" alt="User Avatar" class="w-16 h-16 rounded-full border-2 border-green-400 object-cover">
-                        <label for="profile-image-upload" class="cursor-pointer bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition-colors">
-                            <i class="fas fa-camera mr-2"></i> Change
-                            <input type="file" id="profile-image-upload" class="hidden" accept="image/*">
-                        </label>
-                    </div>
-                </div>
 
-                <!-- Tabs Navigation -->
-                <div class="border-b border-gray-700 mb-8">
-                    <nav id="dashboard-tabs" class="flex flex-wrap -mb-px" aria-label="Tabs">
-                        <button class="tab-button active text-lg py-4 px-6 font-medium" data-tab="overview"><i class="fas fa-chart-line mr-2"></i> Overview</button>
-                        <button class="tab-button text-lg py-4 px-6 font-medium" data-tab="profile"><i class="fas fa-user-edit mr-2"></i> My Profile</button>
-                        <button class="tab-button text-lg py-4 px-6 font-medium" data-tab="documents"><i class="fas fa-file-archive mr-2"></i> Document Vault</button>
-                        <button class="tab-button text-lg py-4 px-6 font-medium" data-tab="achievements"><i class="fas fa-award mr-2"></i> Achievements</button>
-                    </nav>
+            <!-- Dashboard Content -->
+            <div id="dashboard-container" class="max-w-7xl mx-auto hidden">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center mb-8">
+                    <div>
+                        <h1 id="dashboard-welcome" class="text-4xl font-bold text-white">Welcome, User!</h1>
+                        <p id="dashboard-email" class="text-gray-400 mt-1">user@example.com</p>
+                    </div>
+                    <button id="share-profile-btn" class="mt-4 md:mt-0 bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg flex items-center gap-2"><i class="fas fa-share-alt"></i> Share My LifeCV</button>
+                </div>
+                
+                <!-- Tabs -->
+                <div id="dashboard-tabs" class="mb-8 border-b border-gray-700 flex flex-wrap gap-2">
+                    <button class="tab-btn active" data-tab="profile">
+                        <i class="fas fa-user-edit mr-2"></i> LifeCV Profile Builder
+                    </button>
+                    <button class="tab-btn" data-tab="account">
+                        <i class="fas fa-file-invoice-dollar mr-2"></i> My Account
+                    </button>
+                    <button class="tab-btn" data-tab="calendar">
+                        <i class="fas fa-calendar-alt mr-2"></i> Visitation Calendar
+                    </button>
                 </div>
 
                 <!-- Tab Content -->
-                <div>
-                    <div id="overview-tab" class="tab-content active">
-                        <h3 class="text-2xl font-bold mb-4">Welcome Back!</h3>
-                        <p class="text-gray-300">This is your overview. Here you'll find quick stats, recent activity, and shortcuts to your most-used tools. (Content coming soon)</p>
-                    </div>
-                    <div id="profile-tab" class="tab-content">
-                        <h3 class="text-2xl font-bold mb-4">Edit Your Profile</h3>
-                         <form id="profile-form" class="max-w-md space-y-4">
-                            <div>
-                               <label for="displayName" class="block text-sm font-medium text-gray-400">Display Name</label>
-                               <input type="text" id="displayName" name="displayName" class="mt-1 block w-full bg-gray-700 border border-gray-600 rounded-md shadow-sm py-2 px-3 focus:outline-none focus:ring-green-500 focus:border-green-500">
+                <div id="profile-content" class="tab-content">
+                    <form id="profile-form">
+                        <!-- Core Profile Section -->
+                        <div class="bg-gray-900/50 p-6 rounded-lg mb-8">
+                            <h3 class="text-2xl font-bold mb-6 text-green-400">Core Profile</h3>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-center">
+                                <div>
+                                    <label for="displayName" class="block text-sm font-medium text-gray-400 mb-1">Display Name</label>
+                                    <input type="text" id="displayName" name="displayName" class="form-input" placeholder="Your public name">
+                                    <label for="bio" class="block text-sm font-medium text-gray-400 mb-1 mt-4">Short Bio / Tagline</label>
+                                    <input type="text" id="bio" name="bio" class="form-input" placeholder="e.g., Dedicated Father, Skilled Engineer">
+                                </div>
+                                <div class="flex justify-center md:justify-end gap-4">
+                                    <label for="profile-image-upload-1" class="profile-pic-upload cursor-pointer">
+                                        <img id="user-avatar-1" src="https://placehold.co/128x128/374151/FFFFFF?text=Pic+1" alt="Profile Picture 1">
+                                        <div class="overlay"><div class="overlay-text">Change</div></div>
+                                        <input type="file" id="profile-image-upload-1" data-img-num="1" class="hidden profile-image-upload">
+                                    </label>
+                                     <label for="profile-image-upload-2" class="profile-pic-upload cursor-pointer">
+                                        <img id="user-avatar-2" src="https://placehold.co/128x128/374151/FFFFFF?text=Pic+2" alt="Profile Picture 2">
+                                        <div class="overlay"><div class="overlay-text">Change</div></div>
+                                        <input type="file" id="profile-image-upload-2" data-img-num="2" class="hidden profile-image-upload">
+                                    </label>
+                                     <label for="profile-image-upload-3" class="profile-pic-upload cursor-pointer">
+                                        <img id="user-avatar-3" src="https://placehold.co/128x128/374151/FFFFFF?text=Pic+3" alt="Profile Picture 3">
+                                        <div class="overlay"><div class="overlay-text">Change</div></div>
+                                        <input type="file" id="profile-image-upload-3" data-img-num="3" class="hidden profile-image-upload">
+                                    </label>
+                                </div>
                             </div>
-                            <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg">Save Changes</button>
-                         </form>
-                    </div>
-                    <div id="documents-tab" class="tab-content">
-                        <h3 class="text-2xl font-bold mb-4">My Document Vault</h3>
-                        <p class="text-gray-300">Securely store and manage your parenting plans, legal documents, and Life CV.</p>
-                         <div class="mt-4">
-                            <label for="cv-upload" class="cursor-pointer bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg">
-                                <i class="fas fa-upload mr-2"></i> Upload "Life CV"
-                                <input type="file" id="cv-upload" class="hidden" accept=".pdf,.doc,.docx">
-                            </label>
-                            <a href="#" id="cv-link" class="hidden ml-4 text-green-400 hover:underline"></a>
-                         </div>
-                    </div>
-                    <div id="achievements-tab" class="tab-content">
-                        <h3 class="text-2xl font-bold mb-4">My Achievements</h3>
-                        <p class="text-gray-300">View all the certificates and badges you've earned from our training modules and assessments. (Content coming soon)</p>
+                        </div>
+
+                        <!-- Formal Profile Section -->
+                        <div class="bg-gray-900/50 p-6 rounded-lg mb-8">
+                            <h3 class="text-2xl font-bold mb-6 text-blue-400">Formal Profile</h3>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="linkedinUrl" class="block text-sm font-medium text-gray-400 mb-1">LinkedIn Profile URL</label>
+                                    <input type="url" id="linkedinUrl" name="linkedinUrl" class="form-input" placeholder="https://linkedin.com/in/yourprofile">
+                                </div>
+                                <div>
+                                    <label for="websiteUrl" class="block text-sm font-medium text-gray-400 mb-1">Personal Website/Portfolio</label>
+                                    <input type="url" id="websiteUrl" name="websiteUrl" class="form-input" placeholder="https://yourwebsite.com">
+                                </div>
+                                <div>
+                                    <label for="skills" class="block text-sm font-medium text-gray-400 mb-1">Skills (comma separated)</label>
+                                    <input type="text" id="skills" name="skills" class="form-input" placeholder="e.g., Project Management, Welding, isiXhosa">
+                                    <div id="skills-tags" class="mt-2 flex flex-wrap gap-2"></div>
+                                </div>
+                                <div>
+                                    <label for="cv-upload" class="block text-sm font-medium text-gray-400 mb-1">Upload CV (PDF, DOCX)</label>
+                                    <input type="file" id="cv-upload" name="cv-upload" class="form-input-file">
+                                    <a href="#" id="cv-link" class="text-blue-400 hover:underline mt-2 inline-block hidden"><i class="fas fa-file-alt mr-2"></i>View Uploaded CV</a>
+                                </div>
+                            </div>
+                            <!-- Education & Work History can be added here as dynamic sections -->
+                        </div>
+                        
+                        <!-- Holistic Profile Section -->
+                        <div class="bg-gray-900/50 p-6 rounded-lg mb-8">
+                            <h3 class="text-2xl font-bold mb-6 text-yellow-400">Holistic Profile</h3>
+                            <div>
+                                <label for="hobbies" class="block text-sm font-medium text-gray-400 mb-1">Hobbies & Interests</label>
+                                <textarea id="hobbies" name="hobbies" class="form-input" rows="3" placeholder="Describe your passions, e.g., coaching kids soccer, hiking, reading history..."></textarea>
+                            </div>
+                             <div class="mt-4">
+                                <label for="familyActivities" class="block text-sm font-medium text-gray-400 mb-1">Activities with Children</label>
+                                <textarea id="familyActivities" name="familyActivities" class="form-input" rows="3" placeholder="Describe things you do with your kids, e.g., building puzzles, gardening, weekly movie night..."></textarea>
+                            </div>
+                             <div class="mt-4">
+                                <label for="diyProjects" class="block text-sm font-medium text-gray-400 mb-1">DIY Projects & Personal Achievements</label>
+                                <textarea id="diyProjects" name="diyProjects" class="form-input" rows="3" placeholder="Describe things you've built or achieved, e.g., renovated the kitchen, ran a marathon, learned to code..."></textarea>
+                            </div>
+                        </div>
+
+                        <div class="text-right">
+                            <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg">Save Profile</button>
+                        </div>
+                    </form>
+                </div>
+
+                <div id="account-content" class="tab-content hidden">
+                     <div class="bg-gray-900/50 p-6 rounded-lg mb-8">
+                        <h3 class="text-2xl font-bold mb-6 text-teal-400">Membership & Purchases</h3>
+                        <p><strong>Membership Status:</strong> <span class="font-bold text-green-400">Free Member</span></p>
+                        <p class="mt-4 text-gray-400">Purchase history and document downloads will appear here.</p>
+                     </div>
+                </div>
+
+                <div id="calendar-content" class="tab-content hidden">
+                    <div id="visitation-calendar-container" class="bg-gray-900/50 p-6 rounded-lg">
+                        <!-- The visitation calendar from visitation-calendar.html will be loaded here -->
+                        <p class="text-center text-gray-400">Loading Calendar...</p>
                     </div>
                 </div>
             </div>
@@ -132,20 +239,34 @@
             </div>
         </main>
     </div>
-
-    <!-- MODALS -->
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-80 items-end justify-center sm:items-end z-50 p-4">
-        <!-- Chatbot content will be loaded by chatbot.js -->
-    </div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4">
-        <!-- Podcast player content will be loaded by podcast-player.js -->
-    </div>
     
+    <!-- Share Profile Modal -->
+    <div id="share-modal" class="fixed inset-0 bg-black/70 z-50 flex items-center justify-center p-4 hidden">
+        <div class="bg-gray-800 rounded-lg p-8 max-w-lg w-full">
+            <h2 class="text-2xl font-bold mb-4">Share Your LifeCV</h2>
+            <p class="text-gray-400 mb-6">Choose which sections to include in a shareable, public link. This is great for job applications or sharing with platforms like Sazi.life.</p>
+            <div id="share-options" class="space-y-2 mb-6">
+                <label class="flex items-center bg-gray-700 p-3 rounded-md"><input type="checkbox" class="form-checkbox" value="core" checked> <span class="ml-3">Core Profile (Name, Bio, Picture)</span></label>
+                <label class="flex items-center bg-gray-700 p-3 rounded-md"><input type="checkbox" class="form-checkbox" value="formal" checked> <span class="ml-3">Formal Profile (CV, Links, Skills)</span></label>
+                <label class="flex items-center bg-gray-700 p-3 rounded-md"><input type="checkbox" class="form-checkbox" value="holistic"> <span class="ml-3">Holistic Profile (Hobbies, Activities)</span></label>
+            </div>
+            <div class="flex justify-end gap-4">
+                <button id="cancel-share-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg">Cancel</button>
+                <button id="generate-link-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Generate Link</button>
+            </div>
+            <div id="generated-link-container" class="mt-6 hidden">
+                <label class="text-sm font-medium text-gray-400">Your Shareable Link:</label>
+                <div class="flex gap-2 mt-1">
+                    <input type="text" id="generated-link-input" readonly class="form-input bg-gray-900">
+                    <button id="copy-link-btn" class="bg-blue-600 hover:bg-blue-700 p-3 rounded-lg"><i class="fas fa-copy"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/dashboard.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
