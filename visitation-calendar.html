@@ -1,137 +1,46 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
-<head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>FLAMEA - Visitation Scheduler</title>
-
-    <!-- Head content same as other pages -->
-
-</head>
-
-<body class="bg-gray-800 text-white">
-
-    <div class="main-container">
-
-        <!-- Sidebar Navigation -->
-
-<div id="sidebar-placeholder"></div>
-<script src="assets/js/sidebar-loader.js"></script>
-
-
-
-        <!-- Main Content Area -->
-
-        <main class="main-content p-8 md:p-12">
-
-            <div class="max-w-4xl mx-auto">
-
-                <h2 class="text-4xl font-bold font-roboto text-white mb-2">Visitation & Activity Scheduler</h2>
-
-                <p class="text-lg text-gray-400 mb-8">Keep track of visitation schedules, school events, and important activities.</p>
-
-
-
-                <div id="scheduler-tool-container" class="hidden">
-
-                     <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-
-                        <p class="text-gray-300">The full calendar and event scheduling tool is under development and will be available here soon.</p>
-
-                    </div>
-
-                </div>
-
-
-
-                <div id="scheduler-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
-
-                    <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
-
-                    <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
-
-                    <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Scheduler.</p>
-
-                </div>
-
-            </div>
-
-        </main>
-
-    </div>
-
-
-
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-
-<!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - About Us</title>
+    <title>FLAMEA - Visitation Scheduler</title>
+    <!-- External Libraries & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <!-- Centralized Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto;
-            background-image: linear-gradient(rgba(17, 24, 39, 0.97), rgba(17, 24, 39, 0.97)), url('https://images.unsplash.com/photo-1519120126-16817531a7c7?q=80&w=1974');
-            background-size: cover;
-            background-position: center;
-        }
-        .timeline-item {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .timeline-item.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 1.5rem; /* Center on the icon */
-            transform: translateX(-50%);
-            height: 100%;
-            width: 4px;
-            background-color: #4B5563; /* gray-600 */
-        }
-        .timeline-icon { z-index: 10; }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .accordion-content.open {
-            /* This class will be toggled by JS */
-            max-height: 1000px; /* Large enough for your content */
-        }
-    </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-800 text-white">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
 
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-4xl mx-auto">
+                <h2 class="text-4xl font-bold text-white mb-2">Visitation & Activity Scheduler</h2>
+                <p class="text-lg text-gray-400 mb-8">Keep track of visitation schedules, school events, and important activities.</p>
+
+                <div id="scheduler-tool-container" class="hidden">
+                     <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                        <p class="text-gray-300">The full calendar and event scheduling tool is under development and will be available here soon.</p>
+                     </div>
+                </div>
+
+                <div id="scheduler-login-prompt" class="text-center mt-20 flex flex-col items-center justify-center">
+                    <i class="fas fa-lock text-6xl text-blue-500 mx-auto"></i>
+                    <h2 class="text-3xl font-bold text-white mt-4">This is a Secure Member Tool</h2>
+                    <p class="mt-2 text-lg text-gray-400">Please <a href="login.html" class="font-bold text-blue-400 hover:underline">log in or register</a> to use the Scheduler.</p>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Load Scripts -->
+    <script src="assets/js/sidebar-loader.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/scheduler.js"></script>
 </body>
-
 </html>
