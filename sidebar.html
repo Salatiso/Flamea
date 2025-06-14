@@ -1,28 +1,46 @@
-<!-- /sidebar.html -->
-<!-- This is the single, centralized sidebar file for the entire website. -->
-<!-- To add, remove, or change a link, you only need to edit this one file. -->
-<div class="sidebar">
-    <div class="logo">
-        <a href="index.html">
-            <img src="https://sazi.life/flamea_logo-02.png" alt="Flamea Logo" style="width: 150px; height: auto; margin-bottom: 20px;">
-        </a>
-    </div>
-    <nav>
-        <ul>
-            <li><a href="index.html"><i class="fas fa-home"></i> Home</a></li>
-            <li><a href="dashboard.html"><i class="fas fa-tachometer-alt"></i> Dashboard</a></li>
-            <li><a href="ai-legal-assistant.html"><i class="fas fa-robot"></i> AI Legal Assistant</a></li>
-            <li><a href="publications.html"><i class="fas fa-book-open"></i> Flamea Podcast</a></li>
-            <!-- New link as requested -->
-            <li><a href="tools.html"><i class="fas fa-tools"></i> Tools & Templates</a></li>
-            <li><a href="assessment.html"><i class="fas fa-tasks"></i> Needs Assessment</a></li>
-            <li><a href="training.html"><i class="fas fa-chalkboard-teacher"></i> Training Hub</a></li>
-            <li><a href="community.html"><i class="fas fa-users"></i> Community</a></li>
-            <li><a href="about.html"><i class="fas fa-info-circle"></i> About</a></li>
-            <li><a href="contact.html"><i class="fas fa-envelope"></i> Contact</a></li>
-        </ul>
-    </nav>
-    <div class="sidebar-footer">
-        <a href="#" id="logout-link"><i class="fas fa-sign-out-alt"></i> Logout</a>
-    </div>
-</div>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- ===== Standardized Sidebar ===== -->
+        <aside class="bg-gray-900 p-6 flex flex-col justify-between sidebar-container">
+            <div class="sidebar-top">
+                <div class="mb-12 flex justify-center">
+                    <a href="index.html" class="flamea-logo dark">
+                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+                <!-- Final Navigation Structure -->
+                <nav id="main-nav" class="flex flex-col space-y-2">
+                    <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                    <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                    
+                    <!-- Tools Hub -->
+                    <div class="relative">
+                        <button class="sidebar-direct-link has-submenu active flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content bg-gray-800 rounded-lg mt-2">
+                           <a href="forms.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
+                           <a href="games.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
+                        </div>
+                    </div>
+
+                    <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Training Hub</a>
+                    <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resource Hub</a>
+                    <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                    
+                    <!-- Divider and bottom links -->
+                    <div class="border-t border-gray-700 my-2"></div>
+                    
+                    <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
+                    <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-pink-400"></i> FLAMEA Podcast</button>
+                    <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+                </nav>
+            </div>
+            <div class="sidebar-bottom text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <!-- Auth state will be populated here by auth.js -->
+                </div>
+                <!-- Final Copyright -->
+                <p class="text-xs text-gray-500">
+                    © 2025 Flamea.org | Powered by Salatiso | <a href="https://salatiso.com" target="_blank" rel="noopener noreferrer" class="hover:text-green-400 footer-link">salatiso.com</a>
+                </p>
+            </div>
+        </aside>
