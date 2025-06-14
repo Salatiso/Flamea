@@ -1,26 +1,35 @@
 /**
- * Flamea.org - Centralized Sidebar Loader
- * Fetches, injects, and enhances the sidebar navigation.
- * - Dynamically sets the 'active' class on links.
- * - Manages all collapsible submenus.
+ * Flamea.org - Centralized Sidebar Loader (Final)
+ * This script now controls the entire sidebar lifecycle.
  */
+import { auth } from './firebase-config.js'; // Import the central auth instance
+import { updateAuthUI } from './auth.js';   // Import the UI update function
+
 document.addEventListener('DOMContentLoaded', function() {
     const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
 
     if (sidebarPlaceholder) {
         fetch('sidebar.html')
             .then(response => {
-                if (!response.ok) throw new Error('Network response was not ok');
+                if (!response.ok) throw new Error(`Failed to fetch sidebar.html: ${response.statusText}`);
                 return response.text();
             })
             .then(html => {
+                // Step 1: Inject the sidebar HTML into the page.
                 sidebarPlaceholder.innerHTML = html;
-                // Once sidebar is loaded, activate its features
+                
+                // Step 2: Now that the HTML exists, activate the navigation links.
                 setActiveLink();
+                
+                // Step 3: Activate the interactive dropdown menus.
                 setupSubmenuToggles();
+
+                // Step 4 (FINAL & CRITICAL): Call the function from auth.js to populate the login/dashboard buttons.
+                // We pass the current user state to it.
+                updateAuthUI(auth.currentUser);
             })
             .catch(error => {
-                console.error('Error fetching sidebar:', error);
+                console.error('Error loading sidebar:', error);
                 sidebarPlaceholder.innerHTML = '<p class="text-red-500 p-4">Error loading navigation.</p>';
             });
     }
@@ -44,7 +53,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function setupSubmenuToggles() {
-        // This now handles ALL submenu toggles, including the new one
         const submenuToggles = document.querySelectorAll('.submenu-toggle');
         submenuToggles.forEach(button => {
             button.addEventListener('click', (event) => {
