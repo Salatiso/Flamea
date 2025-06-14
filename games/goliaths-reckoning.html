@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goliath's Reckoning: Baza kuSazi!</title>
+    
+    <!-- External Libraries -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Google Fonts for Epic Feel -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=MedievalSharp&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+
+    <!-- Main Stylesheet -->
+    <link rel="stylesheet" href="../assets/css/style.css">
+
+    <style>
+        /* Custom Styles for the Epic Gauntlet Theme */
+        body {
+            font-family: 'Roboto Condensed', sans-serif;
+            background-color: #111827;
+            background-image: url('https://www.transparenttextures.com/patterns/dark-stone-wall.png');
+            color: #F3F4F6;
+            overflow: hidden;
+        }
+
+        .game-title { font-family: 'Bungee', cursive; }
+        .epic-text { font-family: 'MedievalSharp', cursive; }
+
+        .game-wrapper {
+            display: grid;
+            grid-template-columns: 60px 1fr;
+            height: 100vh;
+        }
+
+        /* --- Site Navigation Sidebar --- */
+        .site-sidebar {
+            background-color: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(10px);
+            border-right: 1px solid #374151;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 2rem;
+            gap: 1.5rem;
+            z-index: 50;
+        }
+
+        .sidebar-icon {
+            color: #9CA3AF;
+            font-size: 1.5rem;
+            transition: all 0.2s ease;
+            cursor: pointer;
+        }
+
+        .sidebar-icon:hover {
+            color: #FBBF24;
+            transform: scale(1.2);
+        }
+        
+        /* --- Main Game Container --- */
+        .game-container {
+            position: relative;
+            width: 100%;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            perspective: 1000px;
+        }
+
+        .screen {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            backface-visibility: hidden;
+            transition: transform 0.8s, opacity 0.8s;
+            opacity: 1;
+            transform: rotateY(0deg);
+        }
+        
+        .screen.hidden {
+            opacity: 0;
+            transform: rotateY(-180deg);
+            pointer-events: none;
+        }
+        
+        /* --- Start Screen --- */
+        #start-screen {
+            background: linear-gradient(rgba(0,0,0,0.7), rgba(0,0,0,0.7)), url('https://placehold.co/1200x800/1a1a2e/f3f4f6?text=Epic+Battleground');
+            background-size: cover;
+            background-position: center;
+        }
+        
+        .avatar-card {
+            border: 2px solid #4B5563;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .avatar-card.selected {
+            border-color: #FBBF24;
+            transform: scale(1.1);
+            box-shadow: 0 0 20px #FBBF24;
+        }
+        
+        .difficulty-btn.selected {
+            background-color: #D97706; /* amber-600 */
+            color: white;
+        }
+
+        /* --- Game Screen --- */
+        #game-screen {
+            padding: 1rem;
+            display: grid;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+        }
+        
+        .hud {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 0 2rem;
+        }
+        
+        .progress-bar { transition: width 0.5s ease-in-out; }
+        
+        .battlefield {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            width: 100%;
+        }
+        
+        .player-area, .goliath-area {
+            text-align: center;
+        }
+
+        .goliath-area img {
+             filter: drop-shadow(0 0 15px #DC2626);
+             animation: float 3s ease-in-out infinite;
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        #goliath-image {
+            max-height: 30vh;
+            transition: transform 0.3s ease;
+        }
+
+        .question-panel {
+            width: 80%;
+            max-width: 900px;
+            background: rgba(17, 24, 39, 0.7);
+            border: 1px solid #374151;
+            border-radius: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+        }
+        
+        .option-btn {
+            border: 2px solid #4B5563;
+            transition: all 0.3s ease;
+        }
+
+        .option-btn:hover {
+            background-color: #374151;
+            border-color: #FBBF24;
+        }
+        
+        /* Answer feedback animations */
+        .option-btn.correct { background-color: #16A34A; border-color: #4ADE80; transform: scale(1.05); }
+        .option-btn.wrong { background-color: #DC2626; border-color: #F87171; }
+        .shake-animation { animation: shake 0.5s; }
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-10px); }
+            75% { transform: translateX(10px); }
+        }
+
+        /* --- Modals --- */
+        .modal {
+            background-color: rgba(0, 0, 0, 0.8);
+            backdrop-filter: blur(5px);
+        }
+
+        /* Sudden Death Timer */
+        #sudden-death-timer {
+            font-size: 4rem;
+            color: #EF4444; /* red-500 */
+            text-shadow: 0 0 10px #EF4444;
+            animation: pulse 1s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+        
+        /* --- Footer --- */
+        .game-footer {
+            position: absolute;
+            bottom: 10px;
+            width: 100%;
+            text-align: center;
+            font-size: 0.8rem;
+            color: #6B7280; /* gray-500 */
+        }
+    </style>
+</head>
+<body>
+
+    <div class="game-wrapper">
+        <!-- Site Navigation Sidebar -->
+        <aside class="site-sidebar">
+            <a href="../index.html" title="Home"><i class="fas fa-home sidebar-icon"></i></a>
+            <a href="../games.html" title="All Games"><i class="fas fa-gamepad sidebar-icon"></i></a>
+            <a href="../dashboard.html" title="Dashboard"><i class="fas fa-chart-line sidebar-icon"></i></a>
+        </aside>
+
+        <!-- Main Game Content -->
+        <main class="game-container">
+
+            <!-- Start Screen -->
+            <div id="start-screen" class="screen p-8 text-center">
+                <h1 class="game-title text-6xl md:text-8xl text-amber-400" style="text-shadow: 3px 3px 0 #000;">Goliath's Reckoning</h1>
+                <h2 class="epic-text text-3xl md:text-5xl text-white mb-8">Baza kuSazi!</h2>
+                
+                <div class="w-full max-w-4xl mx-auto">
+                    <!-- Avatar Selection -->
+                    <h3 class="epic-text text-2xl mb-4">Choose Your Warrior:</h3>
+                    <div id="avatar-selection" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 mb-8">
+                        <!-- Avatars will be injected by JS -->
+                    </div>
+                    
+                    <!-- Difficulty Selection -->
+                    <h3 class="epic-text text-2xl mb-4">Select Your Gauntlet:</h3>
+                    <div id="difficulty-selection" class="flex justify-center gap-4 mb-8">
+                        <button data-difficulty="easy" class="difficulty-btn px-8 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition">Inkwenkwe's Path (Easy)</button>
+                        <button data-difficulty="medium" class="difficulty-btn px-8 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition">Tata's Trial (Medium)</button>
+                        <button data-difficulty="hard" class="difficulty-btn px-8 py-3 rounded-lg bg-gray-700 hover:bg-gray-600 transition">Ta'mkhulu's Wisdom (Hard)</button>
+                    </div>
+
+                    <button id="start-game-btn" class="w-full max-w-sm bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-lg text-2xl game-title transition transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed" disabled>Begin Quest</button>
+                </div>
+            </div>
+
+            <!-- Game Screen -->
+            <div id="game-screen" class="screen hidden">
+                <!-- HUD -->
+                <div class="hud">
+                    <div class="flex items-center gap-4">
+                        <div id="player-avatar-hud" class="w-20 h-20 bg-gray-700 border-2 border-amber-400 rounded-full"></div>
+                        <div>
+                            <div id="lives-container" class="flex gap-1 text-2xl"></div>
+                            <div id="score-display" class="text-xl font-bold">Score: 0</div>
+                        </div>
+                    </div>
+                    <div class="flex-grow mx-8">
+                        <div class="w-full bg-gray-700 rounded-full h-6 border-2 border-gray-500">
+                            <div id="level-progress-bar" class="progress-bar bg-gradient-to-r from-red-600 to-red-400 h-full rounded-full text-center text-white font-bold"></div>
+                        </div>
+                        <div id="level-text" class="text-center mt-1 epic-text text-xl">Level 1: The Shadow of Doubt</div>
+                    </div>
+                    <button id="quit-btn" class="px-4 py-2 bg-red-800 hover:bg-red-700 rounded-lg epic-text text-lg">Quit</button>
+                </div>
+                
+                <!-- Battlefield -->
+                <div class="battlefield">
+                    <div class="player-area">
+                        <!-- Player will be animated via JS -->
+                    </div>
+                    <div class="goliath-area">
+                        <img id="goliath-image" src="https://placehold.co/400x400/000000/ffffff?text=Myth" alt="Goliath">
+                        <h3 id="goliath-name" class="epic-text text-3xl text-red-400 mt-2">Goliath of Ignorance</h3>
+                    </div>
+                </div>
+                
+                <!-- Question Panel -->
+                <div class="question-panel">
+                    <div id="question-header" class="text-center mb-4">
+                        <p id="question-counter" class="text-gray-400"></p>
+                        <h2 id="question-text-title" class="epic-text text-2xl text-amber-400">The Challenge is Issued!</h2>
+                    </div>
+                    <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <!-- Options injected by JS -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Game Over Screen -->
+            <div id="game-over-screen" class="screen hidden text-center p-8">
+                 <h1 id="end-title" class="game-title text-8xl text-red-500">Game Over</h1>
+                 <p id="end-message" class="text-2xl mt-4 mb-8"></p>
+                 <p class="text-xl">Final Score: <span id="final-score">0</span></p>
+                 <button id="restart-game-btn" class="mt-8 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-lg text-2xl game-title">Try Again</button>
+            </div>
+            
+            <!-- Modals -->
+            <!-- Feedback/Source Modal -->
+            <div id="feedback-modal" class="modal hidden fixed inset-0 z-50 items-center justify-center p-4">
+                <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 max-w-3xl w-full relative transform transition-all" style="border-color: #FBBF24;">
+                    <h2 id="feedback-title" class="text-3xl font-bold mb-4"></h2>
+                    <p id="feedback-explanation-primary" class="text-lg text-gray-300 mb-4"></p>
+                    <div class="bg-gray-900 p-4 rounded-lg">
+                        <h3 class="epic-text text-xl text-amber-400 mb-2">Deeper Wisdom (Baza kuSazi!)</h3>
+                        <p id="feedback-explanation-secondary" class="text-gray-400 mb-4"></p>
+                        <div id="source-links" class="flex flex-wrap gap-2"></div>
+                    </div>
+                    <button id="continue-btn" class="w-full mt-6 bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-3 px-6 rounded-lg text-xl">Continue</button>
+                </div>
+            </div>
+
+            <!-- Sudden Death Modal -->
+            <div id="sudden-death-modal" class="modal hidden fixed inset-0 z-50 items-center justify-center p-4">
+                <div class="modal-content bg-red-900 p-8 rounded-2xl shadow-2xl border-4 border-red-500 max-w-4xl w-full text-center">
+                    <h2 class="game-title text-6xl text-white animate-pulse">SUDDEN DEATH</h2>
+                    <p class="epic-text text-3xl mb-4">The Legacy Run! Answer before the clock runs out!</p>
+                    <div id="sudden-death-timer" class="font-mono font-bold mb-4">30</div>
+                    <div id="sudden-death-question-panel">
+                        <!-- Question content will be injected here -->
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Quit Confirmation Modal -->
+            <div id="quit-modal" class="modal hidden fixed inset-0 z-50 items-center justify-center p-4">
+                <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 max-w-md w-full text-center">
+                     <h2 class="text-2xl font-bold mb-4">Flee the Gauntlet?</h2>
+                    <p class="text-gray-400 mb-6">Your progress in this battle will be lost.</p>
+                    <div class="flex justify-center gap-4">
+                        <button id="resume-game-btn" class="px-6 py-2 bg-gray-600 hover:bg-gray-500 rounded-lg">Return to Battle</button>
+                        <button id="confirm-quit-btn" class="px-6 py-2 bg-red-700 hover:bg-red-600 rounded-lg">Quit</button>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Footer with Copyright -->
+            <footer class="game-footer">
+                <p>&copy; 2025 Flamea.org | A Salatiso Initiative, <a href="https://salatiso.com/" target="_blank" class="text-amber-400 hover:underline">salatiso.com</a></p>
+            </footer>
+
+        </main>
+    </div>
+
+    <!-- Game Scripts -->
+    <script src="../assets/js/avatar-system.js"></script>
+    <script src="../assets/js/new-questions-database.js" type="module"></script>
+    <script src="../assets/js/goliaths-reckoning.js" type="module"></script>
+</body>
+</html>
