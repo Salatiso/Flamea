@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Flamea Kids Game - Constitution Quest</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body { font-family: 'Fredoka', sans-serif; background: #e0f2fe; overflow-x: hidden; }
+    .game-wrapper { max-width: 900px; margin: auto; padding: 2rem; }
+    .character { width: 100px; border-radius: 12px; }
+    .question-box { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 0 10px #bae6fd; margin-top: 2rem; }
+    .option-btn { background-color: #3b82f6; color: white; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin: 0.25rem 0; width: 100%; text-align: left; font-size: 1rem; }
+    .option-btn:hover { background-color: #2563eb; }
+    .correct { background-color: #16a34a !important; }
+    .wrong { background-color: #dc2626 !important; }
+  </style>
+</head>
+<body class="bg-sky-100">
+
+  <div class="game-wrapper text-center">
+    <h1 class="text-4xl text-blue-800 font-bold mb-2">🧠 Constitution Quest</h1>
+    <p class="text-gray-600 mb-4">Learn your rights while you play! Pick a character and start your mission.</p>
+
+    <!-- Character Selector -->
+    <div class="flex justify-center gap-6">
+      <button onclick="startGame('BuggZ')"><img src="/assets/img/buggz.svg" alt="BuggZ" class="character" /><p>BuggZ</p></button>
+      <button onclick="startGame('Sga')"><img src="/assets/img/sga.svg" alt="Sga" class="character" /><p>Sga</p></button>
+      <button onclick="startGame('Oros')"><img src="/assets/img/oros.svg" alt="Oros" class="character" /><p>Oros</p></button>
+      <button onclick="startGame('Monkey')"><img src="/assets/img/monkey.svg" alt="Monkey" class="character" /><p>Monkey</p></button>
+      <button onclick="startGame('Princess')"><img src="/assets/img/princess.svg" alt="Princess" class="character" /><p>Princess</p></button>
+    </div>
+
+    <div id="game-screen" class="hidden mt-6">
+      <h2 id="player-info" class="text-xl text-blue-700 font-semibold mb-4"></h2>
+      <div id="question-box" class="question-box text-left">
+        <p id="question-text" class="text-lg font-bold mb-4">Loading question...</p>
+        <div id="options-container" class="space-y-2"></div>
+      </div>
+      <div class="mt-4">
+        <button id="next-btn" class="bg-green-500 text-white px-4 py-2 rounded hidden" onclick="nextQuestion()">Next</button>
+      </div>
+    </div>
+
+  </div>
+
+  <script type="module">
+    import { questionBank } from '../assets/js/questions-database.js';
+
+    let currentLevel = 1;
+    let currentIndex = 0;
+    let currentPlayer = '';
+    let currentQuestions = [];
+    let score = 0;
+
+    window.startGame = (name) => {
+      currentPlayer = name;
+      currentLevel = 1;
+      score = 0;
+      document.getElementById('player-info').innerText = `Character: ${name} | Level 1`;
+      document.getElementById('game-screen').classList.remove('hidden');
+      currentQuestions = questionBank.filter(q => q.level === currentLevel);
+      currentIndex = 0;
+      showQuestion();
+    };
+
+    window.nextQuestion = () => {
+      currentIndex++;
+      document.getElementById('next-btn').classList.add('hidden');
+      if (currentIndex < currentQuestions.length) {
+        showQuestion();
+      } else {
+        currentLevel++;
+        if (currentLevel > 3) {
+          document.getElementById('question-box').innerHTML = `<h3 class='text-2xl text-green-600'>🎉 Game Complete!</h3><p>Your score: ${score}</p>`;
+        } else {
+          currentQuestions = questionBank.filter(q => q.level === currentLevel);
+          currentIndex = 0;
+          document.getElementById('player-info').innerText = `Character: ${currentPlayer} | Level ${currentLevel}`;
+          showQuestion();
+        }
+      }
+    };
+
+    function showQuestion() {
+      const q = currentQuestions[currentIndex];
+      document.getElementById('question-text').innerText = q.question;
+      const optionsContainer = document.getElementById('options-container');
+      optionsContainer.innerHTML = '';
+
+      q.options.forEach(opt => {
+        const btn = document.createElement('button');
+        btn.innerText = opt;
+        btn.className = 'option-btn';
+        btn.onclick = () => handleAnswer(btn, opt === q.answer);
+        optionsContainer.appendChild(btn);
+      });
+    }
+
+    function handleAnswer(button, correct) {
+      const allButtons = document.querySelectorAll('.option-btn');
+      allButtons.forEach(btn => btn.disabled = true);
+
+      if (correct) {
+        button.classList.add('correct');
+        score += currentQuestions[currentIndex].points;
+      } else {
+        button.classList.add('wrong');
+        const correctBtn = Array.from(allButtons).find(btn => btn.innerText === currentQuestions[currentIndex].answer);
+        if (correctBtn) correctBtn.classList.add('correct');
+      }
+
+      document.getElementById('next-btn').classList.remove('hidden');
+    }
+  </script>
+</body>
+</html>
