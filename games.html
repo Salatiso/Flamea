@@ -11,12 +11,15 @@
     <style>
         body {
             font-family: 'Roboto Condensed', sans-serif;
+            background-color: #111827;
         }
         .game-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
             background: rgba(255, 255, 255, 0.05);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            position: relative;
+            overflow: hidden;
         }
         .game-card:hover {
             transform: translateY(-10px);
@@ -24,6 +27,29 @@
         }
         .game-title-font {
             font-family: 'Bungee', cursive;
+        }
+        .inspiration-banner {
+            position: absolute;
+            top: 10px;
+            right: -50px;
+            background-color: #FBBF24; /* amber-400 */
+            color: #1F2937; /* gray-800 */
+            padding: 4px 40px;
+            font-size: 0.75rem;
+            font-weight: bold;
+            transform: rotate(45deg);
+            box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+            z-index: 10;
+        }
+         .inspiration-banner a:hover {
+            text-decoration: underline;
+        }
+        .source-card {
+            transition: transform 0.3s ease, background-color 0.3s ease;
+        }
+        .source-card:hover {
+            transform: scale(1.05);
+            background-color: #374151; /* gray-700 */
         }
     </style>
 </head>
@@ -65,61 +91,44 @@
                 <div id="auth-links-desktop" class="mb-4">
                     <!-- Auth state will be populated here by auth.js -->
                 </div>
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+                <p class="text-xs text-gray-500">© <span id="currentYear"></span> Flamea.org | A Salatiso Initiative, <a href="https://salatiso.com/" target="_blank" class="hover:underline">salatiso.com</a></p>
             </div>
         </aside>
 
         <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
+        <main class="main-content p-8 md:p-12 overflow-y-auto">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-16">
                     <h1 class="game-title-font text-5xl md:text-7xl font-bold text-white mb-4">Legal Fun & Games</h1>
                     <p class="text-lg text-gray-400">Learn about your rights and the law in a fun, interactive way. Knowledge is power!</p>
                 </div>
 
-                <!-- Kids' Corner Section -->
+                <!-- Flagship Game Section -->
                 <div class="mb-20">
-                    <h2 class="game-title-font text-4xl text-yellow-400 mb-8 flex items-center"><i class="fas fa-child text-3xl mr-4"></i> Kids' Corner</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Kid Konstitution Game Card -->
-                        <a href="kid-konstitution.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
-                                <i class="fas fa-landmark text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                    <h2 class="game-title-font text-4xl text-amber-400 mb-8 flex items-center"><i class="fas fa-star text-3xl mr-4"></i> Flagship Game</h2>
+                    <div class="grid grid-cols-1">
+                        <a href="games/goliaths-reckoning.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Goliath's Reckoning</a></div>
+                            <div class="h-64 bg-gradient-to-br from-red-800 to-gray-900 flex items-center justify-center">
+                                <i class="fas fa-chess-king text-9xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Kid Konstitution</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 4-12</p>
-                                <p class="text-gray-300">Learn the basics of rights and fairness in a colorful adventure! Match icons to ideas and build a strong foundation.</p>
+                                <h3 class="game-title-font text-3xl text-white mb-2">Goliath's Reckoning: Baza kuSazi!</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                <p class="text-gray-300">The ultimate quest for truth. Face down ideological Goliaths, test your knowledge against the clock, and build your citadel of wisdom in our flagship adventure.</p>
                             </div>
                         </a>
-                        <!-- Add more kids game cards here in the future -->
-                         <div class="game-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
-                            <div class="text-center text-gray-500">
-                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
-                                <h3 class="game-title-font text-xl">More Fun Coming Soon!</h3>
-                            </div>
-                        </div>
                     </div>
                 </div>
 
                 <!-- Games for All Section -->
-                <div>
+                <div class="mb-20">
                     <h2 class="game-title-font text-4xl text-green-400 mb-8 flex items-center"><i class="fas fa-gamepad text-3xl mr-4"></i> Games for All</h2>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Constitution Defender Game Card -->
-                        <a href="constitution-defender.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
-                                <i class="fas fa-gavel text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Defender</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
-                                <p class="text-gray-300">Blast away legal myths and defend the principles of the constitution in this retro arcade shooter.</p>
-                            </div>
-                        </a>
-
+                        
                         <!-- MythBuster Quest Game Card -->
-                        <a href="mythbuster-game.html" class="game-card rounded-2xl overflow-hidden group">
+                        <a href="games/mythbuster-game.html" class="game-card rounded-2xl overflow-hidden group">
+                             <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Goliath's Stand</a></div>
                             <div class="h-56 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
                                 <i class="fas fa-question-circle text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
                             </div>
@@ -130,29 +139,112 @@
                             </div>
                         </a>
 
-                        <!-- Goliath's Reckoning Game Card -->
-                        <a href="legal-simulator.html" class="game-card rounded-2xl overflow-hidden group">
+                        <!-- Legal Simulator Game Card -->
+                        <a href="games/legal-simulator.html" class="game-card rounded-2xl overflow-hidden group">
+                             <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Goliath's Reckoning</a></div>
                             <div class="h-56 bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
                                  <i class="fas fa-balance-scale text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Goliath's Reckoning</h3>
+                                <h3 class="game-title-font text-2xl text-white mb-2">Legal Simulator</h3>
                                  <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
                                 <p class="text-gray-300">A narrative legal simulator. Make tough choices and see their impact on your resources, time, and family.</p>
                             </div>
                         </a>
 
                         <!-- Satirical Game Card -->
-                        <a href="satirical-game.html" class="game-card rounded-2xl overflow-hidden group">
-                             <div class="h-56 bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center">
-                                 <i class="far fa-grimace text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                        <a href="games/satirical-game.html" class="game-card rounded-2xl overflow-hidden group">
+                             <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Modern, Broke...</a></div>
+                              <div class="h-56 bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center">
+                                  <i class="far fa-grimace text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                             </div>
+                             <div class="p-6">
+                                 <h3 class="game-title-font text-2xl text-white mb-2">Modern, Broke & Confused</h3>
+                                  <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                 <p class="text-gray-300">A satirical text-adventure about the absurdities of the system. Can you keep your sanity?</p>
+                             </div>
+                        </a>
+                        
+                        <!-- Rights Racer -->
+                        <a href="games/rights-racer.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Goliath's Stand</a></div>
+                            <div class="h-56 bg-gradient-to-br from-sky-500 to-blue-600 flex items-center justify-center">
+                                <i class="fas fa-car-side text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
                             </div>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Modern, Broke & Confused</h3>
-                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
-                                <p class="text-gray-300">A satirical text-adventure about the absurdities of the system. Can you keep your sanity?</p>
+                                <h3 class="game-title-font text-2xl text-white mb-2">Rights Racer</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 8+</p>
+                                <p class="text-gray-300">Dodge obstacles and collect your rights in this fast-paced racing game!</p>
                             </div>
                         </a>
+
+                        <!-- Justice Builder -->
+                         <a href="games/justice-builder.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Beyond Redress</a></div>
+                            <div class="h-56 bg-gradient-to-br from-lime-500 to-green-600 flex items-center justify-center">
+                                <i class="fas fa-city text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Justice Builder</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 8+</p>
+                                <p class="text-gray-300">Build a fair and happy community from the ground up in this creative city-builder.</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- Kids' Corner Section -->
+                <div class="mb-20">
+                    <h2 class="game-title-font text-4xl text-yellow-400 mb-8 flex items-center"><i class="fas fa-child text-3xl mr-4"></i> Kids' Corner</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Kid Konstitution Game Card -->
+                        <a href="games/kid-konstitution.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="inspiration-banner">Inspired by <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank">Homeschooling Father</a></div>
+                            <div class="h-56 bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
+                                <i class="fas fa-landmark text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Kid Konstitution</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 4-8</p>
+                                <p class="text-gray-300">Learn the basics of rights and fairness in a colorful adventure! Match icons to ideas and build a strong foundation.</p>
+                            </div>
+                        </a>
+                        
+                        <div class="game-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
+                                <h3 class="game-title-font text-xl">More Fun Coming Soon!</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                 <!-- Sources Section -->
+                <div class="mt-24 pt-16 border-t-2 border-gray-700">
+                    <div class="text-center mb-12">
+                         <h2 class="game-title-font text-4xl text-white mb-4">The Minds Behind the Mission</h2>
+                         <p class="text-lg text-gray-400">Our games and tools are built on a foundation of critical thought. Explore the sources that inspire our work.</p>
+                    </div>
+
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <!-- Salatiso Mdeni Card -->
+                        <div class="source-card bg-gray-800 p-6 rounded-2xl">
+                            <h3 class="text-2xl font-bold text-amber-400 mb-4">Salatiso Mdeni</h3>
+                            <p class="text-gray-300 mb-6">Explore the full collection of books that provide the philosophical backbone for Flamea's mission.</p>
+                            <div class="grid grid-cols-2 gap-4">
+                                <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank" class="flex items-center justify-center p-3 bg-gray-700 rounded-lg hover:bg-green-600 transition"><i class="fab fa-google-play text-2xl mr-3"></i> Google Play</a>
+                                <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3ASalatiso%2BMdeni" target="_blank" class="flex items-center justify-center p-3 bg-gray-700 rounded-lg hover:bg-yellow-500 transition"><i class="fab fa-amazon text-2xl mr-3"></i> Amazon</a>
+                                <a href="https://books.apple.com/us/author/salatiso-mdeni/id1745396063" target="_blank" class="flex items-center justify-center p-3 bg-gray-700 rounded-lg hover:bg-gray-200 hover:text-black transition"><i class="fab fa-apple text-2xl mr-3"></i> Apple Books</a>
+                                <a href="https://www.smashwords.com/profile/view/Salatiso_Mdeni" target="_blank" class="flex items-center justify-center p-3 bg-gray-700 rounded-lg hover:bg-blue-600 transition"><i class="fas fa-book-sparkles text-2xl mr-3"></i> Smashwords</a>
+                            </div>
+                        </div>
+                        
+                        <!-- YouTube Card -->
+                        <div class="source-card bg-gray-800 p-6 rounded-2xl">
+                            <h3 class="text-2xl font-bold text-red-500 mb-4">Salatiso on YouTube</h3>
+                            <p class="text-gray-300 mb-6">Watch discussions, interviews, and presentations on the core topics of fatherhood, law, and society.</p>
+                            <a href="https://www.youtube.com/@Salatiso" target="_blank" class="w-full flex items-center justify-center p-3 bg-gray-700 rounded-lg hover:bg-red-600 transition"><i class="fab fa-youtube text-4xl mr-4"></i> Watch Now</a>
+                        </div>
                     </div>
                 </div>
             </div>
