@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution Champions - FLAMEA Kids</title>
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <link rel="stylesheet" href="../assets/css/games.css">
+    <style>
+        .game-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            font-family: 'Comic Sans MS', cursive;
+        }
+        
+        .avatar-selector {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background: white;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            cursor: pointer;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .puzzle-area {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+        
+        .constitution-block {
+            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
+            color: white;
+            padding: 15px;
+            margin: 10px;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: transform 0.3s;
+            user-select: none;
+        }
+        
+        .constitution-block:hover {
+            transform: scale(1.05);
+        }
+        
+        .drop-zone {
+            border: 3px dashed #ccc;
+            min-height: 100px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 10px;
+            transition: all 0.3s;
+        }
+        
+        .drop-zone.drag-over {
+            border-color: #4ECDC4;
+            background: #f0f9ff;
+        }
+        
+        .level-indicator {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+        }
+        
+        .level-dot {
+            width: 15px;
+            height: 15px;
+            border-radius: 50%;
+            margin: 0 5px;
+            background: #ddd;
+            transition: all 0.3s;
+        }
+        
+        .level-dot.completed {
+            background: #4ECDC4;
+            transform: scale(1.2);
+        }
+        
+        .level-dot.current {
+            background: #FF6B6B;
+            animation: pulse 1s infinite;
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        
+        .quiz-container {
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        
+        .answer-option {
+            background: #f8f9fa;
+            border: 2px solid #e9ecef;
+            border-radius: 15px;
+            padding: 15px;
+            margin: 10px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .answer-option:hover {
+            background: #e3f2fd;
+            border-color: #2196f3;
+        }
+        
+        .answer-option.correct {
+            background: #c8e6c9;
+            border-color: #4caf50;
+            animation: celebrate 0.5s;
+        }
+        
+        .answer-option.incorrect {
+            background: #ffcdd2;
+            border-color: #f44336;
+            animation: shake 0.5s;
+        }
+        
+        @keyframes celebrate {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+        
+        @keyframes shake {
+            0%, 100% { transform: translateX(0); }
+            25% { transform: translateX(-5px); }
+            75% { transform: translateX(5px); }
+        }
+    </style>
+</head>
+<body>
+    <div class="game-container">
+        <!-- Avatar Display -->
+        <div class="avatar-selector" id="avatarDisplay">
+            😊
+        </div>
+        
+        <!-- Game Header -->
+        <header class="game-header">
+            <h1>🏆 Constitution Champions 🏆</h1>
+            <div class="level-indicator" id="levelIndicator">
+                <!-- Dynamically populated -->
+            </div>
+            <div class="score-display">
+                Score: <span id="currentScore">0</span> | Level: <span id="currentLevel">1</span>
+            </div>
+        </header>
+
+        <!-- Game Content Area -->
+        <main id="gameContent">
+            <!-- Dynamically loaded based on current level -->
+        </main>
+
+        <!-- Achievement Display -->
+        <div id="achievementNotification" class="achievement-popup" style="display: none;">
+            <div class="achievement-content">
+                <h3>🎉 Achievement Unlocked! 🎉</h3>
+                <p id="achievementText"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Include Firebase and Game Scripts -->
+    <script src="../assets/js/firebase-config.js"></script>
+    <script src="../assets/js/avatar-system.js"></script>
+    <script src="../assets/js/constitution-champions.js"></script>
+</body>
+</html>
