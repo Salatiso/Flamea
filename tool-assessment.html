@@ -4,14 +4,14 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Your Ideal Tool - Flamea</title>
-    <!-- External Libraries & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Centralized Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* Page-specific styles */
+        body { font-family: 'Open Sans', sans-serif; }
         .wizard-step { display: none; }
         .wizard-step.active { display: block; animation: fadeIn 0.5s; }
         .progress-bar-fill { transition: width 0.4s ease-in-out; }
@@ -29,66 +29,54 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
 
-    <div class="main-container">
-        <!-- Sidebar Placeholder -->
-        <div id="sidebar-placeholder"></div>
+    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
+        <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Find Your Ideal Tool</h1>
+        <p class="text-center text-gray-400 mb-8">Answer these questions to get a recommendation for the best tool to solve your problem.</p>
 
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Find Your Ideal Tool</h1>
-                <p class="text-center text-gray-400 mb-8">Answer these questions to get a recommendation for the best tool to solve your problem.</p>
+        <!-- Progress Bar -->
+        <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
+            <div id="progress-bar" class="bg-teal-500 h-2.5 rounded-full progress-bar-fill" style="width: 25%"></div>
+        </div>
 
-                <!-- Progress Bar -->
-                <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="bg-teal-500 h-2.5 rounded-full progress-bar-fill" style="width: 25%"></div>
-                </div>
-
-                <div id="assessment-wizard" class="bg-gray-800 p-8 rounded-2xl shadow-xl relative">
-                    <!-- Step 1 -->
-                    <div id="step-1" class="wizard-step active">
-                        <h2 class="text-2xl font-semibold mb-6">What is your primary goal right now?</h2>
-                        <div class="space-y-4">
-                            <button data-next="2" data-answer="plan" class="wizard-option w-full text-left p-4 rounded-lg">I need to create a formal, written agreement with my co-parent.</button>
-                            <button data-next="2" data-answer="track" class="wizard-option w-full text-left p-4 rounded-lg">I need to log my financial contributions and time spent with my child.</button>
-                            <button data-next="2" data-answer="legal" class="wizard-option w-full text-left p-4 rounded-lg">I need to fill out a specific legal form or affidavit.</button>
-                            <button data-next="2" data-answer="find" class="wizard-option w-full text-left p-4 rounded-lg">I need to find a legal professional or support service near me.</button>
-                        </div>
-                    </div>
-
-                    <!-- Step 2 -->
-                    <div id="step-2" class="wizard-step">
-                        <h2 class="text-2xl font-semibold mb-6">How urgent is your situation?</h2>
-                        <div class="space-y-4">
-                            <button data-next="results" data-answer="urgent" class="wizard-option w-full text-left p-4 rounded-lg">It's an emergency, I need help immediately.</button>
-                            <button data-next="results" data-answer="soon" class="wizard-option w-full text-left p-4 rounded-lg">I need to take action within the next few weeks.</button>
-                            <button data-next="results" data-answer="planning" class="wizard-option w-full text-left p-4 rounded-lg">I'm proactively planning for the future.</button>
-                        </div>
-                    </div>
-
-                    <!-- Results Step -->
-                    <div id="step-results" class="wizard-step text-center">
-                        <h2 class="text-3xl font-semibold mb-4 text-white">Your Recommended Tool Kit</h2>
-                        <div id="recommendation-text" class="text-left bg-gray-700 p-6 rounded-lg space-y-4 my-6">
-                            <!-- Recommendations will be injected here -->
-                        </div>
-                        <a href="tools.html" class="mt-8 bg-teal-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-teal-700 transition-colors inline-block">Explore All Tools</a>
-                    </div>
-                    
-                    <!-- Navigation -->
-                    <div class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
-                        <button id="back-btn" class="text-gray-400 hover:text-white disabled:opacity-50" disabled>&larr; Back</button>
-                        <a href="tools.html" class="text-sm text-red-500 hover:text-red-400">Cancel</a>
-                    </div>
+        <div id="assessment-wizard" class="bg-gray-800 p-8 rounded-2xl shadow-xl relative">
+            
+            <!-- Step 1 -->
+            <div id="step-1" class="wizard-step active">
+                <h2 class="text-2xl font-semibold mb-6">What is your primary goal right now?</h2>
+                <div class="space-y-4">
+                    <button data-next="2" data-answer="plan" class="wizard-option w-full text-left p-4 rounded-lg">I need to create a formal, written agreement with my co-parent.</button>
+                    <button data-next="2" data-answer="track" class="wizard-option w-full text-left p-4 rounded-lg">I need to log my financial contributions and time spent with my child.</button>
+                    <button data-next="2" data-answer="legal" class="wizard-option w-full text-left p-4 rounded-lg">I need to fill out a specific legal form or affidavit.</button>
+                    <button data-next="2" data-answer="find" class="wizard-option w-full text-left p-4 rounded-lg">I need to find a legal professional or support service near me.</button>
                 </div>
             </div>
-        </main>
-    </div>
 
-    <!-- Load Scripts -->
-    <script src="assets/js/sidebar-loader.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
+            <!-- Step 2 -->
+            <div id="step-2" class="wizard-step">
+                <h2 class="text-2xl font-semibold mb-6">How urgent is your situation?</h2>
+                <div class="space-y-4">
+                    <button data-next="results" data-answer="urgent" class="wizard-option w-full text-left p-4 rounded-lg">It's an emergency, I need help immediately.</button>
+                    <button data-next="results" data-answer="soon" class="wizard-option w-full text-left p-4 rounded-lg">I need to take action within the next few weeks.</button>
+                    <button data-next="results" data-answer="planning" class="wizard-option w-full text-left p-4 rounded-lg">I'm proactively planning for the future.</button>
+                </div>
+            </div>
+
+            <!-- Results Step -->
+            <div id="step-results" class="wizard-step text-center">
+                <h2 class="text-3xl font-semibold mb-4 text-white">Your Recommended Tool Kit</h2>
+                <div id="recommendation-text" class="text-left bg-gray-700 p-6 rounded-lg space-y-4 my-6">
+                    <!-- Recommendations will be injected here -->
+                </div>
+                <a href="tools.html" class="mt-8 bg-teal-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-teal-700 transition-colors inline-block">Explore All Tools</a>
+            </div>
+            
+             <!-- Navigation -->
+            <div class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
+                <button id="back-btn" class="text-gray-400 hover:text-white disabled:opacity-50" disabled>&larr; Back</button>
+                <a href="tools.html" class="text-sm text-red-500 hover:text-red-400">Cancel</a>
+            </div>
+        </div>
+    </div>
     <script type="module" src="assets/js/tool-assessment.js"></script>
 </body>
 </html>
