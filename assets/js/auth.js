@@ -1,4 +1,12 @@
-// assets/js/auth.js
+/**
+ * Flamea.org - Centralized Authentication Script (Corrected)
+ * This file manages all user authentication processes sitewide.
+ * - Handles new user registration (Email/Password & Google).
+ * - Handles existing user login.
+ * - Creates user profiles in Firestore.
+ * - Manages login/logout state and redirects.
+ * - Exports the UI update function to be called by the sidebar loader.
+ */
 
 import {
     onAuthStateChanged,
@@ -15,25 +23,19 @@ import {
     getDoc,
     serverTimestamp
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-// Import the initialized services from our config file
+// Import the initialized services from our central config file
 import { auth, db } from './firebase-config.js';
 
 // --- Initialize Auth Provider ---
 const googleProvider = new GoogleAuthProvider();
 
-// --- DOM Elements ---
-// Select elements from the login/register page
+// --- DOM Elements for Login/Register Page ---
 const loginForm = document.getElementById('login-form');
-// FIX: Changed from 'signup-form' to 'register-form' to match the HTML
 const registerForm = document.getElementById('register-form'); 
-// FIX: Changed from 'google-signin' to 'google-signin-btn' to match the HTML
 const googleSignInButton = document.getElementById('google-signin-btn'); 
 const authMessage = document.getElementById('auth-message');
 
-// Select logout buttons, which can appear on any page
-const logoutButtons = document.querySelectorAll('.logout-button');
-
-// --- Helper function to display messages ---
+// --- Helper function to display messages on login/register page ---
 function showMessage(message, isError = false) {
     if (authMessage) {
         authMessage.textContent = message;
@@ -41,7 +43,7 @@ function showMessage(message, isError = false) {
     }
 }
 
-// --- Event Listeners for Auth Forms ---
+// --- Event Listeners for Forms (Only run if the forms exist on the current page) ---
 
 // Login Form Submission
 if (loginForm) {
@@ -52,7 +54,7 @@ if (loginForm) {
         const password = loginForm.password.value;
         try {
             await signInWithEmailAndPassword(auth, email, password);
-            // Redirect is handled by onAuthStateChanged listener
+            // Redirect is handled by the onAuthStateChanged listener below
         } catch (error) {
             console.error("Login Error:", error.message);
             showMessage(error.message, true);
@@ -74,7 +76,7 @@ if (registerForm) {
             await updateProfile(userCredential.user, { displayName: name });
             // Create a document for them in Firestore
             await createUserProfileDocument(userCredential.user, { displayName: name });
-            // Redirect will be handled by onAuthStateChanged
+            // Redirect is handled by onAuthStateChanged
         } catch (error) {
             console.error("Registration Error:", error.message);
             showMessage(error.message, true);
@@ -102,7 +104,7 @@ if (googleSignInButton) {
     });
 }
 
-// --- User Profile Document Creation ---
+// --- Firestore User Profile Creation ---
 async function createUserProfileDocument(user, additionalData = {}) {
     if (!user) return;
     const userRef = doc(db, `users/${user.uid}`);
@@ -125,66 +127,56 @@ async function createUserProfileDocument(user, additionalData = {}) {
     }
 }
 
-// --- Auth State Observer (Handles Redirects and UI Updates) ---
+// --- GLOBAL AUTH STATE OBSERVER ---
+// This listener is the single source of truth for the user's login state.
 onAuthStateChanged(auth, (user) => {
+    // When the state changes, update the UI.
+    updateAuthUI(user);
+
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
     const isAuthPage = ['login.html'].includes(currentPage);
-
-    if (user) {
-        // User is signed in.
-        console.log(`User logged in: ${user.email}. Current page: ${currentPage}`);
-        // If they are on the login page, redirect them to the dashboard.
-        if (isAuthPage) {
-            window.location.replace('dashboard.html');
-        }
-    } else {
-        // User is signed out.
-        console.log(`User logged out. Current page: ${currentPage}`);
-        const protectedPages = ['dashboard.html', 'activity-tracker.html', 'plan-builder.html', 'forms.html'];
-        // If they are on a protected page, redirect them to the login page.
+    
+    if (user && isAuthPage) {
+        // If user is logged in and on the login page, send them to the dashboard.
+        window.location.replace('dashboard.html');
+    } else if (!user) {
+        const protectedPages = ['dashboard.html', 'activity-tracker.html', 'plan-builder.html'];
+        // If user is logged out and on a protected page, send them to login.
         if (protectedPages.includes(currentPage)) {
             window.location.replace('login.html');
         }
     }
-    // Update UI elements like login/logout buttons sitewide
-    updateAuthUI(user);
 });
 
 
-// --- Logout Button ---
-logoutButtons.forEach(button => {
-    button.addEventListener('click', () => {
-        signOut(auth).catch(error => console.error("Logout Error:", error));
-    });
-});
-
-
-// --- Function to update UI elements based on auth state ---
-function updateAuthUI(user) {
-    const authLinksDesktop = document.getElementById('auth-links-desktop');
-    const authLinksMobile = document.getElementById('auth-links-mobile');
+// --- UI UPDATE FUNCTION (EXPORTED) ---
+// This function can now be called by any script that imports it, like sidebar-loader.js
+export function updateAuthUI(user) {
+    const authLinksContainer = document.getElementById('sidebar-auth-links');
+    if (!authLinksContainer) {
+        // If the container isn't ready, do nothing.
+        // The sidebar-loader will call this again once the sidebar is in the DOM.
+        return;
+    }
 
     if (user) {
         // User is logged in: show dashboard and logout buttons
-        const loggedInHTML = `
-            <a href="dashboard.html" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Dashboard</a>
-            <button class="logout-button text-gray-300 hover:text-white">Logout</button>
+        authLinksContainer.innerHTML = `
+            <a href="dashboard.html" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors mb-2">My Dashboard</a>
+            <button id="sidebar-logout-btn" class="text-sm text-gray-400 hover:text-white hover:underline">Logout</button>
         `;
-        if (authLinksDesktop) authLinksDesktop.innerHTML = loggedInHTML;
-        if (authLinksMobile) authLinksMobile.innerHTML = loggedInHTML;
     } else {
         // User is logged out: show login button
-        const loggedOutHTML = `
-            <a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors block">Login / Register</a>
+        authLinksContainer.innerHTML = `
+            <a href="login.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
         `;
-        if (authLinksDesktop) authLinksDesktop.innerHTML = loggedOutHTML;
-        if (authLinksMobile) authLinksMobile.innerHTML = loggedOutHTML;
     }
 
-    // Re-add event listener for newly created logout buttons
-    document.querySelectorAll('.logout-button').forEach(button => {
-        button.addEventListener('click', () => {
+    // Add event listener for the newly created logout button
+    const logoutBtn = document.getElementById('sidebar-logout-btn');
+    if(logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
             signOut(auth).catch(error => console.error("Logout Error:", error));
         });
-    });
+    }
 }
