@@ -59,17 +59,76 @@ body {
     overflow: hidden;
     transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
 }
-
-/* This is the key change: the .open class will be toggled by main.js */
 .accordion-content.open {
-    max-height: 1000px; /* A large enough value to accommodate content */
+    max-height: 1000px; /* Large enough for content */
 }
-
 .accordion-toggle i.fa-chevron-down {
     transition: transform 0.3s ease;
 }
-
-.accordion-toggle i.rotate-180 {
+.accordion-toggle i.fa-chevron-down.rotate-180 {
     transform: rotate(180deg);
 }
 
+/* ================================================================== */
+/* === NEWLY CENTRALIZED STYLES (from games.html and other pages) === */
+/* ================================================================== */
+
+/* --- MAIN LAYOUT --- */
+.main-container {
+    display: flex;
+    height: 100vh;
+}
+.sidebar-container {
+    width: 280px;
+    flex-shrink: 0;
+    background-color: #111827;
+}
+.main-content {
+    flex-grow: 1;
+    padding: 2rem;
+    background-color: #1F2937;
+    color: #F3F4F6;
+    overflow-y: auto;
+}
+
+/* --- SIDEBAR LINK STYLING --- */
+.sidebar-link, .sidebar-link-main {
+    color: #D1D5DB;
+    transition: background-color 0.2s ease, color 0.2s ease;
+    font-weight: 500;
+}
+.sidebar-link:hover, .sidebar-link-main:hover {
+    background-color: #374151;
+    color: #FFFFFF;
+}
+.sidebar-link.active, .sidebar-link-main.active {
+    color: #4ade80;
+    font-weight: bold;
+}
+.sidebar-link.active {
+     background-color: #1F2937;
+}
+.sidebar-link.active .fas, .sidebar-link-main.active .fas {
+    color: #4ade80;
+}
+.submenu-container {
+     display: none;
+}
+.submenu-container.open {
+    display: block;
+}
+
+/* --- PAGE-SPECIFIC COMPONENTS --- */
+.game-card, .resource-card {
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+.game-card:hover, .resource-card:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+}
+.game-title-font {
+    font-family: 'Bungee', cursive;
+}
