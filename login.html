@@ -28,7 +28,6 @@
     <div class="main-container">
         <!-- ===== Standardized Sidebar ===== -->
 <div id="sidebar-placeholder"></div>
-<script src="assets/js/sidebar-loader.js"></script>
 
         <!-- Main Content -->
         <main class="main-content p-8 md:p-12">
@@ -135,7 +134,8 @@
         
         showTab('login'); // Default to login tab
     </script>
-    <!-- This script tag is essential for the authentication logic to run -->
+        <script src="assets/js/sidebar-loader.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
