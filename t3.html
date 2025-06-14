@@ -3,519 +3,237 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MythBuster Quest - A Flamea Game</title>
+    <title>Legal Fun & Games - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body {
             font-family: 'Roboto Condensed', sans-serif;
-            background-color: #1a1a2e;
-            color: #ffffff;
-            overflow: hidden;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            height: 100vh;
-            padding: 1rem;
         }
-
-        .game-title {
+        .game-card, .resource-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        .game-card:hover, .resource-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+        }
+        .game-title-font {
             font-family: 'Bungee', cursive;
         }
-
-        #game-container {
-            width: 100%;
-            max-width: 1200px;
-            height: 95vh;
-            background: #162238;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
+        .resource-card-icon {
+            transition: transform 0.3s ease;
         }
-        
-        #game-board-container {
-            flex-grow: 1;
-            position: relative;
-            background: url('https://www.transparenttextures.com/patterns/cubes.png'), linear-gradient(to bottom right, #1e3a8a, #3b0764);
-            padding: 20px;
-            overflow: hidden;
-        }
-
-        .path {
-            position: absolute;
-            background-color: rgba(255, 255, 255, 0.2);
-            border: 2px dashed rgba(255, 255, 255, 0.4);
-        }
-        
-        #player {
-            position: absolute;
-            width: 40px;
-            height: 40px;
-            background-color: #f59e0b;
-            border-radius: 50%;
-            border: 3px solid white;
-            transition: all 1s ease-in-out;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
-        }
-        
-        .path-point {
-            position: absolute;
-            width: 25px;
-            height: 25px;
-            background-color: rgba(255, 255, 255, 0.3);
-            border-radius: 50%;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-        }
-
-        .path-point.super {
-            background-color: #ef4444;
-            animation: pulse 1.5s infinite;
-        }
-
-        @keyframes pulse {
-            0% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0.7); }
-            70% { transform: scale(1.1); box-shadow: 0 0 10px 15px rgba(239, 68, 68, 0); }
-            100% { transform: scale(1); box-shadow: 0 0 0 0 rgba(239, 68, 68, 0); }
-        }
-        
-        #question-modal, #explanation-modal, #start-modal, #achievement-modal {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            z-index: 100;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.3s, visibility 0.3s;
-        }
-
-        #question-modal.active, #explanation-modal.active, #start-modal.active, #achievement-modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background: #1f2937;
-            padding: 2rem;
-            border-radius: 1rem;
-            width: 90%;
-            max-width: 600px;
-            border: 2px solid #4f46e5;
-            box-shadow: 0 0 20px #4f46e5;
-        }
-        
-        .option-btn {
-            transition: all 0.2s ease;
-        }
-        .option-btn:hover {
-            transform: translateY(-2px);
-            background-color: #4f46e5;
-        }
-        
-        #achievements-bar {
-            background-color: #111827;
-            padding: 0.5rem 1rem;
-            border-top: 2px solid #374151;
-            display: flex;
-            align-items: center;
-            justify-content: space-around;
-            height: 70px;
+        .resource-card:hover .resource-card-icon {
+            transform: scale(1.1);
         }
     </style>
 </head>
-<body>
-
-    <div id="game-container">
-        <!-- HEADER -->
-        <header class="text-center p-4 bg-gray-900 border-b-4 border-indigo-500">
-            <h1 class="game-title text-3xl md:text-4xl text-amber-400">MythBuster Quest</h1>
-            <p class="text-gray-300">A Father's Journey to Truth</p>
-        </header>
-
-        <!-- GAME BOARD -->
-        <div id="game-board-container">
-            <div id="game-board"></div>
-            <div id="player"><i class="fas fa-male"></i></div>
-        </div>
-
-        <!-- ACHIEVEMENTS BAR -->
-        <div id="achievements-bar">
-            <h3 class="font-bold text-lg hidden md:block">Achievements:</h3>
-            <div id="trinkets" class="flex gap-4 text-gray-500">
-                <i class="fas fa-award fa-2x" data-achievement="Truth Seeker" title="Truth Seeker (15 Correct)"></i>
-                <i class="fas fa-shield-alt fa-2x" data-achievement="Fact Finder" title="Fact Finder (30 Correct)"></i>
-                <i class="fas fa-crown fa-2x" data-achievement="Myth Slayer" title="Myth Slayer (45 Correct)"></i>
-                <i class="fas fa-star fa-2x" data-achievement="Enlightened" title="Enlightened (Finished)"></i>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- ===== Standardized Sidebar ===== -->
+        <aside class="bg-gray-900 p-6 flex flex-col justify-between sidebar-container">
+            <div class="sidebar-top">
+                <div class="mb-12 flex justify-center">
+                    <a href="index.html" class="flamea-logo dark">
+                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home"><text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"/></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"/></svg>
+                    </a>
+                </div>
+                <nav id="main-nav" class="flex flex-col space-y-2">
+                    <a href="index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                    <a href="about.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+                    <a href="tools.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Our Tools</a>
+                    <div class="relative">
+                        <button class="sidebar-direct-link has-submenu flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub <i class="fas fa-chevron-down ml-auto"></i></button>
+                        <div class="submenu-content hidden bg-gray-800 rounded-lg mt-2">
+                           <a href="games.html" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Legal Fun & Games</a>
+                           <a href="forms.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates Hub</a>
+                        </div>
+                    <a href="training.html" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm pl-12"><i class="fas fa-book-reader w-6 text-center mr-3"></i> All Courses</a>
+                    <a href="resources.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resources</a>
+                    <a href="community.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+                     <div class="border-t border-gray-700 my-2"></div>
+                <button data-modal-target="chatbot-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> AI Legal Assistant</button>
+                <button data-modal-target="podcast-modal" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-3 text-pink-400"></i> FLAMEA Podcast</button>
+                <a href="assessment.html" class="sidebar-direct-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+                </nav>
             </div>
-        </div>
+            <div class="sidebar-bottom text-center">
+                <div id="auth-links-desktop" class="mb-4">
+                    <!-- Auth state will be populated here by auth.js -->
+                </div>
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-16">
+                    <h1 class="game-title-font text-5xl md:text-7xl font-bold text-white mb-4">Legal Fun & Games</h1>
+                    <p class="text-lg text-gray-400">Learn about your rights and the law in a fun, interactive way. Knowledge is power!</p>
+                </div>
+
+                <!-- Kids' Corner Section -->
+                <div class="mb-20">
+                    <h2 class="game-title-font text-4xl text-yellow-400 mb-8 flex items-center"><i class="fas fa-child text-3xl mr-4"></i> Kids' Corner</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Kid Konstitution Game Card -->
+                        <a href="kid-konstitution.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
+                                <i class="fas fa-landmark text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Kid Konstitution</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 4-12</p>
+                                <p class="text-gray-300">Learn the basics of rights and fairness in a colorful adventure! Match icons to ideas and build a strong foundation.</p>
+                            </div>
+                        </a>
+                        <!-- Add more kids game cards here in the future -->
+                         <div class="game-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
+                                <h3 class="game-title-font text-xl">More Fun Coming Soon!</h3>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Games for All Section -->
+                <div class="mb-20">
+                    <h2 class="game-title-font text-4xl text-green-400 mb-8 flex items-center"><i class="fas fa-gamepad text-3xl mr-4"></i> Games for All</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Constitution Defender Game Card -->
+                        <a href="constitution-defender.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
+                                <i class="fas fa-gavel text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Defender</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
+                                <p class="text-gray-300">Blast away legal myths and defend the principles of the constitution in this retro arcade shooter.</p>
+                            </div>
+                        </a>
+
+                        <!-- MythBuster Quest Game Card -->
+                        <a href="mythbuster-game.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
+                                <i class="fas fa-question-circle text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">MythBuster Quest</h3>
+                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
+                                <p class="text-gray-300">Test your knowledge against common myths in family law. Can you tell fact from fiction?</p>
+                            </div>
+                        </a>
+
+                        <!-- Goliath's Reckoning Game Card -->
+                        <a href="legal-simulator.html" class="game-card rounded-2xl overflow-hidden group">
+                            <div class="h-56 bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
+                                 <i class="fas fa-balance-scale text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Goliath's Reckoning</h3>
+                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                <p class="text-gray-300">A narrative legal simulator. Make tough choices and see their impact on your resources, time, and family.</p>
+                            </div>
+                        </a>
+
+                        <!-- Satirical Game Card -->
+                        <a href="satirical-game.html" class="game-card rounded-2xl overflow-hidden group">
+                             <div class="h-56 bg-gradient-to-br from-purple-500 to-fuchsia-600 flex items-center justify-center">
+                                 <i class="far fa-grimace text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Modern, Broke & Confused</h3>
+                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
+                                <p class="text-gray-300">A satirical text-adventure about the absurdities of the system. Can you keep your sanity?</p>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+
+                <!-- ===== NEW: Further Resources Section ===== -->
+                <div class="mt-20">
+                    <h2 class="game-title-font text-4xl text-purple-400 mb-8 flex items-center"><i class="fas fa-book-reader text-3xl mr-4"></i> Dive Deeper: Further Resources</h2>
+                    <p class="text-lg text-gray-400 mb-10">The learning doesn't have to stop here. Explore these books and videos for in-depth knowledge on family law and navigating the legal system.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+
+                        <!-- Google Play Books Card -->
+                        <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
+                            <div class="h-56 bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
+                                <i class="fab fa-google-play text-8xl text-white opacity-80 resource-card-icon"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Google Play Books</h3>
+                                <p class="text-gray-300">Find my books for Android devices and web readers.</p>
+                            </div>
+                        </a>
+
+                        <!-- Apple Books Card -->
+                        <a href="https://books.apple.com/us/author/salatiso-mdeni/id1745396063" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
+                            <div class="h-56 bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
+                                <i class="fab fa-apple text-8xl text-white opacity-80 resource-card-icon"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Apple Books</h3>
+                                <p class="text-gray-300">Read on your iPhone, iPad, or Mac device.</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Amazon Kindle Card -->
+                        <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3ASalatiso%2BMdeni&s=relevancerank&text=Salatiso+Mdeni&ref=dp_byline_sr_book_1" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
+                            <div class="h-56 bg-gradient-to-br from-amber-500 to-blue-700 flex items-center justify-center">
+                                 <i class="fab fa-amazon text-8xl text-white opacity-80 resource-card-icon"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Amazon Kindle</h3>
+                                <p class="text-gray-300">Purchase for Kindle or the Kindle app on any device.</p>
+                            </div>
+                        </a>
+
+                        <!-- Smashwords Card -->
+                        <a href="https://www.smashwords.com/profile/view/Salatiso_Mdeni/highlyrated" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
+                             <div class="h-56 bg-gradient-to-br from-red-600 to-rose-800 flex items-center justify-center">
+                                <i class="fas fa-book-open-reader text-8xl text-white opacity-80 resource-card-icon"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">Smashwords</h3>
+                                <p class="text-gray-300">Access DRM-free ebooks for any e-reader.</p>
+                            </div>
+                        </a>
+                        
+                         <!-- YouTube Card -->
+                        <a href="https://www.youtube.com/@FamilyLawAdvice" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
+                             <div class="h-56 bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center">
+                                 <i class="fab fa-youtube text-8xl text-white opacity-80 resource-card-icon"></i>
+                            </div>
+                            <div class="p-6">
+                                <h3 class="game-title-font text-2xl text-white mb-2">YouTube Channel</h3>
+                                <p class="text-gray-300">Watch videos and explainers on family law topics.</p>
+                            </div>
+                        </a>
+                        
+                        <!-- Placeholder Card -->
+                        <div class="resource-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
+                            <div class="text-center text-gray-500">
+                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
+                                <h3 class="game-title-font text-xl">More Resources Soon!</h3>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </main>
     </div>
 
-    <!-- START MODAL -->
-    <div id="start-modal" class="active">
-        <div class="modal-content text-center">
-            <h2 class="game-title text-5xl text-amber-400 mb-4">Welcome to MythBuster Quest!</h2>
-            <p class="text-lg text-gray-300 mb-6">Challenge widespread myths with hard facts. Each correct answer moves you along the path to truth. Super questions offer big rewards... or penalties. Are you ready to begin your quest?</p>
-            <button id="start-game-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-2xl transition-colors">Start the Quest</button>
-        </div>
-    </div>
-    
-    <!-- QUESTION MODAL -->
-    <div id="question-modal">
-        <div class="modal-content">
-            <div id="question-header" class="text-center mb-4">
-                 <h2 id="question-title" class="text-2xl font-bold mb-2">Question <span id="question-number"></span></h2>
-                 <p id="question-text" class="text-lg"></p>
-            </div>
-            <div id="options-container" class="grid grid-cols-1 gap-4">
-            </div>
-        </div>
-    </div>
-
-    <!-- EXPLANATION MODAL -->
-    <div id="explanation-modal">
-        <div class="modal-content text-center">
-            <h2 id="explanation-title" class="text-4xl font-bold mb-4"></h2>
-            <p id="explanation-text" class="text-md text-gray-300 mb-6 text-left"></p>
-            <div class="text-left text-sm bg-gray-800 p-3 rounded-lg mb-6">
-                <p id="primary-source" class="mb-1"></p>
-                <p id="secondary-source"></p>
-            </div>
-            <button id="next-question-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors">Continue</button>
-        </div>
-    </div>
-    
-    <!-- ACHIEVEMENT UNLOCKED MODAL -->
-    <div id="achievement-modal">
-        <div class="modal-content text-center">
-            <div class="text-yellow-400 text-8xl mb-4 animate-bounce">
-                <i class="fas fa-trophy"></i>
-            </div>
-            <h2 class="text-4xl font-bold mb-2">Achievement Unlocked!</h2>
-            <p id="achievement-name" class="text-2xl text-yellow-400 font-bold mb-6"></p>
-            <button id="close-achievement-btn" class="w-full bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg text-xl transition-colors">Awesome!</button>
-        </div>
-    </div>
-
-    <script>
-        // DOM Elements
-        const gameBoard = document.getElementById('game-board');
-        const player = document.getElementById('player');
-        const questionModal = document.getElementById('question-modal');
-        const questionNumberEl = document.getElementById('question-number');
-        const questionTextEl = document.getElementById('question-text');
-        const questionTitleEl = document.getElementById('question-title');
-        const optionsContainer = document.getElementById('options-container');
-        const explanationModal = document.getElementById('explanation-modal');
-        const explanationTitleEl = document.getElementById('explanation-title');
-        const explanationTextEl = document.getElementById('explanation-text');
-        const primarySourceEl = document.getElementById('primary-source');
-        const secondarySourceEl = document.getElementById('secondary-source');
-        const nextQuestionBtn = document.getElementById('next-question-btn');
-        const startModal = document.getElementById('start-modal');
-        const startGameBtn = document.getElementById('start-game-btn');
-        const achievementModal = document.getElementById('achievement-modal');
-        const achievementNameEl = document.getElementById('achievement-name');
-        const closeAchievementBtn = document.getElementById('close-achievement-btn');
-        const trinketsContainer = document.getElementById('trinkets');
-
-        // Game State
-        let currentQuestionIndex = 0;
-        let playerPosition = 0;
-        let correctAnswersCount = 0;
-        const totalPositions = 50;
-        let pathPoints = [];
-        let unlockedAchievements = [];
-
-        // --- QUESTIONS DATABASE ---
-        const questions = [
-            // Set 1
-            {
-                questionText: "Myth: Partner violence is almost always committed by men.",
-                options: ["True, men are overwhelmingly the perpetrators.", "False, studies show partner violence rates are comparable across genders, and highest in lesbian relationships."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "Research, such as studies published in the 'Journal of Interpersonal Violence', indicates that partner violence is complex. While men's violence can result in more severe injury, women perpetrate physical aggression in intimate relationships at comparable rates. Some studies have found the highest rates of intimate partner violence occur in lesbian relationships, followed by heterosexual relationships, with the lowest rates among gay men. This challenges the simplistic narrative that men are the sole or primary aggressors.",
-                primarySource: "Primary Source: A. (2013). The 'Gender Symmetry' Debate in Family Violence Research. Journal of Aggression, Maltreatment & Trauma.",
-                secondarySource: "Secondary Source Discussion: 'Goliath's Stand', which critiques one-sided gender narratives in societal issues."
-            },
-            {
-                questionText: "Myth: The nuclear family (mother, father, children) is the 'gold standard' and most resilient family structure.",
-                options: ["True, it's the ideal and most stable arrangement.", "False, while common, it has 'single points of failure'. Extended family structures historically provided more resilience."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "The nuclear family can be fragile. The loss or departure of one parent can destabilize the entire unit. Historically, and in many cultures today, the extended family (grandparents, aunts, uncles) provides a robust support network. If a parent is lost, the children remain within a stable, multi-generational system. South African law itself recognizes this, often preferring to place children with relatives over strangers.",
-                primarySource: "Primary Source: M. (2018). 'African Kinship Systems and their relevance in a globalizing world'. African Sociological Review.",
-                secondarySource: "Secondary Source Discussion: 'Modern Broke and Confused' touches on the failure of modern systems to replace traditional support structures."
-            },
-            {
-                questionText: "Myth: South African law prohibits female circumcision due to its harm, but not male circumcision, because male circumcision is safe.",
-                options: ["True, the law protects girls from a harmful practice.", "False, more boys die from traditional circumcision in South Africa annually, yet they lack similar legal protection, showing a gendered disparity in protection."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "This is a stark example of gender disparity in law. While the harm against girls is rightly prohibited, the fact is that scores of boys die every year from botched traditional circumcisions in South Africa. The lack of equivalent legislation to protect boys from this demonstrably fatal practice raises serious questions about the principle of equal protection under the law.",
-                primarySource: "Primary Source: Commission for the Promotion and Protection of the Rights of Cultural, Religious and Linguistic Communities (CRL Rights Commission) Reports.",
-                secondarySource: "Secondary Source Discussion: 'The Unfairness of Fair Discrimination in South Africa' examines how laws can apply protections unevenly across genders."
-            },
-            {
-                questionText: "Myth: 'Women's Empowerment' programs, funded by taxpayers, are justified because women have always been oppressed, especially under patriarchal traditions.",
-                options: ["True, these programs correct historical imbalances.", "False, this narrative ignores men's historical sacrifices and burdens, like migrant labour, and misinterprets roles like the Xhosa 'successor'."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "The idea of universal male benefit is a myth. During apartheid, men were forced into the migrant labor system, separating them from families, exposing them to danger and violence. The Xhosa role of 'indlalifa' (successor) is not a benefit but a profound burden—they inherit family debt and are obligated to care for everyone, while other siblings (including women) are free to leave and build lives elsewhere. Taxpayer funds that exclusively target women ignore these realities and the contributions of men's partners to their success.",
-                primarySource: "Primary Source: W. Beinart (2001). 'Twentieth-Century South Africa'. Oxford University Press.",
-                secondarySource: "Secondary Source: 'Beyond Redress' provides a detailed critique of the flawed historical premises of redress policies."
-            },
-            {
-                questionText: "SUPER QUESTION: Myth: The SAHRC (South African Human Rights Commission) is an impartial body dedicated to a non-racial South Africa.",
-                options: ["True, its mandate is to protect everyone's human rights equally.", "False, its selective action, such as its stance on 'Kill the Boer' chants versus other forms of hate speech, suggests a political bias rather than impartial rights protection."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: true,
-                explanation: "The SAHRC's impartiality has been heavily questioned. A notable example is its handling of the 'Kill the Boer' chant. While eventually finding it to be hate speech, the path was convoluted and contrasted with swift action on other issues. Critics argue that the commission's actions often align with the governing party's political narrative, failing to apply a consistent, non-racial standard to all forms of potential hate speech and human rights violations, thereby undermining its credibility as an impartial Chapter 9 institution.",
-                primarySource: "Primary Source: South African Institute of Race Relations (IRR) analysis and reports on the SAHRC.",
-                secondarySource: ""
-            },
-            // Set 2
-             {
-                questionText: "Myth: Men are naturally bad at parenting and domestic chores like cooking, making women the default superior caregivers.",
-                options: ["True, it's a biological and social reality.", "False, this is a stereotype. Parenting is a learned skill, and many of the world's top chefs are men."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "This is a harmful stereotype used to justify discriminatory custody arrangements. Parenting and cooking are skills, not gender-inherent traits. The existence of countless world-renowned male chefs (like Gordon Ramsay or Wolfgang Puck) immediately disproves the cooking myth. Similarly, countless studies in developmental psychology show that the key to good parenting is attentiveness, care, and involvement—qualities any man can possess and learn. Denying fathers custody on this basis is unfounded prejudice.",
-                primarySource: "Primary Source: Lamb, M. E. (2010). The role of the father in child development. John Wiley & Sons.",
-                secondarySource: "Secondary Source: 'Goliath's Stand' discusses the use of stereotypes in family law."
-            },
-            {
-                questionText: "Myth: 'Redress' policies like BEE and Affirmative Action are morally justified to punish white people for benefiting from apartheid.",
-                options: ["True, it's a necessary tool for justice.", "False, punishing an entire group based on race is collective punishment and immoral. It's akin to arguing all black people are responsible for current ANC government failures."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "The logic of collective punishment is flawed and immoral, regardless of who it targets. If one argues that all white people must be 'punished' for apartheid, then by the same logic, all black people could be held responsible for the proven corruption, looting, and state regression under the current black-led government. Morality dictates judging individuals by their actions, not their immutable characteristics. True justice cannot be built on the same racial logic that underpinned apartheid.",
-                primarySource: "Primary Source: Mbigi, L. (2005). 'The Spirit of African Leadership'. A philosophical critique of collective guilt.",
-                secondarySource: "Secondary Source: 'The Unfairness of Fair Discrimination in South Africa' argues this point extensively."
-            },
-            {
-                questionText: "Myth: The High Court, as the 'upper guardian' of all children, has succeeded in its duty to protect them.",
-                options: ["True, it provides ultimate legal protection.", "False, its frequent failure to enforce its own orders, particularly for fathers, and its systemic delays have harmed countless children."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "While the principle is noble, the reality is often different. The High Court is plagued by systemic issues. Fathers, in particular, face immense struggles getting the court to enforce contact and care orders against uncooperative mothers. The phrase 'the order isn't worth the paper it's written on' is common. Delays, exorbitant costs, and a lack of enforcement mechanisms mean the court often fails in its duty, leaving children in limbo and dedicated parents disenfranchised.",
-                primarySource: "Primary Source: Research by fathers' rights organizations like Fathers 4 Justice SA, documenting case studies of non-enforcement.",
-                secondarySource: ""
-            },
-             {
-                questionText: "Myth: Men have historically held all the power and wealth, while women were left with nothing.",
-                options: ["True, patriarchy ensured all men benefited.", "False, only a tiny fraction of men achieved wealth, often through immense sacrifice, while the vast majority of men toiled in dangerous, difficult jobs."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: false,
-                explanation: "History is not a simple story of all men oppressing all women. The reality is that a very small elite (mostly men) held power. The average man's life was one of hardship, danger, and sacrifice. Men died in wars, in mines, and on construction sites to provide for their families. They were the disposable gender sent to do the most dangerous work. To ignore these sacrifices and claim all men benefited is a gross and disrespectful distortion of history.",
-                primarySource: "Primary Source: Harari, Y. N. (2014). 'Sapiens: A Brief History of Humankind'. Discusses historical gender roles and labour.",
-                secondarySource: ""
-            },
-             {
-                questionText: "SUPER QUESTION: Myth: Formal education from a school is the most important factor for a child's success in life.",
-                options: ["True, a good school guarantees a good future.", "False, if this were true, outcomes would be uniform. Family values, parental involvement, and home environment are proven to be far more influential."],
-                correctAnswerIndex: 1,
-                isSuperQuestion: true,
-                explanation: "This is a pervasive modern myth. If schooling were the primary driver of success, all students in the same curriculum would have similar outcomes. But they don't. The data is overwhelming: a stable, supportive home with involved parents is the single greatest predictor of a child's well-being and future success. A child from a strong family will likely succeed despite a bad school, while a child from a broken home will likely struggle despite a good school. The value and ethics instilled by parents, like your uneducated mother raising successful children, is the true 'qualification'.",
-                primarySource: "Primary Source: Coleman, J. S. (1966). 'The Coleman Report on Equality of Educational Opportunity'. Landmark study showing family background is more critical than school quality.",
-                secondarySource: "Secondary Source: My own life, as detailed in my books like 'The Homeschooling Father', serves as a direct case study."
-            },
-        ];
-
-        // --- GAME LOGIC ---
-
-        function setupBoard() {
-            const boardWidth = gameBoard.clientWidth;
-            const boardHeight = gameBoard.clientHeight;
-
-            for (let i = 0; i <= totalPositions; i++) {
-                const point = document.createElement('div');
-                point.classList.add('path-point');
-                
-                // A simple algorithm to create a winding path
-                const angle = (i / totalPositions) * 4 * Math.PI; // More turns
-                const radius = Math.min(boardWidth, boardHeight) * 0.4 * (i / totalPositions);
-                const x = boardWidth / 2 + radius * Math.cos(angle);
-                const y = boardHeight / 2 + radius * Math.sin(angle);
-
-                point.style.left = `${x}px`;
-                point.style.top = `${y}px`;
-                
-                const questionForPoint = questions[i - 1];
-                if (questionForPoint && questionForPoint.isSuperQuestion) {
-                    point.classList.add('super');
-                    point.innerHTML = '<i class="fas fa-star text-white"></i>';
-                }
-                
-                pathPoints.push({ x, y });
-                gameBoard.appendChild(point);
-            }
-            movePlayer();
-        }
-
-        function movePlayer() {
-            const safePosition = Math.max(0, Math.min(playerPosition, totalPositions));
-            const targetPoint = pathPoints[safePosition];
-            
-            if (targetPoint) {
-                player.style.left = `${targetPoint.x - player.offsetWidth / 2 + 12.5}px`;
-                player.style.top = `${targetPoint.y - player.offsetHeight / 2 + 12.5}px`;
-            }
-        }
-        
-        function showQuestion() {
-            if (currentQuestionIndex >= questions.length) {
-                endGame();
-                return;
-            }
-            const question = questions[currentQuestionIndex];
-            questionNumberEl.textContent = `${currentQuestionIndex + 1} / ${questions.length}`;
-            questionTextEl.textContent = question.questionText;
-            
-            if (question.isSuperQuestion) {
-                 questionTitleEl.innerHTML = `<i class="fas fa-star text-red-500 animate-pulse"></i> SUPER QUESTION <i class="fas fa-star text-red-500 animate-pulse"></i>`;
-            } else {
-                 questionTitleEl.textContent = `Question ${currentQuestionIndex + 1}`;
-            }
-
-            optionsContainer.innerHTML = '';
-            question.options.forEach((option, index) => {
-                const button = document.createElement('button');
-                button.textContent = option;
-                button.classList.add('w-full', 'bg-gray-700', 'hover:bg-indigo-600', 'text-white', 'font-bold', 'py-3', 'px-4', 'rounded-lg', 'text-left', 'option-btn');
-                button.onclick = () => handleAnswer(index);
-                optionsContainer.appendChild(button);
-            });
-            questionModal.classList.add('active');
-        }
-
-        function handleAnswer(selectedIndex) {
-            const question = questions[currentQuestionIndex];
-            const isCorrect = selectedIndex === question.correctAnswerIndex;
-            
-            questionModal.classList.remove('active');
-            showExplanation(question, isCorrect);
-
-            if (isCorrect) {
-                correctAnswersCount++;
-                if (question.isSuperQuestion) {
-                    playerPosition = Math.min(totalPositions, playerPosition + 5);
-                } else {
-                    playerPosition++;
-                }
-            } else {
-                if (question.isSuperQuestion) {
-                    playerPosition = Math.max(0, playerPosition - 3);
-                }
-            }
-
-            currentQuestionIndex++;
-            movePlayer();
-            checkAchievements();
-        }
-
-        function showExplanation(question, isCorrect) {
-            if (isCorrect) {
-                explanationTitleEl.textContent = "CORRECT!";
-                explanationTitleEl.className = 'text-4xl font-bold mb-4 text-green-400';
-            } else {
-                explanationTitleEl.textContent = "INCORRECT";
-                explanationTitleEl.className = 'text-4xl font-bold mb-4 text-red-400';
-            }
-            explanationTextEl.innerHTML = question.explanation;
-            primarySourceEl.innerHTML = `<strong class="text-amber-400">Primary Source:</strong> ${question.primarySource}`;
-            secondarySourceEl.innerHTML = question.secondarySource ? `<strong class="text-amber-400">Secondary Source:</strong> ${question.secondarySource}` : '';
-            explanationModal.classList.add('active');
-        }
-        
-        function checkAchievements() {
-            const achievements = [
-                { name: 'Truth Seeker', count: 15 },
-                { name: 'Fact Finder', count: 30 },
-                { name: 'Myth Slayer', count: 45 }
-            ];
-
-            achievements.forEach(ach => {
-                if (correctAnswersCount >= ach.count && !unlockedAchievements.includes(ach.name)) {
-                    unlockedAchievements.push(ach.name);
-                    showAchievement(ach.name);
-                    updateTrinkets();
-                }
-            });
-        }
-
-        function showAchievement(name) {
-            achievementNameEl.textContent = name;
-            achievementModal.classList.add('active');
-        }
-        
-        function updateTrinkets() {
-            unlockedAchievements.forEach(name => {
-                const trinket = trinketsContainer.querySelector(`[data-achievement="${name}"]`);
-                if (trinket) {
-                    trinket.classList.remove('text-gray-500');
-                    trinket.classList.add('text-yellow-400');
-                }
-            });
-        }
-        
-        function endGame() {
-            explanationTitleEl.textContent = "QUEST COMPLETE!";
-            explanationTitleEl.className = 'text-5xl font-bold mb-4 text-amber-400 game-title';
-            explanationTextEl.innerHTML = `You have completed the MythBuster Quest! You answered ${correctAnswersCount} out of ${questions.length} questions correctly. You have taken a great step on the path to truth. Continue to question, learn, and stand for what is right.`;
-            primarySourceEl.textContent = '';
-            secondarySourceEl.textContent = '';
-            nextQuestionBtn.textContent = 'Play Again';
-            nextQuestionBtn.onclick = () => window.location.reload();
-            explanationModal.classList.add('active');
-            
-            // Final achievement
-            if (!unlockedAchievements.includes('Enlightened')){
-                unlockedAchievements.push('Enlightened');
-                showAchievement('Enlightened');
-                updateTrinkets();
-            }
-        }
-
-        // --- EVENT LISTENERS ---
-        startGameBtn.addEventListener('click', () => {
-            startModal.classList.remove('active');
-            showQuestion();
-        });
-        
-        nextQuestionBtn.addEventListener('click', () => {
-            explanationModal.classList.remove('active');
-            setTimeout(showQuestion, 300); // Small delay for smooth transition
-        });
-
-        closeAchievementBtn.addEventListener('click', () => {
-            achievementModal.classList.remove('active');
-        });
-
-        window.addEventListener('resize', () => {
-            gameBoard.innerHTML = '';
-            pathPoints = [];
-            setupBoard();
-        });
-
-        // --- INITIALIZATION ---
-        setupBoard();
-
-    </script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
