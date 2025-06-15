@@ -1,256 +1,193 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Legal Fun & Games - Flamea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
+    <title>Games Hub - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        body {
-            font-family: 'Roboto Condensed', sans-serif;
-        }
-        .game-card, .resource-card {
+        .game-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
+            background-color: #1F2937; /* bg-gray-800 */
         }
-        .game-card:hover, .resource-card:hover {
+
+        .game-card:hover {
             transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            box-shadow: 0 20px 25px -5px rgba(255, 165, 0, 0.2), 0 10px 10px -5px rgba(255, 165, 0, 0.1);
         }
-        .game-title-font {
-            font-family: 'Bungee', cursive;
+
+        .game-card-link::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
         }
-        .resource-card-icon {
-            transition: transform 0.3s ease;
-        }
-        .resource-card:hover .resource-card-icon {
-            transform: scale(1.1);
-        }
-        .footer-link {
-            transition: color 0.2s ease-in-out;
+
+        .category-title {
+            background: linear-gradient(90deg, rgba(255, 165, 0, 1) 0%, rgba(255, 99, 71, 1) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            text-fill-color: transparent;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
 
+<body class="bg-gray-900 text-white font-sans">
+    <div class="flex">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
 
         <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-16">
-                    <h1 class="game-title-font text-5xl md:text-7xl font-bold text-white mb-4">Interactive Games</h1>
-                    <p class="text-lg text-gray-400">Learn about your rights and the law in a fun, interactive way. Knowledge is power!</p>
-                </div>
+        <div class="main-content flex-1 p-4 sm:p-6 lg:p-8">
+            <header class="mb-8">
+                <h1 class="text-4xl md:text-5xl font-extrabold text-white tracking-tight">
+                    <i class="fas fa-gamepad text-yellow-400"></i> The Games Hub
+                </h1>
+                <p class="text-gray-400 mt-2 text-lg">Learn about your rights and responsibilities through play.</p>
+            </header>
 
-                <!-- Kids' Corner Section -->
-                <div class="mb-20">
-                    <h2 class="game-title-font text-4xl text-yellow-400 mb-8 flex items-center"><i class="fas fa-child text-3xl mr-4"></i> Kids' Corner</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <!-- Kid Konstitution Game Card -->
-                        <a href="kid-konstitution.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-blue-400 to-indigo-600 flex items-center justify-center">
-                                <i class="fas fa-landmark text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Kid Konstitution</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 4-8</p>
-                                <p class="text-gray-300">A colorful drag-and-drop game to learn the basics of fairness and rights.</p>
-                            </div>
-                        </a>
-                        <a href="constitution-champions.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-purple-400 to-pink-500 flex items-center justify-center">
-                                <i class="fas fa-trophy text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Champions</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 6-10</p>
-                                <p class="text-gray-300">Solve puzzles and quizzes to become a champion of the constitution!</p>
-                            </div>
-                        </a>
-                        <a href="justice-builder.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-green-400 to-teal-500 flex items-center justify-center">
-                                <i class="fas fa-cubes text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Justice Builder</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 7-12</p>
-                                <p class="text-gray-300">Build a fair and just community by placing essential services and rights.</p>
-                            </div>
-                        </a>
-                         <a href="rights-racer.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-sky-400 to-blue-500 flex items-center justify-center">
-                                <i class="fas fa-car-side text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Rights Racer</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 8-12</p>
-                                <p class="text-gray-300">Race against time to collect rights tokens while dodging obstacles.</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
+            <!-- Games Section -->
+            <div class="space-y-12">
 
-                <!-- Games for All Section -->
-                <div class="mb-20">
-                    <h2 class="game-title-font text-4xl text-green-400 mb-8 flex items-center"><i class="fas fa-gamepad text-3xl mr-4"></i> Games for All</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-                        <a href="constitution-crusaders.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-rose-400 to-red-500 flex items-center justify-center">
-                                <i class="fas fa-shield-alt text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
+                <!-- Category: For the Little Ones -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 category-title">For the Little Ones (Ages 4-8)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <!-- Kid Konstitution -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/kid-konstitution.html" class="game-card-link"></a>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Crusaders</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 12+</p>
-                                <p class="text-gray-300">A quiz-based adventure to test your knowledge of the South African constitution.</p>
+                                <i class="fas fa-child text-3xl text-yellow-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Kid Konstitution</h3>
+                                <p class="text-gray-400 text-base">A fun quiz to learn the basics of our country's rules!</p>
                             </div>
-                        </a>
-                        <a href="constitution-defender.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-red-500 to-pink-600 flex items-center justify-center">
-                                <i class="fas fa-gavel text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
+                        </div>
+                        <!-- Rights Racer -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                           <a href="games/rights-racer.html" class="game-card-link"></a>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Defender</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
-                                <p class="text-gray-300">Blast away legal myths and defend constitutional principles in a retro arcade shooter.</p>
+                                <i class="fas fa-running text-3xl text-green-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Rights Racer</h3>
+                                <p class="text-gray-400 text-base">Race against time to collect important rights!</p>
                             </div>
-                        </a>
-                        <a href="mythbuster-game.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-amber-500 to-orange-600 flex items-center justify-center">
-                                <i class="fas fa-question-circle text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
+                        </div>
+                        <!-- Constitution Defender -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                             <a href="games/constitution-defender.html" class="game-card-link"></a>
                             <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">MythBuster Quest</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 13+</p>
-                                <p class="text-gray-300">Test your knowledge against common myths in family law. Can you tell fact from fiction?</p>
-                            </div>
-                        </a>
-                         <a href="law-layers-quest.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-indigo-500 to-purple-600 flex items-center justify-center">
-                                <i class="fas fa-layer-group text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Law Layers Quest</h3>
-                                <p class="text-gray-400 text-sm mb-4">Ages 14+</p>
-                                <p class="text-gray-300">Explore the hierarchy of laws in South Africa through this engaging quest.</p>
-                            </div>
-                        </a>
-                        <a href="legal-simulator.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-teal-500 to-cyan-600 flex items-center justify-center">
-                                 <i class="fas fa-balance-scale text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Goliath's Reckoning</h3>
-                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
-                                <p class="text-gray-300">A narrative legal simulator. Make tough choices and see their impact.</p>
-                            </div>
-                        </a>
-                        <a href="satirical-game.html" class="game-card rounded-2xl overflow-hidden group">
-                             <div class="h-56 bg-gradient-to-br from-slate-500 to-gray-600 flex items-center justify-center">
-                                 <i class="far fa-grimace text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Modern, Broke & Confused</h3>
-                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
-                                <p class="text-gray-300">A satirical text-adventure about the absurdities of the system.</p>
-                            </div>
-                        </a>
-                         <a href="constitution-quest.html" class="game-card rounded-2xl overflow-hidden group">
-                            <div class="h-56 bg-gradient-to-br from-lime-500 to-emerald-600 flex items-center justify-center">
-                                <i class="fas fa-map-signs text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Constitution Quest</h3>
-                                 <p class="text-gray-400 text-sm mb-4">Ages 10+</p>
-                                <p class="text-gray-300">Embark on a quest to learn your rights. Choose a character and start your mission.</p>
-                            </div>
-                        </a>
-                        <a href="goliaths-reckoning.html" class="game-card rounded-2xl overflow-hidden group">
-                             <div class="h-56 bg-gradient-to-br from-orange-500 to-red-600 flex items-center justify-center">
-                                 <i class="fas fa-fist-raised text-8xl text-white opacity-80 group-hover:scale-110 transition-transform"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Goliath's Reckoning: Baza kuSazi!</h3>
-                                 <p class="text-gray-400 text-sm mb-4">Ages 16+</p>
-                                <p class="text-gray-300">An epic battle against legal myths and ignorance. Choose your warrior!</p>
-                            </div>
-                        </a>
-                    </div>
-                </div>
-
-                <!-- Further Resources Section -->
-                <div class="mt-20">
-                    <h2 class="game-title-font text-4xl text-purple-400 mb-8 flex items-center"><i class="fas fa-book-reader text-3xl mr-4"></i> Dive Deeper: Further Resources</h2>
-                    <p class="text-lg text-gray-400 mb-10">The learning doesn't have to stop here. Explore these books and videos for in-depth knowledge on family law and navigating the legal system.</p>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Resource Cards -->
-                        <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
-                            <div class="h-56 bg-gradient-to-br from-blue-500 to-green-500 flex items-center justify-center">
-                                <i class="fab fa-google-play text-8xl text-white opacity-80 resource-card-icon"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Google Play Books</h3>
-                                <p class="text-gray-300">Find my books for Android devices and web readers.</p>
-                            </div>
-                        </a>
-                        <a href="https://books.apple.com/us/author/salatiso-mdeni/id1745396063" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
-                            <div class="h-56 bg-gradient-to-br from-gray-600 to-gray-800 flex items-center justify-center">
-                                <i class="fab fa-apple text-8xl text-white opacity-80 resource-card-icon"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Apple Books</h3>
-                                <p class="text-gray-300">Read on your iPhone, iPad, or Mac device.</p>
-                            </div>
-                        </a>
-                        <a href="https://www.amazon.com/s?i=stripbooks&rh=p_27%3ASalatiso%2BMdeni&s=relevancerank&text=Salatiso+Mdeni&ref=dp_byline_sr_book_1" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
-                            <div class="h-56 bg-gradient-to-br from-amber-500 to-blue-700 flex items-center justify-center">
-                                 <i class="fab fa-amazon text-8xl text-white opacity-80 resource-card-icon"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Amazon Kindle</h3>
-                                <p class="text-gray-300">Purchase for Kindle or the Kindle app on any device.</p>
-                            </div>
-                        </a>
-                        <a href="https://www.smashwords.com/profile/view/Salatiso_Mdeni/highlyrated" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
-                             <div class="h-56 bg-gradient-to-br from-red-600 to-rose-800 flex items-center justify-center">
-                                <i class="fas fa-book-open-reader text-8xl text-white opacity-80 resource-card-icon"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">Smashwords</h3>
-                                <p class="text-gray-300">Access DRM-free ebooks for any e-reader.</p>
-                            </div>
-                        </a>
-                        <a href="https://www.youtube.com/@FamilyLawAdvice" target="_blank" rel="noopener noreferrer" class="resource-card rounded-2xl overflow-hidden group block">
-                             <div class="h-56 bg-gradient-to-br from-red-600 to-red-800 flex items-center justify-center">
-                                 <i class="fab fa-youtube text-8xl text-white opacity-80 resource-card-icon"></i>
-                            </div>
-                            <div class="p-6">
-                                <h3 class="game-title-font text-2xl text-white mb-2">YouTube Channel</h3>
-                                <p class="text-gray-300">Watch videos and explainers on family law topics.</p>
-                            </div>
-                        </a>
-                        <div class="resource-card rounded-2xl overflow-hidden group border-dashed border-gray-600 flex items-center justify-center">
-                            <div class="text-center text-gray-500">
-                                <i class="fas fa-plus-circle text-5xl mb-4"></i>
-                                <h3 class="game-title-font text-xl">More Resources Soon!</h3>
+                                <i class="fas fa-shield-alt text-3xl text-blue-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Constitution Defender</h3>
+                                <p class="text-gray-400 text-base">Protect the constitution from being changed!</p>
                             </div>
                         </div>
                     </div>
                 </div>
 
+                <!-- Category: Young Patriots -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 category-title">Young Patriots (Ages 9-13)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <!-- Constitution Quest -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/constitution-quest.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-map-signs text-3xl text-purple-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Constitution Quest</h3>
+                                <p class="text-gray-400 text-base">An adventure game exploring the Bill of Rights.</p>
+                            </div>
+                        </div>
+                         <!-- Law & Layers Quest -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/law-layers-quest.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-layer-group text-3xl text-indigo-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Law & Layers Quest</h3>
+                                <p class="text-gray-400 text-base">Uncover the different layers of South African law.</p>
+                            </div>
+                        </div>
+                        <!-- Mythbuster Game -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                             <a href="games/mythbuster-game.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-ghost text-3xl text-teal-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Mythbuster</h3>
+                                <p class="text-gray-400 text-base">Bust common myths about our legal system.</p>
+                            </div>
+                        </div>
+                         <!-- Constitution Champions -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                             <a href="games/constitution-champions.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-trophy text-3xl text-yellow-500 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Constitution Champions</h3>
+                                <p class="text-gray-400 text-base">Become a champion of constitutional knowledge.</p>
+                            </div>
+                        </div>
+                         <!-- Constitution Crusaders -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                             <a href="games/constitution-crusaders.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-khanda text-3xl text-gray-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Constitution Crusaders</h3>
+                                <p class="text-gray-400 text-base">A crusade to protect and uphold the constitution.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category: Future Leaders -->
+                <div>
+                    <h2 class="text-3xl font-bold mb-6 category-title">Future Leaders (Ages 14+)</h2>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+                        <!-- Goliath's Reckoning -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/goliaths-reckoning.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-balance-scale text-3xl text-red-500 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Goliath's Reckoning</h3>
+                                <p class="text-gray-400 text-base">A story-driven game about fighting for justice.</p>
+                            </div>
+                        </div>
+                        <!-- Justice Builder -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/justice-builder.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-gavel text-3xl text-orange-500 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Justice Builder</h3>
+                                <p class="text-gray-400 text-base">A simulator where you build a case from scratch.</p>
+                            </div>
+                        </div>
+                        <!-- Satirical Game -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/satirical-game.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-theater-masks text-3xl text-pink-500 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">The System</h3>
+                                <p class="text-gray-400 text-base">A satirical look at the justice system. (Mature)</p>
+                            </div>
+                        </div>
+                        <!-- Legal Simulator -->
+                        <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                            <a href="games/legal-simulator.html" class="game-card-link"></a>
+                            <div class="p-6">
+                                <i class="fas fa-laptop-code text-3xl text-cyan-400 mb-4"></i>
+                                <h3 class="font-bold text-xl mb-2">Legal Simulator</h3>
+                                <p class="text-gray-400 text-base">Experience legal scenarios in a simulated world.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </div>
-        </main>
+        </div>
     </div>
 
     <script src="assets/js/sidebar-loader.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
 </body>
+
 </html>

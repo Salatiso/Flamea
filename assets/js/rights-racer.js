@@ -1,206 +1,214 @@
-// assets/js/rights-racer.js
-class RightsRacer {
-    constructor() {
-        this.car = document.getElementById('playerCar');
-        this.gameArea = document.getElementById('gameArea');
-        this.score = 0;
-        this.rightsCollected = 0;
-        this.speed = 1;
-        this.carPosition = 50; // Percentage from left
-        
-        this.rightsTokens = [
-            { emoji: '🗣️', name: 'Freedom of Speech', points: 10 },
-            { emoji: '📚', name: 'Right to Education', points: 15 },
-            { emoji: '🏠', name: 'Right to Housing', points: 12 },
-            { emoji: '⚖️', name: 'Right to Equality', points: 20 },
-            { emoji: '🛡️', name: 'Right to Safety', points: 18 }
-        ];
-        
-        this.obstacles = [
-            { emoji: '🚫', name: 'Discrimination' },
-            { emoji: '😠', name: 'Bullying' },
-            { emoji: '⛔', name: 'Unfairness' }
-        ];
-        
-        this.gameLoop = null;
-        this.init();
-    }
+// --- Basic Setup ---
+const canvas = document.getElementById('gameCanvas');
+const ctx = canvas.getContext('2d');
+
+// --- UI & Modal Elements ---
+const scoreEl = document.getElementById('score');
+const livesEl = document.getElementById('lives');
+const instructionsBtn = document.getElementById('instructions-btn');
+const instructionsModal = document.getElementById('instructions-modal');
+const closeModalBtn = document.getElementById('close-modal-btn');
+const gameOverModal = document.getElementById('game-over-modal');
+const finalScoreEl = document.getElementById('final-score');
+const playAgainBtn = document.getElementById('play-again-btn');
+const restartBtn = document.getElementById('restart-btn');
+
+// --- Game Configuration ---
+let canvasWidth = Math.min(800, window.innerWidth - 30);
+let canvasHeight = canvasWidth * 0.75;
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+
+const playerWidth = 50;
+const playerHeight = 50;
+const itemSize = 30;
+let playerSpeed = 15;
+let itemSpeed = 2;
+
+// --- Game State ---
+let score = 0;
+let lives = 3;
+let gameOver = false;
+let gameRunning = true;
+let leftPressed = false;
+let rightPressed = false;
+let player = {
+    x: canvas.width / 2 - playerWidth / 2,
+    y: canvas.height - playerHeight - 10,
+    emoji: '🏃'
+};
+let items = [];
+
+// --- Item Definitions ---
+const goodItems = [
+    { emoji: '📖', score: 10 }, // Right to Education
+    { emoji: '🏠', score: 10 }, // Right to Shelter
+    { emoji: '⚕️', score: 15 }, // Right to Healthcare
+    { emoji: '⚖️', score: 20 }, // Right to Justice
+];
+const badItems = [
+    { emoji: '💣', score: -1 }, // Obstacle
+    { emoji: '💥', score: -1 }, // Obstacle
+];
+
+
+// --- Game Logic Functions ---
+
+function resetGame() {
+    score = 0;
+    lives = 3;
+    itemSpeed = 2;
+    gameOver = false;
+    gameRunning = true;
+    player.x = canvas.width / 2 - playerWidth / 2;
+    items = [];
+    updateUI();
+    gameOverModal.classList.add('hidden');
+    gameLoop();
+}
+
+function updateUI() {
+    scoreEl.innerText = `Score: ${score}`;
+    livesEl.innerHTML = `Lives: ${'💖'.repeat(lives)}`;
+}
+
+function spawnItem() {
+    // 70% chance of a good item
+    const isGood = Math.random() < 0.7;
+    const itemSet = isGood ? goodItems : badItems;
+    const template = itemSet[Math.floor(Math.random() * itemSet.length)];
     
-    init() {
-        this.setupControls();
-        this.startGame();
+    items.push({
+        x: Math.random() * (canvas.width - itemSize),
+        y: -itemSize,
+        emoji: template.emoji,
+        score: template.score
+    });
+}
+
+function update() {
+    if (gameOver) return;
+
+    // Move Player
+    if (leftPressed && player.x > 0) {
+        player.x -= playerSpeed;
     }
-    
-    setupControls() {
-        document.getElementById('leftBtn').addEventListener('click', () => this.moveLeft());
-        document.getElementById('rightBtn').addEventListener('click', () => this.moveRight());
-        document.getElementById('slowBtn').addEventListener('click', () => this.changeSpeed(-0.5));
-        document.getElementById('fastBtn').addEventListener('click', () => this.changeSpeed(0.5));
-        
-        // Keyboard controls
-        document.addEventListener('keydown', (e) => {
-            switch(e.key) {
-                case 'ArrowLeft': this.moveLeft(); break;
-                case 'ArrowRight': this.moveRight(); break;
-                case 'ArrowUp': this.changeSpeed(0.5); break;
-                case 'ArrowDown': this.changeSpeed(-0.5); break;
-            }
-        });
+    if (rightPressed && player.x < canvas.width - playerWidth) {
+        player.x += playerSpeed;
     }
-    
-    moveLeft() {
-        this.carPosition = Math.max(10, this.carPosition - 10);
-        this.updateCarPosition();
-    }
-    
-    moveRight() {
-        this.carPosition = Math.min(90, this.carPosition + 10);
-        this.updateCarPosition();
-    }
-    
-    updateCarPosition() {
-        this.car.style.left = this.carPosition + '%';
-    }
-    
-    changeSpeed(delta) {
-        this.speed = Math.max(0.5, Math.min(3, this.speed + delta));
-        document.getElementById('speedDisplay').textContent = this.speed;
-    }
-    
-    startGame() {
-        this.gameLoop = setInterval(() => {
-            this.spawnToken();
-            this.spawnObstacle();
-            this.updateScore();
-        }, 2000 / this.speed);
-    }
-    
-    spawnToken() {
-        if (Math.random() < 0.7) { // 70% chance to spawn token
-            const token = this.rightsTokens[Math.floor(Math.random() * this.rightsTokens.length)];
-            const tokenElement = document.createElement('div');
-            tokenElement.className = 'rights-token';
-            tokenElement.innerHTML = token.emoji;
-            tokenElement.style.left = Math.random() * 80 + 10 + '%';
-            tokenElement.dataset.points = token.points;
-            tokenElement.dataset.name = token.name;
+
+    // Move and check items
+    for (let i = items.length - 1; i >= 0; i--) {
+        const item = items[i];
+        item.y += itemSpeed;
+
+        // Collision detection
+        if (item.x < player.x + playerWidth &&
+            item.x + itemSize > player.x &&
+            item.y < player.y + playerHeight &&
+            item.y + itemSize > player.y) {
             
-            tokenElement.addEventListener('click', () => this.collectToken(tokenElement, token));
-            
-            this.gameArea.appendChild(tokenElement);
-            
-            setTimeout(() => {
-                if (tokenElement.parentNode) {
-                    tokenElement.remove();
+            if (item.score > 0) {
+                score += item.score;
+                // Increase speed every 50 points
+                if (score % 50 === 0 && score > 0) {
+                    itemSpeed += 0.5;
                 }
-            }, 3000);
+            } else {
+                lives--;
+            }
+            items.splice(i, 1); // Remove item
+            updateUI();
+        }
+
+        // Remove items that go off screen
+        if (item.y > canvas.height) {
+            items.splice(i, 1);
         }
     }
     
-    spawnObstacle() {
-        if (Math.random() < 0.3) { // 30% chance to spawn obstacle
-            const obstacle = this.obstacles[Math.floor(Math.random() * this.obstacles.length)];
-            const obstacleElement = document.createElement('div');
-            obstacleElement.className = 'obstacle';
-            obstacleElement.innerHTML = obstacle.emoji;
-            obstacleElement.style.left = Math.random() * 80 + 10 + '%';
-            obstacleElement.dataset.name = obstacle.name;
-            
-            this.gameArea.appendChild(obstacleElement);
-            
-            // Check for collision
-            this.checkCollision(obstacleElement);
-            
-            setTimeout(() => {
-                if (obstacleElement.parentNode) {
-                    obstacleElement.remove();
-                }
-            }, 3000);
-        }
-    }
-    
-    collectToken(tokenElement, token) {
-        this.score += token.points;
-        this.rightsCollected++;
-        
-        document.getElementById('raceScore').textContent = this.score;
-        document.getElementById('rightsCount').textContent = this.rightsCollected;
-        
-        // Show collection feedback
-        this.showFeedback(`+${token.points} ${token.name}!`, 'success');
-        
-        tokenElement.remove();
-    }
-    
-    checkCollision(obstacleElement) {
-        const checkInterval = setInterval(() => {
-            const obstacleRect = obstacleElement.getBoundingClientRect();
-            const carRect = this.car.getBoundingClientRect();
-            
-            if (obstacleRect.bottom >= carRect.top && 
-                obstacleRect.top <= carRect.bottom &&
-                obstacleRect.right >= carRect.left && 
-                obstacleRect.left <= carRect.right) {
-                
-                this.hitObstacle(obstacleElement);
-                clearInterval(checkInterval);
-            }
-            
-            if (!obstacleElement.parentNode) {
-                clearInterval(checkInterval);
-            }
-        }, 50);
-    }
-    
-    hitObstacle(obstacleElement) {
-        this.score = Math.max(0, this.score - 10);
-        document.getElementById('raceScore').textContent = this.score;
-        
-        this.showFeedback(`-10 Avoid ${obstacleElement.dataset.name}!`, 'danger');
-        
-        // Visual feedback
-        this.car.style.animation = 'shake 0.5s';
-        setTimeout(() => {
-            this.car.style.animation = '';
-        }, 500);
-        
-        obstacleElement.remove();
-    }
-    
-    showFeedback(message, type) {
-        const feedback = document.createElement('div');
-        feedback.textContent = message;
-        feedback.style.cssText = `
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: ${type === 'success' ? '#4CAF50' : '#f44336'};
-            color: white;
-            padding: 10px 20px;
-            border-radius: 20px;
-            font-weight: bold;
-            z-index: 100;
-            animation: fadeInOut 2s forwards;
-        `;
-        
-        this.gameArea.appendChild(feedback);
-        
-        setTimeout(() => {
-            if (feedback.parentNode) {
-                feedback.remove();
-            }
-        }, 2000);
-    }
-    
-    updateScore() {
-        // Bonus points for staying alive
-        this.score += 1;
-        document.getElementById('raceScore').textContent = this.score;
+    // Check for game over
+    if (lives <= 0) {
+        gameOver = true;
+        gameRunning = false;
+        finalScoreEl.innerText = score;
+        gameOverModal.classList.remove('hidden');
     }
 }
 
-// Initialize game
-document.addEventListener('DOMContentLoaded', () => {
-    new RightsRacer();
-});
+function draw() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    
+    // Draw Player
+    ctx.font = `${playerWidth}px Arial`;
+    ctx.textAlign = 'center';
+    ctx.fillText(player.emoji, player.x + playerWidth / 2, player.y + playerHeight * 0.85);
+
+    // Draw Items
+    ctx.font = `${itemSize}px Arial`;
+    items.forEach(item => {
+        ctx.fillText(item.emoji, item.x + itemSize / 2, item.y + itemSize * 0.85);
+    });
+}
+
+function gameLoop() {
+    if (!gameRunning) return;
+    update();
+    draw();
+    requestAnimationFrame(gameLoop);
+}
+
+// --- Event Handlers ---
+function keyDownHandler(e) {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+        rightPressed = true;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+        leftPressed = true;
+    }
+}
+
+function keyUpHandler(e) {
+    if (e.key === "Right" || e.key === "ArrowRight") {
+        rightPressed = false;
+    } else if (e.key === "Left" || e.key === "ArrowLeft") {
+        leftPressed = false;
+    }
+}
+
+function mouseMoveHandler(e) {
+    const rect = canvas.getBoundingClientRect();
+    const root = document.documentElement;
+    const mouseX = e.clientX - rect.left - root.scrollLeft;
+    player.x = mouseX - playerWidth / 2;
+    // Clamp player position
+    if (player.x < 0) player.x = 0;
+    if (player.x > canvas.width - playerWidth) player.x = canvas.width - playerWidth;
+}
+
+function handleResize() {
+    canvasWidth = Math.min(800, window.innerWidth - 30);
+    canvasHeight = canvasWidth * 0.75;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
+    player.y = canvas.height - playerHeight - 10;
+    draw(); // Redraw after resize
+}
+
+
+// --- Initializations ---
+document.addEventListener('keydown', keyDownHandler, false);
+document.addEventListener('keyup', keyUpHandler, false);
+canvas.addEventListener('mousemove', mouseMoveHandler, false);
+window.addEventListener('resize', handleResize);
+
+instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
+closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+
+playAgainBtn.addEventListener('click', resetGame);
+restartBtn.addEventListener('click', resetGame);
+
+// Set interval for spawning items
+setInterval(spawnItem, 1000);
+
+// Start Game
+resetGame();
