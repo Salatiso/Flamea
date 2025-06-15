@@ -3,170 +3,223 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MythBuster Quest - A Flamea Game</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Roboto+Condensed:wght@400;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Mythbuster - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            font-family: 'Roboto Condensed', sans-serif;
-            background-color: #111827; /* gray-900 */
-            color: #F3F4F6; /* gray-100 */
+            background-color: #111827;
         }
-        .game-title {
-            font-family: 'Bungee', cursive;
+        .game-card {
+            background-color: #1F2937;
+            border: 2px solid #374151;
         }
-        .progress-bar-fill {
-            background: linear-gradient(90deg, #F59E0B, #FBBF24);
-            transition: width 0.5s ease-in-out;
+        .btn-choice {
+            transition: all 0.2s ease-in-out;
         }
-        .super-question-title {
-            animation: pulse-red 2s infinite;
+        .btn-choice:hover {
+            transform: scale(1.05);
         }
-        @keyframes pulse-red {
-            0% { color: #f87171; }
-            50% { color: #fca5a5; }
-            100% { color: #f87171; }
+        .feedback-correct {
+            color: #4ade80; /* green-400 */
         }
-        .modal {
-            background-color: rgba(17, 24, 39, 0.9);
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
+        .feedback-wrong {
+            color: #f87171; /* red-400 */
         }
-        .modal-content {
-            transition: transform 0.3s ease-in-out;
+        #myth-card {
+             perspective: 1000px;
         }
-        .modal.active .modal-content {
-            transform: scale(1);
+        .flip-card-inner {
+            transition: transform 0.6s;
+            transform-style: preserve-3d;
         }
-        .life-icon.lost {
-            color: #4b5563;
-            animation: fadeOutHeart 0.5s forwards;
+        .is-flipped {
+            transform: rotateY(180deg);
         }
-        @keyframes fadeOutHeart {
-            from { transform: scale(1.2); opacity: 1; }
-            to { transform: scale(0.8); opacity: 0.5; }
+        .flip-card-front, .flip-card-back {
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+        }
+        .flip-card-back {
+            transform: rotateY(180deg);
+        }
+         .modal {
+            background: rgba(0, 0, 0, 0.7);
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
+<body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <div id="game-container" class="grid grid-cols-1 lg:grid-cols-4 gap-6 w-full max-w-7xl mx-auto hidden">
-        <!-- Dashboard (Left Panel) -->
-        <aside class="lg:col-span-1 bg-gray-800 p-6 rounded-2xl border-2 border-gray-700 flex flex-col">
-            <h2 class="game-title text-2xl text-amber-400 text-center mb-6">Dashboard</h2>
-            
-            <!-- Lives Counter -->
-            <div class="mb-6">
-                <h3 class="font-bold text-lg text-gray-300 mb-2">Lives</h3>
-                <div id="lives-container" class="flex justify-center text-3xl text-red-500 gap-3">
-                    <i class="fas fa-heart life-icon"></i>
-                    <i class="fas fa-heart life-icon"></i>
-                    <i class="fas fa-heart life-icon"></i>
-                </div>
+    <!-- In-Game Menu -->
+    <div class="w-full max-w-3xl mx-auto rounded-lg p-2 mb-4 game-card">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-teal-300">Mythbuster</h1>
+             <div id="game-stats" class="flex items-center space-x-4">
+                <span id="score" class="font-bold text-green-400">Score: 0</span>
             </div>
-
-            <!-- Progress to next milestone -->
-            <div class="mb-6">
-                <h3 class="font-bold text-lg text-gray-300 mb-2">Next Milestone</h3>
-                <div class="w-full bg-gray-700 rounded-full h-4">
-                    <div id="progress-bar" class="progress-bar-fill h-4 rounded-full" style="width: 0%;"></div>
-                </div>
-                <p id="progress-text" class="text-xs text-gray-400 text-center mt-1">0/15 Questions</p>
+            <div class="flex space-x-2">
+                <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
+                <button id="restart-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
+                <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
             </div>
-
-            <!-- Achievements -->
-            <div>
-                <h3 class="font-bold text-lg text-gray-300 mb-4">Achievements</h3>
-                <div id="achievements-list" class="space-y-3">
-                    <p data-achievement="Truth Seeker" class="text-gray-500 transition-colors"><i class="fas fa-award mr-2"></i> Truth Seeker (15)</p>
-                    <p data-achievement="Fact Finder" class="text-gray-500 transition-colors"><i class="fas fa-shield-alt mr-2"></i> Fact Finder (30)</p>
-                    <p data-achievement="Myth Slayer" class="text-gray-500 transition-colors"><i class="fas fa-crown mr-2"></i> Myth Slayer (45)</p>
-                    <p data-achievement="Boyhood Champion" class="text-gray-500 transition-colors"><i class="fas fa-child mr-2"></i> Boyhood Champion (60)</p>
-                    <p data-achievement="Fatherhood Guardian" class="text-gray-500 transition-colors"><i class="fas fa-user-shield mr-2"></i> Fatherhood Guardian (80)</p>
-                    <p data-achievement="Legacy Builder" class="text-gray-500 transition-colors"><i class="fas fa-star mr-2"></i> Legacy Builder (100)</p>
-                </div>
-            </div>
-
-             <div class="mt-auto text-center p-4 bg-gray-900 rounded-lg">
-                <p class="text-gray-300 mb-2">Want to save your progress?</p>
-                <a href="#" id="register-link" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm">Register for Free</a>
-            </div>
-        </aside>
-
-        <!-- Game Area (Right Panel) -->
-        <main class="lg:col-span-3 bg-gray-800 p-8 rounded-2xl border-2 border-gray-700 flex flex-col">
-            <div id="question-area" class="flex-grow">
-                <div id="question-header" class="text-center mb-6">
-                    <h2 id="question-title" class="text-3xl font-bold mb-2">Question <span id="question-number">1</span>/100</h2>
-                    <p id="question-text" class="text-xl text-gray-300 min-h-[100px]"></p>
-                </div>
-                <div id="options-container" class="flex flex-col md:flex-row justify-center items-center gap-6">
-                    <!-- Option buttons will be generated here -->
-                </div>
-            </div>
-            <!-- Navigation -->
-            <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
-                <button id="back-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded-lg transition-colors disabled:opacity-50" disabled>
-                    <i class="fas fa-arrow-left mr-2"></i> Back
-                </button>
-                <button id="quit-btn" class="bg-red-700 hover:bg-red-600 text-white font-bold py-2 px-5 rounded-lg transition-colors">
-                    <i class="fas fa-times mr-2"></i> Quit
-                </button>
-                 <button id="forward-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-5 rounded-lg transition-colors disabled:opacity-50" disabled>
-                     Next <i class="fas fa-arrow-right ml-2"></i>
-                </button>
-            </div>
-        </main>
-    </div>
-
-    <!-- Start Screen -->
-    <div id="start-screen" class="w-full max-w-3xl mx-auto bg-gray-800 p-8 rounded-2xl text-center">
-        <h1 class="game-title text-5xl text-amber-400 mb-4">MythBuster Quest</h1>
-        <p class="text-lg text-gray-300 mb-6">Challenge myths with facts. Reclaim the narrative for boys, men, and fathers.</p>
-        <div class="bg-gray-900 p-6 rounded-lg text-gray-300 space-y-3 text-left mb-8">
-            <h3 class="text-xl font-bold text-amber-300 border-b border-gray-700 pb-2 mb-3">Rules of the Quest:</h3>
-            <p><i class="fas fa-heart text-red-500 mr-2"></i> You start with <strong>3 lives</strong>. A wrong answer costs a life.</p>
-            <p><i class="fas fa-star text-yellow-400 mr-2"></i> <strong>Super Questions</strong> are tough. Get it right to earn <strong>3 lives</strong>. Get it wrong, and you lose <strong>3 lives</strong>.</p>
-            <p><i class="fas fa-lightbulb text-blue-400 mr-2"></i> After each answer, review the explanation and the source to arm yourself with knowledge.</p>
-        </div>
-        <button id="start-game-btn" class="w-full bg-green-600 hover:bg-green-700 text-white font-bold py-4 px-8 rounded-lg text-2xl transition-transform hover:scale-105">Begin Your Quest</button>
-    </div>
-
-    <!-- Modals -->
-    <div id="feedback-modal" class="modal fixed inset-0 z-50 items-center justify-center p-4 hidden">
-        <div class="modal-content transform scale-95 bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 max-w-2xl w-full">
-            <h2 id="feedback-title" class="text-4xl font-bold mb-4 text-center"></h2>
-            <p id="feedback-explanation" class="text-md text-gray-300 mb-6 text-left leading-relaxed"></p>
-            <div id="source-container" class="text-left text-sm bg-gray-900 p-4 rounded-lg mb-6">
-                <!-- Source info will be injected here -->
-            </div>
-            <button id="continue-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Continue</button>
         </div>
     </div>
     
-    <div id="book-modal" class="modal fixed inset-0 z-50 items-center justify-center p-4 hidden">
-         <div class="modal-content transform scale-95 bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 max-w-3xl w-full relative">
-             <button id="close-book-modal" class="absolute top-4 right-4 text-gray-400 hover:text-white text-2xl">&times;</button>
-             <h2 id="book-modal-title" class="text-3xl font-bold mb-4 text-amber-400"></h2>
-             <blockquote id="book-modal-excerpt" class="border-l-4 border-amber-400 pl-4 italic text-gray-300 mb-6"></blockquote>
-             <a id="book-modal-link" href="#" target="_blank" class="w-full inline-block text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Find on Google Play</a>
-        </div>
-    </div>
-
-    <div id="quit-modal" class="modal fixed inset-0 z-50 items-center justify-center p-4 hidden">
-        <div class="modal-content transform scale-95 bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 max-w-md w-full text-center">
-             <h2 class="text-2xl font-bold mb-4">Are you sure?</h2>
-            <p class="text-gray-400 mb-6">Quitting now will erase your progress for this session.</p>
-            <div class="flex justify-center gap-4">
-                <button id="resume-btn" class="py-3 px-8 rounded-lg bg-gray-600 hover:bg-gray-500">Resume</button>
-                <button id="confirm-quit-btn" class="py-3 px-8 rounded-lg bg-red-700 text-white hover:bg-red-600">Quit Game</button>
+    <!-- Game Area -->
+    <div id="game-area" class="w-full max-w-3xl mx-auto text-center">
+        <!-- Myth Card -->
+        <div id="myth-card" class="w-full h-64 md:h-80 mb-6">
+            <div id="flip-card-inner" class="relative w-full h-full flip-card-inner">
+                <!-- Front of Card -->
+                <div class="flip-card-front absolute w-full h-full game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
+                    <p class="text-gray-400 text-lg mb-2">Is this statement a myth or a fact?</p>
+                    <h2 id="question-text" class="text-2xl md:text-3xl font-bold"></h2>
+                </div>
+                <!-- Back of Card (Feedback) -->
+                <div class="flip-card-back absolute w-full h-full game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
+                     <h2 id="feedback-title" class="text-4xl font-bold mb-4"></h2>
+                     <p id="feedback-explanation" class="text-lg"></p>
+                </div>
             </div>
         </div>
+        
+        <!-- Answer Buttons -->
+        <div id="answers-container" class="grid grid-cols-2 gap-4">
+            <button data-answer="fact" class="btn-choice bg-green-600 hover:bg-green-700 p-4 text-2xl font-bold rounded-lg"><i class="fas fa-check-circle mr-2"></i> Fact</button>
+            <button data-answer="myth" class="btn-choice bg-red-600 hover:bg-red-700 p-4 text-2xl font-bold rounded-lg"><i class="fas fa-times-circle mr-2"></i> Myth</button>
+        </div>
+        
+        <!-- Next Button - initially hidden -->
+        <div id="next-container" class="mt-4 hidden">
+             <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 p-4 text-2xl font-bold rounded-lg w-full">Next Myth</button>
+        </div>
+    </div>
+    
+     <!-- Instructions Modal -->
+    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
+        <div class="game-card w-11/12 max-w-md p-6 rounded-2xl shadow-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-teal-300">How to Play Mythbuster</h2>
+            <p class="mb-4 text-lg">Read the statement on the card. Decide if it's a legal FACT or a MYTH. After you answer, the card will flip to reveal the explanation!</p>
+            <button id="close-modal-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg">Let's Bust Some Myths!</button>
+        </div>
     </div>
 
-    <script src="mythbuster-game.js"></script>
+    <!-- This should be a separate file at assets/js/mythbuster-game.js -->
+    <script>
+        const myths = [
+            { 
+                statement: "If you live with someone for 7 years, you are automatically in a 'common-law marriage'.", 
+                isMyth: true,
+                explanation: "This is a widespread myth! In South Africa, no amount of time living together automatically creates a marriage. You must have a legal ceremony."
+            },
+            {
+                statement: "The Constitution of South Africa is the supreme law of the land.",
+                isMyth: false,
+                explanation: "This is a fact! All other laws and actions by the government must comply with the Constitution."
+            },
+            {
+                statement: "You have the right to remain silent when arrested, and it cannot be used against you.",
+                isMyth: false,
+                explanation: "This is a fundamental fact. It is your right to remain silent to avoid incriminating yourself, and the court cannot hold your silence against you."
+            },
+            {
+                statement: "A father's name on a birth certificate automatically gives him full parental rights and responsibilities.",
+                isMyth: true,
+                explanation: "This is a myth. While it establishes paternity, an unmarried father must still meet certain conditions under the Children's Act to acquire full parental rights and responsibilities."
+            },
+            {
+                statement: "Hate speech is protected under the right to freedom of expression.",
+                isMyth: true,
+                explanation: "This is a critical myth to bust. The Constitution specifically excludes hate speech (incitement to cause harm based on race, gender, etc.) from protection."
+            }
+        ];
 
+        let currentMythIndex = 0;
+        let score = 0;
+        let shuffledMyths = [];
+
+        const questionTextEl = document.getElementById('question-text');
+        const scoreEl = document.getElementById('score');
+        const answersContainer = document.getElementById('answers-container');
+        const nextContainer = document.getElementById('next-container');
+        const nextBtn = document.getElementById('next-btn');
+        const flipCardInner = document.getElementById('flip-card-inner');
+        const feedbackTitle = document.getElementById('feedback-title');
+        const feedbackExplanation = document.getElementById('feedback-explanation');
+        const restartBtn = document.getElementById('restart-btn');
+        const instructionsBtn = document.getElementById('instructions-btn');
+        const instructionsModal = document.getElementById('instructions-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+
+
+        function startGame() {
+            currentMythIndex = 0;
+            score = 0;
+            shuffledMyths = myths.sort(() => Math.random() - 0.5);
+            updateScore();
+            showNextMyth();
+        }
+
+        function showNextMyth() {
+            if (flipCardInner.classList.contains('is-flipped')) {
+                flipCardInner.classList.remove('is-flipped');
+            }
+
+            // After flip animation, show next question
+            setTimeout(() => {
+                if (currentMythIndex >= shuffledMyths.length) {
+                    // Game over, show final message
+                    questionTextEl.textContent = "You've busted all the myths! Great job!";
+                    answersContainer.classList.add('hidden');
+                    nextContainer.classList.add('hidden');
+                    return;
+                }
+
+                const myth = shuffledMyths[currentMythIndex];
+                questionTextEl.textContent = myth.statement;
+                answersContainer.classList.remove('hidden');
+                nextContainer.classList.add('hidden');
+            }, 300);
+        }
+
+        function handleAnswer(e) {
+            const selectedAnswer = e.target.closest('button').dataset.answer;
+            const myth = shuffledMyths[currentMythIndex];
+            const correctAnwer = myth.isMyth ? 'myth' : 'fact';
+
+            if (selectedAnswer === correctAnwer) {
+                score += 10;
+                feedbackTitle.textContent = 'Correct!';
+                feedbackTitle.className = 'text-4xl font-bold mb-4 feedback-correct';
+            } else {
+                feedbackTitle.textContent = 'Incorrect!';
+                 feedbackTitle.className = 'text-4xl font-bold mb-4 feedback-wrong';
+            }
+            
+            feedbackExplanation.textContent = myth.explanation;
+            updateScore();
+            
+            flipCardInner.classList.add('is-flipped');
+            answersContainer.classList.add('hidden');
+            nextContainer.classList.remove('hidden');
+            
+            currentMythIndex++;
+        }
+        
+        function updateScore() {
+            scoreEl.textContent = `Score: ${score}`;
+        }
+        
+        document.querySelectorAll('.btn-choice').forEach(button => {
+            button.addEventListener('click', handleAnswer);
+        });
+
+        nextBtn.addEventListener('click', showNextMyth);
+        restartBtn.addEventListener('click', startGame);
+        instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
+        closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+
+        startGame();
+    </script>
 </body>
 </html>

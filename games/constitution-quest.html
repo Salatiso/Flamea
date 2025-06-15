@@ -1,118 +1,223 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Flamea Kids Game - Constitution Quest</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body { font-family: 'Fredoka', sans-serif; background: #e0f2fe; overflow-x: hidden; }
-    .game-wrapper { max-width: 900px; margin: auto; padding: 2rem; }
-    .character { width: 100px; border-radius: 12px; }
-    .question-box { background: white; border-radius: 16px; padding: 1rem; box-shadow: 0 0 10px #bae6fd; margin-top: 2rem; }
-    .option-btn { background-color: #3b82f6; color: white; padding: 10px 16px; border-radius: 8px; cursor: pointer; margin: 0.25rem 0; width: 100%; text-align: left; font-size: 1rem; }
-    .option-btn:hover { background-color: #2563eb; }
-    .correct { background-color: #16a34a !important; }
-    .wrong { background-color: #dc2626 !important; }
-  </style>
-</head>
-<body class="bg-sky-100">
-
-  <div class="game-wrapper text-center">
-    <h1 class="text-4xl text-blue-800 font-bold mb-2">🧠 Constitution Quest</h1>
-    <p class="text-gray-600 mb-4">Learn your rights while you play! Pick a character and start your mission.</p>
-
-    <!-- Character Selector -->
-    <div class="flex justify-center gap-6">
-      <button onclick="startGame('BuggZ')"><img src="/assets/img/buggz.svg" alt="BuggZ" class="character" /><p>BuggZ</p></button>
-      <button onclick="startGame('Sga')"><img src="/assets/img/sga.svg" alt="Sga" class="character" /><p>Sga</p></button>
-      <button onclick="startGame('Oros')"><img src="/assets/img/oros.svg" alt="Oros" class="character" /><p>Oros</p></button>
-      <button onclick="startGame('Monkey')"><img src="/assets/img/monkey.svg" alt="Monkey" class="character" /><p>Monkey</p></button>
-      <button onclick="startGame('Princess')"><img src="/assets/img/princess.svg" alt="Princess" class="character" /><p>Princess</p></button>
-    </div>
-
-    <div id="game-screen" class="hidden mt-6">
-      <h2 id="player-info" class="text-xl text-blue-700 font-semibold mb-4"></h2>
-      <div id="question-box" class="question-box text-left">
-        <p id="question-text" class="text-lg font-bold mb-4">Loading question...</p>
-        <div id="options-container" class="space-y-2"></div>
-      </div>
-      <div class="mt-4">
-        <button id="next-btn" class="bg-green-500 text-white px-4 py-2 rounded hidden" onclick="nextQuestion()">Next</button>
-      </div>
-    </div>
-
-  </div>
-
-  <script type="module">
-    import { questionBank } from '../assets/js/questions-database.js';
-
-    let currentLevel = 1;
-    let currentIndex = 0;
-    let currentPlayer = '';
-    let currentQuestions = [];
-    let score = 0;
-
-    window.startGame = (name) => {
-      currentPlayer = name;
-      currentLevel = 1;
-      score = 0;
-      document.getElementById('player-info').innerText = `Character: ${name} | Level 1`;
-      document.getElementById('game-screen').classList.remove('hidden');
-      currentQuestions = questionBank.filter(q => q.level === currentLevel);
-      currentIndex = 0;
-      showQuestion();
-    };
-
-    window.nextQuestion = () => {
-      currentIndex++;
-      document.getElementById('next-btn').classList.add('hidden');
-      if (currentIndex < currentQuestions.length) {
-        showQuestion();
-      } else {
-        currentLevel++;
-        if (currentLevel > 3) {
-          document.getElementById('question-box').innerHTML = `<h3 class='text-2xl text-green-600'>🎉 Game Complete!</h3><p>Your score: ${score}</p>`;
-        } else {
-          currentQuestions = questionBank.filter(q => q.level === currentLevel);
-          currentIndex = 0;
-          document.getElementById('player-info').innerText = `Character: ${currentPlayer} | Level ${currentLevel}`;
-          showQuestion();
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Constitution Quest - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        body {
+            background-color: #1a1a2e;
+            background-image: linear-gradient(180deg, #1a1a2e 0%, #16213e 74%);
+            font-family: 'Courier New', Courier, monospace;
         }
-      }
-    };
+        .game-container {
+            background: rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(5px);
+            border: 2px solid #a29bfe;
+        }
+        #text-display {
+            white-space: pre-wrap;
+            height: 250px;
+            overflow-y: auto;
+            border-bottom: 2px solid #a29bfe;
+            scrollbar-width: thin;
+            scrollbar-color: #a29bfe #1a1a2e;
+        }
+        .option-button {
+            background-color: #a29bfe;
+            color: #1a1a2e;
+            transition: all 0.2s ease-in-out;
+        }
+        .option-button:hover {
+            background-color: #ffffff;
+            transform: scale(1.02);
+        }
+        .btn-game {
+            transition: all 0.3s ease;
+        }
+         .modal {
+            background: rgba(0, 0, 0, 0.7);
+        }
+    </style>
+</head>
+<body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
 
-    function showQuestion() {
-      const q = currentQuestions[currentIndex];
-      document.getElementById('question-text').innerText = q.question;
-      const optionsContainer = document.getElementById('options-container');
-      optionsContainer.innerHTML = '';
+    <!-- In-Game Menu -->
+    <div class="w-full max-w-3xl mx-auto rounded-lg p-2 mb-4 game-container">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-purple-300">Constitution Quest</h1>
+            <div class="flex space-x-2">
+                <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
+                <button id="restart-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
+                <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
+            </div>
+        </div>
+    </div>
 
-      q.options.forEach(opt => {
-        const btn = document.createElement('button');
-        btn.innerText = opt;
-        btn.className = 'option-btn';
-        btn.onclick = () => handleAnswer(btn, opt === q.answer);
-        optionsContainer.appendChild(btn);
-      });
-    }
+    <!-- Game Area -->
+    <div id="game-area" class="w-full max-w-3xl mx-auto p-6 rounded-2xl shadow-2xl game-container">
+        <div id="text-display" class="mb-4 p-4 bg-black/30 rounded-lg text-lg leading-relaxed"></div>
+        <div id="options-container" class="grid grid-cols-1 gap-3">
+            <!-- Options will be dynamically added here -->
+        </div>
+    </div>
+    
+     <!-- Instructions Modal -->
+    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
+        <div class="bg-purple-900 w-11/12 max-w-md p-6 rounded-2xl shadow-2xl border-2 border-purple-400">
+            <h2 class="text-3xl font-bold mb-4 text-purple-300">How to Play</h2>
+            <p class="mb-4 text-lg">This is a text adventure! Read the story and click the buttons to make a choice. Your choices will determine the outcome. Good luck!</p>
+            <button id="close-modal-btn" class="w-full bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded-lg">Let the Quest Begin!</button>
+        </div>
+    </div>
 
-    function handleAnswer(button, correct) {
-      const allButtons = document.querySelectorAll('.option-btn');
-      allButtons.forEach(btn => btn.disabled = true);
+    <script>
+        // --- DOM Elements ---
+        const textDisplay = document.getElementById('text-display');
+        const optionsContainer = document.getElementById('options-container');
+        const instructionsBtn = document.getElementById('instructions-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const instructionsModal = document.getElementById('instructions-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
 
-      if (correct) {
-        button.classList.add('correct');
-        score += currentQuestions[currentIndex].points;
-      } else {
-        button.classList.add('wrong');
-        const correctBtn = Array.from(allButtons).find(btn => btn.innerText === currentQuestions[currentIndex].answer);
-        if (correctBtn) correctBtn.classList.add('correct');
-      }
+        // --- Game State ---
+        let state = {};
 
-      document.getElementById('next-btn').classList.remove('hidden');
-    }
-  </script>
+        // --- Game Logic ---
+        function startGame() {
+            state = {};
+            showScene('start');
+        }
+
+        function showScene(sceneId) {
+            const scene = scenes.find(s => s.id === sceneId);
+            if (!scene) {
+                console.error(`Scene with id ${sceneId} not found!`);
+                return;
+            }
+            
+            textDisplay.innerText = scene.text;
+            
+            while (optionsContainer.firstChild) {
+                optionsContainer.removeChild(optionsContainer.firstChild);
+            }
+
+            scene.options.forEach(option => {
+                // Check if a condition is required to show this option
+                if (option.requiredState && !option.requiredState(state)) {
+                    return;
+                }
+                const button = document.createElement('button');
+                button.innerText = option.text;
+                button.classList.add('option-button', 'w-full', 'p-3', 'text-lg', 'font-bold', 'rounded-lg', 'text-left');
+                button.addEventListener('click', () => selectOption(option));
+                optionsContainer.appendChild(button);
+            });
+            textDisplay.scrollTop = 0; // Scroll to top of text box
+        }
+
+        function selectOption(option) {
+            const nextSceneId = option.nextScene;
+            if (option.setState) {
+                state = { ...state, ...option.setState };
+            }
+            showScene(nextSceneId);
+        }
+
+        // --- Event Listeners ---
+        instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
+        closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+        restartBtn.addEventListener('click', startGame);
+
+        // --- Game Scenes (The Story) ---
+        const scenes = [
+            {
+                id: 'start',
+                text: 'You stand at the entrance to the Cave of Rights, a place said to hold the secrets of the Constitution. The entrance is dark, but a faint light glows within. Your quest is to understand the Bill of Rights.\n\nWhat do you do?',
+                options: [
+                    { text: 'Enter the cave bravely.', nextScene: 'cave_entrance' },
+                    { text: 'Light a torch before entering.', nextScene: 'cave_entrance', setState: { hasTorch: true } }
+                ]
+            },
+            {
+                id: 'cave_entrance',
+                text: 'Inside, you see two paths. To your left, a path echoes with the sound of many voices arguing. To your right, a path is quiet and leads to a single, sturdy-looking door.',
+                options: [
+                    { text: 'Follow the sound of voices.', nextScene: 'voices_path' },
+                    { text: 'Go towards the sturdy door.', nextScene: 'door_path' }
+                ]
+            },
+            {
+                id: 'voices_path',
+                text: 'You find a group of people arguing over a newspaper. One person wants to publish a story, but another says it will embarrass them. They turn to you.\n\n"Should I be allowed to print whatever I want?" asks the journalist.\n\nThis is a test of your knowledge on the Right to Freedom of Expression.',
+                options: [
+                    { text: 'Say: "Yes, you can express yourself freely."', nextScene: 'freedom_expression_correct' },
+                    { text: 'Say: "No, you can\'t hurt others with your words."', nextScene: 'freedom_expression_correct' },
+                    { text: 'Say: "Only if the story is boring."', nextScene: 'freedom_expression_wrong' }
+                ]
+            },
+            {
+                id: 'freedom_expression_correct',
+                text: 'You correctly explain that the Right to Freedom of Expression is important, but it has limits. It doesn\'t protect propaganda for war, incitement of violence, or hate speech.\n\nThe group thanks you for your wisdom. You feel more knowledgeable. A glowing scroll appears in your hand, marked "Chapter 2". You have learned!\n\nWhat next?',
+                setState: { hasChapter2: true },
+                options: [
+                    { text: 'Return to the main path.', nextScene: 'cave_entrance' },
+                    { text: 'Press on deeper.', nextScene: 'deep_cave' }
+                ]
+            },
+            {
+                id: 'freedom_expression_wrong',
+                text: 'The group looks confused by your answer. The path ahead grows dark, and you find yourself back at the cave entrance, having learned little.',
+                options: [
+                    { text: 'Try again from the entrance.', nextScene: 'cave_entrance' }
+                ]
+            },
+            {
+                id: 'door_path',
+                text: 'You approach the sturdy door. It has a single lock. A sign reads: "All are equal before the law." This is the door of Equality.\n\nHow do you try to open it?',
+                options: [
+                    { text: 'Try to force it open with strength.', nextScene: 'equality_wrong' },
+                    { text: 'Look for a key for everyone.', nextScene: 'equality_correct' }
+                ]
+            },
+            {
+                id: 'equality_correct',
+                text: 'You realize that if everyone is equal, there must not be a special key. You simply turn the handle, and the door opens smoothly for you, as it would for anyone.\n\nBeyond the door, you see a library filled with law books. You understand that equality is about equal access and treatment. A glowing scroll, "Chapter 1", appears. You have learned!',
+                setState: { hasChapter1: true },
+                options: [
+                     { text: 'Return to the main path.', nextScene: 'cave_entrance' },
+                     { text: 'Stay and read.', nextScene: 'deep_cave' }
+                ]
+            },
+             {
+                id: 'equality_wrong',
+                text: 'You try to force the door, but it won\'t budge. The principle of Equality cannot be forced, only accepted. The door remains shut, and you are sent back to the entrance to reconsider.',
+                options: [
+                    { text: 'Return to the entrance.', nextScene: 'cave_entrance' }
+                ]
+            },
+            {
+                id: 'deep_cave',
+                text: 'You venture deeper into the cave. It opens into a large cavern. In the center is a pedestal. A wise old owl is perched on it.',
+                options: [
+                    { text: 'Approach the owl.', nextScene: 'final_challenge', requiredState: (s) => s.hasChapter1 && s.hasChapter2 },
+                    { text: 'Explore the cavern.', nextScene: 'cave_entrance' }
+                ]
+            },
+             {
+                id: 'final_challenge',
+                text: 'The owl hoots. "You have learned of Equality and Expression. You hold the scrolls of Chapter 1 and 2. You have completed the Constitution Quest and understand the foundation of our rights!"\n\nCongratulations! You have won!',
+                options: [
+                    { text: 'Play Again', nextScene: 'start' }
+                ]
+            }
+        ];
+
+        // --- Start Game on page load ---
+        startGame();
+
+    </script>
 </body>
 </html>

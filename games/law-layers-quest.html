@@ -3,454 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Law Layers Quest</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Law & Layers Quest - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .speech-bubble {
-            position: absolute;
-            top: 100px;
-            right: 10px;
-            background: white;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 200px;
+        body {
+            background-color: #030712; /* gray-950 */
+            background-image: 
+                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
+                radial-gradient(at 50% 0%, hsla(224,39%,20%,1) 0, transparent 50%),
+                radial-gradient(at 100% 0%, hsla(201,100%,16%,1) 0, transparent 50%);
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 20px;
-            border-width: 10px;
-            border-style: solid;
-            border-color: white transparent transparent transparent;
+        .game-container, .modal-content {
+            background: rgba(17, 24, 39, 0.8);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(59, 130, 246, 0.4);
         }
-        .avatar svg, #joey-avatar svg {
-            width: 100%;
-            height: 100%;
+        .btn-layer {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid transparent;
         }
-        .sidebar-direct-link.active { background-color: #2563EB; color: white; }
-        .sidebar-direct-link:hover { transform: translateX(10px); transition: all 0.3s ease; }
+        .btn-layer:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+        .correct-answer {
+            animation: pulse-green 1s;
+        }
+        .wrong-answer {
+            animation: shake-red 0.7s;
+        }
+        @keyframes pulse-green {
+            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
+            70% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
+            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
+        }
+        @keyframes shake-red {
+            0%, 100% { transform: translateX(0); }
+            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
+            20%, 40%, 60%, 80% { transform: translateX(8px); }
+        }
     </style>
 </head>
-<body class="bg-gray-800 text-white min-h-screen flex">
-    <!-- Sidebar Menu -->
-    <aside class="bg-gray-900 w-64 p-6 flex flex-col h-screen">
-        <h2 class="text-2xl font-bold mb-6">Law Layers Quest</h2>
-        <nav class="flex-1">
-            <a href="/index.html" class="sidebar-direct-link flex items-center p-3 rounded-lg">
-                <i class="fas fa-home w-6 text-center mr-4"></i> Home
-            </a>
-            <a href="/games.html" class="sidebar-direct-link flex items-center p-3 rounded-lg active">
-                <i class="fas fa-gamepad w-6 text-center mr-4"></i> Games
-            </a>
-            <button id="quit-btn" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-sign-out-alt w-6 text-center mr-4"></i> Quit
-            </button>
-            <hr class="my-4 border-gray-700">
-            <button id="dashboard-btn" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-tachometer-alt w-6 text-center mr-4"></i> Dashboard
-            </button>
-            <button id="level-selector-btn" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-layer-group w-6 text-center mr-4"></i> Level Selector
-            </button>
-            <button id="instructions-btn" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-book w-6 text-center mr-4"></i> Instructions
-            </button>
-            <div class="mt-4">
-                <p class="text-sm font-bold mb-2">Progress</p>
-                <div id="progress-bar" class="w-full bg-gray-700 h-4 rounded-full">
-                    <div class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-            <button id="save-progress-btn" class="sidebar-direct-link flex items-center p-3 rounded-lg w-full text-left mt-4">
-                <i class="fas fa-save w-6 text-center mr-4"></i> Save Progress
-            </button>
-        </nav>
-    </aside>
+<body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- Main Content -->
-    <main class="flex-1 p-6">
-        <!-- Modals -->
-        <div id="dashboard-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-gray-900 p-6 rounded-lg w-1/2">
-                <h3 class="text-xl font-bold mb-4">Dashboard</h3>
-                <p id="dashboard-score" class="mb-2">Score: 0</p>
-                <p id="dashboard-achievements" class="mb-4">Achievements: None</p>
-                <button id="close-dashboard-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg">Close</button>
+    <!-- In-Game Menu -->
+    <div class="w-full max-w-4xl mx-auto rounded-lg p-2 mb-4 game-container">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-blue-300">Law & Layers Quest</h1>
+            <div id="game-stats" class="flex items-center space-x-4">
+                <span id="score" class="font-bold text-green-400">Score: 0</span>
+                <span id="question-counter" class="font-bold text-blue-400">Q: 1/5</span>
+            </div>
+            <div class="flex space-x-2">
+                 <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
+                <button id="restart-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
+                <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
             </div>
         </div>
-        <div id="level-selector-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-gray-900 p-6 rounded-lg w-1/2">
-                <h3 class="text-xl font-bold mb-4">Select Level</h3>
-                <div id="level-buttons" class="grid grid-cols-5 gap-2"></div>
-                <button id="close-level-selector-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg mt-4">Close</button>
-            </div>
+    </div>
+    
+    <!-- Game Area -->
+    <div id="game-area" class="w-full max-w-4xl mx-auto p-8 rounded-2xl shadow-2xl text-center game-container">
+        <div id="question-container" class="mb-8">
+            <p class="text-gray-400 text-lg mb-2">From which layer of law does this principle come?</p>
+            <h2 id="question-text" class="text-2xl md:text-3xl font-bold min-h-[80px]"></h2>
         </div>
-        <div id="instructions-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-gray-900 p-6 rounded-lg w-1/2">
-                <h3 class="text-xl font-bold mb-4">Instructions</h3>
-                <p class="mb-4">Welcome to Law Layers Quest! Answer questions about South African laws to collect law tokens. There are 5 levels with 5 questions each. Justice Joey will guide you. Correct answers earn 10 points. Save your progress by registering!</p>
-                <button id="close-instructions-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg">Close</button>
-            </div>
+        <div id="answers-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <!-- Buttons will be generated here -->
         </div>
-        <div id="register-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
-            <div class="bg-gray-900 p-6 rounded-lg w-1/2">
-                <h3 class="text-xl font-bold mb-4">Save Your Progress</h3>
-                <p class="mb-4">To save your progress, please register or log in.</p>
-                <a href="/login.html" class="bg-green-600 text-white py-2 px-4 rounded-lg mr-2">Register/Login</a>
-                <button id="continue-guest-btn" class="bg-gray-600 text-white py-2 px-4 rounded-lg">Continue as Guest</button>
-            </div>
+        <div id="feedback" class="mt-6 text-xl font-bold h-8"></div>
+    </div>
+
+    <!-- End Screen Modal -->
+    <div id="end-screen-modal" class="fixed inset-0 w-full h-full flex items-center justify-center bg-black/70 hidden z-50">
+        <div class="modal-content w-11/12 max-w-md p-8 rounded-2xl text-center shadow-2xl">
+            <h2 class="text-4xl font-bold mb-4 text-blue-300">Quest Complete!</h2>
+            <p class="text-xl mb-4">Your final score:</p>
+            <p id="final-score" class="text-6xl font-bold mb-8 text-green-400">0</p>
+            <button id="play-again-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-xl">Play Again</button>
         </div>
-
-        <!-- Avatar Selection -->
-        <div id="avatar-selection" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
-
-        <!-- Game Screen -->
-        <div id="game-screen" class="hidden">
-            <div class="flex justify-between mb-4">
-                <div id="level-indicator" class="text-xl font-bold">Level 1</div>
-                <div id="score" class="text-xl font-bold">Score: 0</div>
-            </div>
-            <div class="relative">
-                <div id="joey-avatar" class="absolute top-0 right-0 w-20 h-20"></div>
-                <div id="speech-bubble" class="speech-bubble hidden"></div>
-            </div>
-            <div class="question-container text-center mb-8">
-                <h2 id="question-text" class="text-2xl font-bold mb-4"></h2>
-                <div id="options" class="grid grid-cols-2 gap-4"></div>
-            </div>
-            <div id="feedback" class="text-center mb-4 hidden"></div>
-            <button id="next-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg mx-auto block hidden">Next</button>
-            <div class="flex justify-between mt-8">
-                <div id="player-avatar" class="w-20 h-20"></div>
-            </div>
+    </div>
+    
+    <!-- Instructions Modal -->
+    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center bg-black/70 hidden z-50">
+        <div class="modal-content w-11/12 max-w-md p-6 rounded-2xl">
+            <h2 class="text-3xl font-bold mb-4 text-blue-300">How to Play</h2>
+            <p class="mb-4 text-lg">Read the legal principle on the screen. Decide if it comes from the Constitution, an Act of Parliament (Legislation), or from historical court decisions (Common Law). Click the correct button to score points!</p>
+            <button id="close-modal-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Let's Go!</button>
         </div>
+    </div>
 
-        <!-- Level Complete Screen -->
-        <div id="level-complete" class="hidden text-center">
-            <h2 class="text-3xl font-bold mb-4">Level Complete!</h2>
-            <p id="level-score" class="text-xl mb-4"></p>
-            <button id="next-level-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Next Level</button>
-        </div>
+    <script>
+        const layers = {
+            CONSTITUTION: { name: 'The Constitution', color: 'bg-yellow-500 hover:bg-yellow-600' },
+            LEGISLATION: { name: 'Legislation (Acts of Parliament)', color: 'bg-indigo-500 hover:bg-indigo-600' },
+            COMMON_LAW: { name: 'Common Law', color: 'bg-teal-500 hover:bg-teal-600' }
+        };
 
-        <!-- Game Complete Screen -->
-        <div id="game-complete" class="hidden text-center">
-            <h2 class="text-3xl font-bold mb-4">Congratulations!</h2>
-            <p class="text-xl mb-4">You’ve completed all levels and mastered the Law Layers!</p>
-            <p id="total-score" class="text-xl mb-4"></p>
-            <button id="play-again-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Play Again</button>
-        </div>
-    </main>
+        const questions = [
+            { text: "The right to life, dignity, and equality for all citizens.", layer: 'CONSTITUTION' },
+            { text: "The Children's Act 38 of 2005, which details the rights and responsibilities towards children.", layer: 'LEGISLATION' },
+            { text: "The legal principle that a contract requires an offer and an acceptance.", layer: 'COMMON_LAW' },
+            { text: "The supreme law of the country, which all other laws must follow.", layer: 'CONSTITUTION' },
+            { text: "The Basic Conditions of Employment Act, which sets rules for working hours and leave.", layer: 'LEGISLATION' }
+        ];
 
-    <script type="module">
-        import { questionBank } from './questions-database.js';
-        import { AvatarSystem } from './avatar-system.js';
-        import { auth, db } from './firebase-config.js';
-        import { onAuthStateChanged, signOut } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { doc, setDoc, getDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        let currentQuestionIndex = 0;
+        let score = 0;
+        let shuffledQuestions = [];
 
-        class LawLayersQuest {
-            constructor() {
-                this.avatars = new AvatarSystem().avatars;
-                this.playerAvatar = null;
-                this.currentLevel = 1;
-                this.totalLevels = 5;
-                this.questionsPerLevel = 5;
-                this.score = 0;
-                this.currentQuestions = [];
-                this.currentQuestionIndex = 0;
-                this.achievements = [
-                    { name: "Law Starter", threshold: 50, unlocked: false },
-                    { name: "Law Explorer", threshold: 100, unlocked: false },
-                    { name: "Law Master", threshold: 250, unlocked: false }
-                ];
-                this.joeyMessages = {
-                    startLevel: "Let’s explore the layers of law!",
-                    correct: ["Great job!", "You’re a law star!", "Keep going!", "Awesome!"],
-                    incorrect: ["No worries, try again!", "You’ll get it!", "Let’s learn this!", "Keep trying!"],
-                };
-                this.user = null;
-
-                // DOM Elements
-                this.avatarSelection = document.getElementById('avatar-selection');
-                this.gameScreen = document.getElementById('game-screen');
-                this.levelIndicator = document.getElementById('level-indicator');
-                this.scoreElement = document.getElementById('score');
-                this.joeyAvatar = document.getElementById('joey-avatar');
-                this.speechBubble = document.getElementById('speech-bubble');
-                this.questionText = document.getElementById('question-text');
-                this.optionsContainer = document.getElementById('options');
-                this.feedbackElement = document.getElementById('feedback');
-                this.nextBtn = document.getElementById('next-btn');
-                this.playerAvatarElement = document.getElementById('player-avatar');
-                this.progressBar = document.getElementById('progress-bar').firstElementChild;
-                this.levelCompleteScreen = document.getElementById('level-complete');
-                this.levelScore = document.getElementById('level-score');
-                this.nextLevelBtn = document.getElementById('next-level-btn');
-                this.gameCompleteScreen = document.getElementById('game-complete');
-                this.totalScore = document.getElementById('total-score');
-                this.playAgainBtn = document.getElementById('play-again-btn');
-                this.quitBtn = document.getElementById('quit-btn');
-                this.dashboardBtn = document.getElementById('dashboard-btn');
-                this.levelSelectorBtn = document.getElementById('level-selector-btn');
-                this.instructionsBtn = document.getElementById('instructions-btn');
-                this.saveProgressBtn = document.getElementById('save-progress-btn');
-                this.dashboardModal = document.getElementById('dashboard-modal');
-                this.levelSelectorModal = document.getElementById('level-selector-modal');
-                this.instructionsModal = document.getElementById('instructions-modal');
-                this.registerModal = document.getElementById('register-modal');
-                this.closeDashboardBtn = document.getElementById('close-dashboard-btn');
-                this.closeLevelSelectorBtn = document.getElementById('close-level-selector-btn');
-                this.closeInstructionsBtn = document.getElementById('close-instructions-btn');
-                this.continueGuestBtn = document.getElementById('continue-guest-btn');
-
-                // Event Listeners
-                this.nextBtn.addEventListener('click', () => this.nextQuestion());
-                this.nextLevelBtn.addEventListener('click', () => this.startNextLevel());
-                this.playAgainBtn.addEventListener('click', () => this.restartGame());
-                this.quitBtn.addEventListener('click', () => window.location.href = '/tools.html');
-                this.dashboardBtn.addEventListener('click', () => this.showDashboard());
-                this.levelSelectorBtn.addEventListener('click', () => this.showLevelSelector());
-                this.instructionsBtn.addEventListener('click', () => this.showInstructions());
-                this.saveProgressBtn.addEventListener('click', () => this.saveProgress());
-                this.closeDashboardBtn.addEventListener('click', () => this.dashboardModal.classList.add('hidden'));
-                this.closeLevelSelectorBtn.addEventListener('click', () => this.levelSelectorModal.classList.add('hidden'));
-                this.closeInstructionsBtn.addEventListener('click', () => this.instructionsModal.classList.add('hidden'));
-                this.continueGuestBtn.addEventListener('click', () => this.registerModal.classList.add('hidden'));
-
-                // Firebase Auth
-                onAuthStateChanged(auth, (user) => {
-                    this.user = user;
-                    if (user) {
-                        this.loadProgress(user.uid);
-                        this.saveProgressBtn.textContent = "Save Progress";
-                        this.saveProgressBtn.disabled = false;
-                    } else {
-                        this.saveProgressBtn.textContent = "Log in to Save Progress";
-                        this.saveProgressBtn.disabled = true;
-                    }
-                });
-
-                // Initialize
-                this.renderAvatarSelection();
-                this.joeyAvatar.innerHTML = this.avatars['owl'].svgCode;
-            }
-
-            async loadProgress(userId) {
-                const userRef = doc(db, 'users', userId, 'games', 'law-layers-quest');
-                const docSnap = await getDoc(userRef);
-                if (docSnap.exists()) {
-                    const data = docSnap.data();
-                    this.score = data.score || 0;
-                    this.currentLevel = data.level || 1;
-                    this.achievements = data.achievements || this.achievements;
-                    this.updateDashboard();
-                }
-            }
-
-            async saveProgress() {
-                if (!this.user) {
-                    this.registerModal.classList.remove('hidden');
-                    return;
-                }
-                const userRef = doc(db, 'users', this.user.uid, 'games', 'law-layers-quest');
-                try {
-                    await setDoc(userRef, {
-                        score: this.score,
-                        level: this.currentLevel,
-                        achievements: this.achievements,
-                        lastPlayed: new Date().toISOString()
-                    }, { merge: true });
-                    alert("Progress saved successfully!");
-                } catch (error) {
-                    console.error("Error saving progress:", error);
-                    alert("Failed to save progress. Please try again.");
-                }
-            }
-
-            renderAvatarSelection() {
-                Object.entries(this.avatars).forEach(([key, avatar]) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'avatar-btn p-4 border rounded-lg bg-gray-700 hover:bg-gray-600';
-                    btn.dataset.avatar = key;
-                    btn.innerHTML = `
-                        <div class="avatar w-20 h-20 mx-auto">${avatar.svgCode}</div>
-                        <p class="mt-2">${avatar.name} ${avatar.emoji}</p>
-                    `;
-                    btn.addEventListener('click', () => this.selectAvatar(key));
-                    this.avatarSelection.appendChild(btn);
-                });
-            }
-
-            selectAvatar(key) {
-                this.playerAvatar = this.avatars[key];
-                this.playerAvatarElement.innerHTML = this.playerAvatar.svgCode;
-                this.avatarSelection.classList.add('hidden');
-                this.gameScreen.classList.remove('hidden');
-                this.startLevel(this.currentLevel);
-            }
-
-            startLevel(level) {
-                this.currentLevel = level;
-                this.levelIndicator.textContent = `Level ${level}`;
-                this.currentQuestions = this.getRandomQuestions(level, this.questionsPerLevel);
-                this.currentQuestionIndex = 0;
-                this.updateSpeechBubble(this.joeyMessages.startLevel);
-                this.updateProgressBar();
-                this.displayQuestion();
-            }
-
-            getRandomQuestions(level, count) {
-                const relevantQuestions = questionBank.filter(q => 
-                    [66, 68, 91, 92, 93, 94, 100].includes(q.id) || // Specific law hierarchy questions
-                    (q.level >= 4 && q.question.toLowerCase().includes('law') || q.question.toLowerCase().includes('court')) // Broader law-related
-                );
-                const shuffled = relevantQuestions.sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, count);
-            }
-
-            displayQuestion() {
-                const question = this.currentQuestions[this.currentQuestionIndex];
-                this.questionText.textContent = question.question;
-                this.optionsContainer.innerHTML = '';
-                question.options.forEach((option, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn w-full p-4 rounded-lg text-white font-bold';
-                    btn.style.backgroundColor = ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'][index % 4];
-                    btn.textContent = option;
-                    btn.addEventListener('click', () => this.checkAnswer(option));
-                    this.optionsContainer.appendChild(btn);
-                });
-                this.feedbackElement.classList.add('hidden');
-                this.nextBtn.classList.add('hidden');
-            }
-
-            checkAnswer(selected) {
-                const question = this.currentQuestions[this.currentQuestionIndex];
-                const isCorrect = selected === question.answer;
-                let message;
-                if (isCorrect) {
-                    this.score += question.points;
-                    this.scoreElement.textContent = `Score: ${this.score}`;
-                    const phrase = this.joeyMessages.correct[Math.floor(Math.random() * this.joeyMessages.correct.length)];
-                    message = `${phrase} ${question.explanation}`;
-                    this.checkAchievements();
-                } else {
-                    const phrase = this.joeyMessages.incorrect[Math.floor(Math.random() * this.joeyMessages.incorrect.length)];
-                    message = `${phrase} The correct answer is "${question.answer}". ${question.explanation}`;
-                }
-                this.updateSpeechBubble(message);
-                this.feedbackElement.textContent = message;
-                this.feedbackElement.classList.remove('hidden');
-                this.nextBtn.classList.remove('hidden');
-                this.optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent === question.answer) {
-                        btn.classList.add('bg-green-500');
-                    } else if (btn.textContent === selected && !isCorrect) {
-                        btn.classList.add('bg-red-500');
-                    }
-                });
-                this.updateDashboard();
-            }
-
-            nextQuestion() {
-                this.currentQuestionIndex++;
-                this.updateProgressBar();
-                if (this.currentQuestionIndex < this.questionsPerLevel) {
-                    this.displayQuestion();
-                } else {
-                    this.endLevel();
-                }
-            }
-
-            updateProgressBar() {
-                const progress = (this.currentQuestionIndex / this.questionsPerLevel) * 100;
-                this.progressBar.style.width = `${progress}%`;
-            }
-
-            checkAchievements() {
-                this.achievements.forEach(ach => {
-                    if (this.score >= ach.threshold && !ach.unlocked) {
-                        ach.unlocked = true;
-                        alert(`Achievement Unlocked: ${ach.name}!`);
-                    }
-                });
-            }
-
-            updateDashboard() {
-                document.getElementById('dashboard-score').textContent = `Score: ${this.score}`;
-                const unlocked = this.achievements.filter(ach => ach.unlocked).map(ach => ach.name).join(', ') || 'None';
-                document.getElementById('dashboard-achievements').textContent = `Achievements: ${unlocked}`;
-            }
-
-            showDashboard() {
-                this.updateDashboard();
-                this.dashboardModal.classList.remove('hidden');
-            }
-
-            showLevelSelector() {
-                const levelButtons = document.getElementById('level-buttons');
-                levelButtons.innerHTML = '';
-                for (let i = 1; i <= this.totalLevels; i++) {
-                    const btn = document.createElement('button');
-                    btn.className = 'bg-blue-600 text-white py-2 px-4 rounded-lg';
-                    btn.textContent = `Level ${i}`;
-                    btn.addEventListener('click', () => {
-                        this.startLevel(i);
-                        this.levelSelectorModal.classList.add('hidden');
-                        this.gameScreen.classList.remove('hidden');
-                    });
-                    levelButtons.appendChild(btn);
-                }
-                this.levelSelectorModal.classList.remove('hidden');
-            }
-
-            showInstructions() {
-                this.instructionsModal.classList.remove('hidden');
-            }
-
-            endLevel() {
-                this.gameScreen.classList.add('hidden');
-                this.levelCompleteScreen.classList.remove('hidden');
-                const levelScore = this.currentQuestions.reduce((sum, q) => sum + q.points, 0);
-                this.levelScore.textContent = `You scored ${this.score - (this.currentLevel - 1) * 50} out of ${levelScore} in this level!`;
-            }
-
-            startNextLevel() {
-                if (this.currentLevel < this.totalLevels) {
-                    this.currentLevel++;
-                    this.startLevel(this.currentLevel);
-                    this.levelCompleteScreen.classList.add('hidden');
-                    this.gameScreen.classList.remove('hidden');
-                } else {
-                    this.endGame();
-                }
-            }
-
-            endGame() {
-                this.levelCompleteScreen.classList.add('hidden');
-                this.gameCompleteScreen.classList.remove('hidden');
-                this.totalScore.textContent = `Your total score is ${this.score} out of ${this.totalLevels * this.questionsPerLevel * 10}!`;
-            }
-
-            restartGame() {
-                this.score = 0;
-                this.currentLevel = 1;
-                this.achievements.forEach(ach => ach.unlocked = false);
-                this.gameCompleteScreen.classList.add('hidden');
-                this.avatarSelection.classList.remove('hidden');
-            }
-
-            updateSpeechBubble(text) {
-                this.speechBubble.textContent = text;
-                this.speechBubble.classList.remove('hidden');
-            }
+        const questionTextEl = document.getElementById('question-text');
+        const answersContainer = document.getElementById('answers-container');
+        const feedbackEl = document.getElementById('feedback');
+        const scoreEl = document.getElementById('score');
+        const questionCounterEl = document.getElementById('question-counter');
+        const endScreenModal = document.getElementById('end-screen-modal');
+        const finalScoreEl = document.getElementById('final-score');
+        const playAgainBtn = document.getElementById('play-again-btn');
+        const restartBtn = document.getElementById('restart-btn');
+        const instructionsBtn = document.getElementById('instructions-btn');
+        const instructionsModal = document.getElementById('instructions-modal');
+        const closeModalBtn = document.getElementById('close-modal-btn');
+        
+        function startGame() {
+            currentQuestionIndex = 0;
+            score = 0;
+            shuffledQuestions = questions.sort(() => Math.random() - 0.5);
+            endScreenModal.classList.add('hidden');
+            feedbackEl.textContent = '';
+            updateUI();
+            showNextQuestion();
         }
 
-        const game = new LawLayersQuest();
+        function showNextQuestion() {
+            if (currentQuestionIndex >= shuffledQuestions.length) {
+                showEndScreen();
+                return;
+            }
+            
+            const question = shuffledQuestions[currentQuestionIndex];
+            questionTextEl.textContent = question.text;
+            answersContainer.innerHTML = '';
+
+            Object.keys(layers).forEach(key => {
+                const layer = layers[key];
+                const button = document.createElement('button');
+                button.textContent = layer.name;
+                button.className = `btn-layer w-full p-4 md:p-6 text-lg font-bold rounded-lg text-white ${layer.color}`;
+                button.onclick = () => selectAnswer(key, button);
+                answersContainer.appendChild(button);
+            });
+            updateUI();
+        }
+
+        function selectAnswer(selectedLayerKey, button) {
+            const question = shuffledQuestions[currentQuestionIndex];
+            const isCorrect = selectedLayerKey === question.layer;
+
+            // Disable buttons
+            Array.from(answersContainer.children).forEach(btn => btn.disabled = true);
+            
+            if (isCorrect) {
+                score += 10;
+                feedbackEl.textContent = 'Correct!';
+                feedbackEl.className = 'mt-6 text-xl font-bold h-8 text-green-400';
+                button.classList.add('correct-answer');
+            } else {
+                feedbackEl.textContent = `Not quite! The answer is ${layers[question.layer].name}.`;
+                feedbackEl.className = 'mt-6 text-xl font-bold h-8 text-red-400';
+                button.classList.add('wrong-answer');
+            }
+            
+            currentQuestionIndex++;
+            setTimeout(() => {
+                feedbackEl.textContent = '';
+                Array.from(answersContainer.children).forEach(btn => btn.disabled = false);
+                showNextQuestion();
+            }, 2500);
+        }
+        
+        function updateUI() {
+            scoreEl.textContent = `Score: ${score}`;
+            questionCounterEl.textContent = `Q: ${Math.min(currentQuestionIndex + 1, questions.length)}/${questions.length}`;
+        }
+
+        function showEndScreen() {
+            finalScoreEl.textContent = score;
+            endScreenModal.classList.remove('hidden');
+        }
+
+        playAgainBtn.addEventListener('click', startGame);
+        restartBtn.addEventListener('click', startGame);
+        instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
+        closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+
+        startGame();
+
     </script>
 </body>
 </html>
