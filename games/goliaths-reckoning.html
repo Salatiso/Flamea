@@ -7,84 +7,128 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background: #1B263B;
-            font-family: 'Georgia', 'Times New Roman', Times, serif;
-        }
-        .game-container {
-            background: #0D1B2A;
-            border: 2px solid #415A77;
-            box-shadow: 0 0 20px rgba(65, 90, 119, 0.5);
-        }
-        #text-display {
-            height: 280px;
-            overflow-y: auto;
-            color: #E0E1DD;
-            line-height: 1.7;
-        }
-        .option-button {
-            background-color: #415A77;
-            color: #E0E1DD;
-            transition: all 0.2s ease-in-out;
-            border-left: 5px solid transparent;
-        }
-        .option-button:hover {
-            background-color: #778DA9;
-            border-left: 5px solid #E0E1DD;
-        }
-        .progress-bar-container {
-            background-color: #1B263B;
-        }
-        .progress-bar {
-            transition: width 0.5s ease-in-out;
-        }
-        .modal { background: rgba(0, 0, 0, 0.7); }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Roboto:wght@400;700&display=swap');
+        body { background-color: #0a0a0a; font-family: 'Roboto', sans-serif; }
+        .game-title { font-family: 'Cinzel', serif; letter-spacing: 0.1em; }
+        .game-container { background: #111; border: 1px solid #444; }
+        .hud { background: #222; border-bottom: 2px solid #b89b70; }
+        .battlefield { background-image: radial-gradient(circle at center, #222 0%, #111 80%); }
+        .goliath-image-container { filter: drop-shadow(0 0 1rem #555); }
+        .option-btn { background: #333; border: 1px solid #555; transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { background: #b89b70; color: #111; border-color: #fff; }
+        .option-btn.correct { background: #2f855a !important; color: white !important; }
+        .option-btn.wrong { background: #c53030 !important; color: white !important; }
+        .avatar-card { border: 2px solid #444; transition: all 0.2s; }
+        .avatar-card.selected, .difficulty-btn.selected { border-color: #b89b70; background: #333; transform: scale(1.05); }
+        .shake-animation { animation: shake 0.5s; }
+        @keyframes shake { 10%, 90% { transform: translate3d(-1px, 0, 0); } 20%, 80% { transform: translate3d(2px, 0, 0); } 30%, 50%, 70% { transform: translate3d(-4px, 0, 0); } 40%, 60% { transform: translate3d(4px, 0, 0); } }
+        .modal-backdrop { background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="text-white min-h-screen flex flex-col items-center justify-center p-4">
+<body class="text-gray-300">
 
-    <!-- In-Game Menu & Stats -->
-    <div class="w-full max-w-4xl mx-auto rounded-t-lg p-3 game-container border-b-0">
-        <div class="flex justify-between items-center mb-3">
-            <h1 class="text-xl font-bold text-red-300">Goliath's Reckoning</h1>
-            <div class="flex space-x-2">
-                <button id="instructions-btn" class="btn-game bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
-                <button id="restart-btn" class="btn-game bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
-                <a href="../games.html" class="btn-game bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
+    <!-- Main Game Container -->
+    <div class="game-container max-w-7xl mx-auto mt-4 rounded-lg shadow-2xl overflow-hidden">
+        
+        <!-- START SCREEN -->
+        <div id="start-screen" class="p-8">
+            <h1 class="game-title text-6xl text-center text-amber-400 mb-4">Goliath's Reckoning</h1>
+            <p class="text-center text-gray-400 mb-8">Choose your champion, select your challenge, and face the Goliaths of our time.</p>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <div>
+                    <h2 class="game-title text-2xl text-amber-500 mb-4">Select Your Avatar</h2>
+                    <div id="avatar-selection" class="grid grid-cols-2 sm:grid-cols-3 gap-4"></div>
+                </div>
+                <div>
+                    <h2 class="game-title text-2xl text-amber-500 mb-4">Select Difficulty</h2>
+                    <div class="flex flex-col space-y-3">
+                        <button class="difficulty-btn p-4 rounded-lg text-lg" data-difficulty="easy">Easy (Face 3 Goliaths)</button>
+                        <button class="difficulty-btn p-4 rounded-lg text-lg" data-difficulty="medium">Medium (Face 7 Goliaths)</button>
+                        <button class="difficulty-btn p-4 rounded-lg text-lg" data-difficulty="hard">Hard (Face all 10 Goliaths)</button>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="text-center mt-8">
+                <button id="start-game-btn" disabled class="game-title text-2xl bg-amber-600 hover:bg-amber-500 text-white py-3 px-12 rounded-lg disabled:bg-gray-600 disabled:cursor-not-allowed">Begin the Reckoning</button>
             </div>
         </div>
-        <!-- Resource Bars -->
-        <div class="grid grid-cols-2 gap-4 text-sm">
-            <div>
-                <label for="hope-bar" class="mb-1 block font-bold">Hope:</label>
-                <div class="progress-bar-container w-full rounded-full h-4">
-                    <div id="hope-bar" class="progress-bar bg-green-500 h-4 rounded-full" style="width: 50%"></div>
+
+        <!-- GAME SCREEN -->
+        <div id="game-screen" class="hidden">
+            <!-- HUD -->
+            <div class="hud p-2 flex justify-between items-center">
+                <div class="flex items-center space-x-4">
+                    <div id="player-avatar-hud" class="w-12 h-12"></div>
+                    <div id="lives-container" class="text-2xl"></div>
+                </div>
+                <div id="score-display" class="text-xl font-bold">Score: 0</div>
+                <a id="quit-btn" class="cursor-pointer text-gray-400 hover:text-white"><i class="fas fa-times-circle"></i> Quit</a>
+            </div>
+            
+            <!-- Battlefield -->
+            <div class="battlefield p-4 md:p-8 grid grid-cols-1 lg:grid-cols-3 gap-8">
+                <div class="lg:col-span-1 text-center">
+                    <h2 id="level-text" class="game-title text-3xl text-amber-400 mb-4"></h2>
+                    <div class="goliath-image-container">
+                        <img id="goliath-image" src="" alt="Goliath" class="mx-auto rounded-full border-4 border-gray-600 w-48 h-48 md:w-64 md:h-64">
+                    </div>
+                    <h3 id="goliath-name" class="text-2xl mt-4 font-bold"></h3>
+                    <div class="w-full bg-gray-700 rounded-full h-4 mt-2">
+                        <div id="level-progress-bar" class="bg-red-600 h-4 rounded-full" style="width: 100%"></div>
+                    </div>
+                </div>
+                
+                <!-- Question Panel -->
+                <div class="lg:col-span-2 bg-black/30 p-6 rounded-lg">
+                    <p id="question-counter" class="text-sm text-gray-400 mb-2"></p>
+                    <h3 id="question-text-title" class="text-xl md:text-2xl font-bold mb-4 min-h-[6rem]"></h3>
+                    <div id="options-container" class="space-y-3"></div>
                 </div>
             </div>
-            <div>
-                <label for="credibility-bar" class="mb-1 block font-bold">Credibility:</label>
-                <div class="progress-bar-container w-full rounded-full h-4">
-                    <div id="credibility-bar" class="progress-bar bg-blue-500 h-4 rounded-full" style="width: 50%"></div>
-                </div>
-            </div>
+        </div>
+        
+        <!-- GAME OVER SCREEN -->
+        <div id="game-over-screen" class="hidden p-8 text-center flex flex-col items-center justify-center min-h-[50vh]">
+             <h1 id="end-title" class="game-title text-8xl"></h1>
+             <p id="end-message" class="text-2xl mt-4 mb-8"></p>
+             <p class="text-xl">Final Score: <span id="final-score" class="text-4xl font-bold text-amber-400"></span></p>
+             <button id="restart-game-btn" class="game-title text-2xl mt-8 bg-amber-600 hover:bg-amber-500 text-white py-3 px-12 rounded-lg">Play Again</button>
         </div>
     </div>
 
-    <!-- Game Area -->
-    <div id="game-area" class="w-full max-w-4xl mx-auto p-6 rounded-b-2xl shadow-2xl game-container">
-        <div id="text-display" class="mb-4 p-4 bg-black/30 rounded-lg text-lg"></div>
-        <div id="options-container" class="grid grid-cols-1 gap-3"></div>
+    <!-- MODALS -->
+    <!-- Feedback Modal -->
+    <div id="feedback-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden">
+        <div class="game-container w-11/12 max-w-2xl p-6 rounded-lg">
+            <h2 id="feedback-title" class="text-3xl font-bold mb-4"></h2>
+            <p id="feedback-explanation-primary" class="text-lg mb-4"></p>
+            <div id="feedback-explanation-secondary" class="text-base bg-black/30 p-4 rounded mb-4"></div>
+            <div id="source-links" class="flex flex-wrap gap-2 mb-4"></div>
+            <button id="continue-btn" class="w-full bg-amber-600 hover:bg-amber-500 text-white py-2 rounded">Continue</button>
+        </div>
+    </div>
+    <!-- Quit Confirmation Modal -->
+    <div id="quit-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden">
+         <div class="game-container w-11/12 max-w-md p-6 rounded-lg text-center">
+            <h2 class="text-2xl font-bold mb-4">Are you sure you want to quit?</h2>
+            <p class="mb-6">Your progress will be lost.</p>
+            <div class="flex justify-center gap-4">
+                <button id="resume-game-btn" class="bg-gray-500 hover:bg-gray-400 text-white py-2 px-8 rounded">Resume</button>
+                <button id="confirm-quit-btn" class="bg-red-600 hover:bg-red-500 text-white py-2 px-8 rounded">Quit</button>
+            </div>
+         </div>
+    </div>
+    <!-- Sudden Death Modal (simplified for now) -->
+    <div id="sudden-death-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden">
+        <div class="game-container w-11/12 max-w-lg p-6 rounded-lg text-center border-4 border-red-500">
+            <h2 class="game-title text-4xl text-red-500 mb-4">Sudden Death!</h2>
+            <div id="sudden-death-timer" class="text-6xl font-bold mb-4">30</div>
+            <div id="sudden-death-question-panel"></div>
+        </div>
     </div>
     
-     <!-- Instructions/End Modal -->
-    <div id="modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
-        <div class="game-container w-11/12 max-w-md p-8 rounded-2xl shadow-2xl text-center">
-            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-red-300"></h2>
-            <p id="modal-text" class="mb-6 text-lg"></p>
-            <button id="modal-button" class="w-full bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-4 rounded-lg"></button>
-        </div>
-    </div>
-
-    <script src="../assets/js/goliaths-reckoning.js"></script>
+    <script type="module" src="assets/js/goliaths-reckoning.js"></script>
 </body>
 </html>
