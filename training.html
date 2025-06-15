@@ -198,28 +198,40 @@
                                 <a href="games/satirical-game.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700"><div class="flex items-center mb-4"><i class="fas fa-theater-masks text-3xl text-pink-400 mr-4"></i><h4 class="text-xl font-bold">The System</h4></div><p class="text-gray-400 mb-4 h-20">A satirical look at the justice system. (Mature)</p><span class="bg-pink-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Play Now</span></a>
                                 <a href="games/legal-simulator.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700"><div class="flex items-center mb-4"><i class="fas fa-laptop-code text-3xl text-pink-400 mr-4"></i><h4 class="text-xl font-bold">Legal Simulator</h4></div><p class="text-gray-400 mb-4 h-20">Experience legal scenarios in a simulated world.</p><span class="bg-pink-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Play Now</span></a>
                             </div>
+ </div>
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
-</div>
 
+    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
+    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
 
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const accordionToggles = document.querySelectorAll('.accordion-toggle');
-        accordionToggles.forEach(button => {
+    <script src="[https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js](https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js)"></script>
+    <script src="assets/js/sidebar-loader.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>
+</body>
+</html>
+        </div>
+    </div>
+
+    <script>
+        // Accordion functionality
+        document.querySelectorAll('.accordion-toggle').forEach(button => {
             button.addEventListener('click', () => {
                 const content = button.nextElementSibling;
                 const icon = button.querySelector('i');
+
                 if (content.style.maxHeight) {
                     content.style.maxHeight = null;
                     icon.classList.remove('rotate-180');
                 } else {
-                    content.style.maxHeight = content.scrollHeight + "px";
+                    content.style.maxHeight = content.scrollHeight + 'px';
                     icon.classList.add('rotate-180');
                 }
             });
         });
-    });
-</script>
-    <script src="assets/js/sidebar-loader.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
+    </script>
