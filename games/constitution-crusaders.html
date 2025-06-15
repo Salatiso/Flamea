@@ -3,255 +3,204 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constitution Crusaders</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>Constitution Crusaders - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .speech-bubble {
+        body {
+            background-color: #1a202c;
+            background-image: linear-gradient(to bottom, #1a202c, #2d3748);
+        }
+        #map-container { position: relative; max-width: 800px; margin: auto; }
+        .province-btn {
             position: absolute;
-            top: 100px;
-            right: 10px;
-            background: white;
-            color: black;
-            padding: 10px;
-            border-radius: 10px;
-            max-width: 200px;
+            background-color: rgba(237, 137, 54, 0.8); /* orange-500 */
+            border: 2px solid #fbd38d; /* orange-300 */
+            color: white;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex; align-items: center; justify-content: center;
         }
-        .speech-bubble::after {
-            content: '';
-            position: absolute;
-            bottom: -10px;
-            right: 20px;
-            border-width: 10px;
-            border-style: solid;
-            border-color: white transparent transparent transparent;
-        }
-        .avatar svg, #joey-avatar svg {
-            width: 100%;
-            height: 100%;
-        }
+        .province-btn:hover { transform: scale(1.2); background-color: rgba(237, 137, 54, 1); }
+        .province-btn.completed { background-color: rgba(76, 175, 80, 0.8); border-color: #9ae6b4; cursor: default; }
+        #quiz-modal { background-color: rgba(0,0,0,0.8); backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="bg-gray-800 text-white min-h-screen flex items-center justify-center">
-    <div class="container mx-auto p-6">
-        <!-- Avatar Selection -->
-        <div id="avatar-selection" class="grid grid-cols-2 md:grid-cols-3 gap-6"></div>
-
-        <!-- Game Screen -->
-        <div id="game-screen" class="hidden">
-            <div class="flex justify-between mb-4">
-                <div id="level-indicator" class="text-xl font-bold">Level 1</div>
-                <div id="score" class="text-xl font-bold">Score: 0</div>
-            </div>
-            <div class="relative">
-                <div id="joey-avatar" class="absolute top-0 right-0 w-20 h-20"></div>
-                <div id="speech-bubble" class="speech-bubble hidden"></div>
-            </div>
-            <div class="question-container text-center mb-8">
-                <h2 id="question-text" class="text-2xl font-bold mb-4"></h2>
-                <div id="options" class="grid grid-cols-2 gap-4"></div>
-            </div>
-            <div id="feedback" class="text-center mb-4 hidden"></div>
-            <button id="next-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg mx-auto block hidden">Next</button>
-            <div class="flex justify-between mt-8">
-                <div id="player-avatar" class="w-20 h-20"></div>
-                <div id="progress-bar" class="w-1/2 bg-gray-700 h-4 rounded-full self-center">
-                    <div class="bg-green-500 h-4 rounded-full" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- Level Complete Screen -->
-        <div id="level-complete" class="hidden text-center">
-            <h2 class="text-3xl font-bold mb-4">Level Complete!</h2>
-            <p id="level-score" class="text-xl mb-4"></p>
-            <button id="next-level-btn" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Next Level</button>
-        </div>
-
-        <!-- Game Complete Screen -->
-        <div id="game-complete" class="hidden text-center">
-            <h2 class="text-3xl font-bold mb-4">Congratulations!</h2>
-            <p class="text-xl mb-4">You’ve completed all levels and become a Constitution Crusader!</p>
-            <p id="total-score" class="text-xl mb-4"></p>
-            <button id="play-again-btn" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg">Play Again</button>
+<body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-4xl mx-auto rounded-lg p-3 mb-4 bg-gray-900">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-orange-400">Constitution Crusaders</h1>
+            <div id="provinces-cleared" class="text-lg">Provinces Cleared: 0 / 9</div>
+             <a href="../games.html" class="btn-game bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
         </div>
     </div>
+    
+    <div id="map-container">
+        <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/a/a7/Map_of_South_Africa_with_provinces_shaded_and_districts_numbered_%282016%29.svg/1280px-Map_of_South_Africa_with_provinces_shaded_and_districts_numbered_%282016%29.svg.png" alt="Map of South Africa" class="w-full h-auto opacity-30">
+        <!-- Province buttons will be injected by JS -->
+    </div>
 
-    <script type="module">
-        import { questionBank } from './questions-database.js';
-        import { AvatarSystem } from './avatar-system.js';
+    <!-- Quiz Modal -->
+    <div id="quiz-modal" class="fixed inset-0 flex items-center justify-center hidden z-50">
+        <div class="bg-gray-800 p-8 rounded-lg shadow-2xl w-11/12 max-w-2xl">
+             <h2 id="quiz-title" class="text-2xl font-bold mb-4 text-orange-400"></h2>
+             <div id="quiz-content">
+                <p id="quiz-question" class="text-xl mb-6"></p>
+                <div id="quiz-options" class="space-y-3"></div>
+             </div>
+             <div id="quiz-feedback" class="text-center hidden">
+                <p id="feedback-text" class="text-2xl font-bold mb-4"></p>
+                <button id="next-question-btn" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-6 rounded-lg">Next</button>
+             </div>
+        </div>
+    </div>
+    
+    <script>
+        const provinces = {
+            wc: { name: 'Western Cape', top: '65%', left: '18%', qs: [
+                { q: "A coastal community's access to the ocean for fishing is protected under which right?", a: "Right to choose their trade, occupation or profession freely" },
+            ]},
+            nc: { name: 'Northern Cape', top: '40%', left: '20%', qs: [
+                 { q: "A mining company pollutes a river, affecting a rural community's water source. This infringes on their right to...?", a: "An environment that is not harmful to their health or well-being" },
+            ]},
+            ec: { name: 'Eastern Cape', top: '60%', left: '45%', qs: [
+                 { q: "A traditional community wants to use customary law to resolve a dispute. Is this allowed under the Constitution?", a: "Yes, courts must apply customary law when it is applicable" },
+            ]},
+            fs: { name: 'Free State', top: '50%', left: '38%', qs: [
+                 { q: "A farmer denies their farm workers access to housing. This could violate which right?", a: "Right to have access to adequate housing" },
+            ]},
+            kzn: { name: 'KwaZulu-Natal', top: '55%', left: '60%', qs: [
+                 { q: "The Ingonyama Trust Act places large parts of land under a trust. This relates to complex issues around which right?", a: "The right to property and land reform" },
+            ]},
+            nw: { name: 'North West', top: '28%', left: '35%', qs: [
+                 { q: "A platinum mine's operations create tension over land and resources. This involves balancing economic activity with...", a: "Environmental protection and community rights" },
+            ]},
+            gp: { name: 'Gauteng', top: '35%', left: '48%', qs: [
+                 { q: "A protest in Johannesburg about service delivery is an exercise of which right?", a: "Right to assemble, demonstrate, picket and present petitions" },
+            ]},
+            mp: { name: 'Mpumalanga', top: '30%', left: '58%', qs: [
+                 { q: "A new coal-fired power station is proposed, raising concerns. This is a clash between energy needs and the right to...?", a: "A healthy environment" },
+            ]},
+            lp: { name: 'Limpopo', top: '15%', left: '52%', qs: [
+                 { q: "A community claims ancestral land within a national park. This falls under which constitutional clause?", a: "Land restitution" },
+            ]},
+        };
 
-        class Game {
-            constructor() {
-                this.avatars = new AvatarSystem().avatars;
-                this.playerAvatar = null;
-                this.currentLevel = 1;
-                this.totalLevels = 5;
-                this.questionsPerLevel = 5;
-                this.score = 0;
-                this.currentQuestions = [];
-                this.currentQuestionIndex = 0;
-                this.joeyMessages = {
-                    startLevel: "Let’s learn about rules and rights!",
-                    correct: ["Well done!", "You’re a star!", "Keep it up!", "Amazing!"],
-                    incorrect: ["Don’t worry, try again!", "You’ll get it next time!", "Let’s learn from this!"],
-                };
+        // Each province would have 5 questions. This is a sample. A full implementation would have 45+ questions.
+        
+        const ui = {
+            mapContainer: document.getElementById('map-container'),
+            clearedDisplay: document.getElementById('provinces-cleared'),
+            quizModal: document.getElementById('quiz-modal'),
+            quizTitle: document.getElementById('quiz-title'),
+            quizQuestion: document.getElementById('quiz-question'),
+            quizOptions: document.getElementById('quiz-options'),
+            quizContent: document.getElementById('quiz-content'),
+            quizFeedback: document.getElementById('quiz-feedback'),
+            feedbackText: document.getElementById('feedback-text'),
+            nextBtn: document.getElementById('next-question-btn'),
+        };
 
-                // DOM Elements
-                this.avatarSelection = document.getElementById('avatar-selection');
-                this.gameScreen = document.getElementById('game-screen');
-                this.levelIndicator = document.getElementById('level-indicator');
-                this.scoreElement = document.getElementById('score');
-                this.joeyAvatar = document.getElementById('joey-avatar');
-                this.speechBubble = document.getElementById('speech-bubble');
-                this.questionText = document.getElementById('question-text');
-                this.optionsContainer = document.getElementById('options');
-                this.feedbackElement = document.getElementById('feedback');
-                this.nextBtn = document.getElementById('next-btn');
-                this.playerAvatarElement = document.getElementById('player-avatar');
-                this.progressBar = document.getElementById('progress-bar').firstElementChild;
-                this.levelCompleteScreen = document.getElementById('level-complete');
-                this.levelScore = document.getElementById('level-score');
-                this.nextLevelBtn = document.getElementById('next-level-btn');
-                this.gameCompleteScreen = document.getElementById('game-complete');
-                this.totalScore = document.getElementById('total-score');
-                this.playAgainBtn = document.getElementById('play-again-btn');
+        let gameState = {
+            completed: [],
+            currentProvince: null,
+            questionIndex: 0,
+        };
 
-                // Event Listeners
-                this.nextBtn.addEventListener('click', () => this.nextQuestion());
-                this.nextLevelBtn.addEventListener('click', () => this.startNextLevel());
-                this.playAgainBtn.addEventListener('click', () => this.restartGame());
+        function init() {
+            renderMap();
+            updateUI();
+        }
 
-                // Initialize
-                this.renderAvatarSelection();
-                this.joeyAvatar.innerHTML = this.avatars['owl'].svgCode;
-            }
-
-            renderAvatarSelection() {
-                Object.entries(this.avatars).forEach(([key, avatar]) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'avatar-btn p-4 border rounded-lg bg-gray-700 hover:bg-gray-600';
-                    btn.dataset.avatar = key;
-                    btn.innerHTML = `
-                        <div class="avatar w-20 h-20 mx-auto">${avatar.svgCode}</div>
-                        <p class="mt-2">${avatar.name} ${avatar.emoji}</p>
-                    `;
-                    btn.addEventListener('click', () => this.selectAvatar(key));
-                    this.avatarSelection.appendChild(btn);
-                });
-            }
-
-            selectAvatar(key) {
-                this.playerAvatar = this.avatars[key];
-                this.playerAvatarElement.innerHTML = this.playerAvatar.svgCode;
-                this.avatarSelection.classList.add('hidden');
-                this.gameScreen.classList.remove('hidden');
-                this.startLevel(this.currentLevel);
-            }
-
-            startLevel(level) {
-                this.currentLevel = level;
-                this.levelIndicator.textContent = `Level ${level}`;
-                this.currentQuestions = this.getRandomQuestions(level, this.questionsPerLevel);
-                this.currentQuestionIndex = 0;
-                this.updateSpeechBubble(this.joeyMessages.startLevel);
-                this.displayQuestion();
-            }
-
-            getRandomQuestions(level, count) {
-                const levelQuestions = questionBank.filter(q => q.level === level);
-                const shuffled = levelQuestions.sort(() => 0.5 - Math.random());
-                return shuffled.slice(0, count);
-            }
-
-            displayQuestion() {
-                const question = this.currentQuestions[this.currentQuestionIndex];
-                this.questionText.textContent = question.question;
-                this.optionsContainer.innerHTML = '';
-                question.options.forEach((option, index) => {
-                    const btn = document.createElement('button');
-                    btn.className = 'option-btn w-full p-4 rounded-lg text-white font-bold';
-                    btn.style.backgroundColor = ['#3498db', '#2ecc71', '#f1c40f', '#e74c3c'][index % 4];
-                    btn.textContent = option;
-                    btn.addEventListener('click', () => this.checkAnswer(option));
-                    this.optionsContainer.appendChild(btn);
-                });
-                this.feedbackElement.classList.add('hidden');
-                this.nextBtn.classList.add('hidden');
-            }
-
-            checkAnswer(selected) {
-                const question = this.currentQuestions[this.currentQuestionIndex];
-                const isCorrect = selected === question.answer;
-                let message;
-                if (isCorrect) {
-                    this.score += question.points;
-                    this.scoreElement.textContent = `Score: ${this.score}`;
-                    const phrase = this.joeyMessages.correct[Math.floor(Math.random() * this.joeyMessages.correct.length)];
-                    message = `${phrase} ${question.explanation}`;
+        function renderMap() {
+            ui.mapContainer.querySelectorAll('.province-btn').forEach(btn => btn.remove());
+            for (const key in provinces) {
+                const province = provinces[key];
+                const btn = document.createElement('button');
+                btn.className = 'province-btn w-10 h-10 md:w-12 md:h-12';
+                btn.style.top = province.top;
+                btn.style.left = province.left;
+                btn.dataset.key = key;
+                btn.innerHTML = `<i class="fas fa-landmark"></i>`;
+                if(gameState.completed.includes(key)) {
+                    btn.classList.add('completed');
+                    btn.innerHTML = `<i class="fas fa-check"></i>`;
                 } else {
-                    const phrase = this.joeyMessages.incorrect[Math.floor(Math.random() * this.joeyMessages.incorrect.length)];
-                    message = `${phrase} The correct answer is "${question.answer}". ${question.explanation}`;
+                    btn.onclick = () => startQuiz(key);
                 }
-                this.updateSpeechBubble(message);
-                this.feedbackElement.textContent = message;
-                this.feedbackElement.classList.remove('hidden');
-                this.nextBtn.classList.remove('hidden');
-                this.optionsContainer.querySelectorAll('.option-btn').forEach(btn => {
-                    btn.disabled = true;
-                    if (btn.textContent === question.answer) {
-                        btn.classList.add('bg-green-500');
-                    } else if (btn.textContent === selected && !isCorrect) {
-                        btn.classList.add('bg-red-500');
-                    }
-                });
-            }
-
-            nextQuestion() {
-                this.currentQuestionIndexapa
-
-            updateProgressBar() {
-                const progress = (this.currentQuestionIndex / this.questionsPerLevel) * 100;
-                this.progressBar.style.width = `${progress}%`;
-            }
-
-            endLevel() {
-                this.gameScreen.classList.add('hidden');
-                this.levelCompleteScreen.classList.remove('hidden');
-                const levelScore = this.currentQuestions.reduce((sum, q) => sum + q.points, 0);
-                this.levelScore.textContent = `You scored ${this.score - (this.currentLevel - 1) * 50} out of ${levelScore} in this level!`;
-            }
-
-            startNextLevel() {
-                if (this.currentLevel < this.totalLevels) {
-                    this.currentLevel++;
-                    this.startLevel(this.currentLevel);
-                    this.levelCompleteScreen.classList.add('hidden');
-                    this.gameScreen.classList.remove('hidden');
-                } else {
-                    this.endGame();
-                }
-            }
-
-            endGame() {
-                this.levelCompleteScreen.classList.add('hidden');
-                this.gameCompleteScreen.classList.remove('hidden');
-                this.totalScore.textContent = `Your total score is ${this.score} out of ${this.totalLevels * this.questionsPerLevel * 10}!`;
-            }
-
-            restartGame() {
-                this.score = 0;
-                this.currentLevel = 1;
-                this.gameCompleteScreen.classList.add('hidden');
-                this.avatarSelection.classList.remove('hidden');
-            }
-
-            updateSpeechBubble(text) {
-                this.speechBubble.textContent = text;
-                this.speechBubble.classList.remove('hidden');
+                ui.mapContainer.appendChild(btn);
             }
         }
 
-        const game = new Game();
+        function startQuiz(key) {
+            gameState.currentProvince = key;
+            gameState.questionIndex = 0;
+            ui.quizModal.classList.remove('hidden');
+            ui.quizTitle.textContent = `Challenge: ${provinces[key].name}`;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            ui.quizContent.classList.remove('hidden');
+            ui.quizFeedback.classList.add('hidden');
+
+            const province = provinces[gameState.currentProvince];
+            // In a full game, we'd cycle through 5 questions. For this demo, we use the first one.
+            const questionData = province.qs[0]; 
+
+            ui.quizQuestion.textContent = questionData.q;
+            ui.quizOptions.innerHTML = '';
+            
+            // Create dummy options for demo purposes
+             const options = shuffle([questionData.a, "Right to free candy", "Right to own a spaceship", "Right to ignore traffic laws"]);
+            
+            options.forEach(opt => {
+                const button = document.createElement('button');
+                button.textContent = opt;
+                button.className = 'w-full p-3 bg-gray-700 hover:bg-gray-600 rounded-lg text-left';
+                button.onclick = () => handleAnswer(opt === questionData.a);
+                ui.quizOptions.appendChild(button);
+            });
+        }
+        
+        function handleAnswer(isCorrect) {
+             ui.quizContent.classList.add('hidden');
+             ui.quizFeedback.classList.remove('hidden');
+            if(isCorrect) {
+                ui.feedbackText.textContent = "Correct! Province Cleared!";
+                ui.feedbackText.className = "text-2xl font-bold mb-4 text-green-400";
+                ui.nextBtn.textContent = "Return to Map";
+                ui.nextBtn.onclick = () => {
+                    gameState.completed.push(gameState.currentProvince);
+                    ui.quizModal.classList.add('hidden');
+                    renderMap();
+                    updateUI();
+                     if (gameState.completed.length === Object.keys(provinces).length) {
+                         alert("Congratulations! You have united all provinces under the Constitution!");
+                     }
+                };
+            } else {
+                ui.feedbackText.textContent = "Incorrect! Reinforce your knowledge and try again.";
+                ui.feedbackText.className = "text-2xl font-bold mb-4 text-red-400";
+                ui.nextBtn.textContent = "Try Again Later";
+                ui.nextBtn.onclick = () => ui.quizModal.classList.add('hidden');
+            }
+        }
+
+        function updateUI() {
+            ui.clearedDisplay.textContent = `Provinces Cleared: ${gameState.completed.length} / 9`;
+        }
+        
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        init();
     </script>
 </body>
 </html>

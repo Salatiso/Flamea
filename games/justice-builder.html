@@ -3,200 +3,79 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Justice Builder - FLAMEA Kids</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
+    <title>Justice Builder - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .builder-container {
-            display: grid;
-            grid-template-columns: 250px 1fr 250px;
-            height: 100vh;
-            background: linear-gradient(to bottom, #87CEEB, #98FB98);
-        }
-        
-        .tools-panel {
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .building-area {
-            background: #f0f8ff;
-            position: relative;
-            overflow: hidden;
-        }
-        
-        .properties-panel {
-            background: rgba(255,255,255,0.9);
-            padding: 20px;
-            overflow-y: auto;
-        }
-        
-        .building-block {
-            width: 80px;
-            height: 60px;
-            margin: 10px 0;
-            border: 2px solid #333;
-            border-radius: 10px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            cursor: grab;
-            font-size: 24px;
-            transition: transform 0.2s;
-        }
-        
-        .building-block:hover {
-            transform: scale(1.05);
-        }
-        
-        .building-block.dragging {
-            cursor: grabbing;
-            transform: rotate(5deg);
-        }
-        
-        .placed-building {
-            position: absolute;
-            border: 2px solid #4CAF50;
-            border-radius: 10px;
-            background: rgba(255,255,255,0.9);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 30px;
-            cursor: pointer;
-        }
-        
-        .grid-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-image: 
-                linear-gradient(rgba(0,0,0,0.1) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(0,0,0,0.1) 1px, transparent 1px);
-            background-size: 40px 40px;
-            pointer-events: none;
-        }
-        
-        .justice-meter {
-            position: absolute;
-            top: 20px;
-            left: 20px;
-            background: white;
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-        }
-        
-        .meter-bar {
-            width: 200px;
-            height: 20px;
-            background: #ddd;
-            border-radius: 10px;
-            overflow: hidden;
-            margin-top: 10px;
-        }
-        
-        .meter-fill {
-            height: 100%;
-            background: linear-gradient(to right, #ff4444, #ffaa00, #44ff44);
-            transition: width 0.3s;
-            border-radius: 10px;
-        }
-        
-        .challenge-popup {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            transform: translate(-50%, -50%);
-            background: white;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-            max-width: 400px;
-            text-align: center;
-            z-index: 100;
-        }
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&display=swap');
+        body { background-color: #2d3748; color: #e2e8f0; font-family: 'Inter', sans-serif; }
+        .case-file-bg { background-color: #1a202c; }
+        .case-folder { background-color: #4a5568; }
+        .step-item { transition: all 0.3s ease; border-left: 4px solid transparent; }
+        .step-item.active { background-color: #4a5568; border-left-color: #f6ad55; /* orange-400 */ }
+        .step-item.completed { border-left-color: #68d391; /* green-400 */ opacity: 0.7; }
+        .action-button { background-color: #2b6cb0; transition: all 0.2s; }
+        .action-button:hover:not(:disabled) { background-color: #2c5282; transform: translateY(-2px); }
+        .action-button:disabled { background-color: #4a5568; cursor: not-allowed; }
+        .feedback { transition: opacity 0.5s; }
+        .modal-backdrop { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); }
+        .progress-bar { transition: width 0.5s ease-in-out; }
     </style>
 </head>
-<body>
-    <div class="builder-container">
-        <!-- Tools Panel -->
-        <div class="tools-panel">
-            <h3>🏗️ Building Blocks</h3>
-            <div class="tools-section">
-                <h4>Essential Rights 📜</h4>
-                <div class="building-block" draggable="true" data-type="school" data-justice="25">
-                    🏫 School
-                </div>
-                <div class="building-block" draggable="true" data-type="hospital" data-justice="20">
-                    🏥 Hospital
-                </div>
-                <div class="building-block" draggable="true" data-type="house" data-justice="15">
-                    🏠 Home
-                </div>
-                <div class="building-block" draggable="true" data-type="court" data-justice="30">
-                    ⚖️ Court
-                </div>
-                
-                <h4>Community Spaces 🌍</h4>
-                <div class="building-block" draggable="true" data-type="park" data-justice="10">
-                    🌳 Park
-                </div>
-                <div class="building-block" draggable="true" data-type="library" data-justice="20">
-                    📚 Library
-                </div>
-                <div class="building-block" draggable="true" data-type="playground" data-justice="15">
-                    🎠 Playground
-                </div>
-                
-                <h4>Safety & Order 👮</h4>
-                <div class="building-block" draggable="true" data-type="police" data-justice="25">
-                    👮 Police
-                </div>
-                <div class="building-block" draggable="true" data-type="fire" data-justice="20">
-                    🚒 Fire Station
-                </div>
-            </div>
-        </div>
-        
-        <!-- Building Area -->
-        <div class="building-area" id="buildingArea">
-            <div class="grid-overlay"></div>
-            
-            <div class="justice-meter">
-                <div>Justice Level: <span id="justiceScore">0</span>%</div>
-                <div class="meter-bar">
-                    <div class="meter-fill" id="justiceFill" style="width: 0%"></div>
-                </div>
-            </div>
-        </div>
-        
-        <!-- Properties Panel -->
-        <div class="properties-panel">
-            <h3>🎯 Current Challenge</h3>
-            <div id="currentChallenge">
-                <h4>Build a Fair Community!</h4>
-                <p>Create a community where everyone can learn, feel safe, and be happy!</p>
-                <ul>
-                    <li>✅ Everyone needs a place to learn</li>
-                    <li>✅ Everyone needs to feel safe</li>
-                    <li>✅ Everyone needs healthcare</li>
-                    <li>✅ Everyone needs fun and play</li>
-                </ul>
-            </div>
-            
-            <h3>📊 Community Stats</h3>
-            <div id="communityStats">
-                <div>Buildings: <span id="buildingCount">0</span></div>
-                <div>People Happy: <span id="happinessScore">0</span>%</div>
-                <div>Safety Level: <span id="safetyScore">0</span>%</div>
+<body class="min-h-screen flex flex-col items-center justify-center p-4">
+    
+    <div class="w-full max-w-6xl mx-auto rounded-lg p-2 mb-4 case-file-bg">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-orange-300">Justice Builder</h1>
+            <div class="flex space-x-2">
+                <button id="restart-btn" class="btn-game bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i> Restart</button>
+                <a href="../games.html" class="btn-game bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
             </div>
         </div>
     </div>
+    
+    <div class="w-full max-w-6xl mx-auto grid grid-cols-1 md:grid-cols-4 gap-6">
+        <!-- Left: Case Steps -->
+        <div class="md:col-span-1 case-folder p-4 rounded-lg shadow-lg">
+            <h2 class="text-lg font-bold mb-4 border-b-2 border-gray-500 pb-2">Case File</h2>
+            <div id="steps-container" class="space-y-2"></div>
+        </div>
+        
+        <!-- Center: Action Area -->
+        <div class="md:col-span-3 case-file-bg p-6 rounded-lg shadow-lg">
+            <div class="mb-4">
+                <div class="flex justify-between mb-1 text-sm">
+                    <span class="font-bold text-green-400">Case Strength</span>
+                    <span id="strength-value">50%</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-4"><div id="strength-bar" class="bg-green-500 h-4 rounded-full progress-bar"></div></div>
+            </div>
+             <div class="mb-6">
+                <div class="flex justify-between mb-1 text-sm">
+                    <span class="font-bold text-blue-400">Client Morale</span>
+                    <span id="morale-value">50%</span>
+                </div>
+                <div class="w-full bg-gray-700 rounded-full h-4"><div id="morale-bar" class="bg-blue-500 h-4 rounded-full progress-bar"></div></div>
+            </div>
 
-    <script src="../assets/js/firebase-config.js"></script>
+            <h2 id="current-step-title" class="text-2xl font-bold text-orange-300 mb-2"></h2>
+            <p id="scenario-text" class="mb-4 h-24"></p>
+            <div id="actions-container" class="grid grid-cols-1 lg:grid-cols-2 gap-4 mb-4"></div>
+            <div id="feedback-container" class="p-4 rounded-lg bg-gray-700 min-h-[70px]">
+                <p id="feedback-text" class="feedback"></p>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Modal -->
+    <div id="modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal-backdrop hidden z-50">
+        <div class="case-file-bg w-11/12 max-w-md p-8 rounded-2xl shadow-2xl text-center">
+            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-orange-300"></h2>
+            <p id="modal-text" class="mb-6 text-lg"></p>
+            <button id="modal-button" class="w-full bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg"></button>
+        </div>
+    </div>
+
     <script src="../assets/js/justice-builder.js"></script>
 </body>
 </html>

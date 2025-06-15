@@ -3,187 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Constitution Champions - FLAMEA Kids</title>
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <link rel="stylesheet" href="../assets/css/games.css">
+    <title>Constitution Champions - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .game-container {
-            max-width: 1200px;
-            margin: 0 auto;
-            padding: 20px;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            min-height: 100vh;
-            font-family: 'Comic Sans MS', cursive;
+        body {
+            background: radial-gradient(ellipse at bottom, #1b2735 0%, #090a0f 100%);
+            font-family: 'Helvetica Neue', sans-serif;
         }
-        
-        .avatar-selector {
-            position: fixed;
-            top: 20px;
-            right: 20px;
-            background: white;
-            border-radius: 50%;
-            width: 60px;
-            height: 60px;
-            cursor: pointer;
-            box-shadow: 0 4px 8px rgba(0,0,0,0.2);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-size: 24px;
+        .game-area {
+            border: 2px solid #D4AF37;
+            background-color: rgba(0, 0, 0, 0.2);
+            backdrop-filter: blur(10px);
         }
-        
-        .puzzle-area {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
-            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-        }
-        
-        .constitution-block {
-            background: linear-gradient(45deg, #FF6B6B, #4ECDC4);
-            color: white;
-            padding: 15px;
-            margin: 10px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: transform 0.3s;
-            user-select: none;
-        }
-        
-        .constitution-block:hover {
-            transform: scale(1.05);
-        }
-        
-        .drop-zone {
-            border: 3px dashed #ccc;
-            min-height: 100px;
-            border-radius: 15px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            margin: 10px;
-            transition: all 0.3s;
-        }
-        
-        .drop-zone.drag-over {
-            border-color: #4ECDC4;
-            background: #f0f9ff;
-        }
-        
-        .level-indicator {
-            display: flex;
-            justify-content: center;
-            margin: 20px 0;
-        }
-        
-        .level-dot {
-            width: 15px;
-            height: 15px;
-            border-radius: 50%;
-            margin: 0 5px;
-            background: #ddd;
-            transition: all 0.3s;
-        }
-        
-        .level-dot.completed {
-            background: #4ECDC4;
-            transform: scale(1.2);
-        }
-        
-        .level-dot.current {
-            background: #FF6B6B;
-            animation: pulse 1s infinite;
-        }
-        
-        @keyframes pulse {
-            0% { transform: scale(1); }
-            50% { transform: scale(1.2); }
-            100% { transform: scale(1); }
-        }
-        
-        .quiz-container {
-            background: white;
-            border-radius: 20px;
-            padding: 30px;
-            margin: 20px 0;
-            text-align: center;
-        }
-        
-        .answer-option {
-            background: #f8f9fa;
-            border: 2px solid #e9ecef;
-            border-radius: 15px;
-            padding: 15px;
-            margin: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-        }
-        
-        .answer-option:hover {
-            background: #e3f2fd;
-            border-color: #2196f3;
-        }
-        
-        .answer-option.correct {
-            background: #c8e6c9;
-            border-color: #4caf50;
-            animation: celebrate 0.5s;
-        }
-        
-        .answer-option.incorrect {
-            background: #ffcdd2;
-            border-color: #f44336;
-            animation: shake 0.5s;
-        }
-        
-        @keyframes celebrate {
-            0%, 100% { transform: scale(1); }
-            50% { transform: scale(1.05); }
-        }
-        
-        @keyframes shake {
-            0%, 100% { transform: translateX(0); }
-            25% { transform: translateX(-5px); }
-            75% { transform: translateX(5px); }
-        }
+        .timer-bar-bg { background-color: #4a5568; }
+        .timer-bar { background-color: #D4AF37; transition: width 0.1s linear; }
+        .option-btn { background-color: #2d3748; border-color: #4a5568; transition: all 0.2s; }
+        .option-btn:hover:not(:disabled) { background-color: #4a5568; border-color: #D4AF37; }
+        .correct { background-color: #38a169 !important; border-color: #9ae6b4 !important; }
+        .wrong { background-color: #c53030 !important; border-color: #feb2b2 !important; }
+        .modal-content { background: #1a202c; border: 1px solid #D4AF37; }
     </style>
 </head>
-<body>
-    <div class="game-container">
-        <!-- Avatar Display -->
-        <div class="avatar-selector" id="avatarDisplay">
-            😊
+<body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
+
+    <div id="game-ui" class="w-full max-w-4xl mx-auto rounded-lg p-3 mb-4 game-area hidden">
+        <div class="flex justify-between items-center">
+            <h1 class="text-xl font-bold text-yellow-400">Constitution Champions</h1>
+            <div class="flex items-center space-x-6 text-xl">
+                <span id="score-display" class="font-bold">Score: 0</span>
+                <span id="streak-display" class="font-bold text-orange-400">Streak: 0 🔥</span>
+            </div>
+            <a href="../games.html" class="btn-game bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
         </div>
-        
-        <!-- Game Header -->
-        <header class="game-header">
-            <h1>🏆 Constitution Champions 🏆</h1>
-            <div class="level-indicator" id="levelIndicator">
-                <!-- Dynamically populated -->
-            </div>
-            <div class="score-display">
-                Score: <span id="currentScore">0</span> | Level: <span id="currentLevel">1</span>
-            </div>
-        </header>
-
-        <!-- Game Content Area -->
-        <main id="gameContent">
-            <!-- Dynamically loaded based on current level -->
-        </main>
-
-        <!-- Achievement Display -->
-        <div id="achievementNotification" class="achievement-popup" style="display: none;">
-            <div class="achievement-content">
-                <h3>🎉 Achievement Unlocked! 🎉</h3>
-                <p id="achievementText"></p>
-            </div>
+        <div class="w-full timer-bar-bg rounded-full h-2.5 mt-2">
+            <div id="timer-bar" class="timer-bar h-2.5 rounded-full"></div>
+        </div>
+    </div>
+    
+    <div id="game-container" class="w-full max-w-4xl mx-auto p-8 rounded-2xl shadow-2xl text-center game-area">
+        <div id="start-screen">
+            <h2 class="text-5xl font-bold text-yellow-400 mb-4">Become a Champion</h2>
+            <p class="text-xl mb-8">Answer as many questions as you can before time runs out. Correct answers add time. How long can you last?</p>
+            <button id="start-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-10 rounded-lg text-2xl">Start the Challenge</button>
+        </div>
+        <div id="quiz-screen" class="hidden">
+            <h3 id="question-text" class="text-2xl md:text-3xl font-bold mb-6 min-h-[9rem]"></h3>
+            <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
-    <!-- Include Firebase and Game Scripts -->
-    <script src="../assets/js/firebase-config.js"></script>
-    <script src="../assets/js/avatar-system.js"></script>
-    <script src="../assets/js/constitution-champions.js"></script>
+    <div id="modal" class="fixed inset-0 bg-black/70 flex items-center justify-center hidden z-50">
+        <div class="modal-content w-11/12 max-w-md p-8 rounded-2xl text-center">
+            <h2 id="modal-title" class="text-4xl font-bold mb-4 text-yellow-400">Time's Up!</h2>
+            <p class="text-xl mb-2">You are a true champion of the Constitution!</p>
+            <p class="text-xl mb-6">Final Score: <span id="final-score" class="font-bold text-2xl">0</span></p>
+            <button id="restart-btn" class="w-full bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-2 px-4 rounded-lg">Try Again</button>
+        </div>
+    </div>
+
+    <script>
+        const questionBank = [
+            // A comprehensive list of ~50 questions would be populated here.
+            { q: "Which chapter of the Constitution is known as the Bill of Rights?", a: "Chapter 2" },
+            { q: "The right to life is enshrined in which section of the Bill of Rights?", a: "Section 11" },
+            { q: "What is the supreme law of the Republic of South Africa?", a: "The Constitution" },
+            { q: "Which court is the highest court in all constitutional matters?", a: "The Constitutional Court" },
+            { q: "The right to freedom and security of the person includes the right not to be tortured in any way. True or False?", a: "True" },
+            { q: "What year was the final Constitution of South Africa signed into law?", a: "1996" },
+            { q: "Which body is responsible for protecting and promoting human rights in South Africa?", a: "The South African Human Rights Commission" },
+            { q: "The right to fair labour practices is guaranteed in which section?", a: "Section 23" },
+            { q: "Can the right to dignity be limited?", a: "No, it is a non-derogable right" },
+            { q: "What are the three spheres of government in South Africa?", a: "National, Provincial, and Local" },
+             // ... 40 more questions would follow
+        ];
+        
+        const ui = {
+            gameUI: document.getElementById('game-ui'),
+            score: document.getElementById('score-display'),
+            streak: document.getElementById('streak-display'),
+            timerBar: document.getElementById('timer-bar'),
+            startScreen: document.getElementById('start-screen'),
+            quizScreen: document.getElementById('quiz-screen'),
+            questionText: document.getElementById('question-text'),
+            optionsContainer: document.getElementById('options-container'),
+            modal: document.getElementById('modal'),
+            modalTitle: document.getElementById('modal-title'),
+            finalScore: document.getElementById('final-score'),
+            startBtn: document.getElementById('start-btn'),
+            restartBtn: document.getElementById('restart-btn'),
+        };
+
+        let gameState = {};
+        
+        function initGame() {
+            ui.startScreen.classList.remove('hidden');
+            ui.quizScreen.classList.add('hidden');
+            ui.gameUI.classList.add('hidden');
+            ui.modal.classList.add('hidden');
+        }
+
+        function startGame() {
+            gameState = {
+                score: 0,
+                streak: 0,
+                timer: 60, // 60 seconds
+                timerId: null,
+                questions: shuffle([...questionBank])
+            };
+            ui.startScreen.classList.add('hidden');
+            ui.quizScreen.classList.remove('hidden');
+            ui.gameUI.classList.remove('hidden');
+            updateUI();
+            loadNextQuestion();
+            startTimer();
+        }
+
+        function startTimer() {
+            if (gameState.timerId) clearInterval(gameState.timerId);
+            gameState.timerId = setInterval(() => {
+                gameState.timer--;
+                ui.timerBar.style.width = `${(gameState.timer / 60) * 100}%`;
+                if(gameState.timer <= 0) {
+                    gameOver();
+                }
+            }, 1000);
+        }
+
+        function loadNextQuestion() {
+            if (gameState.questions.length === 0) {
+                gameOver(); // No more questions
+                return;
+            }
+            const questionData = gameState.questions.pop();
+            ui.questionText.textContent = questionData.q;
+            
+            const options = generateOptions(questionData.a);
+            ui.optionsContainer.innerHTML = '';
+            options.forEach(opt => {
+                const button = document.createElement('button');
+                button.textContent = opt;
+                button.className = 'option-btn p-4 rounded-lg border-2 text-lg';
+                button.onclick = () => handleAnswer(opt === questionData.a, button);
+                ui.optionsContainer.appendChild(button);
+            });
+        }
+        
+        function handleAnswer(isCorrect, button) {
+            Array.from(ui.optionsContainer.children).forEach(btn => btn.disabled = true);
+            if (isCorrect) {
+                gameState.score += 10 + gameState.streak; // Bonus for streak
+                gameState.streak++;
+                gameState.timer = Math.min(60, gameState.timer + 5); // Add 5 seconds
+                button.classList.add('correct');
+            } else {
+                gameState.streak = 0;
+                button.classList.add('wrong');
+            }
+            updateUI();
+            setTimeout(loadNextQuestion, 1000);
+        }
+        
+        function generateOptions(correctAnswer) {
+            const options = new Set([correctAnswer]);
+            while (options.size < 4) {
+                const randomAnswer = questionBank[Math.floor(Math.random() * questionBank.length)].a;
+                options.add(randomAnswer);
+            }
+            return shuffle([...options]);
+        }
+        
+        function updateUI() {
+            ui.score.textContent = `Score: ${gameState.score}`;
+            ui.streak.textContent = `Streak: ${gameState.streak} 🔥`;
+        }
+
+        function gameOver() {
+            clearInterval(gameState.timerId);
+            ui.finalScore.textContent = gameState.score;
+            ui.modal.classList.remove('hidden');
+        }
+
+        function shuffle(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+            return array;
+        }
+
+        ui.startBtn.addEventListener('click', startGame);
+        ui.restartBtn.addEventListener('click', () => {
+             ui.modal.classList.add('hidden');
+             startGame();
+        });
+
+        initGame();
+    </script>
 </body>
 </html>

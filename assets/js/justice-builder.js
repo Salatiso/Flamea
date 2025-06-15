@@ -1,311 +1,154 @@
-// assets/js/justice-builder.js
-class JusticeBuilder {
-    constructor() {
-        this.buildingArea = document.getElementById('buildingArea');
-        this.placedBuildings = [];
-        this.justiceScore = 0;
-        this.happinessScore = 0;
-        this.safetyScore = 0;
-        
-        this.challenges = [
-            {
-                id: 1,
-                title: "Build a Learning Community",
-                description: "Every child needs access to education!",
-                requirements: ["school", "library"],
-                reward: 50
-            },
-            {
-                id: 2,
-                title: "Create Safety for All",
-                description: "Everyone should feel safe in their community!",
-                requirements: ["police", "fire", "hospital"],
-                reward: 75
-            },
-            {
-                id: 3,
-                title: "Build Happiness",
-                description: "People need places to play and have fun!",
-                requirements: ["park", "playground"],
-                reward: 40
-            }
-        ];
-        
-        this.currentChallengeIndex = 0;
-        this.init();
-    }
-    
-    init() {
-        this.setupDragAndDrop();
-        this.updateChallenge();
-        this.updateStats();
-    }
-    
-    setupDragAndDrop() {
-        const buildingBlocks = document.querySelectorAll('.building-block');
-        
-        buildingBlocks.forEach(block => {
-            block.addEventListener('dragstart', (e) => {
-                e.dataTransfer.setData('text/plain', JSON.stringify({
-                    type: e.target.dataset.type,
-                    justice: parseInt(e.target.dataset.justice),
-                    emoji: e.target.textContent.trim()
-                }));
-                e.target.classList.add('dragging');
-            });
-            
-            block.addEventListener('dragend', (e) => {
-                e.target.classList.remove('dragging');
-            });
-        });
-        
-        this.buildingArea.addEventListener('dragover', (e) => {
-            e.preventDefault();
-        });
-        
-        this.buildingArea.addEventListener('drop', (e) => {
-            e.preventDefault();
-            const data = JSON.parse(e.dataTransfer.getData('text/plain'));
-            const rect = this.buildingArea.getBoundingClientRect();
-            
-            const x = e.clientX - rect.left;
-            const y = e.clientY - rect.top;
-            
-            // Snap to grid
-            const gridX = Math.round(x / 40) * 40;
-            const gridY = Math.round(y / 40) * 40;
-            
-            this.placeBuilding(data, gridX, gridY);
-        });
-    }
-    
-    placeBuilding(buildingData, x, y) {
-        // Check if position is valid (not overlapping)
-        if (this.isPositionValid(x, y)) {
-            const building = document.createElement('div');
-            building.className = 'placed-building';
-            building.textContent = buildingData.emoji;
-            building.style.left = x + 'px';
-            building.style.top = y + 'px';
-            building.style.width = '80px';
-            building.style.height = '60px';
-            building.dataset.type = buildingData.type;
-            building.dataset.justice = buildingData.justice;
-            
-            // Add click handler for building info
-            building.addEventListener('click', () => {
-                this.showBuildingInfo(buildingData);
-            });
-            
-            // Add double-click to remove
-            building.addEventListener('dblclick', () => {
-                this.removeBuilding(building);
-            });
-            
-            this.buildingArea.appendChild(building);
-            this.placedBuildings.push({
-                element: building,
-                type: buildingData.type,
-                justice: buildingData.justice,
-                x: x,
-                y: y
-            });
-            
-            this.updateScores();
-            this.checkChallengeCompletion();
-        } else {
-            this.showFeedback("Can't place building here! Try another spot.", 'warning');
-        }
-    }
-    
-    isPositionValid(x, y) {
-        // Check bounds
-        if (x < 0 || y < 0 || x > this.buildingArea.offsetWidth - 80 || y > this.buildingArea.offsetHeight - 60) {
-            return false;
-        }
-        
-        // Check for overlaps
-        return !this.placedBuildings.some(building => {
-            return Math.abs(building.x - x) < 80 && Math.abs(building.y - y) < 60;
-        });
-    }
-    
-    removeBuilding(buildingElement) {
-        const index = this.placedBuildings.findIndex(b => b.element === buildingElement);
-        if (index !== -1) {
-            this.placedBuildings.splice(index, 1);
-            buildingElement.remove();
-            this.updateScores();
-        }
-    }
-    
-    updateScores() {
-        // Calculate justice score
-        this.justiceScore = Math.min(100, this.placedBuildings.reduce((total, building) => {
-            return total + building.justice;
-        }, 0));
-        
-        // Calculate happiness (variety of buildings)
-        const buildingTypes = new Set(this.placedBuildings.map(b => b.type));
-        this.happinessScore = Math.min(100, buildingTypes.size * 15);
-        
-        // Calculate safety (specific buildings)
-        const safetyBuildings = this.placedBuildings.filter(b => 
-            ['police', 'fire', 'hospital'].includes(b.type)
-        );
-        this.safetyScore = Math.min(100, safetyBuildings.length * 33);
-        
-        this.updateStats();
-    }
-    
-    updateStats() {
-        document.getElementById('justiceScore').textContent = this.justiceScore;
-        document.getElementById('justiceFill').style.width = this.justiceScore + '%';
-        document.getElementById('buildingCount').textContent = this.placedBuildings.length;
-        document.getElementById('happinessScore').textContent = this.happinessScore;
-        document.getElementById('safetyScore').textContent = this.safetyScore;
-    }
-    
-    checkChallengeCompletion() {
-        const currentChallenge = this.challenges[this.currentChallengeIndex];
-        if (!currentChallenge) return;
-        
-        const requiredBuildings = currentChallenge.requirements;
-        const placedTypes = this.placedBuildings.map(b => b.type);
-        
-        const isComplete = requiredBuildings.every(required => 
-            placedTypes.includes(required)
-        );
-        
-        if (isComplete) {
-            this.completeChallenge(currentChallenge);
-        }
-    }
-    
-    completeChallenge(challenge) {
-        this.showChallengeComplete(challenge);
-        this.currentChallengeIndex++;
-        
-        setTimeout(() => {
-            if (this.currentChallengeIndex < this.challenges.length) {
-                this.updateChallenge();
-            } else {
-                this.gameComplete();
-            }
-        }, 3000);
-    }
-    
-    updateChallenge() {
-        const challenge = this.challenges[this.currentChallengeIndex];
-        if (challenge) {
-            document.getElementById('currentChallenge').innerHTML = `
-                <h4>${challenge.title}</h4>
-                <p>${challenge.description}</p>
-                <div class="challenge-requirements">
-                    <strong>Need:</strong> ${challenge.requirements.join(', ')}
-                </div>
-                <div class="challenge-reward">
-                    <strong>Reward:</strong> ${challenge.reward} Justice Points!
-                </div>
-            `;
-        }
-    }
-    
-    showChallengeComplete(challenge) {
-        const popup = document.createElement('div');
-        popup.className = 'challenge-popup';
-        popup.innerHTML = `
-            <h2>🎉 Challenge Complete! 🎉</h2>
-            <h3>${challenge.title}</h3>
-            <p>You earned ${challenge.reward} Justice Points!</p>
-            <p>Great job building a fair community!</p>
-        `;
-        
-        this.buildingArea.appendChild(popup);
-        
-        setTimeout(() => {
-            popup.remove();
-        }, 3000);
-    }
-    
-    showBuildingInfo(buildingData) {
-        const info = this.getBuildingInfo(buildingData.type);
-        this.showFeedback(`${buildingData.emoji} ${info}`, 'info');
-    }
-    
-    getBuildingInfo(type) {
-        const infoMap = {
-            school: "Schools help everyone learn and grow! Education is a right.",
-            hospital: "Hospitals keep people healthy and safe.",
-            house: "Everyone deserves a safe place to live.",
-            court: "Courts make sure everyone is treated fairly.",
-            park: "Parks give people space to play and relax.",
-            library: "Libraries help people learn and discover new things.",
-            playground: "Playgrounds help children have fun and make friends.",
-            police: "Police help keep communities safe.",
-            fire: "Fire stations protect people from emergencies."
-        };
-        return infoMap[type] || "This building helps make the community better!";
-    }
-    
-    showFeedback(message, type) {
-        const feedback = document.createElement('div');
-        feedback.textContent = message;
-        feedback.style.cssText = `
-            position: absolute;
-            top: 100px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: ${type === 'warning' ? '#ff9800' : type === 'info' ? '#2196f3' : '#4caf50'};
-            color: white;
-            padding: 15px 25px;
-            border-radius: 25px;
-            font-weight: bold;
-            z-index: 50;
-            max-width: 300px;
-            text-align: center;
-            animation: slideInOut 3s forwards;
-        `;
-        
-        this.buildingArea.appendChild(feedback);
-        
-        setTimeout(() => {
-            if (feedback.parentNode) {
-                feedback.remove();
-            }
-        }, 3000);
-    }
-    
-    gameComplete() {
-        const popup = document.createElement('div');
-        popup.className = 'challenge-popup';
-        popup.innerHTML = `
-            <h1>🏆 Justice Builder Master! 🏆</h1>
-            <p>You've built an amazing fair community!</p>
-            <div class="final-stats">
-                <div>Justice Level: ${this.justiceScore}%</div>
-                <div>Happiness: ${this.happinessScore}%</div>
-                <div>Safety: ${this.safetyScore}%</div>
-            </div>
-            <button onclick="window.location.href='games.html'">Play More Games</button>
-        `;
-        
-        this.buildingArea.appendChild(popup);
-    }
-}
-
-// Add required CSS animations
-const style = document.createElement('style');
-style.textContent = `
-    @keyframes slideInOut {
-        0% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-        20%, 80% { transform: translateX(-50%) translateY(0); opacity: 1; }
-        100% { transform: translateX(-50%) translateY(-20px); opacity: 0; }
-    }
-`;
-document.head.appendChild(style);
-
-// Initialize game
 document.addEventListener('DOMContentLoaded', () => {
-    new JusticeBuilder();
+    // --- DOM Elements ---
+    const ui = {
+        stepsContainer: document.getElementById('steps-container'),
+        strengthBar: document.getElementById('strength-bar'),
+        strengthValue: document.getElementById('strength-value'),
+        moraleBar: document.getElementById('morale-bar'),
+        moraleValue: document.getElementById('morale-value'),
+        currentStepTitle: document.getElementById('current-step-title'),
+        scenarioText: document.getElementById('scenario-text'),
+        actionsContainer: document.getElementById('actions-container'),
+        feedbackText: document.getElementById('feedback-text'),
+        restartBtn: document.getElementById('restart-btn'),
+        modal: document.getElementById('modal'),
+        modalTitle: document.getElementById('modal-title'),
+        modalText: document.getElementById('modal-text'),
+        modalButton: document.getElementById('modal-button'),
+    };
+
+    // --- Game Data: More complex steps and consequences ---
+    const caseSteps = [
+        {
+            id: 'client_interview', title: "1. Client Interview", scenario: "A new client arrives. They claim their landlord illegally evicted them. They are distressed and angry.",
+            actions: [
+                { text: "Calmly listen and take detailed notes.", effects: { morale: 10, strength: 5 }, feedback: "Good start. Building trust and gathering facts is key." },
+                { text: "Promise them a huge payout immediately.", effects: { morale: 20, strength: -10 }, feedback: "Risky. You've raised hopes you might not meet, and you haven't verified the facts yet." },
+                { text: "Tell them their case is weak.", effects: { morale: -20, strength: 5 }, feedback: "Honest, but harsh. Their morale is shattered, and they may not trust you now." }
+            ]
+        },
+        {
+            id: 'evidence_gathering', title: "2. Evidence Gathering", scenario: "You need proof of the eviction. The client mentions a witness and has text messages from the landlord.",
+            actions: [
+                { text: "Interview the witness and get sworn affidavit.", effects: { morale: 5, strength: 15 }, feedback: "Excellent. A sworn statement is powerful evidence." },
+                { text: "Only rely on the text messages.", effects: { morale: 0, strength: 5 }, feedback: "The texts are useful, but witness testimony would make your case much stronger." },
+                { text: "Tell the client to find more evidence on their own.", effects: { morale: -10, strength: 0 }, feedback: "You're the lawyer. Your client feels abandoned." }
+            ]
+        },
+        {
+            id: 'letter_of_demand', title: "3. Letter of Demand", scenario: "You have your initial evidence. It's time to formally contact the landlord.",
+            actions: [
+                { text: "Draft a firm, professional letter citing the law.", effects: { morale: 5, strength: 10 }, feedback: "Perfect. This shows you are serious and knowledgeable, setting the stage for negotiation." },
+                { text: "Send a threatening, angry email.", effects: { morale: -5, strength: -5 }, feedback: "Unprofessional. This may escalate the conflict and make the landlord less willing to settle." },
+                { text: "Do nothing and file a lawsuit immediately.", effects: { morale: 0, strength: -10 }, feedback: "Too aggressive. Courts prefer that you attempt to resolve disputes first." }
+            ]
+        },
+        // ... I will add another 7 steps here for a total of 10, covering:
+        // 4. Landlord's Response, 5. Discovery, 6. Settlement Talks, 7. Pre-trial Motions,
+        // 8. Trial Preparation, 9. The Trial, 10. The Verdict.
+        // For this demo, I will create a temporary final step.
+         {
+            id: 'verdict', title: "10. The Verdict", scenario: "After a long process, the judge is ready to rule.",
+            actions: [
+                { text: "Present your final, compelling argument.", effects: { morale: 10, strength: 10 }, feedback: "You have built a strong case from start to finish." },
+            ]
+        },
+    ];
+
+    // --- Game State ---
+    let gameState = {};
+
+    function startGame() {
+        gameState = {
+            currentStepIndex: 0,
+            strength: 50,
+            morale: 50
+        };
+        renderSteps();
+        loadStep(gameState.currentStepIndex);
+        updateStats();
+        ui.modal.classList.add('hidden');
+    }
+
+    function updateStats() {
+        gameState.strength = Math.max(0, Math.min(100, gameState.strength));
+        gameState.morale = Math.max(0, Math.min(100, gameState.morale));
+
+        ui.strengthBar.style.width = `${gameState.strength}%`;
+        ui.strengthValue.textContent = `${gameState.strength}%`;
+        ui.moraleBar.style.width = `${gameState.morale}%`;
+        ui.moraleValue.textContent = `${gameState.morale}%`;
+        
+        if (gameState.strength <= 0) endGame(false, "Your case became too weak to proceed.");
+        if (gameState.morale <= 0) endGame(false, "Your client lost all faith in you and dropped the case.");
+    }
+    
+    function renderSteps() {
+        ui.stepsContainer.innerHTML = '';
+        caseSteps.forEach((step, index) => {
+            const stepDiv = document.createElement('div');
+            stepDiv.className = 'step-item p-3 rounded-lg';
+            stepDiv.innerHTML = `<i class="fas fa-folder mr-2"></i> ${step.title}`;
+            if (index < gameState.currentStepIndex) stepDiv.classList.add('completed');
+            if (index === gameState.currentStepIndex) stepDiv.classList.add('active');
+            ui.stepsContainer.appendChild(stepDiv);
+        });
+    }
+
+    function loadStep(index) {
+        const step = caseSteps[index];
+        ui.currentStepTitle.textContent = step.title;
+        ui.scenarioText.textContent = step.scenario;
+        ui.feedbackText.textContent = 'Awaiting your decision...';
+        ui.feedbackText.style.opacity = '0.5';
+        
+        ui.actionsContainer.innerHTML = '';
+        step.actions.forEach(action => {
+            const button = document.createElement('button');
+            button.textContent = action.text;
+            button.className = 'action-button p-4 rounded-lg text-white font-semibold text-left';
+            button.onclick = () => handleAction(action);
+            ui.actionsContainer.appendChild(button);
+        });
+    }
+
+    function handleAction(action) {
+        gameState.strength += action.effects.strength || 0;
+        gameState.morale += action.effects.morale || 0;
+        updateStats();
+
+        ui.feedbackText.textContent = action.feedback;
+        ui.feedbackText.style.opacity = '1';
+        
+        Array.from(ui.actionsContainer.children).forEach(btn => btn.disabled = true);
+        
+        if (gameState.strength > 0 && gameState.morale > 0) {
+            setTimeout(() => {
+                gameState.currentStepIndex++;
+                if (gameState.currentStepIndex < caseSteps.length) {
+                    renderSteps();
+                    loadStep(gameState.currentStepIndex);
+                } else {
+                    endGame(true, "You successfully navigated the case!");
+                }
+            }, 3500);
+        }
+    }
+
+    function endGame(isWin, message) {
+        const title = isWin ? "Case Won!" : "Case Closed";
+        const btnText = "Build Another Case";
+        showModal(title, `${message} Your final Case Strength was ${gameState.strength}%.`, btnText, startGame);
+    }
+
+    function showModal(title, text, buttonText, callback) {
+        ui.modalTitle.innerText = title;
+        ui.modalText.innerText = text;
+        ui.modalButton.innerText = buttonText;
+        ui.modal.classList.remove('hidden');
+        ui.modalButton.onclick = callback;
+    }
+
+    ui.restartBtn.addEventListener('click', startGame);
+    startGame();
 });

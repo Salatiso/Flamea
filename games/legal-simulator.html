@@ -3,180 +3,180 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Goliath's Reckoning: A Legal Journey</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Condensed:wght@400;700&family=Bungee&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <title>Legal Simulator - Flamea</title>
+    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            font-family: 'Roboto Condensed', sans-serif;
-            background-color: #111827;
-        }
-        .game-title {
-            font-family: 'Bungee', cursive;
-        }
-        .resource-bar-fill {
-            transition: width 0.5s ease-in-out;
-        }
+        body { background-color: #111827; font-family: 'Georgia', serif; }
+        .sim-container { background-color: #1f2937; border: 1px solid #4b5563; }
+        .event-log { height: 400px; overflow-y: auto; border-color: #374151; }
+        .event-entry { border-left: 4px solid #4b5563; }
         .choice-btn {
-            background-color: #374151;
-            border-left: 4px solid #4b5563;
-            transition: all 0.2s ease-in-out;
+            background-color: #374151; color: #d1d5db;
+            transition: all 0.2s ease;
         }
-        .choice-btn:hover {
-            background-color: #4f46e5;
-            border-left-color: #a5b4fc;
-            transform: translateX(10px);
-        }
-        .modal {
-            background-color: rgba(17, 24, 39, 0.9);
-            transition: opacity 0.3s ease-in-out, visibility 0.3s ease-in-out;
-            opacity: 0;
-            visibility: hidden;
-        }
-        .modal.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        .modal-content {
-            transform: scale(0.95);
-            transition: transform 0.3s ease-in-out;
-        }
-        .modal.active .modal-content {
-            transform: scale(1);
-        }
-        .tooltip {
-            position: relative;
-            display: inline-block;
-        }
-        .tooltip .tooltiptext {
-            visibility: hidden;
-            width: 200px;
-            background-color: #1f2937;
-            color: #fff;
-            text-align: center;
-            border-radius: 6px;
-            padding: 5px;
-            position: absolute;
-            z-index: 1;
-            bottom: 125%;
-            left: 50%;
-            margin-left: -100px;
-            opacity: 0;
-            transition: opacity 0.3s;
-        }
-        .tooltip:hover .tooltiptext {
-            visibility: visible;
-            opacity: 1;
-        }
+        .choice-btn:hover { background-color: #4b5563; border-color: #9ca3af; }
+        .stat-bar-bg { background-color: #374151; }
+        .stat-bar { transition: width 0.5s ease-in-out; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-
-    <!-- Start Screen -->
-    <div id="start-screen" class="min-h-screen flex items-center justify-center p-4">
-        <div class="text-center max-w-3xl">
-            <h1 class="game-title text-5xl md:text-6xl text-amber-400">Goliath's Reckoning</h1>
-            <h2 class="text-2xl text-gray-300 mt-2 mb-8">A Father's Legal Journey</h2>
-            <div class="bg-gray-800 p-6 rounded-lg text-gray-300 space-y-4 mb-8 text-left">
-                <h3 class="text-xl font-bold text-amber-300 border-b border-gray-700 pb-2 mb-3">Choose Your Battle:</h3>
-                <p>Select the situation that best describes your starting point. This will determine the path of your legal simulation.</p>
-                <div id="path-selection" class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-4">
-                    <button data-path="contact" class="choice-btn p-4 rounded-md">I am being denied fair contact with my child.</button>
-                    <button data-path="paternity" class="choice-btn p-4 rounded-md">I need to formally establish paternity and my parental rights.</button>
-                    <button data-path="allegations" class="choice-btn p-4 rounded-md">I am facing false allegations that impact my relationship with my child.</button>
-                    <button data-path="constitutional" class="choice-btn p-4 rounded-md">I believe a law or policy is violating my constitutional rights as a father.</button>
-                </div>
+<body class="text-gray-300 min-h-screen flex flex-col items-center justify-center p-4">
+    <div class="w-full max-w-6xl mx-auto">
+        <!-- HEADER -->
+        <div class="sim-container rounded-t-lg p-3 flex justify-between items-center">
+            <h1 class="text-xl font-bold text-cyan-400">Legal Simulator</h1>
+            <div class="flex space-x-2">
+                <button id="restart-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i> Restart</button>
+                <a href="../games.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
             </div>
-            <p class="text-sm text-gray-500">This game is a simulator designed for educational purposes. It is not legal advice. For real-world assistance, consult Flamea.org and a qualified legal professional.</p>
+        </div>
+        <!-- STATS -->
+        <div class="grid grid-cols-2 gap-4 bg-gray-800 p-3">
+            <div>
+                <label class="text-sm font-bold text-green-400">Reputation</label>
+                <div class="stat-bar-bg rounded-full h-4"><div id="rep-bar" class="stat-bar bg-green-500 h-4 rounded-full"></div></div>
+            </div>
+            <div>
+                <label class="text-sm font-bold text-blue-400">Case Success Chance</label>
+                <div class="stat-bar-bg rounded-full h-4"><div id="case-bar" class="stat-bar bg-blue-500 h-4 rounded-full"></div></div>
+            </div>
+        </div>
+        <!-- MAIN AREA -->
+        <div class="sim-container rounded-b-lg p-6 grid grid-cols-1 md:grid-cols-5 gap-6">
+            <div class="md:col-span-2">
+                <h2 class="text-lg font-bold border-b border-gray-600 pb-2 mb-2">Current Situation</h2>
+                <p id="scenario-text" class="text-lg mb-4"></p>
+                <div id="choices-container" class="space-y-3"></div>
+            </div>
+            <div class="md:col-span-3">
+                 <h2 class="text-lg font-bold border-b border-gray-600 pb-2 mb-2">Event Log</h2>
+                 <div id="event-log" class="bg-gray-900 p-3 rounded-md space-y-4"></div>
+            </div>
         </div>
     </div>
 
-    <!-- Main Game UI -->
-    <div id="game-container" class="hidden w-full max-w-7xl mx-auto p-4 md:p-6">
-        <div class="grid grid-cols-1 lg:grid-cols-5 gap-6">
-            
-            <!-- Dashboard (Left Panel) -->
-            <aside class="lg:col-span-1 bg-gray-800 p-4 rounded-2xl border-2 border-gray-700 flex flex-col h-fit">
-                <h2 class="game-title text-xl text-amber-400 text-center mb-4">Case File</h2>
-                
-                <div class="mb-4">
-                    <h3 class="font-bold text-sm text-gray-400 mb-1">Case Strength</h3>
-                    <div class="w-full bg-gray-700 rounded-full h-4">
-                        <div id="strength-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-green-400 to-green-600" style="width: 50%;"></div>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <h3 class="font-bold text-sm text-gray-400 mb-1">Financial Resources</h3>
-                    <div class="w-full bg-gray-700 rounded-full h-4">
-                        <div id="finance-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-yellow-400 to-yellow-600" style="width: 100%;"></div>
-                    </div>
-                </div>
-                <div class="mb-4">
-                    <h3 class="font-bold text-sm text-gray-400 mb-1">Time Wasted</h3>
-                    <div class="w-full bg-gray-700 rounded-full h-4">
-                        <div id="time-bar" class="resource-bar-fill h-4 rounded-full bg-gradient-to-r from-red-500 to-red-700" style="width: 0%;"></div>
-                    </div>
-                </div>
+<script>
+const scenarios = {
+    start: {
+        text: "It's Monday morning at your new law firm. Your coffee is lukewarm, and your desk is piled high. The phone rings. What do you do?",
+        choices: [
+            { text: "Answer with a crisp, professional greeting.", next: 'client_call_good', rep: 5, case: 0 },
+            { text: "Let it go to voicemail. You're not ready.", next: 'client_call_bad', rep: -5, case: 0 },
+        ]
+    },
+    client_call_good: {
+        text: "It's a potential new client, Mrs. Higgins. Her small business is being sued by a corporate giant. She sounds desperate.",
+        choices: [
+            { text: "Schedule an immediate consultation.", next: 'consult_prep', rep: 10, case: 5 },
+            { text: "Tell her you're too busy with other cases.", next: 'end_refuse_case', rep: -10, case: 0 },
+        ]
+    },
+    client_call_bad: {
+        text: "The voicemail is from a frantic potential client. By the time you call back, they've already found another lawyer. A missed opportunity.",
+        choices: [
+            { text: "Vow to be more prepared next time. Wait for a new opportunity.", next: 'start', rep: 0, case: 0 },
+        ]
+    },
+    consult_prep: {
+        text: "Mrs. Higgins is coming this afternoon. You have a few hours to prepare.",
+        choices: [
+            { text: "Do a deep-dive into case law related to corporate litigation.", next: 'consult_ready', rep: 5, case: 15 },
+            { text: "Read a few online articles on the topic.", next: 'consult_ok', rep: 0, case: 5 },
+            { text: "Just wing it. You're a natural.", next: 'consult_unprepared', rep: -10, case: -5 },
+        ]
+    },
+    consult_ready: {
+        text: "You greet Mrs. Higgins armed with relevant case precedents. She is impressed by your diligence and agrees to retain you.",
+        choices: [
+            { text: "Begin drafting the initial court filings.", next: 'filing_docs', rep: 5, case: 10 },
+        ]
+    },
+    // ... More scenarios would follow, covering filings, discovery, dealing with opposing counsel, court appearances, and final verdicts.
+    // This structure allows for a deep, branching simulation.
+    filing_docs: {
+        text: "You've drafted the documents. A senior partner reviews them and points out a minor but crucial procedural error.",
+        choices: [
+            { text: "Thank them and correct it immediately.", next: 'end_win_good', rep: 10, case: 5 },
+            { text: "Argue with them. Your way is better.", next: 'end_lose_arrogance', rep: -15, case: -10 },
+        ]
+    },
 
-                <div class="border-t border-gray-700 pt-4 mt-4">
-                    <h3 class="font-bold text-lg text-gray-300 mb-2">Inventory</h3>
-                    <ul id="inventory-list" class="text-sm text-gray-400 space-y-1">
-                        <!-- Inventory items will be added here -->
-                    </ul>
-                </div>
-                 <div class="mt-6 text-center">
-                    <button id="flamea-assist-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors text-sm tooltip">
-                        <i class="fas fa-question-circle mr-2"></i> Flamea AI Assist
-                        <span class="tooltiptext">Get hints, explanations, and links to Flamea.org resources for your current step.</span>
-                    </button>
-                </div>
-            </aside>
+    // Endings
+    end_refuse_case: { text: "You refused the case. Your reputation for helping the 'little guy' takes a hit, but you avoid a difficult fight. The week ends quietly.", choices: [{ text: "Start a New Week", next: 'start', rep:0, case:0}] },
+    end_win_good: { text: "Because you caught the error, your filing is perfect. The corporate giant, seeing your meticulous preparation, offers a generous settlement. Mrs. Higgins is overjoyed. You've earned a great reputation. YOU WIN!", choices: [{ text: "Start a New Week", next: 'start', rep:0, case:0}] },
+    end_lose_arrogance: { text: "Your arrogance leads you to file the documents with the error. The case is dismissed on a technicality. Your client is devastated and your reputation is in tatters. YOU LOSE.", choices: [{ text: "Start a New Week", next: 'start', rep:0, case:0}] }
+};
 
-            <!-- Game Content (Right Panel) -->
-            <main class="lg:col-span-4 bg-gray-800 p-6 rounded-2xl border-2 border-gray-700 flex flex-col">
-                <div id="scenario-display" class="flex-grow">
-                    <h2 id="scenario-title" class="text-2xl font-bold mb-4"></h2>
-                    <div id="scenario-text" class="prose prose-invert max-w-none text-gray-300 space-y-4"></div>
-                </div>
-                <div id="choices-area" class="mt-6 pt-6 border-t border-gray-700">
-                    <h3 class="text-lg font-bold mb-3">What do you do?</h3>
-                    <div id="choices-container" class="space-y-3">
-                        <!-- Choices will be generated by JS -->
-                    </div>
-                </div>
-            </main>
-        </div>
-    </div>
+const ui = {
+    repBar: document.getElementById('rep-bar'),
+    caseBar: document.getElementById('case-bar'),
+    scenario: document.getElementById('scenario-text'),
+    choices: document.getElementById('choices-container'),
+    log: document.getElementById('event-log'),
+    restartBtn: document.getElementById('restart-btn'),
+};
+
+let gameState = {};
+
+function startGame() {
+    gameState = {
+        reputation: 50,
+        caseSuccess: 50,
+        currentScenario: 'start',
+    };
+    ui.log.innerHTML = '';
+    addLogEntry("Your week begins...", "blue-400");
+    loadScenario('start');
+    updateStats();
+}
+
+function loadScenario(scenarioId) {
+    const scenario = scenarios[scenarioId];
+    if (!scenario) return;
+
+    gameState.currentScenario = scenarioId;
+    ui.scenario.textContent = scenario.text;
+    ui.choices.innerHTML = '';
+
+    scenario.choices.forEach(choice => {
+        const button = document.createElement('button');
+        button.textContent = choice.text;
+        button.className = 'choice-btn w-full p-3 rounded-lg text-left border-2 border-transparent';
+        button.onclick = () => selectChoice(choice);
+        ui.choices.appendChild(button);
+    });
+}
+
+function selectChoice(choice) {
+    gameState.reputation += choice.rep || 0;
+    gameState.caseSuccess += choice.case || 0;
     
-    <!-- Outcome Modal -->
-    <div id="outcome-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-2xl w-full">
-            <h2 id="outcome-title" class="text-3xl font-bold mb-4 text-center"></h2>
-            <div id="outcome-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
-            <div id="resource-changes" class="text-center font-bold text-md mb-6 space-y-1"></div>
-            <button id="next-step-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg text-xl">Continue</button>
-        </div>
-    </div>
+    let color = 'gray-400';
+    if((choice.rep || 0) + (choice.case || 0) > 0) color = 'green-400';
+    if((choice.rep || 0) + (choice.case || 0) < 0) color = 'red-400';
+    addLogEntry(`> ${choice.text}`, color);
 
-    <!-- AI Assist Modal -->
-    <div id="ai-assist-modal" class="modal fixed inset-0 z-50 flex items-center justify-center p-4">
-        <div class="modal-content bg-gray-800 p-8 rounded-2xl shadow-2xl border-2 border-gray-600 max-w-3xl w-full">
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-2xl font-bold text-blue-400"><i class="fas fa-robot mr-2"></i> Flamea AI Legal Assistant</h2>
-                <button id="close-ai-modal" class="text-gray-400 hover:text-white text-3xl">&times;</button>
-            </div>
-            <div id="ai-assist-text" class="prose prose-invert max-w-none text-gray-300 mb-6"></div>
-            <div id="ai-links-container" class="space-y-2">
-                <!-- Links to resources will be added here -->
-            </div>
-        </div>
-    </div>
+    updateStats();
+    loadScenario(choice.next);
+}
 
+function updateStats() {
+    gameState.reputation = Math.max(0, Math.min(100, gameState.reputation));
+    gameState.caseSuccess = Math.max(0, Math.min(100, gameState.caseSuccess));
+    ui.repBar.style.width = `${gameState.reputation}%`;
+    ui.caseBar.style.width = `${gameState.caseSuccess}%`;
+}
 
-    <script src="legal-simulator.js"></script>
+function addLogEntry(text, colorClass = 'gray-400') {
+    const entry = document.createElement('div');
+    entry.className = `event-entry p-2 text-sm text-${colorClass}`;
+    entry.textContent = text;
+    ui.log.prepend(entry);
+}
 
+ui.restartBtn.addEventListener('click', startGame);
+startGame();
+
+</script>
 </body>
 </html>
