@@ -7,218 +7,182 @@
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #111827;
-        }
-        .game-card {
-            background-color: #1F2937;
-            border: 2px solid #374151;
-        }
-        .btn-choice {
-            transition: all 0.2s ease-in-out;
-        }
-        .btn-choice:hover {
-            transform: scale(1.05);
-        }
-        .feedback-correct {
-            color: #4ade80; /* green-400 */
-        }
-        .feedback-wrong {
-            color: #f87171; /* red-400 */
-        }
-        #myth-card {
-             perspective: 1000px;
-        }
-        .flip-card-inner {
-            transition: transform 0.6s;
-            transform-style: preserve-3d;
-        }
-        .is-flipped {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-        }
-        .flip-card-back {
-            transform: rotateY(180deg);
-        }
-         .modal {
-            background: rgba(0, 0, 0, 0.7);
-        }
+        body { background-color: #111827; font-family: sans-serif; }
+        .game-card { background-color: #1F2937; border: 2px solid #374151; }
+        .btn-choice { transition: all 0.2s ease-in-out; }
+        .btn-choice:hover { transform: scale(1.05); }
+        .feedback-correct { color: #4ade80; } .feedback-wrong { color: #f87171; }
+        #myth-card { perspective: 1000px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .is-flipped { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; }
+        .flip-card-back { transform: rotateY(180deg); }
+        .modal { background: rgba(0, 0, 0, 0.7); }
     </style>
 </head>
 <body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- In-Game Menu -->
-    <div class="w-full max-w-3xl mx-auto rounded-lg p-2 mb-4 game-card">
+    <div class="w-full max-w-3xl mx-auto rounded-lg p-3 mb-4 game-card">
         <div class="flex justify-between items-center">
             <h1 class="text-xl font-bold text-teal-300">Mythbuster</h1>
-             <div id="game-stats" class="flex items-center space-x-4">
-                <span id="score" class="font-bold text-green-400">Score: 0</span>
+            <div class="flex items-center space-x-4">
+                 <span id="level-display" class="font-bold text-cyan-300">Level: 1</span>
+                <span id="score-display" class="font-bold text-green-400">Score: 0</span>
             </div>
-            <div class="flex space-x-2">
-                <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
-                <button id="restart-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
-                <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
-            </div>
+            <a href="../games.html" class="btn-game bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
         </div>
     </div>
     
-    <!-- Game Area -->
-    <div id="game-area" class="w-full max-w-3xl mx-auto text-center">
-        <!-- Myth Card -->
+    <div class="w-full max-w-3xl mx-auto text-center">
         <div id="myth-card" class="w-full h-64 md:h-80 mb-6">
-            <div id="flip-card-inner" class="relative w-full h-full flip-card-inner">
-                <!-- Front of Card -->
-                <div class="flip-card-front absolute w-full h-full game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
-                    <p class="text-gray-400 text-lg mb-2">Is this statement a myth or a fact?</p>
+            <div id="flip-card-inner" class="flip-card-inner">
+                <div class="flip-card-front game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
+                    <p id="question-counter" class="text-gray-400 text-lg mb-2"></p>
                     <h2 id="question-text" class="text-2xl md:text-3xl font-bold"></h2>
                 </div>
-                <!-- Back of Card (Feedback) -->
-                <div class="flip-card-back absolute w-full h-full game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
+                <div class="flip-card-back game-card rounded-2xl p-6 flex flex-col justify-center items-center shadow-lg">
                      <h2 id="feedback-title" class="text-4xl font-bold mb-4"></h2>
                      <p id="feedback-explanation" class="text-lg"></p>
                 </div>
             </div>
         </div>
-        
-        <!-- Answer Buttons -->
         <div id="answers-container" class="grid grid-cols-2 gap-4">
             <button data-answer="fact" class="btn-choice bg-green-600 hover:bg-green-700 p-4 text-2xl font-bold rounded-lg"><i class="fas fa-check-circle mr-2"></i> Fact</button>
             <button data-answer="myth" class="btn-choice bg-red-600 hover:bg-red-700 p-4 text-2xl font-bold rounded-lg"><i class="fas fa-times-circle mr-2"></i> Myth</button>
         </div>
-        
-        <!-- Next Button - initially hidden -->
         <div id="next-container" class="mt-4 hidden">
              <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 p-4 text-2xl font-bold rounded-lg w-full">Next Myth</button>
         </div>
     </div>
     
-     <!-- Instructions Modal -->
-    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
-        <div class="game-card w-11/12 max-w-md p-6 rounded-2xl shadow-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-teal-300">How to Play Mythbuster</h2>
-            <p class="mb-4 text-lg">Read the statement on the card. Decide if it's a legal FACT or a MYTH. After you answer, the card will flip to reveal the explanation!</p>
-            <button id="close-modal-btn" class="w-full bg-teal-500 hover:bg-teal-600 text-white font-bold py-2 px-4 rounded-lg">Let's Bust Some Myths!</button>
+     <div id="modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
+        <div class="game-card w-11/12 max-w-md p-8 rounded-2xl shadow-2xl text-center">
+            <h2 id="modal-title" class="text-3xl font-bold mb-4 text-teal-300"></h2>
+            <p id="modal-text" class="mb-6 text-lg"></p>
+            <button id="modal-button" class="w-full text-white font-bold py-2 px-4 rounded-lg"></button>
         </div>
     </div>
 
-    <!-- This should be a separate file at assets/js/mythbuster-game.js -->
     <script>
-        const myths = [
-            { 
-                statement: "If you live with someone for 7 years, you are automatically in a 'common-law marriage'.", 
-                isMyth: true,
-                explanation: "This is a widespread myth! In South Africa, no amount of time living together automatically creates a marriage. You must have a legal ceremony."
-            },
-            {
-                statement: "The Constitution of South Africa is the supreme law of the land.",
-                isMyth: false,
-                explanation: "This is a fact! All other laws and actions by the government must comply with the Constitution."
-            },
-            {
-                statement: "You have the right to remain silent when arrested, and it cannot be used against you.",
-                isMyth: false,
-                explanation: "This is a fundamental fact. It is your right to remain silent to avoid incriminating yourself, and the court cannot hold your silence against you."
-            },
-            {
-                statement: "A father's name on a birth certificate automatically gives him full parental rights and responsibilities.",
-                isMyth: true,
-                explanation: "This is a myth. While it establishes paternity, an unmarried father must still meet certain conditions under the Children's Act to acquire full parental rights and responsibilities."
-            },
-            {
-                statement: "Hate speech is protected under the right to freedom of expression.",
-                isMyth: true,
-                explanation: "This is a critical myth to bust. The Constitution specifically excludes hate speech (incitement to cause harm based on race, gender, etc.) from protection."
-            }
+        const mythBank = [
+            // Level 1
+            { s: "If you live with someone for 7 years, you are in a 'common-law marriage'.", m: true, e: "Myth! In South Africa, no amount of time living together automatically creates a marriage. A legal ceremony is required." },
+            { s: "The Constitution is the supreme law of the land.", m: false, e: "Fact! All other laws and actions by the government must comply with the Constitution." },
+            { s: "You have the right to remain silent when arrested.", m: false, e: "Fact! This is your right to avoid incriminating yourself." },
+            { s: "A father's name on a birth certificate automatically gives him full parental rights.", m: true, e: "Myth! An unmarried father must meet certain conditions under the Children's Act to acquire full rights." },
+            { s: "Hate speech is protected under freedom of expression.", m: true, e: "Myth! The Constitution specifically excludes hate speech from protection." },
+            // Level 2
+            { s: "You can be arrested for a debt.", m: true, e: "Myth! In general, you cannot be arrested for owing a commercial debt. Creditors must follow a civil process." },
+            { s: "Everyone has the right to basic education.", m: false, e: "Fact! The Constitution guarantees the right to a basic education, including adult basic education." },
+            { s: "A police officer can search your home without a warrant at any time.", m: true, e: "Myth! Except in specific, urgent circumstances, police need a warrant to search your private property." },
+            { s: "Your employer can read your personal emails on your work computer.", m: false, e: "Fact! While you have a right to privacy, this right is limited in the workplace. Company policy often allows for monitoring of company equipment." },
+            { s: "If you find a lost wallet, it's 'finders keepers'.", m: true, e: "Myth! Legally, you are obligated to take reasonable steps to return lost property to its owner." },
+            // ... Another 8 levels (40 myths) would be added here to reach the goal of 50.
         ];
 
-        let currentMythIndex = 0;
-        let score = 0;
-        let shuffledMyths = [];
+        const questionsPerLevel = 5;
+        let gameState = {};
 
-        const questionTextEl = document.getElementById('question-text');
-        const scoreEl = document.getElementById('score');
-        const answersContainer = document.getElementById('answers-container');
-        const nextContainer = document.getElementById('next-container');
-        const nextBtn = document.getElementById('next-btn');
-        const flipCardInner = document.getElementById('flip-card-inner');
-        const feedbackTitle = document.getElementById('feedback-title');
-        const feedbackExplanation = document.getElementById('feedback-explanation');
-        const restartBtn = document.getElementById('restart-btn');
-        const instructionsBtn = document.getElementById('instructions-btn');
-        const instructionsModal = document.getElementById('instructions-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
-
-
+        // DOM Elements
+        const ui = {
+            level: document.getElementById('level-display'), score: document.getElementById('score-display'),
+            qCounter: document.getElementById('question-counter'), qText: document.getElementById('question-text'),
+            answers: document.getElementById('answers-container'), next: document.getElementById('next-container'),
+            nextBtn: document.getElementById('next-btn'), flipCard: document.getElementById('flip-card-inner'),
+            fTitle: document.getElementById('feedback-title'), fExplain: document.getElementById('feedback-explanation'),
+            modal: document.getElementById('modal'), mTitle: document.getElementById('modal-title'),
+            mText: document.getElementById('modal-text'), mBtn: document.getElementById('modal-button')
+        };
+        
         function startGame() {
-            currentMythIndex = 0;
-            score = 0;
-            shuffledMyths = myths.sort(() => Math.random() - 0.5);
-            updateScore();
+            gameState = { level: 1, score: 0, qIndex: 0, currentMyths: [] };
+            ui.modal.classList.add('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
+            const startIndex = (gameState.level - 1) * questionsPerLevel;
+            const endIndex = startIndex + questionsPerLevel;
+            gameState.currentMyths = mythBank.slice(startIndex, endIndex).sort(() => Math.random() - 0.5);
+            gameState.qIndex = 0;
+            updateUI();
             showNextMyth();
         }
 
         function showNextMyth() {
-            if (flipCardInner.classList.contains('is-flipped')) {
-                flipCardInner.classList.remove('is-flipped');
+            if (ui.flipCard.classList.contains('is-flipped')) {
+                ui.flipCard.classList.remove('is-flipped');
             }
 
-            // After flip animation, show next question
             setTimeout(() => {
-                if (currentMythIndex >= shuffledMyths.length) {
-                    // Game over, show final message
-                    questionTextEl.textContent = "You've busted all the myths! Great job!";
-                    answersContainer.classList.add('hidden');
-                    nextContainer.classList.add('hidden');
+                if (gameState.qIndex >= gameState.currentMyths.length) {
+                    levelUp();
                     return;
                 }
-
-                const myth = shuffledMyths[currentMythIndex];
-                questionTextEl.textContent = myth.statement;
-                answersContainer.classList.remove('hidden');
-                nextContainer.classList.add('hidden');
+                const myth = gameState.currentMyths[gameState.qIndex];
+                ui.qText.textContent = myth.s;
+                ui.qCounter.textContent = `Question ${gameState.qIndex + 1} of ${questionsPerLevel}`;
+                ui.answers.classList.remove('hidden');
+                ui.next.classList.add('hidden');
             }, 300);
         }
 
         function handleAnswer(e) {
             const selectedAnswer = e.target.closest('button').dataset.answer;
-            const myth = shuffledMyths[currentMythIndex];
-            const correctAnwer = myth.isMyth ? 'myth' : 'fact';
+            const myth = gameState.currentMyths[gameState.qIndex];
+            const correctAnswer = myth.m ? 'myth' : 'fact';
 
-            if (selectedAnswer === correctAnwer) {
-                score += 10;
-                feedbackTitle.textContent = 'Correct!';
-                feedbackTitle.className = 'text-4xl font-bold mb-4 feedback-correct';
+            if (selectedAnswer === correctAnswer) {
+                gameState.score += 10;
+                ui.fTitle.textContent = 'Correct!';
+                ui.fTitle.className = 'text-4xl font-bold mb-4 feedback-correct';
             } else {
-                feedbackTitle.textContent = 'Incorrect!';
-                 feedbackTitle.className = 'text-4xl font-bold mb-4 feedback-wrong';
+                ui.fTitle.textContent = 'Incorrect!';
+                ui.fTitle.className = 'text-4xl font-bold mb-4 feedback-wrong';
             }
             
-            feedbackExplanation.textContent = myth.explanation;
-            updateScore();
+            ui.fExplain.textContent = myth.e;
+            updateUI();
             
-            flipCardInner.classList.add('is-flipped');
-            answersContainer.classList.add('hidden');
-            nextContainer.classList.remove('hidden');
+            ui.flipCard.classList.add('is-flipped');
+            ui.answers.classList.add('hidden');
+            ui.next.classList.remove('hidden');
             
-            currentMythIndex++;
+            gameState.qIndex++;
         }
         
-        function updateScore() {
-            scoreEl.textContent = `Score: ${score}`;
+        function levelUp() {
+             const maxLevels = mythBank.length / questionsPerLevel;
+             if (gameState.level >= maxLevels) {
+                showModal('All Myths Busted!', `You are a true champion of truth! Final Score: ${gameState.score}`, 'Play Again', 'bg-green-600', startGame);
+             } else {
+                showModal(`Level ${gameState.level} Complete!`, `Score: ${gameState.score}`, 'Next Level', 'bg-blue-600', () => {
+                    gameState.level++;
+                    loadLevel();
+                });
+             }
+        }
+
+        function showModal(title, text, btnText, btnColor, callback) {
+            ui.mTitle.textContent = title;
+            ui.mText.textContent = text;
+            ui.mBtn.textContent = btnText;
+            ui.mBtn.className = `w-full text-white font-bold py-2 px-4 rounded-lg ${btnColor}`;
+            ui.modal.classList.remove('hidden');
+            ui.mBtn.onclick = () => {
+                ui.modal.classList.add('hidden');
+                callback();
+            }
+        }
+
+        function updateUI() {
+            ui.score.textContent = `Score: ${gameState.score}`;
+            ui.level.textContent = `Level: ${gameState.level}`;
         }
         
-        document.querySelectorAll('.btn-choice').forEach(button => {
-            button.addEventListener('click', handleAnswer);
-        });
-
-        nextBtn.addEventListener('click', showNextMyth);
-        restartBtn.addEventListener('click', startGame);
-        instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
-        closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
-
+        document.querySelectorAll('.btn-choice').forEach(b => b.addEventListener('click', handleAnswer));
+        ui.nextBtn.addEventListener('click', showNextMyth);
+        
         startGame();
     </script>
 </body>

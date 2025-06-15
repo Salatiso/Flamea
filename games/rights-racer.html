@@ -15,35 +15,30 @@
             justify-content: center;
             min-height: 100vh;
             overflow: hidden;
+            font-family: Arial, Helvetica, sans-serif;
         }
         canvas {
-            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><path fill="%231F2937" d="M0 0h100v100H0z"/><circle cx="10" cy="10" r="1" fill="%23FBBF24"/><circle cx="80" cy="20" r="1" fill="%23FBBF24"/><circle cx="30" cy="70" r="2" fill="%23FBBF24"/><circle cx="50" cy="40" r="1" fill="%23FBBF24"/><circle cx="90" cy="90" r="1" fill="%23FBBF24"/><circle cx="60" cy="80" r="2" fill="%23FBBF24"/></svg>');
+            background: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100" width="100" height="100"><path fill="%231F2937" d="M0 0h100v100H0z"/><circle cx="10" cy="10" r="1" fill="%23FBBF24"/><circle cx="80" cy="20" r="1" fill="%23FBBF24"/><circle cx="30" cy="70" r="2" fill="%2SBBF24"/><circle cx="50" cy="40" r="1" fill="%23FBBF24"/><circle cx="90" cy="90" r="1" fill="%23FBBF24"/><circle cx="60" cy="80" r="2" fill="%23FBBF24"/></svg>');
             border-radius: 1rem;
             border: 4px solid #FBBF24;
             box-shadow: 0 0 30px rgba(251, 191, 36, 0.5);
+            cursor: none;
         }
-        .btn-game {
-            transition: all 0.3s ease;
-            box-shadow: 0 4px 6px rgba(0,0,0,0.3);
-        }
-        .btn-game:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0,0,0,0.3);
-        }
-        .modal {
-            background: rgba(0, 0, 0, 0.7);
-            backdrop-filter: blur(5px);
-        }
+        .btn-game { transition: all 0.3s ease; box-shadow: 0 4px 6px rgba(0,0,0,0.3); }
+        .btn-game:hover { transform: translateY(-2px); box-shadow: 0 6px 12px rgba(0,0,0,0.3); }
+        .modal { background: rgba(0, 0, 0, 0.7); backdrop-filter: blur(5px); }
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
     </style>
 </head>
 <body class="text-white">
 
     <!-- In-Game UI -->
-    <div id="game-ui" class="w-full max-w-3xl mx-auto rounded-lg p-2 mb-4 bg-gray-800 border-2 border-yellow-400">
+    <div id="game-ui" class="w-full max-w-3xl mx-auto rounded-lg p-3 mb-4 bg-gray-800 border-2 border-yellow-400">
         <div class="flex justify-between items-center">
-             <div class="flex items-center space-x-4">
-                <div id="score" class="text-xl font-bold text-green-400">Score: 0</div>
-                <div id="lives" class="text-xl font-bold text-red-400">Lives: 💖💖💖</div>
+             <div class="flex items-center space-x-6">
+                <div id="score" class="text-xl font-bold text-green-400 text-shadow">Score: 0</div>
+                <div id="level" class="text-xl font-bold text-blue-400 text-shadow">Level: 1</div>
+                <div id="lives" class="text-xl font-bold text-red-400">💖💖💖</div>
             </div>
             <div class="flex space-x-2">
                 <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
@@ -56,28 +51,239 @@
     <!-- Game Canvas -->
     <canvas id="gameCanvas"></canvas>
 
-    <!-- Instructions Modal -->
-    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
-        <div class="bg-gray-800 w-11/12 max-w-md p-6 rounded-2xl shadow-2xl border-2 border-yellow-300">
-            <h2 class="text-3xl font-bold mb-4 text-yellow-300">How to Play Rights Racer</h2>
-            <p class="mb-2 text-lg">Use your <strong class="text-yellow-300">mouse</strong> or <strong class="text-yellow-300">arrow keys</strong> to move the character left and right.</p>
-            <p class="mb-2 text-lg">Catch the good items (like 📖, 🏠, ⚕️) to score points!</p>
-            <p class="mb-4 text-lg">Avoid the obstacles (like 💣)! You have 3 lives.</p>
-            <button id="close-modal-btn" class="w-full bg-yellow-400 hover:bg-yellow-500 text-gray-800 font-bold py-2 px-4 rounded-lg">Let's Race!</button>
-        </div>
-    </div>
-    
-    <!-- Game Over Modal -->
-     <div id="game-over-modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
-        <div class="bg-gray-800 w-11/12 max-w-md p-8 rounded-2xl text-center shadow-2xl border-2 border-red-500">
-            <h2 class="text-4xl font-bold mb-4 text-red-500">Game Over!</h2>
-            <p class="text-xl mb-2">Your final score is:</p>
-            <p id="final-score" class="text-5xl font-bold mb-6 text-yellow-300">0</p>
-            <button id="play-again-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-xl">Play Again</button>
+    <!-- Modal for Instructions, Level Up, and Game Over -->
+    <div id="modal" class="fixed inset-0 w-full h-full flex items-center justify-center modal hidden z-50">
+        <div id="modal-content" class="bg-gray-800 w-11/12 max-w-md p-8 rounded-2xl text-center shadow-2xl border-2">
+            <h2 id="modal-title" class="text-4xl font-bold mb-4"></h2>
+            <p id="modal-text" class="text-xl mb-6"></p>
+            <button id="modal-button" class="w-full text-white font-bold py-3 px-4 rounded-lg text-xl"></button>
         </div>
     </div>
 
+    <script>
+        // --- Setup ---
+        const canvas = document.getElementById('gameCanvas');
+        const ctx = canvas.getContext('2d');
+        const scoreEl = document.getElementById('score');
+        const livesEl = document.getElementById('lives');
+        const levelEl = document.getElementById('level');
+        const modal = document.getElementById('modal');
+        const modalContent = document.getElementById('modal-content');
+        const modalTitle = document.getElementById('modal-title');
+        const modalText = document.getElementById('modal-text');
+        const modalButton = document.getElementById('modal-button');
+        const instructionsBtn = document.getElementById('instructions-btn');
+        const restartBtn = document.getElementById('restart-btn');
 
-    <script src="../assets/js/rights-racer.js"></script>
+        // --- Game Configuration ---
+        let canvasWidth = Math.min(800, window.innerWidth - 30);
+        let canvasHeight = canvasWidth * 0.75;
+        canvas.width = canvasWidth;
+        canvas.height = canvasHeight;
+
+        const playerWidth = 50;
+        const playerHeight = 50;
+        const itemSize = 30;
+
+        // --- Game State ---
+        let gameState;
+        let gameLoopId;
+
+        const player = { emoji: '🏃' };
+        
+        // Comprehensive lists of items
+        const allGoodItems = [
+            { emoji: '📖', score: 10, name: 'Right to Education' },
+            { emoji: '🏠', score: 10, name: 'Right to Shelter' },
+            { emoji: '⚕️', score: 15, name: 'Right to Healthcare' },
+            { emoji: '⚖️', score: 20, name: 'Right to Justice' },
+            { emoji: '💬', score: 10, name: 'Right to Expression' },
+            { emoji: '🗳️', score: 15, name: 'Right to Vote' },
+        ];
+        const allBadItems = [
+            { emoji: '💣', score: -1, name: 'Obstacle' },
+            { emoji: '💥', score: -1, name: 'Setback' },
+            { emoji: '⛓️', score: -1, name: 'Injustice' },
+            { emoji: ' censored ', score: -1, name: 'Censorship' }
+        ];
+
+        const levelConfig = {
+            1: { speed: 2, spawnRate: 1000, good: 2, bad: 1, goal: 100 },
+            2: { speed: 2.5, spawnRate: 900, good: 3, bad: 1, goal: 250 },
+            3: { speed: 3, spawnRate: 800, good: 4, bad: 2, goal: 450 },
+            4: { speed: 3.5, spawnRate: 700, good: 5, bad: 3, goal: 700 },
+            5: { speed: 4, spawnRate: 600, good: 6, bad: 4, goal: 1000 },
+        };
+        const maxLevel = Object.keys(levelConfig).length;
+
+        // --- Game Logic Functions ---
+        function initGame() {
+            cancelAnimationFrame(gameLoopId);
+            gameState = {
+                score: 0,
+                lives: 3,
+                level: 1,
+                items: [],
+                playerX: canvas.width / 2 - playerWidth / 2,
+                leftPressed: false,
+                rightPressed: false,
+                isPaused: false,
+                spawnIntervalId: null,
+            };
+            showModal('Rights Racer', `Use your mouse or arrow keys to catch rights and avoid obstacles. Reach the score goal to level up!`, 'Start Level 1', 'bg-green-600', 'border-green-500', runGame);
+        }
+
+        function runGame() {
+            modal.classList.add('hidden');
+            gameState.isPaused = false;
+            setupLevel();
+            gameLoop();
+        }
+
+        function setupLevel() {
+            if (gameState.spawnIntervalId) clearInterval(gameState.spawnIntervalId);
+            const config = levelConfig[gameState.level];
+            gameState.spawnIntervalId = setInterval(spawnItem, config.spawnRate);
+            updateUI();
+        }
+
+        function updateUI() {
+            scoreEl.textContent = `Score: ${gameState.score}`;
+            levelEl.textContent = `Level: ${gameState.level}`;
+            livesEl.innerHTML = '💖'.repeat(gameState.lives);
+        }
+
+        function spawnItem() {
+            if (gameState.isPaused) return;
+
+            const config = levelConfig[gameState.level];
+            const goodItems = allGoodItems.slice(0, config.good);
+            const badItems = allBadItems.slice(0, config.bad);
+            const itemPool = [...goodItems, ...badItems];
+            const template = itemPool[Math.floor(Math.random() * itemPool.length)];
+            
+            gameState.items.push({
+                x: Math.random() * (canvas.width - itemSize),
+                y: -itemSize,
+                speed: config.speed,
+                ...template
+            });
+        }
+
+        function update() {
+            if (gameState.isPaused) return;
+
+            // Move Player
+            if (gameState.leftPressed && gameState.playerX > 0) gameState.playerX -= 15;
+            if (gameState.rightPressed && gameState.playerX < canvas.width - playerWidth) gameState.playerX += 15;
+
+            // Move and check items
+            for (let i = gameState.items.length - 1; i >= 0; i--) {
+                const item = gameState.items[i];
+                item.y += item.speed;
+
+                // Collision detection
+                if (item.x < gameState.playerX + playerWidth &&
+                    item.x + itemSize > gameState.playerX &&
+                    item.y < canvas.height &&
+                    item.y + itemSize > canvas.height - playerHeight) {
+                    
+                    if (item.score > 0) gameState.score += item.score;
+                    else gameState.lives--;
+                    
+                    gameState.items.splice(i, 1);
+                    updateUI();
+                } else if (item.y > canvas.height) {
+                    gameState.items.splice(i, 1);
+                }
+            }
+            
+            // Check for level up
+            if (gameState.score >= levelConfig[gameState.level].goal) {
+                levelUp();
+                return;
+            }
+
+            // Check for game over
+            if (gameState.lives <= 0) {
+                gameOver();
+            }
+        }
+
+        function draw() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            // Draw Player
+            ctx.font = `${playerWidth}px Arial`;
+            ctx.textAlign = 'center';
+            ctx.fillText(player.emoji, gameState.playerX + playerWidth / 2, canvas.height - (playerHeight/2) + 10);
+            // Draw Items
+            ctx.font = `${itemSize}px Arial`;
+            gameState.items.forEach(item => {
+                ctx.fillText(item.emoji, item.x + itemSize / 2, item.y + itemSize * 0.85);
+            });
+        }
+
+        function gameLoop() {
+            update();
+            draw();
+            gameLoopId = requestAnimationFrame(gameLoop);
+        }
+        
+        function levelUp() {
+            gameState.isPaused = true;
+            if (gameState.level >= maxLevel) {
+                 showModal('Congratulations!', `You've completed all levels! Final Score: ${gameState.score}`, 'Play Again', 'bg-green-600', 'border-green-500', initGame);
+            } else {
+                 gameState.level++;
+                 showModal(`Level ${gameState.level-1} Complete!`, `You reached the score goal! Get ready for Level ${gameState.level}.`, `Start Level ${gameState.level}`, 'bg-blue-600', 'border-blue-500', runGame);
+            }
+        }
+
+        function gameOver() {
+            gameState.isPaused = true;
+            showModal('Game Over', `Your final score is ${gameState.score}. Try again to defend our rights!`, 'Restart Game', 'bg-red-600', 'border-red-500', initGame);
+        }
+
+        function showModal(title, text, buttonText, btnColor, borderColor, callback) {
+            gameState.isPaused = true;
+            modalTitle.textContent = title;
+            modalText.textContent = text;
+            modalButton.textContent = buttonText;
+            modalContent.className = `bg-gray-800 w-11/12 max-w-md p-8 rounded-2xl text-center shadow-2xl border-2 ${borderColor}`;
+            modalButton.className = `w-full text-white font-bold py-3 px-4 rounded-lg text-xl ${btnColor}`;
+            modal.classList.remove('hidden');
+            modalButton.onclick = callback;
+        }
+
+        // --- Event Handlers ---
+        document.addEventListener('keydown', e => {
+            if (e.key === "Right" || e.key === "ArrowRight") gameState.rightPressed = true;
+            else if (e.key === "Left" || e.key === "ArrowLeft") gameState.leftPressed = true;
+        });
+        document.addEventListener('keyup', e => {
+            if (e.key === "Right" || e.key === "ArrowRight") gameState.rightPressed = false;
+            else if (e.key === "Left" || e.key === "ArrowLeft") gameState.leftPressed = false;
+        });
+        canvas.addEventListener('mousemove', e => {
+            const rect = canvas.getBoundingClientRect();
+            gameState.playerX = e.clientX - rect.left - playerWidth / 2;
+            if (gameState.playerX < 0) gameState.playerX = 0;
+            if (gameState.playerX > canvas.width - playerWidth) gameState.playerX = canvas.width - playerWidth;
+        });
+        window.addEventListener('resize', () => {
+             canvasWidth = Math.min(800, window.innerWidth - 30);
+             canvasHeight = canvasWidth * 0.75;
+             canvas.width = canvasWidth;
+             canvas.height = canvasHeight;
+        });
+        instructionsBtn.addEventListener('click', () => {
+             showModal('How to Play', `Use your mouse or arrow keys to move the character. Catch the good items (📖, 🏠, ⚕️) to score points and avoid the obstacles (💣, 💥)!`, 'Got it!', 'bg-blue-600', 'border-blue-500', () => modal.classList.add('hidden'));
+        });
+        restartBtn.addEventListener('click', initGame);
+
+        // --- Start Game ---
+        initGame();
+
+    </script>
 </body>
 </html>

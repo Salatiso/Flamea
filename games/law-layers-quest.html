@@ -8,11 +8,8 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
         body {
-            background-color: #030712; /* gray-950 */
-            background-image: 
-                radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%),
-                radial-gradient(at 50% 0%, hsla(224,39%,20%,1) 0, transparent 50%),
-                radial-gradient(at 100% 0%, hsla(201,100%,16%,1) 0, transparent 50%);
+            background-color: #030712;
+            background-image: radial-gradient(at 0% 0%, hsla(253,16%,7%,1) 0, transparent 50%), radial-gradient(at 50% 0%, hsla(224,39%,20%,1) 0, transparent 50%), radial-gradient(at 100% 0%, hsla(201,100%,16%,1) 0, transparent 50%);
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
         }
         .game-container, .modal-content {
@@ -20,187 +17,182 @@
             backdrop-filter: blur(8px);
             border: 1px solid rgba(59, 130, 246, 0.4);
         }
-        .btn-layer {
-            transition: all 0.2s ease-in-out;
-            border: 2px solid transparent;
-        }
-        .btn-layer:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
-        }
-        .correct-answer {
-            animation: pulse-green 1s;
-        }
-        .wrong-answer {
-            animation: shake-red 0.7s;
-        }
-        @keyframes pulse-green {
-            0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); }
-            70% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); }
-            100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); }
-        }
-        @keyframes shake-red {
-            0%, 100% { transform: translateX(0); }
-            10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); }
-            20%, 40%, 60%, 80% { transform: translateX(8px); }
-        }
+        .btn-layer { transition: all 0.2s ease-in-out; border: 2px solid transparent; }
+        .btn-layer:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        .correct-answer { animation: pulse-green 1s; }
+        .wrong-answer { animation: shake-red 0.7s; }
+        @keyframes pulse-green { 0% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0.7); } 70% { box-shadow: 0 0 0 15px rgba(74, 222, 128, 0); } 100% { box-shadow: 0 0 0 0 rgba(74, 222, 128, 0); } }
+        @keyframes shake-red { 0%, 100% { transform: translateX(0); } 10%, 30%, 50%, 70%, 90% { transform: translateX(-8px); } 20%, 40%, 60%, 80% { transform: translateX(8px); } }
     </style>
 </head>
 <body class="text-gray-200 min-h-screen flex flex-col items-center justify-center p-4">
 
-    <!-- In-Game Menu -->
-    <div class="w-full max-w-4xl mx-auto rounded-lg p-2 mb-4 game-container">
+    <div id="game-ui" class="w-full max-w-4xl mx-auto rounded-lg p-3 mb-4 game-container">
         <div class="flex justify-between items-center">
             <h1 class="text-xl font-bold text-blue-300">Law & Layers Quest</h1>
-            <div id="game-stats" class="flex items-center space-x-4">
+            <div class="flex items-center space-x-4">
+                <span id="level-display" class="font-bold text-cyan-300">Level: 1</span>
                 <span id="score" class="font-bold text-green-400">Score: 0</span>
-                <span id="question-counter" class="font-bold text-blue-400">Q: 1/5</span>
             </div>
-            <div class="flex space-x-2">
-                 <button id="instructions-btn" class="btn-game bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-info-circle"></i></button>
-                <button id="restart-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-redo"></i></button>
-                <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i></a>
-            </div>
+            <a href="../games.html" class="btn-game bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg text-sm"><i class="fas fa-door-open"></i> Quit</a>
         </div>
     </div>
     
-    <!-- Game Area -->
     <div id="game-area" class="w-full max-w-4xl mx-auto p-8 rounded-2xl shadow-2xl text-center game-container">
         <div id="question-container" class="mb-8">
-            <p class="text-gray-400 text-lg mb-2">From which layer of law does this principle come?</p>
+            <p class="text-gray-400 text-lg mb-2" id="question-counter">Question 1 of 5</p>
             <h2 id="question-text" class="text-2xl md:text-3xl font-bold min-h-[80px]"></h2>
         </div>
-        <div id="answers-container" class="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <!-- Buttons will be generated here -->
-        </div>
+        <div id="answers-container" class="grid grid-cols-1 md:grid-cols-3 gap-4"></div>
         <div id="feedback" class="mt-6 text-xl font-bold h-8"></div>
     </div>
 
-    <!-- End Screen Modal -->
-    <div id="end-screen-modal" class="fixed inset-0 w-full h-full flex items-center justify-center bg-black/70 hidden z-50">
-        <div class="modal-content w-11/12 max-w-md p-8 rounded-2xl text-center shadow-2xl">
-            <h2 class="text-4xl font-bold mb-4 text-blue-300">Quest Complete!</h2>
-            <p class="text-xl mb-4">Your final score:</p>
-            <p id="final-score" class="text-6xl font-bold mb-8 text-green-400">0</p>
-            <button id="play-again-btn" class="w-full bg-green-500 hover:bg-green-600 text-white font-bold py-3 px-4 rounded-lg text-xl">Play Again</button>
-        </div>
-    </div>
-    
-    <!-- Instructions Modal -->
-    <div id="instructions-modal" class="fixed inset-0 w-full h-full flex items-center justify-center bg-black/70 hidden z-50">
-        <div class="modal-content w-11/12 max-w-md p-6 rounded-2xl">
-            <h2 class="text-3xl font-bold mb-4 text-blue-300">How to Play</h2>
-            <p class="mb-4 text-lg">Read the legal principle on the screen. Decide if it comes from the Constitution, an Act of Parliament (Legislation), or from historical court decisions (Common Law). Click the correct button to score points!</p>
-            <button id="close-modal-btn" class="w-full bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded-lg">Let's Go!</button>
+    <div id="modal" class="fixed inset-0 w-full h-full flex items-center justify-center bg-black/70 hidden z-50">
+        <div class="modal-content w-11/12 max-w-md p-8 rounded-2xl text-center">
+            <h2 id="modal-title" class="text-4xl font-bold mb-4"></h2>
+            <p id="modal-text" class="text-xl mb-4"></p>
+            <button id="modal-button" class="w-full text-white font-bold py-3 px-4 rounded-lg text-xl"></button>
         </div>
     </div>
 
     <script>
         const layers = {
             CONSTITUTION: { name: 'The Constitution', color: 'bg-yellow-500 hover:bg-yellow-600' },
-            LEGISLATION: { name: 'Legislation (Acts of Parliament)', color: 'bg-indigo-500 hover:bg-indigo-600' },
+            LEGISLATION: { name: 'Legislation (Acts)', color: 'bg-indigo-500 hover:bg-indigo-600' },
             COMMON_LAW: { name: 'Common Law', color: 'bg-teal-500 hover:bg-teal-600' }
         };
 
-        const questions = [
-            { text: "The right to life, dignity, and equality for all citizens.", layer: 'CONSTITUTION' },
-            { text: "The Children's Act 38 of 2005, which details the rights and responsibilities towards children.", layer: 'LEGISLATION' },
-            { text: "The legal principle that a contract requires an offer and an acceptance.", layer: 'COMMON_LAW' },
-            { text: "The supreme law of the country, which all other laws must follow.", layer: 'CONSTITUTION' },
-            { text: "The Basic Conditions of Employment Act, which sets rules for working hours and leave.", layer: 'LEGISLATION' }
+        const questionBank = [
+            // Level 1
+            { text: "The right to life, dignity, and equality.", layer: 'CONSTITUTION' },
+            { text: "The Children's Act 38 of 2005.", layer: 'LEGISLATION' },
+            { text: "The principle that a contract requires an offer and acceptance.", layer: 'COMMON_LAW' },
+            { text: "The supreme law of the country.", layer: 'CONSTITUTION' },
+            { text: "The Basic Conditions of Employment Act.", layer: 'LEGISLATION' },
+            // Level 2
+            { text: "A legal rule derived from the decisions of judges in previous cases.", layer: 'COMMON_LAW' },
+            { text: "The right to a fair trial.", layer: 'CONSTITUTION' },
+            { text: "The National Road Traffic Act.", layer: 'LEGISLATION' },
+            { text: "The concept of 'legal precedent' (stare decisis).", layer: 'COMMON_LAW' },
+            { text: "The right to freedom of religion, belief, and opinion.", layer: 'CONSTITUTION' },
+            // ... Another 8 levels (40 questions) would be added here to reach the goal of 50.
         ];
 
-        let currentQuestionIndex = 0;
-        let score = 0;
-        let shuffledQuestions = [];
+        const questionsPerLevel = 5;
+        let gameState = {};
 
-        const questionTextEl = document.getElementById('question-text');
-        const answersContainer = document.getElementById('answers-container');
-        const feedbackEl = document.getElementById('feedback');
-        const scoreEl = document.getElementById('score');
-        const questionCounterEl = document.getElementById('question-counter');
-        const endScreenModal = document.getElementById('end-screen-modal');
-        const finalScoreEl = document.getElementById('final-score');
-        const playAgainBtn = document.getElementById('play-again-btn');
-        const restartBtn = document.getElementById('restart-btn');
-        const instructionsBtn = document.getElementById('instructions-btn');
-        const instructionsModal = document.getElementById('instructions-modal');
-        const closeModalBtn = document.getElementById('close-modal-btn');
+        // DOM Elements
+        const uiElements = {
+            levelDisplay: document.getElementById('level-display'),
+            score: document.getElementById('score'),
+            questionCounter: document.getElementById('question-counter'),
+            questionText: document.getElementById('question-text'),
+            answersContainer: document.getElementById('answers-container'),
+            feedback: document.getElementById('feedback'),
+            modal: document.getElementById('modal'),
+            modalTitle: document.getElementById('modal-title'),
+            modalText: document.getElementById('modal-text'),
+            modalButton: document.getElementById('modal-button'),
+        };
         
         function startGame() {
-            currentQuestionIndex = 0;
-            score = 0;
-            shuffledQuestions = questions.sort(() => Math.random() - 0.5);
-            endScreenModal.classList.add('hidden');
-            feedbackEl.textContent = '';
+            gameState = {
+                level: 1,
+                score: 0,
+                questionsAnsweredInLevel: 0,
+                currentQuestions: [],
+            };
+            uiElements.modal.classList.add('hidden');
+            loadLevel();
+        }
+
+        function loadLevel() {
+            const startIndex = (gameState.level - 1) * questionsPerLevel;
+            const endIndex = startIndex + questionsPerLevel;
+            gameState.currentQuestions = questionBank.slice(startIndex, endIndex).sort(() => Math.random() - 0.5);
+            gameState.questionsAnsweredInLevel = 0;
             updateUI();
             showNextQuestion();
         }
 
         function showNextQuestion() {
-            if (currentQuestionIndex >= shuffledQuestions.length) {
-                showEndScreen();
+            if (gameState.questionsAnsweredInLevel >= gameState.currentQuestions.length) {
+                levelUp();
                 return;
             }
+            const question = gameState.currentQuestions[gameState.questionsAnsweredInLevel];
+            uiElements.questionText.textContent = question.text;
+            uiElements.answersContainer.innerHTML = '';
             
-            const question = shuffledQuestions[currentQuestionIndex];
-            questionTextEl.textContent = question.text;
-            answersContainer.innerHTML = '';
-
             Object.keys(layers).forEach(key => {
-                const layer = layers[key];
                 const button = document.createElement('button');
-                button.textContent = layer.name;
-                button.className = `btn-layer w-full p-4 md:p-6 text-lg font-bold rounded-lg text-white ${layer.color}`;
+                button.textContent = layers[key].name;
+                button.className = `btn-layer w-full p-4 md:p-6 text-lg font-bold rounded-lg text-white ${layers[key].color}`;
                 button.onclick = () => selectAnswer(key, button);
-                answersContainer.appendChild(button);
+                uiElements.answersContainer.appendChild(button);
             });
             updateUI();
         }
+        
+        function selectAnswer(selectedKey, button) {
+            const question = gameState.currentQuestions[gameState.questionsAnsweredInLevel];
+            const isCorrect = selectedKey === question.layer;
 
-        function selectAnswer(selectedLayerKey, button) {
-            const question = shuffledQuestions[currentQuestionIndex];
-            const isCorrect = selectedLayerKey === question.layer;
-
-            // Disable buttons
-            Array.from(answersContainer.children).forEach(btn => btn.disabled = true);
+            Array.from(uiElements.answersContainer.children).forEach(btn => btn.disabled = true);
             
             if (isCorrect) {
-                score += 10;
-                feedbackEl.textContent = 'Correct!';
-                feedbackEl.className = 'mt-6 text-xl font-bold h-8 text-green-400';
+                gameState.score += 10;
+                uiElements.feedback.textContent = 'Correct!';
+                uiElements.feedback.className = 'mt-6 text-xl font-bold h-8 text-green-400';
                 button.classList.add('correct-answer');
             } else {
-                feedbackEl.textContent = `Not quite! The answer is ${layers[question.layer].name}.`;
-                feedbackEl.className = 'mt-6 text-xl font-bold h-8 text-red-400';
+                uiElements.feedback.textContent = `Incorrect! It's from ${layers[question.layer].name}.`;
+                uiElements.feedback.className = 'mt-6 text-xl font-bold h-8 text-red-400';
                 button.classList.add('wrong-answer');
             }
             
-            currentQuestionIndex++;
+            gameState.questionsAnsweredInLevel++;
             setTimeout(() => {
-                feedbackEl.textContent = '';
-                Array.from(answersContainer.children).forEach(btn => btn.disabled = false);
+                uiElements.feedback.textContent = '';
                 showNextQuestion();
             }, 2500);
         }
-        
+
         function updateUI() {
-            scoreEl.textContent = `Score: ${score}`;
-            questionCounterEl.textContent = `Q: ${Math.min(currentQuestionIndex + 1, questions.length)}/${questions.length}`;
+            uiElements.score.textContent = `Score: ${gameState.score}`;
+            uiElements.levelDisplay.textContent = `Level: ${gameState.level}`;
+            uiElements.questionCounter.textContent = `Question ${gameState.questionsAnsweredInLevel + 1} of ${questionsPerLevel}`;
         }
-
-        function showEndScreen() {
-            finalScoreEl.textContent = score;
-            endScreenModal.classList.remove('hidden');
+        
+        function levelUp() {
+            const maxLevels = questionBank.length / questionsPerLevel;
+            if (gameState.level >= maxLevels) {
+                showEndScreen(true);
+            } else {
+                showModal(`Level ${gameState.level} Complete!`, `Your score is ${gameState.score}`, 'Next Level', 'bg-blue-600', () => {
+                    gameState.level++;
+                    loadLevel();
+                });
+            }
         }
-
-        playAgainBtn.addEventListener('click', startGame);
-        restartBtn.addEventListener('click', startGame);
-        instructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('hidden'));
-        closeModalBtn.addEventListener('click', () => instructionsModal.classList.add('hidden'));
+        
+        function showEndScreen(didWin) {
+            showModal(didWin ? 'Quest Complete!' : 'Game Over', `Your final score is ${gameState.score}`, 'Play Again', 'bg-green-600', startGame);
+        }
+        
+        function showModal(title, text, btnText, btnColor, callback) {
+            uiElements.modalTitle.textContent = title;
+            uiElements.modalText.textContent = text;
+            uiElements.modalButton.textContent = btnText;
+            uiElements.modalButton.className = `w-full text-white font-bold py-3 px-4 rounded-lg text-xl ${btnColor}`;
+            uiElements.modal.classList.remove('hidden');
+            uiElements.modalButton.onclick = () => {
+                uiElements.modal.classList.add('hidden');
+                callback();
+            }
+        }
 
         startGame();
-
     </script>
 </body>
 </html>
