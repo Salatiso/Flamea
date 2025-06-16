@@ -16,8 +16,12 @@
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 text-gray-800 dark:text-gray-200">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
+        <div id="sidebar-placeholder"></div>
 
+        <!-- Main Content Area -->
     <div class="container mx-auto p-4 md:p-8 max-w-4xl">
         <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Your Journey to Co-Parenting Excellence</h1>
         <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Answer a few questions to get a personalised action plan.</p>
@@ -86,5 +90,8 @@
     </div>
 
     <script type="module" src="assets/js/assessment.js"></script>
+    <script src="assets/js/sidebar-loader.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
