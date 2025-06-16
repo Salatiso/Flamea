@@ -2,7 +2,7 @@
 
 /**
  * Flamea.org - Unified Main Script
- * This file contains the core sitewide JavaScript functionality.
+ * This file contains the core sitewide JavaScript functionality for rendering dynamic catalogues.
  * It uses event delegation to handle events on dynamically loaded content.
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -55,8 +55,15 @@ document.addEventListener('DOMContentLoaded', function() {
                 { name: "Needs Assessment", icon: "fas fa-clipboard-check", description: "Start here to get a personalized action plan.", url: "assessment.html" },
                 { name: "Parenting Plan Builder", icon: "fas fa-file-signature", description: "Create a comprehensive, court-ready parenting plan.", url: "plan-builder.html" },
                 { name: "Family Activity Tracker", icon: "fas fa-chart-line", description: "Log contributions, schedules, and important events.", url: "activity-tracker.html" },
-                { name: "Forms & Wizards", icon: "fas fa-folder-open", description: "Access legal templates and guided forms.", url: "forms.html" },
                 { name: "Resource Locator", icon: "fas fa-map-marked-alt", description: "Find Family Advocates, courts, and father-friendly NGOs.", url: "locator.html" }
+            ]
+        },
+        {
+            title: "🗂️ Forms & Templates",
+            color: "purple-500",
+            tools: [
+                { name: "Forms & Wizards", icon: "fas fa-folder-open", description: "Access legal templates and guided forms.", url: "forms.html" },
+                { name: "Traditional Customs Database", icon: "fas fa-book-reader", description: "Explore a rich database of South African cultural practices and their significance.", url: "customs.html" }
             ]
         },
         {
@@ -95,21 +102,90 @@ document.addEventListener('DOMContentLoaded', function() {
         { title: "Legal Simulator", description: "Experience legal scenarios in a simulated world.", url: "games/legal-simulator.html", icon: "fas fa-laptop-code text-cyan-400", category: "leaders" }
     ];
 
+    const customsDatabase = [
+        {
+            id: 'imbeleko', name: 'Imbeleko', stage: 'birth', cultures: ['xhosa', 'zulu'],
+            description: 'A crucial ritual to introduce a newborn to their ancestors and the community.',
+            procedure: 'The ceremony involves the ritual slaughter of a goat (or sheep), the burial of the umbilical cord and afterbirth, and the brewing of traditional beer (umqombothi). The baby is passed through the smoke of the sacred fire and given a traditional name.',
+            significance: "This ritual establishes the child's spiritual connection to their clan and ancestors, ensuring their protection and guidance. It formally welcomes the child into the family and community.",
+            variations: {
+                xhosa: "Among the Xhosa, Imbeleko can be performed at any age before a male's initiation, but it is considered vital for formally introducing the child to their paternal ancestors.",
+                zulu: "The Zulu tradition places a strong emphasis on the father's role in introducing the child to the ancestral spirits (amadlozi)."
+            },
+            sources: {
+                primary: ['https://www.nalug.net/exploring-the-vibrant-xhosa-cultural-traditions-an-insight-into-its-rich-heritage-and-beliefs/'],
+                secondary: ['Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 6, Rites of passage and initiation ceremonies.']
+            }
+        },
+        {
+            id: 'ulwaluko', name: 'Ulwaluko', stage: 'coming-of-age', cultures: ['xhosa', 'ndebele', 'sotho'],
+            description: 'A formal initiation and circumcision ritual that marks the transition from boyhood to manhood.',
+            procedure: 'Initiates (abakhwetha/bashanyana) are secluded in a specially built hut (iboma/mophato) for several weeks. They undergo circumcision and are taught about manhood, cultural values, and their responsibilities to the community by elders and traditional surgeons (iingcibi/basuwe). The process concludes with a cleansing ceremony and a celebration where the new men (amakrwala) are welcomed back.',
+            significance: "This is a pivotal transition into manhood, signifying a man's readiness to take on adult responsibilities, marry, and lead a family. It is deeply embedded in cultural identity and social standing.",
+            variations: {
+                xhosa: 'Typically performed when a young man is 18+ and considered ready to provide for himself.',
+                ndebele: 'Often occurs in the early to mid-teens.',
+                sotho: 'Known as Lebollo, this is also central to the transition to manhood, with age varying between 12-20.'
+            },
+            sources: {
+                primary: ['https://en.wikipedia.org/wiki/Ulwaluko', 'https://en.wikipedia.org/wiki/Lebollo_la_banna'],
+                secondary: ['The HomeSchooling Father - Master Edition 5-9-24.docx: Chapter 1, The formal school system.']
+            }
+        },
+        {
+            id: 'intonjane', name: 'Intonjane', stage: 'coming-of-age', cultures: ['xhosa', 'zulu'],
+            description: 'A rite of passage for young women, marking their transition into womanhood.',
+            procedure: 'When a girl has her first menstruation, she is secluded for a period to be taught by elder women about womanhood, marriage, and her future role in the community. The ceremony involves specific rituals, teachings, and celebrations.',
+            significance: 'Prepares young women for marriage and adult responsibilities, instilling values of respect, loyalty, and family cohesion. It is a celebrated transition that reduces the likelihood of children outside of marriage.',
+            sources: {
+                primary: ['https://www.imvabainstitute.co.za/intonjane-part-1-kwaxhosa/'],
+                secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 6, Rites of passage and initiation ceremonies."]
+            }
+        },
+        {
+            id: 'lobola', name: 'Lobola', stage: 'marriage', cultures: ['xhosa', 'zulu', 'sotho', 'swazi', 'ndebele', 'pedi', 'tsonga', 'venda'],
+            description: "The practice of bride wealth, where the groom's family presents gifts, traditionally cattle, to the bride's family.",
+            procedure: 'Negotiations are conducted between the two families, often through intermediaries (abanyana). The number of cattle (or the equivalent monetary value) is agreed upon, and the exchange solidifies the union.',
+            significance: 'Lobola is not a "purchase" but a gesture of gratitude and a way to unite the two families. It legitimizes the marriage and demonstrates the groom\'s commitment and ability to provide for his wife.',
+            sources: {
+                primary: ['https://www.sowetanlive.co.za/news/2023-09-15-lobola-a-cultural-practice-of-unity-and-family/'],
+                secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 2, Influence on Xhosa social structure and beliefs."]
+            }
+        },
+        {
+            id: 'umngcwabo', name: 'Umngcwabo', stage: 'death', cultures: ['xhosa', 'zulu', 'ndebele'],
+            description: 'A traditional funeral ceremony to honour the deceased and ensure their spirit transitions to the ancestral realm.',
+            procedure: 'Involves specific rituals like the slaughter of a cow (ukuherebha) to accompany the spirit, speeches, and traditional songs. The body is traditionally buried in a specific posture (e.g., sitting, facing east). Post-burial rituals like ukubuyisa (bringing the spirit back home) are performed later.',
+            significance: 'Death is seen not as an end but as a transition to becoming an ancestor (idlozi/ithongo). The funeral is a community event that honors the deceased\'s life and reinforces the connection between the living and the dead. Ancestors are revered and believed to guide and protect the living.',
+            sources: {
+                primary: ['https://www.news24.com/news24/southafrica/news/the-meaning-of-xhosa-funeral-rituals-20181206', 'https://www.sundaynews.co.zw/ndebele-burial-customs/'],
+                secondary: ["Beyond the Grave: A Son's Journey Through Xhosa Tradition, Spirituality, and Freedom: Preface & Chapter 1."]
+            }
+        }
+    ];
+
+
     // --- Event Delegation ---
     document.body.addEventListener('click', (event) => {
         const target = event.target;
+
+        // Modal triggers
         const modalButton = target.closest('[data-modal-target]');
         if (modalButton) {
             event.preventDefault();
             openModal(modalButton.dataset.modalTarget);
             return;
         }
+
+        // Modal close buttons
         const modalCloseButton = target.closest('[data-modal-close]');
         if (modalCloseButton) {
             event.preventDefault();
             closeModal(modalCloseButton.closest('.modal'));
             return;
         }
+
+        // Accordion toggles
         const accordionButton = target.closest('.accordion-toggle');
         if (accordionButton) {
             const content = accordionButton.nextElementSibling;
@@ -120,13 +196,31 @@ document.addEventListener('DOMContentLoaded', function() {
                 if (icon) icon.classList.toggle('rotate-180', isOpen);
             }
         }
+        
+        // --- Event handlers specific to the customs page ---
+        if (document.getElementById('customs-catalogue')) {
+            if (target.id === 'searchBtn' || target.closest('#searchBtn')) {
+                const query = document.getElementById('customSearch').value;
+                const results = searchCustoms(query);
+                displayCustomsResults(results);
+            }
+            if (target.id === 'wizardSearch' || target.closest('#wizardSearch')) {
+                 const stage = document.getElementById('lifeStage').value;
+                const culture = document.getElementById('culturalFilter').value;
+                const results = searchCustoms('', stage, culture);
+                displayCustomsResults(results);
+            }
+        }
     });
 
     // --- Modal Functions ---
-    async function openModal(modalId) { /* ... implementation ... */ }
-    function closeModal(modal) { /* ... implementation ... */ }
+    // (Keep your existing modal functions here)
+    async function openModal(modalId) { /* ... */ }
+    function closeModal(modal) { /* ... */ }
+
 
     // --- Render Functions ---
+    // (Keep renderTrainingCatalogue, renderToolsCatalogue, renderGames here)
     function renderTrainingCatalogue() {
         const container = document.getElementById('course-catalogue');
         if (!container) return;
@@ -160,9 +254,9 @@ document.addEventListener('DOMContentLoaded', function() {
         container.innerHTML = '';
         toolData.forEach(category => {
             const section = document.createElement('div');
-            section.className = 'accordion-item';
+            section.className = 'accordion-item mb-6';
             section.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                     <span class="text-2xl font-bold">${category.title}</span><i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
                 <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
@@ -172,14 +266,13 @@ document.addEventListener('DOMContentLoaded', function() {
                             const tag = isModal ? 'button' : 'a';
                             const attrs = isModal 
                                 ? `type="button" data-modal-target="${tool.modal}"` 
-                                : `href="${tool.url}" ${tool.external ? 'target="_blank"' : ''}`;
+                                : `href="${tool.url}" ${tool.external ? 'target="_blank" rel="noopener noreferrer"' : ''}`;
                             return `
-                                <${tag} ${attrs} class="tool-card">
-                                   <i class="${tool.icon} text-${category.color.split('-')[0]}-400"></i>
-                                   <h3>${tool.name}</h3>
-                                   <p>${tool.description}</p>
-                                </${tag}>
-                            `;
+                                <${tag} ${attrs} class="tool-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300">
+                                   <i class="${tool.icon} text-4xl text-${category.color.split('-')[0]}-400 mb-4"></i>
+                                   <h3 class="text-xl font-bold mb-2">${tool.name}</h3>
+                                   <p class="text-gray-400 flex-grow">${tool.description}</p>
+                                </${tag}>`;
                         }).join('')}
                     </div>
                 </div>`;
@@ -187,43 +280,116 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function renderGames() {
-        const container = document.getElementById('games-page-container');
-        if (!container) return;
-        container.innerHTML = '';
-        const categories = {
-            kids: { title: "For the Little Ones (Ages 4-8)", games: [] },
-            patriots: { title: "Young Patriots (Ages 9-13)", games: [] },
-            leaders: { title: "Future Leaders (Ages 14+)", games: [] },
-        };
-        gameData.forEach(game => {
-            if (categories[game.category]) categories[game.category].games.push(game);
+    function renderGames() { /* ... existing function ... */ }
+
+
+    // --- NEW FUNCTIONS FOR CUSTOMS PAGE ---
+    
+    function searchCustoms(query, stage = '', culture = '') {
+        return customsDatabase.filter(custom => {
+            const nameMatch = custom.name.toLowerCase().includes(query.toLowerCase());
+            const stageMatch = !stage || custom.stage === stage;
+            const cultureMatch = !culture || culture === 'all' || custom.cultures.includes(culture);
+            return nameMatch && stageMatch && cultureMatch;
         });
-        for (const key in categories) {
-            const category = categories[key];
-            if (category.games.length > 0) {
-                const categoryWrapper = document.createElement('div');
-                categoryWrapper.className = "mb-12";
-                categoryWrapper.innerHTML = `
-                    <h2 class="text-3xl font-bold mb-6 category-title">${category.title}</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                        ${category.games.map(game => `
-                            <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
-                                <a href="${game.url}" class="game-card-link absolute inset-0"></a>
-                                <div class="p-6">
-                                    <i class="${game.icon} text-3xl mb-4"></i>
-                                    <h3 class="font-bold text-xl mb-2">${game.title}</h3>
-                                    <p class="text-gray-400 text-base">${game.description}</p>
-                                </div>
-                            </div>
-                        `).join('')}
-                    </div>`;
-                container.appendChild(categoryWrapper);
-            }
-        }
     }
 
+    function displayCustomsResults(results) {
+        const resultsContainer = document.getElementById('resultsContainer');
+        if (!resultsContainer) return;
+
+        resultsContainer.innerHTML = '';
+        if (results.length === 0) {
+            resultsContainer.innerHTML = '<p class="text-gray-400 col-span-1 md:col-span-2 text-center">No customs found matching your criteria.</p>';
+            return;
+        }
+
+        results.forEach(custom => {
+            const card = document.createElement('div');
+            card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1';
+            card.innerHTML = `
+                <h3 class="text-2xl font-bold text-purple-400 mb-2">${custom.name}</h3>
+                <p class="text-sm uppercase text-gray-400 mb-4">${custom.cultures.join(', ')} - ${custom.stage}</p>
+                <p class="mb-4 text-gray-300">${custom.description}</p>
+                <div class="accordion-item">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left py-2 text-purple-300">
+                        <span class="font-semibold">View Details</span>
+                        <i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="accordion-content mt-4 pl-4 border-l-2 border-purple-400 text-sm">
+                        <h4 class="font-bold text-lg mb-2">Procedure:</h4>
+                        <p class="mb-4">${custom.procedure}</p>
+                        <h4 class="font-bold text-lg mb-2">Significance:</h4>
+                        <p class="mb-4">${custom.significance}</p>
+                        ${custom.variations ? Object.entries(custom.variations).map(([culture, text]) => `<p class="mb-2"><strong>${culture.charAt(0).toUpperCase() + culture.slice(1)} Variation:</strong> ${text}</p>`).join('') : ''}
+                        <div class="mt-4 pt-4 border-t border-gray-700">
+                            <h4 class="font-bold text-lg mb-2">Sources:</h4>
+                            <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
+                            <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+            resultsContainer.appendChild(card);
+        });
+    }
+
+    function renderCustomsPage() {
+        const container = document.getElementById('customs-catalogue');
+        if (!container) return;
+
+        container.innerHTML = `
+            <div class="text-center mb-12">
+                <h1 class="text-5xl font-bold font-roboto mb-4">South African Traditional Customs</h1>
+                <p class="text-xl text-gray-400 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices from birth to death.</p>
+            </div>
+            <section class="search-interface bg-gray-800 p-6 rounded-lg mb-12 shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
+                    <div class="manual-search">
+                        <label for="customSearch" class="block text-sm font-semibold mb-2 text-gray-300">Search by Name</label>
+                        <div class="flex">
+                            <input type="text" id="customSearch" placeholder="e.g., Imbeleko, Lobola..." class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                            <button id="searchBtn" class="bg-purple-600 hover:bg-purple-700 rounded-r-lg px-6 py-3 font-bold text-white transition-colors">Search</button>
+                        </div>
+                    </div>
+                    <div class="wizard-interface">
+                        <label class="block text-sm font-semibold mb-2 text-gray-300">Filter by Category</label>
+                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
+                            <select id="lifeStage" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="">All Life Stages</option>
+                                <option value="birth">Birth & Early Childhood</option>
+                                <option value="coming-of-age">Coming of Age</option>
+                                <option value="marriage">Marriage & Union</option>
+                                <option value="death">Death & Ancestral</option>
+                            </select>
+                            <select id="culturalFilter" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
+                                <option value="all">All Cultures</option>
+                                <option value="xhosa">Xhosa</option>
+                                <option value="zulu">Zulu</option>
+                                <option value="sotho">Sotho</option>
+                                <option value="ndebele">Ndebele</option>
+                                <option value="venda">Venda</option>
+                                <option value="swazi">Swazi</option>
+                                <option value="pedi">Pedi</option>
+                                <option value="tsonga">Tsonga</option>
+                            </select>
+                            <button id="wizardSearch" class="bg-purple-600 hover:bg-purple-700 rounded-lg w-full py-3 font-bold text-white transition-colors">Find</button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+            <section id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                <!-- Initial results will be loaded here -->
+            </section>
+        `;
+        // Initial display of all customs
+        displayCustomsResults(customsDatabase);
+    }
+
+
+    // --- INITIALIZE ALL DYNAMIC CONTENT ---
     renderTrainingCatalogue();
     renderToolsCatalogue();
     renderGames();
+    renderCustomsPage(); // New function call
 });

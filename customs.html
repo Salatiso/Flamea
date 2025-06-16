@@ -13,61 +13,20 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- Sidebar will be loaded by sidebar-loader.js -->
         <div id="sidebar-placeholder"></div>
 
+        <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-12">
-                    <h1 class="text-5xl font-bold font-roboto mb-4">South African Traditional Customs</h1>
-                    <p class="text-xl text-gray-400 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices from birth to death.</p>
-                </div>
-
-                <section class="search-interface bg-gray-800 p-6 rounded-lg mb-12">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                        <div class="manual-search">
-                            <label for="customSearch" class="block text-sm font-semibold mb-2">Search by Name</label>
-                            <div class="flex">
-                                <input type="text" id="customSearch" placeholder="e.g., Imbeleko, Lobola..." class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <button id="searchBtn" class="bg-purple-600 hover:bg-purple-700 rounded-r-lg px-6 py-3 font-bold">Search</button>
-                            </div>
-                        </div>
-                        
-                        <div class="wizard-interface">
-                            <label class="block text-sm font-semibold mb-2">Filter by Category</label>
-                            <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                                <select id="lifeStage" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option value="">All Life Stages</option>
-                                    <option value="birth">Birth & Early Childhood</option>
-                                    <option value="coming-of-age">Coming of Age</option>
-                                    <option value="marriage">Marriage & Union</option>
-                                    <option value="death">Death & Ancestral</option>
-                                </select>
-                                
-                                <select id="culturalFilter" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                    <option value="all">All Cultures</option>
-                                    <option value="xhosa">Xhosa</option>
-                                    <option value="zulu">Zulu</option>
-                                    <option value="sotho">Sotho</option>
-                                    <option value="ndebele">Ndebele</option>
-                                    <option value="venda">Venda</option>
-                                    <option value="swazi">Swazi</option>
-                                    <option value="pedi">Pedi</option>
-                                    <option value="tsonga">Tsonga</option>
-                                </select>
-                                
-                                <button id="wizardSearch" class="bg-purple-600 hover:bg-purple-700 rounded-lg w-full py-3 font-bold">Find</button>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-
-                <section id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    </section>
+            <!-- This container will be fully populated by main.js -->
+            <div id="customs-catalogue" class="max-w-7xl mx-auto">
+                <!-- Dynamic content (header, search, results) will be inserted here -->
             </div>
         </main>
     </div>
 
+    <!-- Main JS file that handles all dynamic rendering -->
     <script src="assets/js/sidebar-loader.js"></script>
-    <script src="assets/js/customs.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>
