@@ -4,13 +4,11 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Hub - Flamea</title>
-    
     <!-- External Libraries & Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
     <!-- Centralized Stylesheet -->
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
@@ -18,7 +16,6 @@
     <div class="main-container">
         <!-- Sidebar placeholder -->
         <div id="sidebar-placeholder"></div>
-
         <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
             <!-- Countdown Section -->
@@ -33,7 +30,6 @@
                 </div>
                 <div id="countdown-message" class="mt-4 text-yellow-400 font-semibold hidden">The Forum is Live! Join the conversation!</div>
             </div>
-
             <!-- Polling Section -->
             <div class="grid md:grid-cols-2 gap-12 items-center mb-16">
                 <div>
@@ -44,7 +40,6 @@
                 </div>
                 <div class="bg-gray-900 p-4 rounded-lg h-64 md:h-80"><canvas id="poll-chart"></canvas></div>
             </div>
-
             <!-- Contact Form & Info -->
             <div class="bg-gray-900 p-8 rounded-lg shadow-xl">
                 <h2 class="text-3xl font-bold text-center mb-8">Get In Touch</h2>
@@ -97,10 +92,9 @@
             </div>
         </main>
     </div>
-
     <!-- Modals -->
-    <div id="confirmation-modal" class="custom-modal">
-        <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl w-11/12 max-w-lg p-6 text-center">
+    <div id="confirmation-modal" class="modal">
+        <div class="modal-content bg-gray-800 rounded-lg shadow-2xl w-11/12 max-w-lg p-6 text-center">
             <h3 class="text-2xl font-bold mb-4">Confirm Submission</h3>
             <div class="text-left text-sm text-gray-300 space-y-3 mb-6">
                 <p><i class="fas fa-shield-alt text-green-400 mr-2"></i><span class="font-bold">Personal Information:</span> By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you.</p>
@@ -114,9 +108,9 @@
         </div>
     </div>
     
-    <!-- These modals are required for the sidebar buttons to function via main.js -->
-    <div id="chatbot-modal" class="custom-modal"></div>
-    <div id="podcast-modal" class="custom-modal"></div>
+    <!-- FIX: Corrected class name from 'custom-modal' to 'modal' -->
+    <div id="chatbot-modal" class="modal"></div>
+    <div id="podcast-modal" class="modal"></div>
 
     <!-- LOAD SCRIPTS AT THE END - IN CORRECT ORDER -->
     <script type="module" src="assets/js/firebase-config.js"></script>
@@ -126,6 +120,3 @@
     <script type="module" src="assets/js/community-features.js"></script>
 </body>
 </html>
-
-
-
