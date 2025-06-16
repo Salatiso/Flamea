@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <title>FLAMEA - Traditional Customs Database</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <nav class="sidebar-fixed">
+        <!-- FLAMEA navigation structure -->
+    </nav>
+    
+    <main class="content-area">
+        <header>
+            <h1>South African Traditional Customs</h1>
+            <p class="subtitle">From Birth to Ancestral Transition</p>
+        </header>
+        
+        <section class="search-interface">
+            <div class="manual-search">
+                <input type="text" id="customSearch" placeholder="Search for custom or practice...">
+                <button id="searchBtn">Search</button>
+            </div>
+            
+            <div class="wizard-interface">
+                <select id="lifeStage">
+                    <option value="">Select Life Stage</option>
+                    <option value="birth">Birth & Early Childhood</option>
+                    <option value="coming-of-age">Coming of Age</option>
+                    <option value="marriage">Marriage & Union</option>
+                    <option value="healing">Healing & Spiritual</option>
+                    <option value="death">Death & Ancestral</option>
+                </select>
+                
+                <select id="culturalFilter">
+                    <option value="all">All Tribes</option>
+                    <option value="xhosa">Xhosa</option>
+                    <option value="zulu">Zulu</option>
+                    <option value="ndebele">Ndebele</option>
+                    <option value="venda">Venda</option>
+                    <option value="sotho-tswana">Sotho-Tswana</option>
+                    <option value="swazi">Swazi</option>
+                </select>
+                
+                <button id="wizardSearch">Find Customs</button>
+            </div>
+        </section>
+        
+        <section class="results-display" id="resultsContainer">
+            <!-- Dynamic content insertion -->
+        </section>
+    </main>
+    
+    <aside class="timeline-container">
+        <div class="timeline-scroll" id="customsTimeline">
+            <!-- Timeline content -->
+        </div>
+    </aside>
+    
+    <script src="customs-database.js"></script>
+</body>
+</html>
