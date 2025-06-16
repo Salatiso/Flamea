@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -21,45 +21,30 @@
         }
         .main-content {
             overflow-y: auto;
+            background-color: #111827;
         }
-        .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
-        }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active {
-            background-color: #2563EB;
-            color: white;
-            transform: translateX(10px);
-        }
-        .form-input {
-            background-color: #374151; /* gray-700 */
-            border-color: #4B5563; /* gray-600 */
-        }
-        .form-input:focus {
-            --tw-ring-color: #3B82F6; /* blue-500 */
-            border-color: #3B82F6;
-        }
-        #list-container::-webkit-scrollbar { width: 8px; }
-        #list-container::-webkit-scrollbar-track { background: #1f2937; }
-        #list-container::-webkit-scrollbar-thumb { background: #4b5563; border-radius: 4px; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
+    <!-- FIX: Added main-container div -->
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
+        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
+        <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-6xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Resource Locator</h2>
-                <p class="text-lg text-gray-400 mb-8">Find essential support services near you. Enter a keyword to search for Courts, Family Advocates, and NGOs.</p>
-
-                <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-                    <div class="flex flex-col md:flex-row gap-4 mb-8">
-                        <input type="text" id="location-search" placeholder="Enter city or keyword, e.g., Johannesburg" class="flex-grow p-3 rounded-md form-input text-white">
-                        <select id="resource-type" class="p-3 rounded-md form-input text-white">
-                            <option value="all">All Resource Types</option>
+        <!-- FIX: Added main-content class and centering div -->
+        <main class="main-content p-8">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-10">
+                    <h1 class="text-4xl font-bold font-roboto">Resource Locator</h1>
+                    <p class="text-lg text-gray-400 mt-2">Find Family Advocates, courts, father-friendly NGOs, and other essential services.</p>
+                </div>
+                
+                <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+                    <div class="flex flex-col md:flex-row gap-4 mb-6">
+                        <input type="text" id="search-input" placeholder="Search by name, city, or province..." class="w-full flex-grow p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <select id="type-filter" class="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            <option value="">All Resource Types</option>
                             <option value="court">Court</option>
                             <option value="family-advocate">Family Advocate</option>
                             <option value="ngo-father">Father/Men NGOs</option>
@@ -79,10 +64,9 @@
         </main>
     </div>
 
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script src="assets/js/locator.js"></script>
+    <script type="module" src="assets/js/locator.js"></script>
 </body>
 </html>

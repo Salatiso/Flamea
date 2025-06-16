@@ -12,80 +12,160 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; background-color: #111827; }
         .wizard-step { display: none; }
         .wizard-step.active { display: block; animation: fadeIn 0.5s; }
         .progress-bar-fill { transition: width 0.4s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
         .wizard-option {
             transition: all 0.2s ease-in-out;
-            border: 1px solid #4B5563; /* gray-600 */
+            border: 2px solid #4B5563; /* border-gray-600 */
         }
         .wizard-option:hover {
-            transform: translateY(-2px);
-            border-color: #3B82F6; /* blue-500 */
-            background-color: #1F2937; /* gray-800 */
+            border-color: #3B82F6; /* border-blue-500 */
+            transform: translateY(-4px);
+        }
+        .wizard-option.selected {
+            background-color: #1E40AF; /* bg-blue-800 */
+            border-color: #3B82F6; /* border-blue-500 */
+            box-shadow: 0 0 15px rgba(59, 130, 246, 0.4);
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
 
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
-        <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Find Your Ideal Tool</h1>
-        <p class="text-center text-gray-400 mb-8">Answer these questions to get a recommendation for the best tool to solve your problem.</p>
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <!-- FIX: Added centering container -->
+            <div class="max-w-4xl mx-auto">
+                <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl">
+                    <div id="wizard-container">
+                        <!-- Step 1: Goal -->
+                        <div id="step-1" class="wizard-step active">
+                             <div class="text-center mb-6">
+                                <i class="fas fa-bullseye text-4xl text-teal-400"></i>
+                                <h2 class="text-3xl font-bold font-roboto-slab text-white mt-3">What is your main goal right now?</h2>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="wizard-option p-6 rounded-lg cursor-pointer" data-next="2" data-goal="plan">
+                                    <h3 class="text-xl font-bold">Create a Parenting Plan</h3>
+                                    <p class="text-gray-400 mt-1">Build a formal or informal agreement for co-parenting.</p>
+                                </div>
+                                <div class="wizard-option p-6 rounded-lg cursor-pointer" data-next="3" data-goal="track">
+                                    <h3 class="text-xl font-bold">Track Contributions & Events</h3>
+                                    <p class="text-gray-400 mt-1">Log expenses, time, and important interactions.</p>
+                                </div>
+                                <div class="wizard-option p-6 rounded-lg cursor-pointer" data-next="4" data-goal="document">
+                                    <h3 class="text-xl font-bold">Find a Legal Document</h3>
+                                    <p class="text-gray-400 mt-1">Get affidavits, official complaints, or letter templates.</p>
+                                </div>
+                                <div class="wizard-option p-6 rounded-lg cursor-pointer" data-next="5" data-goal="resource">
+                                    <h3 class="text-xl font-bold">Find Help Near Me</h3>
+                                    <p class="text-gray-400 mt-1">Locate Family Advocates, NGOs, or social services.</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <!-- Progress Bar -->
-        <div class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
-            <div id="progress-bar" class="bg-teal-500 h-2.5 rounded-full progress-bar-fill" style="width: 25%"></div>
-        </div>
+                        <!-- Step 2: Plan Type -->
+                        <div id="step-2" class="wizard-step">
+                            <h2 class="text-2xl font-bold text-center mb-6">What kind of plan do you need?</h2>
+                            <div class="space-y-4">
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="plan-builder">
+                                    <h3 class="text-lg font-bold">Comprehensive Parenting Plan</h3>
+                                    <p class="text-gray-400 text-sm">A detailed, court-ready plan covering all aspects of co-parenting.</p>
+                                </div>
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="communication-plan">
+                                    <h3 class="text-lg font-bold">Communication Plan</h3>
+                                    <p class="text-gray-400 text-sm">A simple agreement focused on how you and the co-parent will communicate.</p>
+                                </div>
+                            </div>
+                        </div>
 
-        <div id="assessment-wizard" class="bg-gray-800 p-8 rounded-2xl shadow-xl relative">
-            
-            <!-- Step 1 -->
-            <div id="step-1" class="wizard-step active">
-                <h2 class="text-2xl font-semibold mb-6">What is your primary goal right now?</h2>
-                <div class="space-y-4">
-                    <button data-next="2" data-answer="plan" class="wizard-option w-full text-left p-4 rounded-lg">I need to create a formal, written agreement with my co-parent.</button>
-                    <button data-next="2" data-answer="track" class="wizard-option w-full text-left p-4 rounded-lg">I need to log my financial contributions and time spent with my child.</button>
-                    <button data-next="2" data-answer="legal" class="wizard-option w-full text-left p-4 rounded-lg">I need to fill out a specific legal form or affidavit.</button>
-                    <button data-next="2" data-answer="find" class="wizard-option w-full text-left p-4 rounded-lg">I need to find a legal professional or support service near me.</button>
+                        <!-- Step 3: Tracking Type -->
+                        <div id="step-3" class="wizard-step">
+                            <h2 class="text-2xl font-bold text-center mb-6">What do you need to track?</h2>
+                            <div class="space-y-4">
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="activity-tracker">
+                                    <h3 class="text-lg font-bold">General Activities & Contributions</h3>
+                                    <p class="text-gray-400 text-sm">Log time spent, financial contributions, and day-to-day events.</p>
+                                </div>
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="dispute-tracker">
+                                    <h3 class="text-lg font-bold">Disputes & Incidents</h3>
+                                    <p class="text-gray-400 text-sm">Keep a secure, private log of conflicts or issues for your records.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Step 4: Document Type -->
+                        <div id="step-4" class="wizard-step">
+                            <h2 class="text-2xl font-bold text-center mb-6">What type of document?</h2>
+                             <div class="space-y-4">
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="forms-affidavits">
+                                    <h3 class="text-lg font-bold">Affidavits</h3>
+                                    <p class="text-gray-400 text-sm">General affidavits or specific templates for legal statements.</p>
+                                </div>
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="forms-complaints">
+                                    <h3 class="text-lg font-bold">Official Complaints</h3>
+                                    <p class="text-gray-400 text-sm">Templates for lodging complaints with bodies like the Magistrate's Commission or SAPS.</p>
+                                </div>
+                                 <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="forms-agreements">
+                                    <h3 class="text-lg font-bold">Agreements & Letters</h3>
+                                    <p class="text-gray-400 text-sm">Draft co-habitation agreements, child support agreements, or formal letters.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Step 5: Resource Type -->
+                        <div id="step-5" class="wizard-step">
+                             <h2 class="text-2xl font-bold text-center mb-6">What resource are you looking for?</h2>
+                             <div class="space-y-4">
+                                <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="locator-advocate">
+                                    <h3 class="text-lg font-bold">Family Advocate</h3>
+                                    <p class="text-gray-400 text-sm">Find the Office of the Family Advocate nearest to you.</p>
+                                </div>
+                                 <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="locator-ngo">
+                                    <h3 class="text-lg font-bold">Father & Family NGOs</h3>
+                                    <p class="text-gray-400 text-sm">Locate non-profits that support fathers and children.</p>
+                                </div>
+                                 <div class="wizard-option p-5 rounded-lg cursor-pointer" data-tool="locator-court">
+                                    <h3 class="text-lg font-bold">Court or Legal Aid</h3>
+                                    <p class="text-gray-400 text-sm">Find your local Children's Court or Legal Aid office.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    
+                    <!-- Results -->
+                    <div id="results-container" class="wizard-step">
+                         <div class="text-center">
+                            <i class="fas fa-wrench text-4xl text-teal-400"></i>
+                            <h2 class="text-3xl font-bold font-roboto-slab text-white mt-3">Recommended Tools</h2>
+                            <p class="text-gray-300">Based on your selection, here are the best tools for you:</p>
+                        </div>
+                        <div id="recommendations" class="space-y-4 my-6">
+                            <!-- Recommendations will be injected here -->
+                        </div>
+                        <a href="tools.html" class="mt-8 bg-teal-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-teal-700 transition-colors inline-block">Explore All Tools</a>
+                    </div>
+                    
+                     <!-- Navigation -->
+                    <div class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
+                        <button id="back-btn" class="text-gray-400 hover:text-white disabled:opacity-50" disabled>&larr; Back</button>
+                        <a href="tools.html" class="text-sm text-red-500 hover:text-red-400">Cancel</a>
+                    </div>
                 </div>
             </div>
-
-            <!-- Step 2 -->
-            <div id="step-2" class="wizard-step">
-                <h2 class="text-2xl font-semibold mb-6">How urgent is your situation?</h2>
-                <div class="space-y-4">
-                    <button data-next="results" data-answer="urgent" class="wizard-option w-full text-left p-4 rounded-lg">It's an emergency, I need help immediately.</button>
-                    <button data-next="results" data-answer="soon" class="wizard-option w-full text-left p-4 rounded-lg">I need to take action within the next few weeks.</button>
-                    <button data-next="results" data-answer="planning" class="wizard-option w-full text-left p-4 rounded-lg">I'm proactively planning for the future.</button>
-                </div>
-            </div>
-
-            <!-- Results Step -->
-            <div id="step-results" class="wizard-step text-center">
-                <h2 class="text-3xl font-semibold mb-4 text-white">Your Recommended Tool Kit</h2>
-                <div id="recommendation-text" class="text-left bg-gray-700 p-6 rounded-lg space-y-4 my-6">
-                    <!-- Recommendations will be injected here -->
-                </div>
-                <a href="tools.html" class="mt-8 bg-teal-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-teal-700 transition-colors inline-block">Explore All Tools</a>
-            </div>
-            
-             <!-- Navigation -->
-            <div class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
-                <button id="back-btn" class="text-gray-400 hover:text-white disabled:opacity-50" disabled>&larr; Back</button>
-                <a href="tools.html" class="text-sm text-red-500 hover:text-red-400">Cancel</a>
-            </div>
-        </div>
+        </main>
     </div>
-            <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
-</div>
-    <script type="module" src="assets/js/tool-assessment.js"></script>
 
-    <script src="[https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js](https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js)"></script>
+    <script type="module" src="assets/js/tool-assessment.js"></script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>

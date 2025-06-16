@@ -1,182 +1,122 @@
 <!DOCTYPE html>
-
-<html lang="en">
-
+<html lang="en" class="dark">
 <head>
-
-    <meta charset="UTF-8">
-
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
-    <title>FLAMEA - Find Your Learning Path</title>
-
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-
-    <style>
-
-        body { font-family: 'Open Sans', sans-serif; }
-
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-
-        .main-content { overflow-y: auto; }
-
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-
-        .form-input { background-color: #374151; border: 1px solid #4B5563; border-radius: 0.375rem; color: #F9FAFB; }
-
-        .form-input:focus { outline: none; --tw-ring-color: #3B82F6; border-color: #3B82F6; box-shadow: 0 0 0 2px var(--tw-ring-color); }
-
-        .question-block { border-left: 3px solid #4B5563; }
-
-        #results-container { display: none; }
-
-    </style>
-
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMEA - Find Your Learning Path</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; background-color: #111827; }
+        .option-checkbox:checked + label {
+            background-color: #1D4ED8; /* bg-blue-700 */
+            border-color: #3B82F6; /* border-blue-500 */
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
         <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
         <div id="sidebar-placeholder"></div>
-        
-        <!-- Main Content -->
 
-        <main class="main-content p-8 md:p-12">
+        <!-- Main Content Area -->
+        <main class="main-content p-8 md:p-12">
+            <!-- FIX: Added centering container -->
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center">
+                    <h1 class="text-4xl font-bold font-roboto-slab text-white">Find Your Learning Path</h1>
+                    <p class="text-lg text-gray-400 mb-8 mt-2">Answer a few quick questions to get a personalized course plan.</p>
+                </div>
 
-            <div class="max-w-4xl mx-auto">
+                <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl">
+                    <form id="assessment-form">
+                        <div class="text-center mb-10">
+                            <i class="fas fa-question-circle text-5xl text-teal-400"></i>
+                            <h2 class="text-3xl font-bold font-roboto text-white mt-4">What stage are you at in your fatherhood journey?</h2>
+                            <p class="mt-2 text-lg text-gray-300">Select all that apply. This will help us tailor your results.</p>
+                        </div>
+                        
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
+                            <!-- Option 1 -->
+                            <div class="relative">
+                                <input type="checkbox" id="expecting" name="interest" value="foundations" class="hidden option-checkbox">
+                                <label for="expecting" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Expecting or New Father</h3>
+                                    <p class="text-gray-400 mt-2">Preparing for a newborn or navigating the first year.</p>
+                                </label>
+                            </div>
+                            <!-- Option 2 -->
+                            <div class="relative">
+                                <input type="checkbox" id="separated" name="interest" value="practical" class="hidden option-checkbox">
+                                <label for="separated" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Separated or Divorced</h3>
+                                    <p class="text-gray-400 mt-2">Dealing with co-parenting, maintenance, or contact issues.</p>
+                                </label>
+                            </div>
+                            <!-- Option 3 -->
+                            <div class="relative">
+                                <input type="checkbox" id="homeschooling" name="interest" value="homeschooling" class="hidden option-checkbox">
+                                <label for="homeschooling" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Homeschooling Father</h3>
+                                    <p class="text-gray-400 mt-2">Looking to build a custom curriculum for your child.</p>
+                                </label>
+                            </div>
+                            <!-- Option 4 -->
+                            <div class="relative">
+                                <input type="checkbox" id="traditional" name="interest" value="cultural" class="hidden option-checkbox">
+                                <label for="traditional" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Connecting with Tradition</h3>
+                                    <p class="text-gray-400 mt-2">Exploring cultural and ancestral roles in fatherhood.</p>
+                                </label>
+                            </div>
+                             <!-- Option 5 -->
+                            <div class="relative">
+                                <input type="checkbox" id="legal" name="interest" value="advocacy" class="hidden option-checkbox">
+                                <label for="legal" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Facing a Legal Battle</h3>
+                                    <p class="text-gray-400 mt-2">Needing to understand your rights and advocate for your child.</p>
+                                </label>
+                            </div>
+                            <!-- Option 6 -->
+                            <div class="relative">
+                                <input type="checkbox" id="curious" name="interest" value="all" class="hidden option-checkbox">
+                                <label for="curious" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
+                                    <h3 class="font-bold text-xl text-white">Just Curious / General Skills</h3>
+                                    <p class="text-gray-400 mt-2">Want to explore all topics and broaden your knowledge.</p>
+                                </label>
+                            </div>
+                        </div>
 
-                <div id="assessment-form-container">
+                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">Show My Path</button>
+                    </form>
+                </div>
 
-                    <div class="text-center">
+                <div id="results-container" class="mt-12" style="display: none;">
+                    <div class="text-center mb-8">
+                        <i class="fas fa-map-signs text-5xl text-teal-400"></i>
+                        <h2 class="text-4xl font-bold font-roboto text-white mt-4">Your Recommended Learning Path</h2>
+                        <p class="mt-2 text-lg text-gray-300">Based on your answers, here are the most valuable first courses for you.</p>
+                    </div>
+                    <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                        <!-- Recommended courses will be injected here -->
+                    </div>
+                     <div class="text-center mt-10">
+                        <a href="training.html#course-catalogue" class="text-teal-400 font-bold hover:underline text-lg">Or, Explore the Full Course Catalogue &rarr;</a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
 
-                        <h2 class="text-4xl font-bold font-roboto text-white">Your Personal Learning Path</h2>
-
-                        <p class="mt-2 text-lg text-gray-400">Answer 3 quick questions to get a personalized list of recommended courses.</p>
-
-                    </div>
-
-                    <div class="mt-10 bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
-
-                        <form id="training-assessment-form" class="space-y-8">
-
-                            <div class="question-block pl-4">
-
-                                <label for="q1" class="block text-lg font-semibold text-gray-200">1. How familiar are you with your parental rights under the SA Constitution?</label>
-
-                                <select id="q1" class="w-full p-2 mt-2 form-input" required>
-
-                                    <option value="">Select an option...</option>
-
-                                    <option value="familiar">I'm very familiar.</option>
-
-                                    <option value="somewhat">I know a little, but need clarity.</option>
-
-                                    <option value="not_familiar">I'm not familiar at all.</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="question-block pl-4">
-
-                                <label for="q2" class="block text-lg font-semibold text-gray-200">2. Which best describes your current fatherhood journey?</label>
-
-                                <select id="q2" class="w-full p-2 mt-2 form-input" required>
-
-                                    <option value="">Select an option...</option>
-
-                                    <option value="planning">Planning for the future (no children yet)</option>
-
-                                    <option value="expecting">Expecting a child</option>
-
-                                    <option value="new_dad">Father to young children (0-6 years)</option>
-
-                                    <option value="experienced_dad">Father to older children (7+ years)</option>
-
-                                </select>
-
-                            </div>
-
-                            <div class="question-block pl-4">
-
-                                <label for="q3" class="block text-lg font-semibold text-gray-200">3. Have you created a written parenting plan before?</label>
-
-                                <select id="q3" class="w-full p-2 mt-2 form-input" required>
-
-                                    <option value="">Select an option...</option>
-
-                                    <option value="yes">Yes, we have a detailed plan.</option>
-
-                                    <option value="no">No, we have nothing in writing.</option>
-
-                                    <option value="what_is_that">What is a parenting plan?</option>
-
-                                </select>
-
-                            </div>
-
-                            <button type="submit" class="w-full bg-teal-500 hover:bg-teal-600 font-bold py-3 px-6 rounded-lg text-lg transition-colors">Show My Path</button>
-
-                        </form>
-
-                    </div>
-
-                </div>
-
-
-
-                <div id="results-container" class="mt-12">
-
-                    <div class="text-center mb-8">
-
-                        <i class="fas fa-map-signs text-5xl text-teal-400"></i>
-
-                        <h2 class="text-4xl font-bold font-roboto text-white mt-4">Your Recommended Learning Path</h2>
-
-                        <p class="mt-2 text-lg text-gray-300">Based on your answers, here are the most valuable first courses for you.</p>
-
-                    </div>
-
-                    <div id="recommendations-list" class="space-y-6">
-
-                        <!-- Recommendations will be injected here by JS -->
-
-                    </div>
-
-                     <div class="mt-8 text-center">
-
-                        <a href="training.html#course-catalogue" class="text-blue-400 hover:underline font-semibold">Or browse the full course catalogue &rarr;</a>
-
-                    </div>
-
-                </div>
-
-            </div>
-
-        </main>
-
-    </div>
-
-   
-
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
-
-    <script type="module" src="assets/js/training-assessment.js"></script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-
+    <script type="module" src="assets/js/training-assessment.js"></script>
 </body>
-
 </html>

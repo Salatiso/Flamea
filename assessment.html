@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,8 +8,11 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Inter', sans-serif; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; background-color: #111827; }
         .wizard-step { display: none; }
         .wizard-step.active { display: block; animation: fadeIn 0.5s; }
         .progress-bar-fill { transition: width 0.4s ease-in-out; }
@@ -17,64 +20,44 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
+    <!-- FIX: Added main-container div -->
     <div class="main-container">
         <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
-    <div class="container mx-auto p-4 md:p-8 max-w-4xl">
-        <h1 class="text-3xl font-bold font-roboto-slab text-center mb-2">Your Journey to Co-Parenting Excellence</h1>
-        <p class="text-center text-gray-600 dark:text-gray-400 mb-8">Answer a few questions to get a personalised action plan.</p>
-
-        <div class="w-full bg-gray-200 dark:bg-gray-700 rounded-full h-2.5 mb-8">
-            <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 25%"></div>
-        </div>
-
-        <div id="assessment-wizard" class="bg-white dark:bg-gray-800 p-8 rounded-2xl shadow-xl relative">
-            
-            <div id="step-1" class="wizard-step active">
-                <h2 class="text-2xl font-semibold mb-6">What is the current status of your co-parenting relationship?</h2>
-                <div class="space-y-4">
-                    <button data-next="2" data-answer="amicable" class="wizard-option w-full text-left p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-green-50 dark:hover:bg-green-900/50">We are on good terms and can discuss things calmly.</button>
-                    <button data-next="2" data-answer="tense" class="wizard-option w-full text-left p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-yellow-50 dark:hover:bg-yellow-900/50">It's tense. We struggle to communicate without arguing.</button>
-                    <button data-next="2" data-answer="conflict" class="wizard-option w-full text-left p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-red-50 dark:hover:bg-red-900/50">It's high-conflict. We cannot agree on anything.</button>
-                    <button data-next="2" data-answer="no-contact" class="wizard-option w-full text-left p-4 rounded-lg border border-gray-300 dark:border-gray-600 hover:bg-gray-100 dark:hover:bg-gray-700">We have little to no contact.</button>
+        <!-- FIX: Changed container div to main tag with main-content class -->
+        <main class="main-content flex items-center justify-center p-4">
+            <!-- FIX: Added centering container -->
+            <div class="max-w-4xl mx-auto w-full">
+                <div id="wizard-container" class="bg-gray-800 shadow-2xl rounded-2xl p-8 transition-all duration-500">
+                    <!-- Progress Bar -->
+                    <div class="mb-8">
+                        <div class="flex justify-between items-center mb-2">
+                            <span class="text-sm font-semibold text-gray-400">Question <span id="current-q-number">1</span> of <span id="total-q-number">10</span></span>
+                            <span id="progress-text" class="text-sm font-bold text-teal-400">0%</span>
+                        </div>
+                        <div class="w-full bg-gray-700 rounded-full h-2.5">
+                            <div id="progress-bar" class="bg-teal-500 h-2.5 rounded-full progress-bar-fill" style="width: 0%"></div>
+                        </div>
+                    </div>
+                    
+                    <!-- Question Area -->
+                    <div id="question-container">
+                        <!-- Questions injected here -->
+                    </div>
+                    
+                    <!-- Navigation -->
+                    <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
+                        <button id="prev-btn" class="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-500 disabled:opacity-50 disabled:cursor-not-allowed transition-colors">Back</button>
+                        <button id="quit-btn" class="text-sm text-red-500 hover:text-red-400">Quit Assessment</button>
+                    </div>
                 </div>
             </div>
-
-            <div id="step-2" class="wizard-step">
-                 <h2 class="text-2xl font-semibold mb-6">What is your biggest challenge right now?</h2>
-                <div class="space-y-4">
-                    <button data-next="3" data-answer="finances" class="wizard-option w-full text-left p-4 rounded-lg border">Creating a fair financial plan for maintenance.</button>
-                    <button data-next="3" data-answer="schedule" class="wizard-option w-full text-left p-4 rounded-lg border">Arranging a consistent visitation schedule.</button>
-                    <button data-next="3" data-answer="decisions" class="wizard-option w-full text-left p-4 rounded-lg border">Making major decisions together (school, health).</button>
-                    <button data-next="3" data-answer="new" class="wizard-option w-full text-left p-4 rounded-lg border">We are just starting and need to define everything.</button>
-                </div>
-            </div>
-
-            <div id="step-3" class="wizard-step">
-                <h2 class="text-2xl font-semibold mb-6">Do you have an existing court order or legal agreement?</h2>
-                <div class="space-y-4">
-                    <button data-next="results" data-answer="yes" class="wizard-option w-full text-left p-4 rounded-lg border">Yes, we have a formal court order.</button>
-                    <button data-next="results" data-answer="informal" class="wizard-option w-full text-left p-4 rounded-lg border">We have an informal agreement, but it's not working well.</button>
-                    <button data-next="results" data-answer="no" class="wizard-option w-full text-left p-4 rounded-lg border">No, we have nothing in writing.</button>
-                </div>
-            </div>
-
-            <div id="step-results" class="wizard-step text-center">
-                 <h2 class="text-2xl font-semibold mb-4">Thank You! Here is Your Personalised Action Plan:</h2>
-                 <div id="recommendation-text" class="text-left bg-gray-50 dark:bg-gray-700 p-6 rounded-lg space-y-3"></div>
-                 <button id="get-certificate-btn" class="mt-8 bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-700 transition-colors">Claim Your "SuperDad" Achievement!</button>
-            </div>
-            
-             <div class="mt-8 pt-4 border-t border-gray-200 dark:border-gray-700 flex justify-between items-center">
-                <button id="back-btn" class="text-gray-600 dark:text-gray-400 hover:text-black dark:hover:text-white">&larr; Back</button>
-                <button id="quit-btn" class="text-sm text-red-500 hover:text-red-700 dark:hover:text-red-400">Quit Assessment</button>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
+    <div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
         <div class="bg-white dark:bg-gray-800 p-8 rounded-lg text-center max-w-sm w-full">
             <h2 class="text-xl font-bold mb-4">Are you sure?</h2>
             <p class="text-gray-600 dark:text-gray-400 mb-6">If you quit now, all your progress will be lost.</p>
@@ -85,13 +68,12 @@
         </div>
     </div>
     
-    <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden">
-        <div id="certificate-content" class="bg-white dark:bg-gray-800 p-8 rounded-lg max-w-3xl w-full text-center"></div>
+    <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-75 flex items-center justify-center p-4 hidden z-50">
+        <!-- Certificate content will be loaded here -->
     </div>
 
-    <script type="module" src="assets/js/assessment.js"></script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/assessment.js"></script>
 </body>
 </html>
