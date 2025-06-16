@@ -38,10 +38,10 @@
     </style>
 </head>
 
-<body class="bg-gray-900 text-white font-sans">
-    <div class="flex">
-        <!-- Sidebar Container -->
-        <div id="sidebar-container"></div>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- ===== Standardized Sidebar ===== -->
+<div id="sidebar-placeholder"></div>
 
         <!-- Main Content -->
         <div class="main-content flex-1 p-4 sm:p-6 lg:p-8">
@@ -186,8 +186,44 @@
             </div>
         </div>
     </div>
+           function displayCTA() {
+                contentContainer.innerHTML = `
+                    <div class="text-center" style="animation: fadeIn 0.5s;">
+                        <p class="text-xl font-bold mb-4">Your Voice Matters. Your Legacy Awaits.</p>
+                        <p class="mb-4">Join the community, share your ideas, and let's build a better future for our children, together.</p>
+                        <a href="community.html" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors mr-2">Join the Community</a>
+                        <a href="login.html" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors">Sign Up Now</a>
+                    </div>
+                `;
+            }
 
+            function updateMessage() {
+                if (currentMessageIndex === theme.messages.length) {
+                    displayCTA();
+                } else {
+                    displayMessage();
+                }
+            }
+
+            prevBtn.addEventListener('click', () => {
+                currentMessageIndex = (currentMessageIndex - 1 + theme.messages.length + 1) % (theme.messages.length + 1);
+                updateMessage();
+            });
+
+            nextBtn.addEventListener('click', () => {
+                currentMessageIndex = (currentMessageIndex + 1) % (theme.messages.length + 1);
+                updateMessage();
+            });
+
+            if (themeNameEl) {
+                themeNameEl.textContent = theme.name;
+            }
+            // Initial display
+            updateMessage();
+        });
+    </script>
     <script src="assets/js/sidebar-loader.js"></script>
-</body>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 
 </html>
