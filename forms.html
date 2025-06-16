@@ -1,50 +1,23 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Flamea - Forms & Documents Hub</title>
-    
-    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
-    
-    <!-- Custom Styles -->
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Roboto', sans-serif; overflow: hidden; -webkit-print-color-adjust: exact; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-        }
-        .main-content-area { overflow-y: auto; }
-        .option-card { transition: all 0.3s ease; }
-        .option-card:hover { transform: translateY(-5px); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
-        .progress-bar { background-color: #374151; }
-        .progress-fill { background-color: #2563EB; }
-        .form-link { color: #60A5FA; text-decoration: underline; }
-        .form-link:hover { color: #93C5FD; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        .notification { position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%); z-index: 1000; }
-    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
-
-        <!-- Main Content Area -->
-        <main class="main-content-area p-8 md:p-12">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-8 md:p-12">
             <div class="max-w-4xl mx-auto">
                 <div class="text-center">
                     <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">Forms & Documents Hub</h1>
                     <p class="text-lg text-gray-400 mb-12">Prepare for your journey with the right tools. Honest communication and our resources can help you salvage everything for your child’s sake.</p>
                 </div>
-
                 <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
                     <div id="start-wizard-btn" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer">
                         <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
@@ -57,148 +30,17 @@
                         <p class="text-gray-400">Know what you need? Browse all forms by category.</p>
                     </div>
                 </div>
-
-                <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
-                    <i class="fas fa-user-shield text-5xl text-blue-300"></i>
-                    <div>
-                        <h3 class="font-bold text-xl">Become a Flamea Member</h3>
-                        <p class="mt-1 text-blue-200"><a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your form progress and build your "SuperDad" Life CV.</p>
-                    </div>
+                <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg mb-12">
+                    <!-- Wizard content will be injected by forms.js -->
                 </div>
-
-                <div id="wizard-section" class="hidden bg-gray-900 p-8 rounded-lg mb-12">
-                     <!-- Wizard content remains the same -->
-                </div>
-
                 <div id="explorer-section" class="hidden space-y-8 mb-12">
-                     <h2 class="text-2xl font-bold mb-4">Form Categories</h2>
-                     <div class="space-y-4">
-                        <div class="mb-8"><button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600"><span class="text-xl font-bold">🏛️ Official & Legal Forms</span><i class="fas fa-chevron-down transform transition-transform"></i></button><div class="accordion-content mt-4 pl-4 border-l-4 border-blue-500"><ul class="space-y-3 pt-4"><li><a class="form-link" href="https://www.justice.gov.za/forms/form_cj.html" target="_blank">Form 10 [J779]: Register Parenting Plan</a></li><li><a class="form-link" href="templates/Legal_Practice_Council_Complaint.html">Legal Practice Council Complaint</a></li><li><a class="form-link" href="templates/Magistrates_Commission_Complaint_Template.html">Magistrates Commission Complaint</a></li><li><a class="form-link" href="templates/Public_Protector_Complaint.html">Public Protector Complaint</a></li><li><a class="form-link" href="templates/Commission_Gender_Equality.html">Commission for Gender Equality Complaint</a></li></ul></div></div>
-                        <div class="mb-8"><button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600"><span class="text-xl font-bold">✍️ Agreements & Plans</span><i class="fas fa-chevron-down transform transition-transform"></i></button><div class="accordion-content mt-4 pl-4 border-l-4 border-green-500"><ul class="space-y-3 pt-4"><li><a class="form-link" href="templates/Parenting_Plan_Template.html">Flamea Parenting Plan Template</a></li><li><a class="form-link" href="templates/Child_Support_Agreement.html">Child Support Agreement</a></li><li><a class="form-link" href="templates/Cohabitation_Agreement.html">Cohabitation Agreement</a></li><li><a class="form-link" href="templates/Communication_Plan.html">Co-Parenting Communication Plan</a></li><li><a class="form-link" href="templates/Conflict_Resolution_Worksheet.html">Conflict Resolution Worksheet</a></li></ul></div></div>
-                        <div class="mb-8"><button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600"><span class="text-xl font-bold">✉️ Affidavits & Letters</span><i class="fas fa-chevron-down transform transition-transform"></i></button><div class="accordion-content mt-4 pl-4 border-l-4 border-yellow-500"><ul class="space-y-3 pt-4"><li><a class="form-link" href="templates/Affidavit_General_Template.html">General Affidavit Template</a></li><li><a class="form-link" href="templates/Affidavit-SAPS_Complaint_.html">SAPS Complaint Affidavit</a></li><li><a class="form-link" href="templates/Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html">Informal Parental Rights Letter</a></li><li><a class="form-link" href="templates/Damages_Accepting_Letter.html">Damages Accepting Letter</a></li><li><a class="form-link" href="templates/Mediation_Request_Letter.html">Mediation Request Letter</a></li></ul></div></div>
-                        <div class="mb-8"><button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow-lg hover:bg-gray-600"><span class="text-xl font-bold">📋 Personal & Administrative</span><i class="fas fa-chevron-down transform transition-transform"></i></button><div class="accordion-content mt-4 pl-4 border-l-4 border-purple-500"><ul class="space-y-3 pt-4"><li><a class="form-link" href="templates/Budget_Couples.html">Couples Budget Planner</a></li><li><a class="form-link" href="templates/Medical_Record_Request_Template.html">Medical Record Request</a></li><li><a class="form-link" href="templates/School_Letter_General_Template.html">General School Letter</a></li><li><a class="form-link" href="templates/School_Letter_Transfer_Template.html">School Transfer Letter</a></li></ul></div></div>
-                     </div>
-                </div>
-
-                <div id="form-actions" class="mt-8 flex flex-wrap justify-center gap-4">
-                    <!-- Action buttons remain here -->
-                </div>
-                
-                <div id="superdad-progress" class="mt-16 bg-gray-900 p-8 rounded-lg shadow-lg">
-                    <!-- SuperDad progress content remains here -->
+                    <!-- Explorer content will be injected by forms.js -->
                 </div>
             </div>
         </main>
     </div>
-
-    <div id="notification" class="notification"></div>
-
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
-        import { getAuth, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
-        import { getFirestore, doc, setDoc, getDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-firestore.js";
-
-        const firebaseConfig = {
-            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
-            authDomain: "flamea.firebaseapp.com",
-            projectId: "flamea",
-            storageBucket: "flamea.appspot.com",
-            messagingSenderId: "681868881622",
-            appId: "1:681868881622:web:d20687c688b2d1d943a377",
-            measurementId: "G-MX7X9JQE51"
-        };
-
-        const app = initializeApp(firebaseConfig);
-        const auth = getAuth(app);
-        const db = getFirestore(app);
-
-        document.addEventListener('DOMContentLoaded', () => {
-            const wizardBtn = document.getElementById('start-wizard-btn');
-            const explorerBtn = document.getElementById('explore-forms-btn');
-            const wizardSection = document.getElementById('wizard-section');
-            const explorerSection = document.getElementById('explorer-section');
-            const situationSelect = document.getElementById('situation');
-            const actionSelect = document.getElementById('action');
-            const wizardResultDiv = document.getElementById('wizard-result');
-            const recommendedFormsDiv = document.getElementById('recommended-forms');
-            const saveProgressBtn = document.getElementById('save-progress');
-            const progressFill = document.getElementById('progress-fill');
-            const progressMessage = document.getElementById('progress-message');
-            const accordionToggles = document.querySelectorAll('.accordion-toggle');
-            const notificationDiv = document.getElementById('notification');
-            
-            let currentUser = null;
-            let userProgress = { completedForms: [] };
-
-            const formsData = { /* The JS formsData object remains the same */ };
-
-            function showNotification(message, isError = false) {
-                notificationDiv.textContent = message;
-                notificationDiv.className = `notification p-3 rounded-lg shadow-lg text-white ${isError ? 'bg-red-600' : 'bg-green-600'}`;
-                setTimeout(() => {
-                    notificationDiv.className = 'notification';
-                    notificationDiv.textContent = '';
-                }, 3000);
-            }
-
-            onAuthStateChanged(auth, (user) => {
-                currentUser = user;
-                if (user) { loadProgress(user.uid); }
-            });
-
-            wizardBtn.addEventListener('click', () => {
-                wizardSection.classList.remove('hidden');
-                explorerSection.classList.add('hidden');
-            });
-            explorerBtn.addEventListener('click', () => {
-                explorerSection.classList.remove('hidden');
-                wizardSection.classList.add('hidden');
-            });
-
-            situationSelect.addEventListener('change', (e) => { /* ... situation logic ... */ });
-            actionSelect.addEventListener('change', (e) => { /* ... action logic ... */ });
-            
-            saveProgressBtn.addEventListener('click', () => {
-                if (currentUser) {
-                    saveUserProgress(currentUser.uid);
-                } else {
-                    showNotification('Please log in to save your progress!', true);
-                    setTimeout(() => window.location.href = 'login.html', 1500);
-                }
-            });
-
-            accordionToggles.forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.nextElementSibling;
-                    const icon = button.querySelector('i.fa-chevron-down');
-                    if (content.style.maxHeight) {
-                        content.style.maxHeight = null;
-                        icon.classList.remove('rotate-180');
-                    } else {
-                        content.style.maxHeight = content.scrollHeight + "px";
-                        icon.classList.add('rotate-180');
-                    } 
-                });
-            });
-            
-            function updateProgress(formName) { /* ... update progress logic ... */ }
-            
-            async function saveUserProgress(uid) {
-                try {
-                    await setDoc(doc(db, 'users', uid), { formsProgress: userProgress, lastUpdated: serverTimestamp() }, { merge: true });
-                    showNotification('Your progress has been saved!');
-                } catch (error) {
-                    console.error("Error saving progress: ", error);
-                    showNotification('Error saving progress.', true);
-                }
-            }
-
-            async function loadProgress(uid) { /* ... load progress logic ... */ }
-        });
-
-            <script src="assets/js/sidebar-loader.js"></script>
+    <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    </script>
+    <script type="module" src="assets/js/forms.js"></script>
 </body>
 </html>

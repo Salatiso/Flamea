@@ -8,11 +8,9 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; background-color: #111827; }
         .game-card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #1F2937; /* bg-gray-800 */
+            background-color: #1F2937;
         }
         .game-card:hover {
             transform: translateY(-10px);
@@ -29,24 +27,19 @@
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
-    <!-- FIX: Added main-container div -->
     <div class="main-container">
         <div id="sidebar-placeholder"></div>
-        <!-- FIX: Added main-content class and centering div -->
         <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12">
                     <h1 class="text-5xl font-bold font-roboto text-white">Flamea Game Arcade</h1>
                     <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">Test your knowledge, sharpen your strategic thinking, and learn about your rights in an interactive way.</p>
                 </div>
-
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
-                    <!-- Game Cards will be injected here by main.js -->
-                </div>
+                <!-- This container will be populated by main.js -->
+                <div id="games-page-container"></div>
             </div>
         </main>
     </div>
-
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
 </body>
