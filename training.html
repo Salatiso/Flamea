@@ -40,34 +40,9 @@
                     </a>
                 </div>
 
-                <div id="member-prompt" class="my-10 bg-blue-900 bg-opacity-40 border border-blue-500 text-white p-6 rounded-lg shadow-lg flex items-center gap-6">
-                    <i class="fas fa-user-shield text-5xl text-blue-300"></i>
-                    <div>
-                        <h3 class="font-bold text-xl">Become a Flamea Member</h3>
-                        <p class="mt-1 text-blue-200">
-                            <a href="login.html" class="font-bold underline hover:text-white">Register for a free account</a> to save your course progress, earn completion certificates with unique QR codes, and build your "Superdad" Life CV.
-                        </p>
-                    </div>
-                </div>
-
+                <!-- The course catalogue will be dynamically rendered here -->
                 <div id="course-catalogue" class="space-y-8">
-                    <!-- Legal & Constitutional Foundations -->
-                    <div class="accordion-item">
-                        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
-                            <span class="text-xl md:text-2xl font-bold">🎓 Legal & Constitutional Foundations</span>
-                            <i class="fas fa-chevron-down transform transition-transform"></i>
-                        </button>
-                        <div class="accordion-content mt-4 pl-4 border-l-4 border-green-500">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
-                                <a href="training/course-constitution.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700"><div class="flex items-center mb-4"><i class="fas fa-landmark text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The SA Constitution</h4></div><p class="text-gray-400 mb-4 h-20">Understand your foundational rights as a father and a citizen under South Africa's supreme law.</p><span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span></a>
-                                <a href="training/course-childrens-act.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700"><div class="flex items-center mb-4"><i class="fas fa-child text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">The Children's Act</h4></div><p class="text-gray-400 mb-4 h-20">A deep dive into parental rights, responsibilities, care, and contact. Know the law that governs your relationship with your child.</p><span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span></a>
-                                <a href="training/course-family-law.html" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700"><div class="flex items-center mb-4"><i class="fas fa-balance-scale text-3xl text-green-400 mr-4"></i><h4 class="text-xl font-bold">Family Law Overview</h4></div><p class="text-gray-400 mb-4 h-20">Navigate the Marriage, Divorce, and Maintenance Acts with confidence.</p><span class="bg-green-500 text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Other course categories go here... -->
-
+                    <!-- This div will be populated by main.js -->
                 </div>
             </div>
         </main>
@@ -76,7 +51,6 @@
     <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
     <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
 
-    <!-- FIX: Corrected the script tag for rss-parser -->
     <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>

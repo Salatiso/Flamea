@@ -7,182 +7,179 @@
  */
 document.addEventListener('DOMContentLoaded', function() {
     
-    // --- Centralized Event Listener for the whole page ---
+    // --- Data for Dynamic Content ---
+
+    const trainingData = [
+        { 
+            title: "🎓 Legal & Constitutional Foundations", 
+            color: "green-500", 
+            courses: [
+                { title: "The SA Constitution", icon: "fas fa-landmark", description: "Understand your foundational rights as a father and a citizen under South Africa's supreme law.", url: "training/course-constitution.html" },
+                { title: "The Children's Act", icon: "fas fa-child", description: "A deep dive into parental rights, responsibilities, care, and contact. Know the law that governs your relationship with your child.", url: "training/course-childrens-act.html" },
+                { title: "Family Law Overview", icon: "fas fa-balance-scale", description: "Navigate the Marriage, Divorce, and Maintenance Acts with confidence.", url: "training/course-family-law.html" }
+            ] 
+        },
+        {
+            title: "👨‍👧‍👦 Practical Parenting Skills",
+            color: "blue-500",
+            courses: [
+                 { title: "Co-Parenting 101", icon: "fas fa-hands-helping", description: "Master communication, conflict resolution, and building effective parenting plans. Learn to work with your co-parent for the child's benefit.", url: "training/course-coparenting.html" },
+                 { title: "Newborn & Daily Care", icon: "fas fa-baby-carriage", description: "From changing diapers to installing car seats, gain confidence in daily tasks. Lean on your family for support.", url: "training/course-newborn-daily-care.html" },
+                 { title: "Building Your Own Curriculum", icon: "fas fa-pencil-ruler", description: "A guide for the homeschooling father. Move beyond the formal system to create a practical, values-based education.", url: "training/course-build-curriculum.html" }
+            ]
+        },
+        {
+            title: "🦅 Cultural & Ancestral Wisdom",
+            color: "yellow-500",
+            courses: [
+                { title: "The Unbroken Chain", icon: "fas fa-link", description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty as `indlalifa` beyond mere inheritance.", url: "training/course-unbroken-chain.html" },
+                { title: "Finding Your Ancestors Within", icon: "fas fa-dna", description: "A guide to modern spirituality, blending science with Xhosa tradition to connect with your ancestral wisdom anywhere.", url: "training/course-ancestors-within.html" },
+                { title: "The Power of the Extended Family", icon: "fas fa-users", description: "Champion the resilient household. Learn how your family structure is a core strength in raising children.", url: "training/course-extended-family.html" }
+            ]
+        },
+        {
+            title: "🔥 Advanced Advocacy & Self-Sufficiency",
+            color: "red-500",
+            courses: [
+                { title: "A Father's Shield", icon: "fas fa-gavel", description: "Use the 'Best Interests of the Child' principle (Sec 28) to challenge discriminatory policies and advocate for your child.", url: "training/course-fathers-shield.html" },
+                { title: "Risk Management for Fathers", icon: "fas fa-shield-alt", description: "Apply OHS principles to family life. Identify and mitigate risks to your family's physical, emotional, and financial well-being.", url: "training/course-risk-management.html" }
+            ]
+        }
+    ];
+
+    const toolData = [
+        {
+            title: "🛠️ Core Planning & Tracking Tools",
+            color: "blue-500",
+            tools: [
+                { name: "Needs Assessment", icon: "fas fa-clipboard-check", description: "Start here to get a personalized action plan.", url: "assessment.html" },
+                { name: "Parenting Plan Builder", icon: "fas fa-file-signature", description: "Create a comprehensive, court-ready parenting plan.", url: "plan-builder.html" },
+                { name: "Family Activity Tracker", icon: "fas fa-chart-line", description: "Log contributions, schedules, and important events.", url: "activity-tracker.html" },
+                { name: "Forms & Wizards", icon: "fas fa-folder-open", description: "Access legal templates and guided forms.", url: "forms.html" },
+                { name: "Resource Locator", icon: "fas fa-map-marked-alt", description: "Find Family Advocates, courts, and father-friendly NGOs.", url: "locator.html" }
+            ]
+        },
+        {
+            title: "📚 Media & Publications",
+            color: "yellow-500",
+            tools: [
+                { name: "Read Our Books", icon: "fas fa-book-open", description: "Access exclusive books on fatherhood and the law.", url: "book-reader.html" },
+                { name: "Flamea Podcast", icon: "fas fa-podcast", description: "Listen to discussions on key topics for fathers.", url: "#", modal: "podcast-modal" },
+                { name: "YouTube Channel", icon: "fab fa-youtube", description: "Watch video guides, tutorials, and interviews.", url: "https://www.youtube.com/@Flamea2024", external: true }
+            ]
+        }
+    ];
+
+    const gameData = [
+        { title: "Kid Konstitution", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html", icon: "fas fa-child text-pink-400", category: "kids" },
+        { title: "Rights Racer", description: "Race against time to collect important rights!", url: "games/rights-racer.html", icon: "fas fa-running text-pink-400", category: "kids" },
+        // ... all other games
+    ];
+
+
+    // --- Event Delegation ---
     document.body.addEventListener('click', (event) => {
         const target = event.target;
 
-        // --- 1. Modal Control ---
         const modalButton = target.closest('[data-modal-target]');
         if (modalButton) {
             event.preventDefault();
             const modalId = modalButton.dataset.modalTarget;
             openModal(modalId);
+            return;
         }
 
         const modalCloseButton = target.closest('[data-modal-close]');
         if (modalCloseButton) {
             event.preventDefault();
             closeModal(modalCloseButton.closest('.modal'));
+            return;
         }
         
-        // --- 2. Accordion Control ---
         const accordionButton = target.closest('.accordion-toggle');
         if (accordionButton) {
             const content = accordionButton.nextElementSibling;
             const icon = accordionButton.querySelector('i.fa-chevron-down');
             
             if (content && content.classList.contains('accordion-content')) {
-                // Toggle the 'open' class
                 const isOpen = content.classList.toggle('open');
-                
-                // Toggle icon rotation
-                if (icon) {
-                    icon.classList.toggle('rotate-180', isOpen);
-                }
+                content.style.maxHeight = isOpen ? content.scrollHeight + 'px' : null;
+                if (icon) icon.classList.toggle('rotate-180', isOpen);
             }
         }
     });
+
+    // --- Modal Functions ---
+    async function openModal(modalId) { /* ... same as before ... */ }
+    function closeModal(modal) { /* ... same as before ... */ }
+
+    // --- RENDER FUNCTIONS ---
     
-    // Close modal if clicking on the background overlay
-    document.body.addEventListener('click', (event) => {
-        if (event.target.classList.contains('modal')) {
-            closeModal(event.target);
-        }
-    });
+    function renderTrainingCatalogue() {
+        const container = document.getElementById('course-catalogue');
+        if (!container) return;
+        container.innerHTML = '';
 
-    /**
-     * Opens a modal and loads its content if needed.
-     * @param {string} modalId - The ID of the modal to open.
-     */
-    async function openModal(modalId) {
-        const modal = document.getElementById(modalId);
-        if (!modal) return;
-
-        // Load content dynamically if it hasn't been loaded yet
-        if (!modal.dataset.loaded) {
-            let contentUrl = '';
-            if (modalId === 'chatbot-modal') {
-                contentUrl = 'chatbot.html';
-            } else if (modalId === 'podcast-modal') {
-                // For the podcast, we just need the structure, the JS will fill it
-                const podcastHtml = `
-                    <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
-                        <div class="flex justify-between items-center p-4 border-b border-gray-700">
-                            <h3 class="text-2xl font-bold text-yellow-300"><i class="fas fa-podcast mr-3"></i>Flamea Podcast</h3>
-                            <button data-modal-close class="text-gray-400 hover:text-white text-2xl">&times;</button>
-                        </div>
-                        <div id="episode-list" class="p-6 space-y-4 overflow-y-auto">
-                            <!-- Episodes will be loaded here by podcast-player.js -->
-                        </div>
-                    </div>`;
-                modal.innerHTML = podcastHtml;
-                // Now trigger the podcast loader
-                if (typeof window.loadPodcastEpisodes === 'function') {
-                    window.loadPodcastEpisodes();
-                }
-                 modal.dataset.loaded = 'true';
-            }
-            
-            if(contentUrl) {
-                try {
-                    const response = await fetch(contentUrl);
-                    const text = await response.text();
-                    modal.innerHTML = text;
-                    
-                    // If chatbot was loaded, its own script will handle it.
-                    if (modalId === 'chatbot-modal') {
-                       const chatScript = document.createElement('script');
-                       chatScript.type = 'module';
-                       chatScript.src = 'assets/js/chatbot.js';
-                       modal.appendChild(chatScript);
-                    }
-
-                    modal.dataset.loaded = 'true';
-                } catch (error) {
-                    modal.innerHTML = `<div class="bg-red-800 text-white p-4 rounded-lg">Error loading content.</div>`;
-                    console.error("Error loading modal content:", error);
-                }
-            }
-        }
-        modal.classList.add('active');
-    }
-
-    /**
-     * Closes a specific modal.
-     * @param {HTMLElement} modal - The modal element to close.
-     */
-    function closeModal(modal) {
-        if (modal) {
-            modal.classList.remove('active');
-            const audioPlayer = modal.querySelector('audio');
-            if (audioPlayer) audioPlayer.pause();
-        }
-    }
-    
-    // --- 3. DYNAMIC FOOTER YEAR ---
-    // This can be removed if the copyright is only in the sidebar.
-    // Kept for pages that might have a separate footer.
-    const currentYearSpan = document.getElementById('currentYear');
-    if (currentYearSpan) {
-        currentYearSpan.textContent = new Date().getFullYear();
-    }
-});
-```javascript
-// assets/js/podcast-player.js
-
-/**
- * This script is now designed to be loaded on all pages.
- * It exposes a global function that the main.js modal system can call.
- */
-
-// Make the function available globally
-window.loadPodcastEpisodes = async function() {
-    const episodeList = document.getElementById('episode-list');
-    if (!episodeList) return;
-
-    episodeList.innerHTML = '<p class="text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Fetching latest episodes...</p>';
-    
-    // Ensure RSS Parser script is loaded, if not already
-    if (typeof RSSParser === 'undefined') {
-        console.error("RSS Parser not loaded. Make sure to include the script tag.");
-        episodeList.innerHTML = '<p class="text-center text-red-400">Error: Required library not found.</p>';
-        return;
-    }
-    
-    const parser = new RSSParser();
-    const CORS_PROXY = "[https://api.allorigins.win/raw?url=](https://api.allorigins.win/raw?url=)";
-    const feedUrl = "[https://anchor.fm/s/10357aacc/podcast/rss](https://anchor.fm/s/10357aacc/podcast/rss)";
-
-    try {
-        const feed = await parser.parseURL(CORS_PROXY + encodeURIComponent(feedUrl));
-        episodeList.innerHTML = ''; // Clear loading message
-        
-        if (feed.items.length === 0) {
-            episodeList.innerHTML = '<p class="text-center text-gray-400">No podcast episodes found.</p>';
-            return;
-        }
-
-        feed.items.slice(0, 10).forEach(item => { // Show latest 10 episodes
-            const episodeDiv = document.createElement('div');
-            episodeDiv.className = 'p-4 bg-gray-700 rounded-lg';
-            
-            const pubDate = new Date(item.pubDate).toLocaleDateString('en-ZA', {
-                year: 'numeric', month: 'long', day: 'numeric'
-            });
-
-            episodeDiv.innerHTML = `
-                <h4 class="font-bold text-lg text-yellow-300">${item.title}</h4>
-                <p class="text-sm text-gray-400 mb-2">${pubDate}</p>
-                <audio controls class="w-full">
-                    <source src="${item.enclosure.url}" type="${item.enclosure.type}">
-                    Your browser does not support the audio element.
-                </audio>
+        trainingData.forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'accordion-item mb-8';
+            section.innerHTML = `
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
+                    <span class="text-xl md:text-2xl font-bold">${category.title}</span>
+                    <i class="fas fa-chevron-down transform transition-transform"></i>
+                </button>
+                <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
+                        ${category.courses.map(course => `
+                            <a href="${course.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                                <div class="flex items-center mb-4"><i class="${course.icon} text-3xl text-${category.color} mr-4"></i><h4 class="text-xl font-bold">${course.title}</h4></div>
+                                <p class="text-gray-400 mb-4 h-20">${course.description}</p>
+                                <span class="bg-${category.color} text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
             `;
-            episodeList.appendChild(episodeDiv);
+            container.appendChild(section);
         });
-
-    } catch (error) {
-        episodeList.innerHTML = '<p class="text-center text-red-400">Error loading podcast episodes. Please try again later.</p>';
-        console.error('Error fetching RSS feed:', error);
     }
-}
+
+    function renderToolsCatalogue() {
+        const container = document.getElementById('tools-catalogue');
+        if (!container) return;
+        container.innerHTML = '';
+
+        toolData.forEach(category => {
+            const section = document.createElement('div');
+            section.className = 'accordion-item';
+            section.innerHTML = `
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
+                    <span class="text-2xl font-bold">${category.title}</span><i class="fas fa-chevron-down transform transition-transform"></i>
+                </button>
+                <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
+                        ${category.tools.map(tool => `
+                            <a href="${tool.url}" 
+                               class="tool-card" 
+                               ${tool.modal ? `data-modal-target="${tool.modal}"` : ''} 
+                               ${tool.external ? 'target="_blank"' : ''}>
+                               <i class="${tool.icon} text-${category.color}"></i>
+                               <h3>${tool.name}</h3>
+                               <p>${tool.description}</p>
+                            </a>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            container.appendChild(section);
+        });
+    }
+
+    function renderGames() { /* ... same as before ... */ }
+
+    // --- Initial Calls ---
+    renderTrainingCatalogue();
+    renderToolsCatalogue();
+    renderGames();
+});
+

@@ -15,9 +15,6 @@
     <div class="main-container">
         <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content -->
-        <!-- FIX: Changed class from "main-content-area" to "main-content" to match training.html -->
-        <!-- This ensures the main content area is correctly placed within the page's grid layout, allowing mx-auto to center the content. -->
         <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12">
@@ -25,7 +22,6 @@
                     <p class="text-xl text-gray-400 max-w-3xl mx-auto">A comprehensive suite of powerful tools and legal templates designed to empower you at every stage of your journey.</p>
                 </div>
                 
-                <!-- 3-Box Feature Layout -->
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-purple-500 transition-all duration-300">
                         <i class="fas fa-robot text-4xl text-purple-400 mb-4"></i>
@@ -47,60 +43,9 @@
                     </div>
                 </div>
 
-                <!-- Accordions Section -->
-                <div class="space-y-6">
-                    <!-- 1. Core Planning & Tracking Tools -->
-                    <div class="accordion-item">
-                        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
-                            <span class="text-2xl font-bold">🛠️ Core Planning & Tracking Tools</span><i class="fas fa-chevron-down transform transition-transform"></i>
-                        </button>
-                        <div class="accordion-content mt-4 pl-4 border-l-4 border-blue-500">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-                                <a href="assessment.html" class="tool-card"><i class="fas fa-clipboard-check text-blue-400"></i><h3>Needs Assessment</h3><p>Start here to get a personalized action plan.</p></a>
-                                <a href="plan-builder.html" class="tool-card"><i class="fas fa-file-signature text-blue-400"></i><h3>Parenting Plan Builder</h3><p>Create a comprehensive, court-ready parenting plan.</p></a>
-                                <a href="activity-tracker.html" class="tool-card"><i class="fas fa-chart-line text-blue-400"></i><h3>Family Activity Tracker</h3><p>Log contributions, schedules, and important events.</p></a>
-                                <a href="forms.html" class="tool-card"><i class="fas fa-folder-open text-blue-400"></i><h3>Forms & Wizards</h3><p>Access legal templates and guided forms.</p></a>
-                                <a href="locator.html" class="tool-card"><i class="fas fa-map-marked-alt text-blue-400"></i><h3>Resource Locator</h3><p>Find Family Advocates, courts, and father-friendly NGOs.</p></a>
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <!-- 2. Media & Publications -->
-                    <div class="accordion-item">
-                        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
-                            <span class="text-2xl font-bold">📚 Media & Publications</span><i class="fas fa-chevron-down transform transition-transform"></i>
-                        </button>
-                        <div class="accordion-content mt-4 pl-4 border-l-4 border-yellow-500">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-                                <a href="book-reader.html" class="tool-card"><i class="fas fa-book-open text-yellow-400"></i><h3>Read Our Books</h3><p>Access exclusive books on fatherhood and the law.</p></a>
-                                <button data-modal-target="podcast-modal" class="tool-card text-left"><i class="fas fa-podcast text-yellow-400"></i><h3>Flamea Podcast</h3><p>Listen to discussions on key topics for fathers.</p></button>
-                                <a href="https://www.youtube.com/@Flamea2024" target="_blank" class="tool-card"><i class="fab fa-youtube text-yellow-400"></i><h3>YouTube Channel</h3><p>Watch video guides, tutorials, and interviews.</p></a>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- 3. Interactive Games (All Games Included) -->
-                    <div class="accordion-item">
-                        <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
-                            <span class="text-2xl font-bold">🎮 Interactive Games</span><i class="fas fa-chevron-down transform transition-transform"></i>
-                        </button>
-                        <div class="accordion-content mt-4 pl-4 border-l-4 border-pink-500">
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 py-6">
-                                <a href="games/kid-konstitution.html" class="tool-card"><i class="fas fa-child text-pink-400"></i><h3>Kid Konstitution</h3><p>A fun quiz to learn the basics of our country's rules!</p></a>
-                                <a href="games/rights-racer.html" class="tool-card"><i class="fas fa-running text-pink-400"></i><h3>Rights Racer</h3><p>Race against time to collect important rights!</p></a>
-                                <a href="games/constitution-defender.html" class="tool-card"><i class="fas fa-shield-alt text-pink-400"></i><h3>Constitution Defender</h3><p>Protect the constitution from being changed!</p></a>
-                                <a href="games/constitution-quest.html" class="tool-card"><i class="fas fa-map-signs text-pink-400"></i><h3>Constitution Quest</h3><p>An adventure game exploring the Bill of Rights.</p></a>
-                                <a href="games/law-layers-quest.html" class="tool-card"><i class="fas fa-layer-group text-pink-400"></i><h3>Law & Layers Quest</h3><p>Uncover the different layers of South African law.</p></a>
-                                <a href="games/mythbuster-game.html" class="tool-card"><i class="fas fa-ghost text-pink-400"></i><h3>Mythbuster</h3><p>Bust common myths about our legal system.</p></a>
-                                <a href="games/constitution-champions.html" class="tool-card"><i class="fas fa-trophy text-pink-400"></i><h3>Constitution Champions</h3><p>Become a champion of constitutional knowledge.</p></a>
-                                <a href="games/constitution-crusaders.html" class="tool-card"><i class="fas fa-khanda text-pink-400"></i><h3>Constitution Crusaders</h3><p>A crusade to protect and uphold the constitution.</p></a>
-                                <a href="games/goliaths-reckoning.html" class="tool-card"><i class="fas fa-balance-scale text-pink-400"></i><h3>Goliath's Reckoning</h3><p>A story-driven game about fighting for justice.</p></a>
-                                <a href="games/justice-builder.html" class="tool-card"><i class="fas fa-gavel text-pink-400"></i><h3>Justice Builder</h3><p>A simulator where you build a case from scratch.</p></a>
-                                <a href="games/satirical-game.html" class="tool-card"><i class="fas fa-theater-masks text-pink-400"></i><h3>The System</h3><p>A satirical look at the justice system. (Mature)</p></a>
-                                <a href="games/legal-simulator.html" class="tool-card"><i class="fas fa-laptop-code text-pink-400"></i><h3>Legal Simulator</h3><p>Experience legal scenarios in a simulated world.</p></a>
-                            </div>
-                        </div>
-                    </div>
+                <!-- The tool catalogue will be dynamically rendered here -->
+                <div id="tools-catalogue" class="space-y-6">
+                    <!-- This div will be populated by main.js -->
                 </div>
             </div>
         </main>
@@ -116,4 +61,3 @@
     <script type="module" src="assets/js/podcast-player.js"></script>    
 </body>
 </html>
-<!-- This HTML file serves as the main entry point for the Flamea Tools Hub, providing a comprehensive overview of all available tools and resources for fathers. It includes a sidebar for navigation, a main content area with feature cards, and accordion sections for detailed tool descriptions. The page is styled using Tailwind CSS and includes interactive elements powered by JavaScript modules. -->
