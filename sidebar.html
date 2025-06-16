@@ -26,15 +26,15 @@
         .submenu-toggle:hover i {
             transform: rotate(180deg);
         }
-        .submenu-container {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.3s ease;
-        }
-        .submenu-container.open {
-            max-height: 200px;
-            display: block;
-        }
+.submenu-container {
+    max-height: 0;
+    overflow: hidden;
+    transition: max-height 0.3s ease;
+}
+.submenu-container.open {
+    max-height: 500px; /* Adjust if needed */
+}
+
         .logo-text {
             font-family: 'Inter', sans-serif;
         }
@@ -218,20 +218,19 @@
 
     <script>
         // Submenu Toggle Function
-        function toggleSubmenu(menuItem) {
-            const submenu = document.getElementById(menuItem + '-submenu');
-            const toggle = document.querySelector(`[data-menu-item="${menuItem}"] .submenu-toggle i`);
-            
-            if (submenu.classList.contains('open')) {
-                submenu.classList.remove('open');
-                submenu.style.display = 'none';
-                toggle.style.transform = 'rotate(0deg)';
-            } else {
-                submenu.classList.add('open');
-                submenu.style.display = 'block';
-                toggle.style.transform = 'rotate(180deg)';
-            }
-        }
+function toggleSubmenu(menuItem) {
+    const submenu = document.getElementById(menuItem + '-submenu');
+    const toggleIcon = document.querySelector(`[data-menu-item="${menuItem}"] .submenu-toggle i`);
+
+    submenu.classList.toggle('open');
+
+    if (submenu.classList.contains('open')) {
+        toggleIcon.style.transform = 'rotate(180deg)';
+    } else {
+        toggleIcon.style.transform = 'rotate(0deg)';
+    }
+}
+
 
         // Modal Functions
         function openModal(modalId) {
