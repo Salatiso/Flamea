@@ -23,8 +23,8 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "👨‍👧‍👦 Practical Parenting Skills",
             color: "blue-500",
             courses: [
-                 { title: "Co-Parenting 101", icon: "fas fa-hands-helping", description: "Master communication, conflict resolution, and building effective parenting plans. Learn to work with your co-parent for the child's benefit.", url: "training/course-coparenting.html" },
-                 { title: "Newborn & Daily Care", icon: "fas fa-baby-carriage", description: "From changing diapers to installing car seats, gain confidence in daily tasks. Lean on your family for support.", url: "training/course-newborn-daily-care.html" },
+                 { title: "Co-Parenting 101", icon: "fas fa-hands-helping", description: "Master communication, conflict resolution, and building effective parenting plans.", url: "training/course-coparenting.html" },
+                 { title: "Newborn & Daily Care", icon: "fas fa-baby-carriage", description: "From changing diapers to installing car seats, gain confidence in daily tasks.", url: "training/course-newborn-daily-care.html" },
                  { title: "Building Your Own Curriculum", icon: "fas fa-pencil-ruler", description: "A guide for the homeschooling father. Move beyond the formal system to create a practical, values-based education.", url: "training/course-build-curriculum.html" }
             ]
         },
@@ -67,41 +67,54 @@ document.addEventListener('DOMContentLoaded', function() {
                 { name: "Flamea Podcast", icon: "fas fa-podcast", description: "Listen to discussions on key topics for fathers.", url: "#", modal: "podcast-modal" },
                 { name: "YouTube Channel", icon: "fab fa-youtube", description: "Watch video guides, tutorials, and interviews.", url: "https://www.youtube.com/@Flamea2024", external: true }
             ]
+        },
+        {
+            title: "🎮 Interactive Games",
+            color: "pink-500",
+            tools: [
+                 { name: "Kid Konstitution", icon: "fas fa-child", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html" },
+                 { name: "Rights Racer", icon: "fas fa-running", description: "Race against time to collect important rights!", url: "games/rights-racer.html" },
+                 { name: "Justice Builder", icon: "fas fa-gavel", description: "A simulator where you build a case from scratch.", url: "games/justice-builder.html" },
+                 { name: "See All Games", icon: "fas fa-gamepad", description: "Visit the main arcade to play all available games.", url: "games.html" }
+            ]
         }
     ];
 
     const gameData = [
-        { title: "Kid Konstitution", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html", icon: "fas fa-child text-pink-400", category: "kids" },
-        { title: "Rights Racer", description: "Race against time to collect important rights!", url: "games/rights-racer.html", icon: "fas fa-running text-pink-400", category: "kids" },
-        // ... all other games
+        { title: "Kid Konstitution", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html", icon: "fas fa-child text-yellow-400", category: "kids" },
+        { title: "Rights Racer", description: "Race against time to collect important rights!", url: "games/rights-racer.html", icon: "fas fa-running text-green-400", category: "kids" },
+        { title: "Constitution Defender", description: "Protect the constitution from being changed!", url: "games/constitution-defender.html", icon: "fas fa-shield-alt text-blue-400", category: "kids" },
+        { title: "Constitution Quest", description: "An adventure game exploring the Bill of Rights.", url: "games/constitution-quest.html", icon: "fas fa-map-signs text-purple-400", category: "patriots" },
+        { title: "Law & Layers Quest", description: "Uncover the different layers of South African law.", url: "games/law-layers-quest.html", icon: "fas fa-layer-group text-indigo-400", category: "patriots" },
+        { title: "Mythbuster", description: "Bust common myths about our legal system.", url: "games/mythbuster-game.html", icon: "fas fa-ghost text-teal-400", category: "patriots" },
+        { title: "Constitution Champions", description: "Become a champion of constitutional knowledge.", url: "games/constitution-champions.html", icon: "fas fa-trophy text-yellow-500", category: "patriots" },
+        { title: "Constitution Crusaders", description: "A crusade to protect and uphold the constitution.", url: "games/constitution-crusaders.html", icon: "fas fa-khanda text-gray-400", category: "patriots" },
+        { title: "Goliath's Reckoning", description: "A story-driven game about fighting for justice.", url: "games/goliaths-reckoning.html", icon: "fas fa-balance-scale text-red-500", category: "leaders" },
+        { title: "Justice Builder", description: "A simulator where you build a case from scratch.", url: "games/justice-builder.html", icon: "fas fa-gavel text-orange-500", category: "leaders" },
+        { title: "The System", description: "A satirical look at the justice system. (Mature)", url: "games/satirical-game.html", icon: "fas fa-theater-masks text-pink-500", category: "leaders" },
+        { title: "Legal Simulator", description: "Experience legal scenarios in a simulated world.", url: "games/legal-simulator.html", icon: "fas fa-laptop-code text-cyan-400", category: "leaders" }
     ];
-
 
     // --- Event Delegation ---
     document.body.addEventListener('click', (event) => {
         const target = event.target;
-
         const modalButton = target.closest('[data-modal-target]');
         if (modalButton) {
             event.preventDefault();
-            const modalId = modalButton.dataset.modalTarget;
-            openModal(modalId);
+            openModal(modalButton.dataset.modalTarget);
             return;
         }
-
         const modalCloseButton = target.closest('[data-modal-close]');
         if (modalCloseButton) {
             event.preventDefault();
             closeModal(modalCloseButton.closest('.modal'));
             return;
         }
-        
         const accordionButton = target.closest('.accordion-toggle');
         if (accordionButton) {
             const content = accordionButton.nextElementSibling;
-            const icon = accordionButton.querySelector('i.fa-chevron-down');
-            
             if (content && content.classList.contains('accordion-content')) {
+                const icon = accordionButton.querySelector('i.fa-chevron-down');
                 const isOpen = content.classList.toggle('open');
                 content.style.maxHeight = isOpen ? content.scrollHeight + 'px' : null;
                 if (icon) icon.classList.toggle('rotate-180', isOpen);
@@ -110,16 +123,14 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // --- Modal Functions ---
-    async function openModal(modalId) { /* ... same as before ... */ }
-    function closeModal(modal) { /* ... same as before ... */ }
+    async function openModal(modalId) { /* ... implementation ... */ }
+    function closeModal(modal) { /* ... implementation ... */ }
 
-    // --- RENDER FUNCTIONS ---
-    
+    // --- Render Functions ---
     function renderTrainingCatalogue() {
         const container = document.getElementById('course-catalogue');
         if (!container) return;
         container.innerHTML = '';
-
         trainingData.forEach(category => {
             const section = document.createElement('div');
             section.className = 'accordion-item mb-8';
@@ -138,8 +149,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             </a>
                         `).join('')}
                     </div>
-                </div>
-            `;
+                </div>`;
             container.appendChild(section);
         });
     }
@@ -148,7 +158,6 @@ document.addEventListener('DOMContentLoaded', function() {
         const container = document.getElementById('tools-catalogue');
         if (!container) return;
         container.innerHTML = '';
-
         toolData.forEach(category => {
             const section = document.createElement('div');
             section.className = 'accordion-item';
@@ -158,28 +167,63 @@ document.addEventListener('DOMContentLoaded', function() {
                 </button>
                 <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
-                        ${category.tools.map(tool => `
-                            <a href="${tool.url}" 
-                               class="tool-card" 
-                               ${tool.modal ? `data-modal-target="${tool.modal}"` : ''} 
-                               ${tool.external ? 'target="_blank"' : ''}>
-                               <i class="${tool.icon} text-${category.color}"></i>
-                               <h3>${tool.name}</h3>
-                               <p>${tool.description}</p>
-                            </a>
-                        `).join('')}
+                        ${category.tools.map(tool => {
+                            const isModal = !!tool.modal;
+                            const tag = isModal ? 'button' : 'a';
+                            const attrs = isModal 
+                                ? `type="button" data-modal-target="${tool.modal}"` 
+                                : `href="${tool.url}" ${tool.external ? 'target="_blank"' : ''}`;
+                            return `
+                                <${tag} ${attrs} class="tool-card">
+                                   <i class="${tool.icon} text-${category.color.split('-')[0]}-400"></i>
+                                   <h3>${tool.name}</h3>
+                                   <p>${tool.description}</p>
+                                </${tag}>
+                            `;
+                        }).join('')}
                     </div>
-                </div>
-            `;
+                </div>`;
             container.appendChild(section);
         });
     }
 
-    function renderGames() { /* ... same as before ... */ }
+    function renderGames() {
+        const container = document.getElementById('games-page-container');
+        if (!container) return;
+        container.innerHTML = '';
+        const categories = {
+            kids: { title: "For the Little Ones (Ages 4-8)", games: [] },
+            patriots: { title: "Young Patriots (Ages 9-13)", games: [] },
+            leaders: { title: "Future Leaders (Ages 14+)", games: [] },
+        };
+        gameData.forEach(game => {
+            if (categories[game.category]) categories[game.category].games.push(game);
+        });
+        for (const key in categories) {
+            const category = categories[key];
+            if (category.games.length > 0) {
+                const categoryWrapper = document.createElement('div');
+                categoryWrapper.className = "mb-12";
+                categoryWrapper.innerHTML = `
+                    <h2 class="text-3xl font-bold mb-6 category-title">${category.title}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        ${category.games.map(game => `
+                            <div class="game-card rounded-lg overflow-hidden shadow-lg relative">
+                                <a href="${game.url}" class="game-card-link absolute inset-0"></a>
+                                <div class="p-6">
+                                    <i class="${game.icon} text-3xl mb-4"></i>
+                                    <h3 class="font-bold text-xl mb-2">${game.title}</h3>
+                                    <p class="text-gray-400 text-base">${game.description}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                container.appendChild(categoryWrapper);
+            }
+        }
+    }
 
-    // --- Initial Calls ---
     renderTrainingCatalogue();
     renderToolsCatalogue();
     renderGames();
 });
-
