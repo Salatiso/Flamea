@@ -3,9 +3,6 @@
 /**
  * Flamea.org - Unified Main Script
  * This file contains the core sitewide JavaScript functionality.
- * - Handles modal popups for the chatbot and podcast player.
- * - Manages accordion (collapsible section) behavior.
- * - Dynamically renders the games on the games.html page.
  * It uses event delegation to handle events on dynamically loaded content.
  */
 document.addEventListener('DOMContentLoaded', function() {
@@ -35,16 +32,9 @@ document.addEventListener('DOMContentLoaded', function() {
             const icon = accordionButton.querySelector('i.fa-chevron-down');
             
             if (content && content.classList.contains('accordion-content')) {
-                // Toggle the 'open' class for styling and max-height
+                // Toggle the 'open' class
                 const isOpen = content.classList.toggle('open');
                 
-                // Animate max-height for smooth transition
-                if (isOpen) {
-                    content.style.maxHeight = content.scrollHeight + 'px';
-                } else {
-                    content.style.maxHeight = null;
-                }
-
                 // Toggle icon rotation
                 if (icon) {
                     icon.classList.toggle('rotate-180', isOpen);
@@ -74,6 +64,7 @@ document.addEventListener('DOMContentLoaded', function() {
             if (modalId === 'chatbot-modal') {
                 contentUrl = 'chatbot.html';
             } else if (modalId === 'podcast-modal') {
+                // For the podcast, we just need the structure, the JS will fill it
                 const podcastHtml = `
                     <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl max-w-2xl w-full max-h-[90vh] flex flex-col">
                         <div class="flex justify-between items-center p-4 border-b border-gray-700">
@@ -85,6 +76,7 @@ document.addEventListener('DOMContentLoaded', function() {
                         </div>
                     </div>`;
                 modal.innerHTML = podcastHtml;
+                // Now trigger the podcast loader
                 if (typeof window.loadPodcastEpisodes === 'function') {
                     window.loadPodcastEpisodes();
                 }
@@ -97,6 +89,7 @@ document.addEventListener('DOMContentLoaded', function() {
                     const text = await response.text();
                     modal.innerHTML = text;
                     
+                    // If chatbot was loaded, its own script will handle it.
                     if (modalId === 'chatbot-modal') {
                        const chatScript = document.createElement('script');
                        chatScript.type = 'module';
@@ -127,91 +120,69 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     // --- 3. DYNAMIC FOOTER YEAR ---
+    // This can be removed if the copyright is only in the sidebar.
+    // Kept for pages that might have a separate footer.
     const currentYearSpan = document.getElementById('currentYear');
     if (currentYearSpan) {
         currentYearSpan.textContent = new Date().getFullYear();
     }
+});
+```javascript
+// assets/js/podcast-player.js
 
-    // --- 4. DYNAMIC GAME LISTING ---
-    // Data for all the games available in the arcade.
-    const gameData = [
-        { title: "Kid Konstitution", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html", icon: "fas fa-child text-yellow-400", category: "kids" },
-        { title: "Rights Racer", description: "Race against time to collect important rights!", url: "games/rights-racer.html", icon: "fas fa-running text-green-400", category: "kids" },
-        { title: "Constitution Defender", description: "Protect the constitution from being changed!", url: "games/constitution-defender.html", icon: "fas fa-shield-alt text-blue-400", category: "kids" },
-        { title: "Constitution Quest", description: "An adventure game exploring the Bill of Rights.", url: "games/constitution-quest.html", icon: "fas fa-map-signs text-purple-400", category: "patriots" },
-        { title: "Law & Layers Quest", description: "Uncover the different layers of South African law.", url: "games/law-layers-quest.html", icon: "fas fa-layer-group text-indigo-400", category: "patriots" },
-        { title: "Mythbuster", description: "Bust common myths about our legal system.", url: "games/mythbuster-game.html", icon: "fas fa-ghost text-teal-400", category: "patriots" },
-        { title: "Constitution Champions", description: "Become a champion of constitutional knowledge.", url: "games/constitution-champions.html", icon: "fas fa-trophy text-yellow-500", category: "patriots" },
-        { title: "Constitution Crusaders", description: "A crusade to protect and uphold the constitution.", url: "games/constitution-crusaders.html", icon: "fas fa-khanda text-gray-400", category: "patriots" },
-        { title: "Goliath's Reckoning", description: "A story-driven game about fighting for justice.", url: "games/goliaths-reckoning.html", icon: "fas fa-balance-scale text-red-500", category: "leaders" },
-        { title: "Justice Builder", description: "A simulator where you build a case from scratch.", url: "games/justice-builder.html", icon: "fas fa-gavel text-orange-500", category: "leaders" },
-        { title: "The System", description: "A satirical look at the justice system. (Mature)", url: "games/satirical-game.html", icon: "fas fa-theater-masks text-pink-500", category: "leaders" },
-        { title: "Legal Simulator", description: "Experience legal scenarios in a simulated world.", url: "games/legal-simulator.html", icon: "fas fa-laptop-code text-cyan-400", category: "leaders" }
-    ];
+/**
+ * This script is now designed to be loaded on all pages.
+ * It exposes a global function that the main.js modal system can call.
+ */
 
-    /**
-     * Renders game cards into the appropriate categories on the games.html page.
-     */
-    function renderGames() {
-        const gamesContainer = document.querySelector('.main-content .grid');
-        // Only run this function if we are on a page with the games container (i.e., games.html)
-        if (!gamesContainer) return;
-        
-        gamesContainer.innerHTML = ''; // Clear any placeholder content
+// Make the function available globally
+window.loadPodcastEpisodes = async function() {
+    const episodeList = document.getElementById('episode-list');
+    if (!episodeList) return;
 
-        // Create a map to hold games by category
-        const categories = {
-            kids: { title: "For the Little Ones (Ages 4-8)", games: [], el: null },
-            patriots: { title: "Young Patriots (Ages 9-13)", games: [], el: null },
-            leaders: { title: "Future Leaders (Ages 14+)", games: [], el: null },
-        };
-
-        // Group games by category
-        gameData.forEach(game => {
-            if (categories[game.category]) {
-                categories[game.category].games.push(game);
-            }
-        });
-
-        // Loop through the categories and render them
-        for (const key in categories) {
-            const category = categories[key];
-            if (category.games.length > 0) {
-                // Create the main container for the category
-                const categoryWrapper = document.createElement('div');
-                categoryWrapper.className = "mb-12";
-                
-                // Add the category title
-                const titleEl = document.createElement('h2');
-                titleEl.className = "text-3xl font-bold mb-6 category-title";
-                titleEl.textContent = category.title;
-                categoryWrapper.appendChild(titleEl);
-
-                // Create the grid for the game cards
-                const gridEl = document.createElement('div');
-                gridEl.className = "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8";
-
-                // Create and add each game card to the grid
-                category.games.forEach(game => {
-                    const card = document.createElement('div');
-                    card.className = "game-card rounded-lg overflow-hidden shadow-lg relative";
-                    card.innerHTML = `
-                        <a href="${game.url}" class="game-card-link absolute inset-0"></a>
-                        <div class="p-6">
-                            <i class="${game.icon} text-3xl mb-4"></i>
-                            <h3 class="font-bold text-xl mb-2">${game.title}</h3>
-                            <p class="text-gray-400 text-base">${game.description}</p>
-                        </div>
-                    `;
-                    gridEl.appendChild(card);
-                });
-                
-                categoryWrapper.appendChild(gridEl);
-                gamesContainer.appendChild(categoryWrapper);
-            }
-        }
+    episodeList.innerHTML = '<p class="text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Fetching latest episodes...</p>';
+    
+    // Ensure RSS Parser script is loaded, if not already
+    if (typeof RSSParser === 'undefined') {
+        console.error("RSS Parser not loaded. Make sure to include the script tag.");
+        episodeList.innerHTML = '<p class="text-center text-red-400">Error: Required library not found.</p>';
+        return;
     }
     
-    // Call the function to render the games on page load.
-    renderGames();
-});
+    const parser = new RSSParser();
+    const CORS_PROXY = "[https://api.allorigins.win/raw?url=](https://api.allorigins.win/raw?url=)";
+    const feedUrl = "[https://anchor.fm/s/10357aacc/podcast/rss](https://anchor.fm/s/10357aacc/podcast/rss)";
+
+    try {
+        const feed = await parser.parseURL(CORS_PROXY + encodeURIComponent(feedUrl));
+        episodeList.innerHTML = ''; // Clear loading message
+        
+        if (feed.items.length === 0) {
+            episodeList.innerHTML = '<p class="text-center text-gray-400">No podcast episodes found.</p>';
+            return;
+        }
+
+        feed.items.slice(0, 10).forEach(item => { // Show latest 10 episodes
+            const episodeDiv = document.createElement('div');
+            episodeDiv.className = 'p-4 bg-gray-700 rounded-lg';
+            
+            const pubDate = new Date(item.pubDate).toLocaleDateString('en-ZA', {
+                year: 'numeric', month: 'long', day: 'numeric'
+            });
+
+            episodeDiv.innerHTML = `
+                <h4 class="font-bold text-lg text-yellow-300">${item.title}</h4>
+                <p class="text-sm text-gray-400 mb-2">${pubDate}</p>
+                <audio controls class="w-full">
+                    <source src="${item.enclosure.url}" type="${item.enclosure.type}">
+                    Your browser does not support the audio element.
+                </audio>
+            `;
+            episodeList.appendChild(episodeDiv);
+        });
+
+    } catch (error) {
+        episodeList.innerHTML = '<p class="text-center text-red-400">Error loading podcast episodes. Please try again later.</p>';
+        console.error('Error fetching RSS feed:', error);
+    }
+}
