@@ -8,115 +8,97 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; background-color: #111827; }
-        .option-checkbox:checked + label {
-            background-color: #1D4ED8; /* bg-blue-700 */
-            border-color: #3B82F6; /* border-blue-500 */
-        }
-    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
+        <!-- Sidebar -->
         <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content Area -->
+        <!-- Main Content -->
         <main class="main-content p-8 md:p-12">
-            <!-- FIX: Added centering container -->
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center">
-                    <h1 class="text-4xl font-bold font-roboto-slab text-white">Find Your Learning Path</h1>
-                    <p class="text-lg text-gray-400 mb-8 mt-2">Answer a few quick questions to get a personalized course plan.</p>
-                </div>
+            <div class="max-w-4xl mx-auto">
+                
+                <!-- Container for the form, will be hidden after submission -->
+                <div id="assessment-form-container">
+                    <div class="text-center">
+                        <h1 class="text-4xl font-bold font-roboto text-white">Find Your Learning Path</h1>
+                        <p class="text-lg text-gray-400 mb-8 mt-2">Answer a few quick questions to get a personalized course plan.</p>
+                    </div>
 
-                <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl">
-                    <form id="assessment-form">
-                        <div class="text-center mb-10">
-                            <i class="fas fa-question-circle text-5xl text-teal-400"></i>
-                            <h2 class="text-3xl font-bold font-roboto text-white mt-4">What stage are you at in your fatherhood journey?</h2>
-                            <p class="mt-2 text-lg text-gray-300">Select all that apply. This will help us tailor your results.</p>
-                        </div>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                            <!-- Option 1 -->
-                            <div class="relative">
+                    <div class="bg-gray-800 p-8 rounded-2xl shadow-2xl">
+                        <form id="assessment-form">
+                            <div class="text-center mb-10">
+                                <i class="fas fa-question-circle text-5xl text-teal-400"></i>
+                                <h2 class="text-3xl font-bold text-white mt-4">What stage are you at in your fatherhood journey?</h2>
+                                <p class="mt-2 text-lg text-gray-300">Select all that apply. This will help us tailor your results.</p>
+                            </div>
+                            
+                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
                                 <input type="checkbox" id="expecting" name="interest" value="foundations" class="hidden option-checkbox">
                                 <label for="expecting" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Expecting or New Father</h3>
                                     <p class="text-gray-400 mt-2">Preparing for a newborn or navigating the first year.</p>
                                 </label>
-                            </div>
-                            <!-- Option 2 -->
-                            <div class="relative">
+                                
                                 <input type="checkbox" id="separated" name="interest" value="practical" class="hidden option-checkbox">
                                 <label for="separated" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Separated or Divorced</h3>
                                     <p class="text-gray-400 mt-2">Dealing with co-parenting, maintenance, or contact issues.</p>
                                 </label>
-                            </div>
-                            <!-- Option 3 -->
-                            <div class="relative">
+
                                 <input type="checkbox" id="homeschooling" name="interest" value="homeschooling" class="hidden option-checkbox">
                                 <label for="homeschooling" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Homeschooling Father</h3>
                                     <p class="text-gray-400 mt-2">Looking to build a custom curriculum for your child.</p>
                                 </label>
-                            </div>
-                            <!-- Option 4 -->
-                            <div class="relative">
+                               
                                 <input type="checkbox" id="traditional" name="interest" value="cultural" class="hidden option-checkbox">
                                 <label for="traditional" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Connecting with Tradition</h3>
                                     <p class="text-gray-400 mt-2">Exploring cultural and ancestral roles in fatherhood.</p>
                                 </label>
-                            </div>
-                             <!-- Option 5 -->
-                            <div class="relative">
+
                                 <input type="checkbox" id="legal" name="interest" value="advocacy" class="hidden option-checkbox">
                                 <label for="legal" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Facing a Legal Battle</h3>
                                     <p class="text-gray-400 mt-2">Needing to understand your rights and advocate for your child.</p>
                                 </label>
-                            </div>
-                            <!-- Option 6 -->
-                            <div class="relative">
+                                
                                 <input type="checkbox" id="curious" name="interest" value="all" class="hidden option-checkbox">
                                 <label for="curious" class="block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 cursor-pointer hover:bg-gray-600 transition-colors h-full">
                                     <h3 class="font-bold text-xl text-white">Just Curious / General Skills</h3>
                                     <p class="text-gray-400 mt-2">Want to explore all topics and broaden your knowledge.</p>
                                 </label>
                             </div>
-                        </div>
 
-                        <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">Show My Path</button>
-                    </form>
+                            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">Show My Path</button>
+                        </form>
+                    </div>
                 </div>
 
-                <div id="results-container" class="mt-12" style="display: none;">
-                    <div class="text-center mb-8">
+                <!-- Container for the results, hidden by default -->
+                <div id="results-container" class="hidden">
+                    <div class="text-center mb-10">
                         <i class="fas fa-map-signs text-5xl text-teal-400"></i>
                         <h2 class="text-4xl font-bold font-roboto text-white mt-4">Your Recommended Learning Path</h2>
                         <p class="mt-2 text-lg text-gray-300">Based on your answers, here are the most valuable first courses for you.</p>
                     </div>
-                    <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-                        <!-- Recommended courses will be injected here -->
-                    </div>
-                     <div class="text-center mt-10">
-                        <a href="training.html#course-catalogue" class="text-teal-400 font-bold hover:underline text-lg">Or, Explore the Full Course Catalogue &rarr;</a>
+                    <!-- The results will be injected here by JS -->
+                    <div id="results-grid" class="space-y-6"></div>
+                     <div class="text-center mt-12">
+                        <a href="training.html" class="text-teal-400 font-bold hover:underline text-lg">Or, Explore the Full Course Catalogue &rarr;</a>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
+    <div id="modal-container"></div>
     <script src="assets/js/sidebar-loader.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/training-assessment.js"></script>
+    <script type="module" src="assets/js/modal-loaders.js"></script>
 </body>
 </html>

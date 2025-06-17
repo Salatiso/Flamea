@@ -17,30 +17,30 @@
 
         <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
-                <div class="text-center">
-                    <h1 class="text-4xl font-bold font-roboto-slab text-white">The Father's Armoury</h1>
-                    <p class="text-lg text-gray-400 mb-8 mt-2">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl font-bold font-roboto text-white">The Father's Armoury</h1>
+                    <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    <a href="training-assessment.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
+                    <a href="training-assessment.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
                         <p class="text-gray-400">New here? Answer a few questions and get a personalized training plan.</p>
                     </a>
-                    <a href="#course-catalogue" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
+                    <a href="#course-catalogue" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
                         <p class="text-gray-400">Know what you're looking for? Browse our full catalogue of courses.</p>
                     </a>
-                    <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
+                    <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
                         <p class="text-gray-400">Test your knowledge in an interactive arcade game. Defend your rights!</p>
                     </a>
                 </div>
 
-                <!-- The course catalogue will be dynamically rendered here -->
+                <!-- The course catalogue will be dynamically rendered here by main.js -->
                 <div id="course-catalogue" class="space-y-8">
                     <!-- This div will be populated by main.js -->
                 </div>
@@ -48,13 +48,13 @@
         </main>
     </div>
 
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
+    <!-- Container for globally accessible modals -->
+    <div id="modal-container"></div>
 
-    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
+    <!-- All necessary scripts for sitewide functionality -->
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
+    <script type="module" src="assets/js/modal-loaders.js"></script>
 </body>
 </html>

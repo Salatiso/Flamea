@@ -1,95 +1,154 @@
 document.addEventListener('DOMContentLoaded', () => {
-    const form = document.getElementById('training-assessment-form');
+    const form = document.getElementById('assessment-form');
     if (!form) return;
 
+    // Get containers for the form and the results display
     const formContainer = document.getElementById('assessment-form-container');
     const resultsContainer = document.getElementById('results-container');
-    const recommendationsList = document.getElementById('recommendations-list');
+    const resultsGrid = document.getElementById('results-grid');
 
+    // Define all available courses with their details and associated keywords
     const allCourses = {
+        // Legal & Constitutional
         constitution: {
-            title: "SA Constitution: Your Foundational Rights",
-            text: "Start here. Understand the supreme law that guarantees your equality as a parent and prioritizes your child's best interests.",
-            icon: "fa-landmark",
-            color: "text-green-400",
-            url: "training/course-constitution.html"
+            title: "The SA Constitution",
+            description: "Understand your foundational rights as a father and a citizen.",
+            icon: "fas fa-landmark",
+            url: "training/course-constitution.html",
+            keywords: ['advocacy', 'all']
         },
         childrensAct: {
-            title: "The Children's Act: A Father's Guide",
-            text: "This is the most critical piece of legislation for any parent. Learn about your rights and responsibilities regarding care, contact, and guardianship.",
-            icon: "fa-child",
-            color: "text-green-400",
-            url: "training/course-childrens-act.html"
+            title: "The Children's Act",
+            description: "A deep dive into parental rights, responsibilities, care, and contact.",
+            icon: "fas fa-child",
+            url: "training/course-childrens-act.html",
+            keywords: ['advocacy', 'practical', 'all']
         },
+        familyLaw: {
+            title: "Family Law Overview",
+            description: "Navigate the Marriage, Divorce, and Maintenance Acts with confidence.",
+            icon: "fas fa-balance-scale",
+            url: "training/course-family-law.html",
+            keywords: ['advocacy', 'practical', 'all']
+        },
+        // Practical Skills
         coParenting: {
-            title: "Co-Parenting 101: Build a Strong Plan",
-            text: "Learn to communicate effectively, manage conflict, and use the FLAMEA Parenting Plan tool to create a roadmap for success.",
-            icon: "fa-hands-helping",
-            color: "text-blue-400",
-            url: "training/course-co-parenting.html"
+            title: "Co-Parenting 101",
+            description: "Master communication, conflict resolution, and building effective parenting plans.",
+            icon: "fas fa-hands-helping",
+            url: "training/course-coparenting.html",
+            keywords: ['practical', 'all']
         },
-        dailyCare: {
-            title: "Newborn & Daily Care Skills",
-            text: "Build your confidence with practical, hands-on skills for daily care, from feeding routines to installing a car seat correctly.",
-            icon: "fa-baby-carriage",
-            color: "text-blue-400",
-            url: "training/course-daily-care.html"
+        newbornCare: {
+            title: "Newborn & Daily Care",
+            description: "From changing diapers to installing car seats, gain confidence in daily tasks.",
+            icon: "fas fa-baby-carriage",
+            url: "training/course-newborn-daily-care.html",
+            keywords: ['foundations', 'all']
+        },
+        buildCurriculum: {
+            title: "Building Your Own Curriculum",
+            description: "A guide for the homeschooling father to create a practical, values-based education.",
+            icon: "fas fa-pencil-ruler",
+            url: "training/course-build-curriculum.html",
+            keywords: ['homeschooling', 'all']
+        },
+        // Cultural & Ancestral
+        unbrokenChain: {
+            title: "The Unbroken Chain",
+            description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty.",
+            icon: "fas fa-link",
+            url: "training/course-unbroken-chain.html",
+            keywords: ['cultural', 'all']
+        },
+        ancestorsWithin: {
+            title: "Finding Your Ancestors Within",
+            description: "A guide to modern spirituality, blending science with tradition.",
+            icon: "fas fa-dna",
+            url: "training/course-ancestors-within.html",
+            keywords: ['cultural', 'all']
+        },
+        extendedFamily: {
+            title: "The Power of the Extended Family",
+            description: "Champion the resilient household. Learn how your family structure is a core strength.",
+            icon: "fas fa-users",
+            url: "training/course-extended-family.html",
+            keywords: ['cultural', 'practical', 'all']
+        },
+        // Advanced
+        fathersShield: {
+            title: "A Father's Shield",
+            description: "Use the 'Best Interests of the Child' principle to challenge discriminatory policies.",
+            icon: "fas fa-gavel",
+            url: "training/course-fathers-shield.html",
+            keywords: ['advocacy', 'all']
+        },
+        riskManagement: {
+            title: "Risk Management for Fathers",
+            description: "Apply OHS principles to family life to identify and mitigate risks.",
+            icon: "fas fa-shield-alt",
+            url: "training/course-risk-management.html",
+            keywords: ['advocacy', 'practical', 'all']
         }
     };
 
     form.addEventListener('submit', (e) => {
         e.preventDefault();
         
-        const answers = {
-            q1: document.getElementById('q1').value,
-            q2: document.getElementById('q2').value,
-            q3: document.getElementById('q3').value,
-        };
+        // Get all selected checkboxes and extract their values (e.g., 'practical', 'advocacy')
+        const selectedInterests = [...form.querySelectorAll('input[name="interest"]:checked')].map(cb => cb.value);
 
-        let recommendations = new Set();
-
-        // Logic to determine recommendations
-        if (answers.q1 === 'not_familiar' || answers.q1 === 'somewhat') {
-            recommendations.add(allCourses.constitution);
+        // If no interest is selected, default to 'all'
+        if (selectedInterests.length === 0) {
+            selectedInterests.push('all');
         }
         
-        if (answers.q3 === 'no' || answers.q3 === 'what_is_that') {
-            recommendations.add(allCourses.coParenting);
-        }
-
-        if (answers.q2 === 'expecting' || answers.q2 === 'new_dad') {
-             recommendations.add(allCourses.dailyCare);
-        }
-        
-        if(recommendations.size === 0) {
-            recommendations.add(allCourses.constitution);
-            recommendations.add(allCourses.childrensAct);
-        }
+        // Find all courses that have at least one of the selected keywords
+        const recommendations = new Set();
+        selectedInterests.forEach(interest => {
+            for (const key in allCourses) {
+                if (allCourses[key].keywords.includes(interest)) {
+                    recommendations.add(allCourses[key]);
+                }
+            }
+        });
 
         displayResults(Array.from(recommendations));
     });
 
+    /**
+     * Hides the form and displays the recommended courses.
+     * @param {Array} recs - An array of recommended course objects.
+     */
     const displayResults = (recs) => {
+        // Hide the form and show the results container
         formContainer.classList.add('hidden');
-        resultsContainer.style.display = 'block';
-        recommendationsList.innerHTML = '';
+        resultsContainer.classList.remove('hidden');
+        resultsGrid.innerHTML = ''; // Clear previous results
 
+        if (recs.length === 0) {
+            resultsGrid.innerHTML = `<p class="text-center text-gray-400">No specific courses found. Why not browse the full catalogue?</p>`;
+            return;
+        }
+
+        // Create and append a card for each recommended course
         recs.forEach(rec => {
             const recElement = document.createElement('div');
-            recElement.className = `bg-gray-900 bg-opacity-75 p-6 rounded-lg border-l-4 border-gray-700`;
+            // Using a standard card style for consistency
+            recElement.className = `bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1`;
             
             recElement.innerHTML = `
-                <a href="${rec.url}" class="block hover:bg-gray-800 p-4 rounded-md -m-4 transition-colors">
+                <a href="${rec.url}" class="block">
                     <div class="flex items-start">
-                        <i class="fas ${rec.icon} ${rec.color} text-4xl mr-5 mt-1"></i>
+                        <i class="fas ${rec.icon} text-teal-400 text-3xl mr-5 mt-1 w-8 text-center"></i>
                         <div>
                             <h3 class="text-xl font-bold text-white">${rec.title}</h3>
-                            <p class="text-gray-300 mt-1">${rec.text}</p>
+                            <p class="text-gray-300 mt-1">${rec.description}</p>
                         </div>
                     </div>
                 </a>
             `;
-            recommendationsList.appendChild(recElement);
+            resultsGrid.appendChild(recElement);
         });
     };
 });

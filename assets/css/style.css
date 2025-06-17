@@ -6,6 +6,20 @@ body {
     background-color: #111827; /* gray-900 */
 }
 
+/* --- MAIN LAYOUT (Ensure this is consistent) --- */
+.main-container {
+    display: grid;
+    /* Default to 2 columns, specific pages like 'about' can override this */
+    grid-template-columns: 280px 1fr; 
+    height: 100vh;
+    width: 100vw;
+    overflow: hidden;
+}
+.main-content {
+    overflow-y: auto;
+    background-color: #111827; /* Darker background for content area */
+}
+
 /* --- LOGO --- */
 .flamea-logo .logo-text {
     font-family: 'Roboto Slab', serif;
@@ -69,66 +83,23 @@ body {
     transform: rotate(180deg);
 }
 
-/* ================================================================== */
-/* === NEWLY CENTRALIZED STYLES (from games.html and other pages) === */
-/* ================================================================== */
-
-/* --- MAIN LAYOUT --- */
-.main-container {
-    display: flex;
-    height: 100vh;
-}
-.sidebar-container {
-    width: 280px;
-    flex-shrink: 0;
-    background-color: #111827;
-}
-.main-content {
-    flex-grow: 1;
-    padding: 2rem;
-    background-color: #1F2937;
-    color: #F3F4F6;
-    overflow-y: auto;
+/* --- FORM STYLES (for assessments, etc.) --- */
+.option-checkbox:checked + label {
+    background-color: #1D4ED8; /* bg-blue-700 */
+    border-color: #3B82F6; /* border-blue-500 */
+    transform: scale(1.02);
 }
 
-/* --- SIDEBAR LINK STYLING --- */
-.sidebar-link, .sidebar-link-main {
-    color: #D1D5DB;
-    transition: background-color 0.2s ease, color 0.2s ease;
-    font-weight: 500;
-}
-.sidebar-link:hover, .sidebar-link-main:hover {
+.form-input {
+    width: 100%;
+    padding: 0.75rem;
+    border-radius: 0.375rem;
     background-color: #374151;
-    color: #FFFFFF;
+    border: 1px solid #4B5563;
+    color: #F3F4F6;
 }
-.sidebar-link.active, .sidebar-link-main.active {
-    color: #4ade80;
-    font-weight: bold;
-}
-.sidebar-link.active {
-     background-color: #1F2937;
-}
-.sidebar-link.active .fas, .sidebar-link-main.active .fas {
-    color: #4ade80;
-}
-.submenu-container {
-     display: none;
-}
-.submenu-container.open {
-    display: block;
-}
-
-/* --- PAGE-SPECIFIC COMPONENTS --- */
-.game-card, .resource-card {
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
-    background: rgba(255, 255, 255, 0.05);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-}
-.game-card:hover, .resource-card:hover {
-    transform: translateY(-10px);
-    box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
-}
-.game-title-font {
-    font-family: 'Bungee', cursive;
+.form-input:focus {
+    outline: none;
+    border-color: #3B82F6;
+    box-shadow: 0 0 0 2px #3B82F6;
 }
