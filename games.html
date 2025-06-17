@@ -8,42 +8,28 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        .game-card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            background-color: #1F2937; /* gray-800 */
-        }
-        .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 25px -5px rgba(192, 132, 252, 0.2), 0 10px 10px -5px rgba(192, 132, 252, 0.1);
-        }
-        .game-card-link::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-        }
-        .category-title {
-            color: #c4b5fd; /* violet-300 */
-        }
-    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- Sidebar is loaded here by sidebar-loader.js -->
         <div id="sidebar-placeholder"></div>
+        
         <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12">
                     <h1 class="text-5xl font-bold font-roboto text-white">Flamea Game Arcade</h1>
                     <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">Test your knowledge, sharpen your strategic thinking, and learn about your rights in an interactive way.</p>
                 </div>
-                <!-- This container will be populated by main.js -->
-                <div id="games-page-container"></div>
+                
+                <!-- This container will be populated by the updated main.js -->
+                <div id="games-catalogue" class="space-y-8">
+                    <!-- Accordion categories of games will be rendered here -->
+                </div>
             </div>
         </main>
     </div>
+
+    <!-- Scripts -->
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
 </body>

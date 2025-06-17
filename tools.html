@@ -4,15 +4,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Fatherhood Tools - Flamea</title>
-    <script src="[https://cdn.tailwindcss.com](https://cdn.tailwindcss.com)"></script>
-    <link rel="stylesheet" href="[https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css](https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css)">
-    <link rel="preconnect" href="[https://fonts.googleapis.com](https://fonts.googleapis.com)">
-    <link rel="preconnect" href="[https://fonts.gstatic.com](https://fonts.gstatic.com)" crossorigin>
-    <link href="[https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap](https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap)" rel="stylesheet">
+    <!-- FIX: Corrected the link format for all external resources -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- Sidebar will be loaded here by sidebar-loader.js -->
         <div id="sidebar-placeholder"></div>
 
         <main class="main-content p-8 md:p-12">
@@ -23,18 +25,21 @@
                 </div>
                 
                 <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                    <!-- Feature Card 1: Chatbot -->
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-purple-500 transition-all duration-300">
                         <i class="fas fa-robot text-4xl text-purple-400 mb-4"></i>
                         <h3 class="text-2xl font-bold mb-2">iSazi: The Fatherhood Compass</h3>
                         <p class="text-gray-400 flex-grow mb-4">Get instant answers to your family law questions from our AI assistant.</p>
-                        <button data-modal-target="chatbot-modal" class="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-500 transition-colors w-full">Launch Assistant</button>
+                        <a href="chatbot.html" class="bg-purple-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-purple-500 transition-colors w-full">Launch Assistant</a>
                     </div>
+                     <!-- Feature Card 2: Podcast -->
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
                         <i class="fas fa-podcast text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-2xl font-bold mb-2">Flamea Podcast</h3>
                         <p class="text-gray-400 flex-grow mb-4">Listen to discussions and interviews on key topics for modern fathers.</p>
                         <button data-modal-target="podcast-modal" class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Listen Now</button>
                     </div>
+                     <!-- Feature Card 3: Games -->
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-pink-500 transition-all duration-300">
                         <i class="fas fa-gamepad text-4xl text-pink-400 mb-4"></i>
                         <h3 class="text-2xl font-bold mb-2">Interactive Games</h3>
@@ -43,18 +48,21 @@
                     </div>
                 </div>
 
-                <!-- The tool catalogue will be dynamically rendered here -->
+                <!-- The tool catalogue will be dynamically rendered here by main.js -->
                 <div id="tools-catalogue" class="space-y-6">
-                    <!-- This div will be populated by main.js -->
+                    <!-- Content populated by main.js -->
                 </div>
             </div>
         </main>
     </div>
 
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
+    <!-- Modals (Their content is loaded by JS) -->
+    <div id="chatbot-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
+    <div id="podcast-modal" class="modal hidden fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
 
-    <script src="[https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js](https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js)"></script>
+    <!-- Scripts -->
+    <!-- FIX: Corrected the script link format -->
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
     <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
