@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customs & Consequences - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #111827; font-family: 'Open Sans', sans-serif; }
+        .game-wrapper { max-width: 900px; }
+        .scenario-card { background-color: #1f2937; border-left: 5px solid #a855f7; }
+        .choice-btn {
+            background-color: #374151;
+            border: 2px solid #4b5563;
+            transition: all 0.3s ease;
+        }
+        .choice-btn:hover {
+            background-color: #4f46e5;
+            border-color: #818cf8;
+            transform: translateY(-5px);
+        }
+        .feedback-panel {
+            background-color: #1f2937;
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out;
+            padding: 0 1.5rem;
+        }
+        .feedback-panel.show {
+            max-height: 500px;
+            padding: 1.5rem;
+        }
+        .nav-btn { background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s; }
+        .nav-btn:hover { background-color: #6366f1; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="game-wrapper w-full bg-gray-800 rounded-2xl shadow-2xl flex flex-col p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-6">
+            <h1 class="text-3xl font-bold font-roboto-slab text-purple-400">Customs & Consequences</h1>
+            <a href="../games.html" class="nav-btn">Back to Arcade</a>
+        </div>
+
+        <!-- Game Content -->
+        <div id="game-content">
+            <!-- Scenario Card -->
+            <div id="scenario-card" class="scenario-card p-6 rounded-lg mb-6">
+                <p id="scenario-text" class="text-lg text-gray-300"></p>
+            </div>
+
+            <!-- Choices -->
+            <div id="choices-container" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-6">
+                <!-- Choice buttons will be injected by JS -->
+            </div>
+
+            <!-- Feedback Panel -->
+            <div id="feedback-panel" class="feedback-panel rounded-lg">
+                <h3 id="feedback-title" class="text-xl font-bold mb-2"></h3>
+                <p id="feedback-text" class="text-gray-400"></p>
+            </div>
+        </div>
+
+        <!-- Next Button -->
+        <div class="mt-6 text-right">
+            <button id="next-scenario-btn" class="nav-btn hidden">Next Scenario</button>
+        </div>
+
+    </div>
+    
+    <script type="module" src="../assets/js/games.js"></script>
+
+</body>
+</html>
