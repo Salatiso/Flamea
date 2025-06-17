@@ -21,68 +21,61 @@
                 
                 <!-- Header -->
                 <header class="mb-10">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">Current Affairs</h1>
-                    <p class="text-lg text-gray-400 mt-2">Your daily briefing on news, community insights, and lifestyle.</p>
+                    <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">Current Affairs & Community Hub</h1>
+                    <p class="text-lg text-gray-400 mt-2">Your daily briefing on news, community insights, and essential services.</p>
                 </header>
 
-                <!-- Dashboard Widgets -->
-                <section id="dashboard-widgets" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-12">
-                    <!-- Weather Widget (Placeholder) -->
-                    <div class="widget">
-                        <i class="fas fa-cloud-sun text-yellow-400 widget-icon"></i>
-                        <div>
-                            <h3 class="widget-title">Johannesburg</h3>
-                            <p class="widget-data">24°C, Sunny</p>
-                        </div>
-                    </div>
-                    <!-- Loadshedding Widget (Placeholder) -->
-                    <div class="widget">
-                         <i class="fas fa-power-off text-red-500 widget-icon"></i>
-                        <div>
-                            <h3 class="widget-title">Loadshedding</h3>
-                            <p class="widget-data">Stage 2 (18:00-20:00)</p>
-                        </div>
-                    </div>
-                     <!-- Trending Topic Widget (Placeholder) -->
-                    <div class="widget">
-                        <i class="fas fa-chart-line text-green-400 widget-icon"></i>
-                        <div>
-                            <h3 class="widget-title">Trending</h3>
-                            <p class="widget-data">#ParentingHacks</p>
-                        </div>
-                    </div>
-                     <!-- New Article Widget (Placeholder) -->
-                    <div class="widget">
-                        <i class="fas fa-plus-circle text-purple-400 widget-icon"></i>
-                        <div>
-                            <h3 class="widget-title">Contribute</h3>
-                            <p class="widget-data">Submit Your Story</p>
+                 <!-- NEW: Community Service Locator -->
+                <section id="community-locator" class="mb-12 bg-gray-800 p-6 rounded-lg border border-gray-700">
+                    <h2 class="text-3xl font-bold text-teal-400 mb-4">Community Service Locator</h2>
+                    <p class="text-gray-400 mb-6">Find essential public services near you. Use the map to explore or search for specific services.</p>
+                    
+                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+                        <!-- Map -->
+                        <div id="map" class="lg:col-span-2 h-96 lg:h-full rounded-lg bg-gray-700 border border-gray-600"></div>
+                        
+                        <!-- Search & Filters -->
+                        <div class="space-y-4">
+                            <div>
+                                <label for="service-category-filter" class="block text-sm font-medium text-gray-300 mb-1">Service Category</label>
+                                <select id="service-category-filter" class="form-select w-full"></select>
+                            </div>
+                             <div>
+                                <label for="service-search-input" class="block text-sm font-medium text-gray-300 mb-1">Quick Search</label>
+                                <input type="text" id="service-search-input" placeholder="e.g., 'SAPS', 'Home Affairs'" class="form-input w-full">
+                            </div>
+                            <div>
+                                <label for="radius-slider" class="block text-sm font-medium text-gray-300 mb-1">Search Radius: <span id="radius-value">20</span> km</label>
+                                <input type="range" id="radius-slider" min="1" max="100" value="20" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
+                            </div>
+                             <button id="geolocate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2">
+                                <i class="fas fa-map-marker-alt"></i> Find Services Near Me
+                            </button>
+                            <div id="locator-status" class="text-center text-yellow-400 text-sm h-4"></div>
                         </div>
                     </div>
                 </section>
 
                 <!-- Category Selector Carousel -->
                 <section class="mb-12">
-                     <h2 class="text-2xl font-bold mb-4 text-white">Browse by Category</h2>
-                     <div id="category-carousel" class="flex space-x-4 overflow-x-auto pb-4">
-                        <!-- Categories will be injected by JS -->
-                     </div>
+                     <h2 class="text-2xl font-bold mb-4 text-white">Browse Articles by Category</h2>
+                     <div id="category-carousel" class="flex space-x-4 overflow-x-auto pb-4"></div>
                 </section>
 
                 <!-- Articles Section -->
-                <section id="articles-container">
-                    <!-- Articles will be dynamically rendered here by articles.js -->
-                </section>
+                <section id="articles-container"></section>
 
             </div>
         </main>
     </div>
 
     <!-- Scripts -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,geometry" async defer></script>
     <script type="module" src="assets/js/firebase-config.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/articles-db.js"></script>
     <script type="module" src="assets/js/articles.js"></script>
+    <script type="module" src="assets/js/current-affairs-map.js"></script>
 </body>
 </html>
