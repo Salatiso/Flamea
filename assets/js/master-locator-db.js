@@ -1,9 +1,8 @@
 /**
  * Flamea.org - Master Resource Database
+ * * Version: 2.0
  * * This file is the SINGLE SOURCE OF TRUTH for all location-based service data on the website.
- * Both the main Resource Directory page (locator.js) and the Current Affairs map
- * (current-affairs-map.js) will import their data from this file.
- *
+ * * It now contains a merged and deduplicated list of all provided resources.
  * To add a new service, simply add a new object to the `masterDB` array.
  */
 
@@ -69,7 +68,7 @@ export const masterDB = [
     "lat": -29.8600,
     "lng": 31.0292
   },
-   {
+  {
     "name": "Gauteng High Court, Pretoria",
     "category": "Justice & Legal",
     "sub_category": "High Court",
@@ -230,5 +229,54 @@ export const masterDB = [
     "website": "N/A",
     "lat": -26.1991,
     "lng": 28.0487
-  }
+  },
+  // --- Additional Courts from user data ---
+  {
+    "name": "Pietermaritzburg High Court",
+    "category": "Justice & Legal",
+    "sub_category": "High Court",
+    "address": "237 Langalibalele St, Pietermaritzburg, 3201",
+    "province": "KwaZulu-Natal",
+    "city_town": "Pietermaritzburg",
+    "phone": "033 392 2500",
+    "website": "https://www.justice.gov.za/",
+    "lat": -29.6110,
+    "lng": 30.3944
+  },
+  {
+    "name": "Fort Beaufort Magistrates Court",
+    "category": "Justice & Legal",
+    "sub_category": "Magistrates Court",
+    "address": "Market Street 4, Fort Beaufort, Eastern Cape, 5720",
+    "province": "Eastern Cape",
+    "city_town": "Fort Beaufort",
+    "phone": "046 645 1104",
+    "website": "https://www.justice.gov.za/",
+    "lat": -32.77756,
+    "lng": 26.63037
+  },
+   {
+    "name": "Small Claims Court Fort Beaufort",
+    "category": "Justice & Legal",
+    "sub_category": "Small Claims Court",
+    "address": "Market Street 4, Fort Beaufort, Eastern Cape, 5720",
+    "province": "Eastern Cape",
+    "city_town": "Fort Beaufort",
+    "phone": "046 645 1104",
+    "website": "https://www.justice.gov.za/scc/",
+    "lat": -32.77756,
+    "lng": 26.63037
+   },
+   {
+    "name": "Customary Court (Kgotla) village near Sekhukhune",
+    "category": "Justice & Legal",
+    "sub_category": "Customary Court",
+    "address": "Rural community council site, Sekhukhune District, Limpopo",
+    "province": "Limpopo",
+    "city_town": "Sekhukhune area",
+    "phone": "",
+    "website": "",
+    "lat": -24.2250,
+    "lng": 29.1850
+   }
 ];

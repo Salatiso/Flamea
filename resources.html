@@ -12,38 +12,35 @@
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
+        .main-container { display: flex; height: 100vh; width: 100vw; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
         .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
         .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .form-input { background-color: #374151; border-color: #4B5563; }
-        .form-input:focus { --tw-ring-color: #3B82F6; border-color: #3B82F6; }
+        .form-input, .form-select { background-color: #374151; border-color: #4B5563; }
+        .form-input:focus, .form-select:focus { --tw-ring-color: #3B82F6; border-color: #3B82F6; }
         details > summary { list-style: none; cursor: pointer; }
         details > summary::-webkit-details-marker { display: none; }
         details summary .icon { transition: transform 0.3s; }
         details[open] summary .icon { transform: rotate(90deg); }
         .resource-card { border-left-width: 4px; }
-        .modal { display: none; }
-        .modal.active { display: flex; animation: fadeIn 0.3s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
+        <!-- ===== Standardized Sidebar Placeholder ===== -->
+        <div id="sidebar-placeholder"></div>
 
         <!-- Main Content -->
         <main class="main-content p-8 md:p-12">
             <div class="max-w-4xl mx-auto">
-                <h2 class="text-4xl font-bold font-roboto mb-2 text-white">Resource Directory</h2>
-                <p class="text-lg text-gray-400 mb-8">A comprehensive directory of courts, advocacy groups, and support services for fathers and families in South Africa and beyond.</p>
+                <h2 class="text-4xl font-bold font-roboto-slab mb-2 text-white">Resource Directory</h2>
+                <p class="text-lg text-gray-400 mb-8">A comprehensive directory of courts, advocacy groups, and support services for fathers and families in South Africa.</p>
                 
-                <div class="bg-gray-900 bg-opacity-50 p-6 rounded-lg mb-10 border border-gray-700">
+                <div class="bg-gray-800 bg-opacity-50 p-6 rounded-lg mb-10 border border-gray-700">
                     <p class="text-gray-300">Navigating the legal and support systems can be daunting. This directory is designed to be your compass, connecting you with the vital services you need. Remember that organisations like <strong>FLAMEA</strong> are here to support you online, providing a digital community and resources accessible no matter where you are.</p>
                 </div>
 
-                <div class="bg-gray-900 p-8 rounded-xl shadow-lg mb-12">
+                <div class="bg-gray-800 p-8 rounded-xl shadow-lg mb-12">
                     <h3 class="text-2xl font-bold text-teal-400 mb-4">Find Help Near You</h3>
                     <div class="grid md:grid-cols-2 gap-6 items-end">
                         <div>
@@ -52,15 +49,8 @@
                         </div>
                         <div>
                             <label for="service-type-filter" class="block mb-2 font-semibold">Type of Service:</label>
-                            <select id="service-type-filter" class="w-full p-3 rounded-md form-input text-white">
-                                <option value="all">All Services</option>
-                                <option value="court">Courts</option>
-                                <option value="family-advocate">Family Advocate</option>
-                                <option value="social-worker">Social Workers / DSD</option>
-                                <option value="ngo-father">NGO - Father Support</option>
-                                <option value="ngo-family">NGO - Family & Child</option>
-                                <option value="legal-aid">Legal Aid</option>
-                            </select>
+                            <!-- This select dropdown will be populated dynamically by locator.js -->
+                            <select id="service-type-filter" class="w-full p-3 rounded-md form-select text-white"></select>
                         </div>
                     </div>
                      <div class="flex items-center gap-4 mt-4">
@@ -68,7 +58,7 @@
                         <span class="text-gray-400">or</span>
                         <button id="geolocate-btn" class="bg-teal-600 hover:bg-teal-700 text-white font-bold py-2 px-6 rounded-lg flex items-center"><i class="fas fa-map-marker-alt mr-2"></i> Use My Location</button>
                      </div>
-                     <div id="locator-status" class="text-center mt-4 text-yellow-400"></div>
+                     <div id="locator-status" class="text-center mt-4 text-yellow-400 h-5"></div>
                 </div>
 
                 <div id="results-section" class="space-y-6"></div>
@@ -80,20 +70,14 @@
         </main>
     </div>
     
-    <!-- Modals -->
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-60 items-center justify-center z-50"></div>
+    <!-- Modals are loaded and managed by main.js -->
+    <div id="chatbot-modal" class="custom-modal"></div>
+    <div id="podcast-modal" class="custom-modal"></div>
 
     <!-- Scripts -->
-    <!-- IMPORTANT: Replace YOUR_GOOGLE_MAPS_API_KEY with your actual API key in a secure way -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&libraries=places,geometry" async defer></script>
-    <script src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/locator.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
-        <script src="assets/js/sidebar-loader.js"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,geometry" async defer></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/locator.js"></script>
 </body>
 </html>
