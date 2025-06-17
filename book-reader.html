@@ -6,21 +6,42 @@
     <title>FLAMEA - Book Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Lora:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
     <style>
         .main-content {
             background-color: #1f2937; /* gray-800 */
         }
-        .book-page {
-            font-family: 'Lora', serif;
-            line-height: 1.8;
-            background-color: #fdfaf4;
-            color: #1f2937;
+        .book-container {
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        /* Style for the initial view showing the book cover */
+        .cover-view {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            background-color: #111827; /* gray-900 */
+            border-radius: 0.5rem;
+            height: 100%;
             padding: 2rem;
+        }
+        /* Style for the reading view */
+        .reader-view {
+            font-family: 'Lora', serif;
+            line-height: 1.9;
+            font-size: 1.1rem;
+            background-color: #fdfaf4; /* A soft, paper-like color */
+            color: #1f2937; /* Dark text for readability */
+            padding: 2rem 3rem; /* More padding for a book-like feel */
             height: 100%;
             overflow-y: auto;
-            border: 1px solid #d1d5db;
+            border-radius: 0.5rem;
+            box-shadow: inset 0 2px 10px rgba(0,0,0,0.1);
         }
     </style>
 </head>
@@ -30,19 +51,32 @@
 
         <main class="main-content p-8 flex flex-col">
             <div class="flex-shrink-0 mb-6">
-                <div class="flex justify-between items-center border-b-2 border-gray-700 pb-4">
-                     <h1 id="book-title" class="text-3xl font-bold font-roboto text-green-400">Library</h1>
-                     <div>
+                <div class="flex flex-col md:flex-row justify-between items-center border-b-2 border-gray-700 pb-4 gap-4">
+                     <h1 id="book-title" class="text-3xl font-bold font-roboto text-green-400 order-2 md:order-1">Library</h1>
+                     <div class="order-1 md:order-2">
                         <label for="book-select" class="text-sm text-gray-400 mr-2">Select a Book:</label>
                         <select id="book-select" class="form-input w-72"></select>
                      </div>
                 </div>
             </div>
-           
-            <div class="flex-grow min-h-0">
-                 <div id="book-content-container" class="book-page rounded-lg shadow-inner">
-                    <p>Loading...</p>
-                 </div>
+            
+            <div class="book-container flex-grow min-h-0">
+                <!-- Cover View (shown initially) -->
+                <div id="cover-view" class="cover-view">
+                    <img id="book-cover-img" src="https://placehold.co/300x450/374151/FFFFFF?text=Book+Cover" alt="Book Cover" class="w-48 h-auto max-h-72 object-cover rounded-lg shadow-2xl mb-6">
+                    <h2 id="cover-title" class="text-2xl font-bold text-white">Select a book to start</h2>
+                    <p id="cover-author" class="text-gray-400 mb-6">by Salatiso</p>
+                    <button id="start-reading-btn" class="bg-green-600 hover:bg-green-500 text-white font-bold py-3 px-8 rounded-full text-lg transition-transform transform hover:scale-105">
+                        <i class="fas fa-book-open mr-2"></i>Start Reading
+                    </button>
+                </div>
+
+                <!-- Reader View (hidden initially) -->
+                <div id="reader-view" class="reader-view hidden">
+                    <div id="book-content-container">
+                        <p>Loading...</p>
+                    </div>
+                </div>
             </div>
 
             <div class="flex-shrink-0 mt-6 flex justify-between items-center">
