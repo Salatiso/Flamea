@@ -1,11 +1,11 @@
 // We import the specific Firestore instance for the chatbot from its dedicated config file.
 import { chatbotDb } from './firebase-chatbot-config.js';
-import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM ELEMENT SELECTION ---
     const chatModal = document.getElementById('chatbot-modal');
-    if (!chatModal) return; // Stop if the modal isn't on the page
+    if (!chatModal) return;
 
     const chatMessagesContainer = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
@@ -32,31 +32,25 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput.value = '';
 
         try {
-            // =================================================================
-            // KNOWLEDGE BASE HOOK (Coming in the next step)
-            // In the future, we will first search our Firestore knowledge base
-            // for content from your books related to `messageText`.
-            // const contextFromBooks = await searchKnowledgeBase(messageText);
-            // =================================================================
+            // --- 1. RETRIEVE KNOWLEDGE FROM FIRESTORE (RAG) ---
+            const contextFromBooks = await searchKnowledgeBase(messageText);
 
-            // --- Call the Gemini API for a response ---
-            const botResponse = await getGeminiResponse(messageText); // We'll pass `contextFromBooks` here later
+            // --- 2. GENERATE RESPONSE WITH GEMINI ---
+            const botResponse = await getGeminiResponse(messageText, contextFromBooks);
 
-            // Display the bot's response
             appendMessage(botResponse.replace(/\n/g, '<br>'), 'bot');
 
-            // --- DATA PERSISTENCE ---
-            // Save the conversation turn to Firestore
+            // --- 3. PERSIST CONVERSATION ---
             await addDoc(collection(chatbotDb, 'conversations'), {
                 user_message: messageText,
                 bot_response: botResponse,
+                retrieved_context: contextFromBooks, // Save what context was used
                 timestamp: serverTimestamp(),
-                // We could add a user ID here if they are logged in
             });
 
         } catch (error) {
             console.error("Chatbot Error:", error);
-            const errorMessage = "Sorry, I encountered a problem. Please try again later.";
+            const errorMessage = "Sorry, I had trouble finding an answer. My knowledge base might be updating. Please try again.";
             appendMessage(errorMessage, 'bot-error');
         } finally {
             // --- CLEANUP ---
@@ -68,38 +62,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     /**
+     * Searches the Firestore 'knowledge_base' for relevant content.
+     * @param {string} userMessage The user's query.
+     * @returns {Promise<string>} A string containing the relevant text chunks.
+     */
+    async function searchKnowledgeBase(userMessage) {
+        console.log("Searching knowledge base for:", userMessage);
+        const knowledgeBaseRef = collection(chatbotDb, "knowledge_base");
+
+        // Simple keyword extraction (can be improved with more advanced NLP)
+        const keywords = userMessage.toLowerCase().split(' ').filter(word => word.length > 3);
+        if (keywords.length === 0) return ""; // No useful keywords
+
+        try {
+            // Create a query to find documents where the 'content' contains any of the keywords.
+            // Note: Firestore does not support full-text search natively. This is a basic workaround.
+            // For production, a dedicated search service like Algolia or Elasticsearch is recommended.
+            // This query is a placeholder for a more robust keyword search.
+            const q = query(knowledgeBaseRef, where("keywords", "array-contains-any", keywords), limit(3));
+            const querySnapshot = await getDocs(q);
+
+            let context = "";
+            if (!querySnapshot.empty) {
+                querySnapshot.forEach(doc => {
+                    context += doc.data().content + "\n\n";
+                });
+                console.log("Found relevant context from books.");
+                return context;
+            } else {
+                 console.log("No specific context found, using general knowledge.");
+                 return ""; // Return empty string if no docs found
+            }
+        } catch (error) {
+             console.error("Error searching knowledge base:", error);
+             // This might fail if the composite index is not created. Firestore provides a link in the error console to create it.
+             return "";
+        }
+    }
+
+
+    /**
      * Appends a new message bubble to the chat window.
-     * @param {string} htmlContent - The HTML content of the message.
-     * @param {string} type - The type of message ('user', 'bot', or 'bot-error').
+     * @param {string} htmlContent The HTML content of the message.
+     * @param {string} type The type of message ('user', 'bot', or 'bot-error').
      */
     function appendMessage(htmlContent, type) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-bubble', `${type}-message`);
-        messageElement.innerHTML = htmlContent; // Using innerHTML to render line breaks (<br>)
-
+        messageElement.innerHTML = htmlContent;
         chatMessagesContainer.appendChild(messageElement);
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-        return messageElement;
     }
 
     /**
-     * Sends a prompt to the Gemini API and returns the text response.
-     * @param {string} userMessage - The message typed by the user.
-     * @returns {Promise<string>} A promise that resolves with the bot's text response.
+     * Sends a prompt to the Gemini API, augmented with context from Firestore.
+     * @param {string} userMessage The message from the user.
+     * @param {string} context The context retrieved from the knowledge base.
+     * @returns {Promise<string>} The bot's text response.
      */
-    async function getGeminiResponse(userMessage) {
-        // Construct the prompt with specific instructions for the AI model
-        // In the future, we will add content from your books here.
-        const prompt = `You are a helpful legal information assistant for South Africa, named Flamea. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
+    async function getGeminiResponse(userMessage, context) {
+        let prompt;
 
-        const payload = {
-            contents: [{
-                parts: [{ text: prompt }]
-            }]
-        };
+        if (context) {
+            prompt = `Based on the following information from my books: \n\n---START OF BOOK CONTENT---\n${context}\n---END OF BOOK CONTENT---\n\nNow, as a helpful legal information assistant for South African Family Law named Flamea, answer the following user question. Prioritize information from the book content provided. Do not provide legal advice. User question: "${userMessage}"`;
+        } else {
+            prompt = `You are a helpful legal information assistant for South Africa, named Flamea. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
+        }
 
-        const apiKey = ""; // This is handled by the execution environment
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+        const payload = { contents: [{ parts: [{ text: prompt }] }] };
+        const apiKey = ""; // Handled by execution environment
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -108,8 +140,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
+            throw new Error(`API request failed: ${response.statusText}`);
         }
 
         const result = await response.json();
@@ -118,7 +149,6 @@ document.addEventListener('DOMContentLoaded', () => {
         if (botText) {
             return botText;
         } else {
-            console.error("Invalid response structure from API:", JSON.stringify(result, null, 2));
             throw new Error("Received an invalid response from the AI service.");
         }
     }
