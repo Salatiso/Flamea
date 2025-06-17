@@ -1,3 +1,10 @@
+<!--
+  Flamea.org - Sidebar Component
+  - This is a clean HTML file with no internal scripts.
+  - All functionality (submenu toggles, modal triggers) is now handled by assets/js/main.js.
+  - Added 'data-modal-target' attribute to the iSazi AI link to trigger the chatbot modal.
+  - Added a link to the Podcast RSS feed.
+-->
 <aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300 w-72">
     <!-- Top Section: Logo & Navigation -->
     <div class="sidebar-top">
@@ -12,89 +19,69 @@
                 </svg>
             </a>
         </div>
-        
+
         <!-- Main Navigation -->
         <nav id="main-nav" class="flex flex-col space-y-2">
-            <a href="index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-            <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-            
-            <!-- Tools Hub with Submenu -->
-            <div class="relative">
-                <button class="submenu-toggle w-full flex items-center rounded-lg hover:bg-gray-800">
-                    <a href="tools.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
-                    <span class="p-3 pr-4 text-gray-400 hover:text-white"><i class="fas fa-chevron-down submenu-toggle-icon transition-transform duration-300"></i></span>
-                </button>
-                <div class="submenu-container pl-8 py-2">
-                   <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
-                   <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-feather-alt w-6 text-center mr-3"></i> Traditional Customs</a>
-                   <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
+            <!-- Home -->
+            <a href="index.html" class="nav-link"><i class="fas fa-home nav-icon"></i>Home</a>
+
+            <!-- About -->
+            <a href="about.html" class="nav-link"><i class="fas fa-info-circle nav-icon"></i>About</a>
+
+            <!-- Training -->
+            <div data-menu-item>
+                <div class="nav-link-header">
+                    <a href="training.html" class="flex-grow"><i class="fas fa-chalkboard-teacher nav-icon"></i>Training</a>
+                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
+                </div>
+                <div class="submenu-container">
+                    <a href="training/course-constitution.html" class="submenu-link">SA Constitution</a>
+                    <a href="training/course-childrens-act.html" class="submenu-link">Children's Act</a>
+                    <a href="training/course-family-law.html" class="submenu-link">Family Law</a>
                 </div>
             </div>
 
-            <a href="training.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Training Hub</a>
-            <a href="resources.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resource Hub</a>
-            <a href="community.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-            
-            <div class="border-t border-gray-700 my-2"></div>
-            
-            <!-- Modal Trigger Buttons -->
-            <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: Fatherhood Compass</button>
-            <button data-modal-target="podcast-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Flamea Podcast</button>
-            <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+            <!-- Tools -->
+            <div data-menu-item>
+                <div class="nav-link-header">
+                    <a href="tools.html" class="flex-grow"><i class="fas fa-tools nav-icon"></i>Tools</a>
+                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
+                </div>
+                <div class="submenu-container">
+                    <a href="plan-builder.html" class="submenu-link">Parenting Plan Builder</a>
+                    <a href="assessment.html" class="submenu-link">Needs Assessment</a>
+                    <a href="forms.html" class="submenu-link">Legal Forms & Templates</a>
+                </div>
+            </div>
+
+            <!-- Publications -->
+            <a href="publications.html" class="nav-link"><i class="fas fa-book-open nav-icon"></i>Publications</a>
+
+            <!-- AI Assistant -->
+            <a href="#" id="chatbot-link" class="nav-link" data-modal-target="chatbot-modal">
+                <i class="fas fa-robot nav-icon"></i>iSazi AI Assistant
+            </a>
+
+            <!-- Podcast -->
+             <a href="https://anchor.fm/s/10357aacc/podcast/rss" target="_blank" class="nav-link">
+                <i class="fas fa-podcast nav-icon"></i>Podcast
+            </a>
+
+            <!-- Community -->
+            <a href="community.html" class="nav-link"><i class="fas fa-users nav-icon"></i>Community</a>
+
         </nav>
     </div>
 
-    <!-- Bottom Section: Join, Auth & Copyright -->
-    <div class="sidebar-bottom text-center">
-        <!-- Join the Movement -->
-        <div class="mb-4">
-            <button class="submenu-toggle flex items-center justify-center p-3 rounded-lg w-full text-left bg-yellow-600/10 hover:bg-yellow-600/20">
-                <i class="fas fa-hands-helping w-6 text-center mr-4 text-yellow-400"></i>
-                <span class="flex-grow font-semibold">Join the Movement</span>
-                <i class="fas fa-chevron-down submenu-toggle-icon text-xs transition-transform duration-300"></i>
-            </button>
-            <div class="submenu-container text-left text-sm p-4 bg-gray-800 rounded-b-lg">
-                <p class="text-gray-400 mb-4">Flamea is built by the community, for the community. See how you can contribute.</p>
-                <a href="join-the-movement.html" class="font-bold text-yellow-400 hover:underline">Learn More &rarr;</a>
-            </div>
+    <!-- Bottom Section: Auth & Footer -->
+    <div class="sidebar-bottom">
+        <div id="sidebar-auth-links" class="mb-6">
+            <!-- Auth links will be dynamically injected here by auth.js -->
+            <a href="login.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
         </div>
-        
-        <div id="sidebar-auth-links" class="mb-4"></div>
-
-        <div class="text-xs text-gray-500 leading-relaxed">
-            <span>© 2025 Flamea.org</span><br>
+        <div class="text-xs text-center text-gray-500">
+            <span>&copy; 2024 Flamea.org</span><br>
             <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
         </div>
     </div>
 </aside>
-
-<!-- NEW SCRIPT to handle collapsible sections and modal triggers -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        const sidebar = document.querySelector('.sidebar-container');
-        if (!sidebar) return;
-
-        sidebar.addEventListener('click', function(event) {
-            // Handle submenu toggles
-            const toggleButton = event.target.closest('.submenu-toggle');
-            if (toggleButton) {
-                const submenu = toggleButton.nextElementSibling;
-                const icon = toggleButton.querySelector('.submenu-toggle-icon');
-                if (submenu && submenu.classList.contains('submenu-container')) {
-                    submenu.classList.toggle('open');
-                    if (icon) icon.classList.toggle('rotate-180');
-                }
-            }
-
-            // Handle modal triggers
-            const modalButton = event.target.closest('[data-modal-target]');
-            if (modalButton) {
-                const modalId = modalButton.dataset.modalTarget;
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                    modal.classList.add('visible'); // Use 'visible' to match centralized CSS
-                }
-            }
-        });
-    });
-</script>

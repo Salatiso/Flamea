@@ -1,45 +1,19 @@
-// assets/js/firebase-chatbot-config.js
-
-// Import the necessary functions from the SDKs
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-// Firebase configuration for the AI Chatbot project (flamea-ai-app)
-// IMPORTANT: This uses a separate Firebase project to keep chat data isolated.
-const chatbotFirebaseConfig = {
-  apiKey: "AIzaSyCUzKEzNZWNaOXBIV4yxv1Il8RwWgCuMgE",
-  authDomain: "flamea-ai-app.firebaseapp.com",
-  projectId: "flamea-ai-app",
-  storageBucket: "flamea-ai-app.appspot.com", // Corrected storage bucket format
-  messagingSenderId: "761216371067",
-  appId: "1:761216371067:web:a17cd633305a954edf95de"
-};
-
-// Initialize a secondary Firebase app instance specifically for the chatbot.
-// We give it a unique name 'chatbot' to avoid conflicts with the main 'flamea' app instance.
-const chatbotApp = initializeApp(chatbotFirebaseConfig, 'chatbot');
-
-// Get a Firestore instance from our dedicated chatbot app
-const chatbotDb = getFirestore(chatbotApp);
-
-// Export the chatbot's Firestore instance for use in other scripts
-export { chatbotDb };
-```javascript
-// assets/js/chatbot.js
-
 // We import the specific Firestore instance for the chatbot from its dedicated config file.
-import { chatbotDb } from './firebase-chatbot-config.js'; 
-import { collection, addDoc, serverTimestamp } from "[https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js](https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js)";
+import { chatbotDb } from './firebase-chatbot-config.js';
+import { collection, addDoc, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
     // --- DOM ELEMENT SELECTION ---
+    const chatModal = document.getElementById('chatbot-modal');
+    if (!chatModal) return; // Stop if the modal isn't on the page
+
     const chatMessagesContainer = document.getElementById('chat-messages');
     const chatForm = document.getElementById('chat-form');
     const chatInput = document.getElementById('chat-input');
     const formButton = chatForm ? chatForm.querySelector('button') : null;
+    const typingIndicator = document.getElementById('typing-indicator');
 
-    // If the chat form doesn't exist on the page, stop execution.
-    if (!chatForm || !chatInput || !formButton) {
+    if (!chatForm || !chatInput || !formButton || !chatMessagesContainer) {
         return;
     }
 
@@ -50,62 +24,60 @@ document.addEventListener('DOMContentLoaded', () => {
         if (messageText === '') return;
 
         // --- UI & STATE MANAGEMENT ---
-        // Disable the form to prevent multiple submissions
         chatInput.disabled = true;
         formButton.disabled = true;
+        if(typingIndicator) typingIndicator.style.display = 'block';
 
-        // Immediately display the user's message
         appendMessage(messageText, 'user');
-        chatInput.value = ''; // Clear the input field
+        chatInput.value = '';
 
-        // Display a "thinking" indicator for the bot's response
-        const thinkingIndicator = appendMessage('<i class="fas fa-spinner fa-spin"></i>', 'bot');
-        
-        // --- DATA PERSISTENCE & API CALL ---
         try {
-            // Save the user's message to the dedicated chatbot Firestore instance
-            await addDoc(collection(chatbotDb, 'messages'), {
-                text: messageText,
-                timestamp: serverTimestamp(),
-                sender: 'user',
-                response_needed: true // Flag for the backend/Cloud Function
-            });
+            // =================================================================
+            // KNOWLEDGE BASE HOOK (Coming in the next step)
+            // In the future, we will first search our Firestore knowledge base
+            // for content from your books related to `messageText`.
+            // const contextFromBooks = await searchKnowledgeBase(messageText);
+            // =================================================================
 
             // --- Call the Gemini API for a response ---
-            const botResponse = await getGeminiResponse(messageText);
-            
-            // Update the thinking indicator with the actual response from the bot
-            thinkingIndicator.innerHTML = botResponse.replace(/\n/g, '<br>');
+            const botResponse = await getGeminiResponse(messageText); // We'll pass `contextFromBooks` here later
+
+            // Display the bot's response
+            appendMessage(botResponse.replace(/\n/g, '<br>'), 'bot');
+
+            // --- DATA PERSISTENCE ---
+            // Save the conversation turn to Firestore
+            await addDoc(collection(chatbotDb, 'conversations'), {
+                user_message: messageText,
+                bot_response: botResponse,
+                timestamp: serverTimestamp(),
+                // We could add a user ID here if they are logged in
+            });
 
         } catch (error) {
             console.error("Chatbot Error:", error);
-            // If an error occurs, update the thinking indicator with an error message
-            thinkingIndicator.innerHTML = "Sorry, I encountered a problem. Please try again later.";
-            thinkingIndicator.classList.remove('bot-message');
-            thinkingIndicator.classList.add('bot-error'); // Style it as an error
+            const errorMessage = "Sorry, I encountered a problem. Please try again later.";
+            appendMessage(errorMessage, 'bot-error');
         } finally {
             // --- CLEANUP ---
-            // Re-enable the form regardless of success or failure
             chatInput.disabled = false;
             formButton.disabled = false;
-            chatInput.focus(); // Set focus back to the input field
+            if(typingIndicator) typingIndicator.style.display = 'none';
+            chatInput.focus();
         }
     });
 
     /**
      * Appends a new message bubble to the chat window.
      * @param {string} htmlContent - The HTML content of the message.
-     * @param {string} type - The type of message ('user' or 'bot' or 'bot-error').
-     * @returns {HTMLElement} The created message element.
+     * @param {string} type - The type of message ('user', 'bot', or 'bot-error').
      */
     function appendMessage(htmlContent, type) {
         const messageElement = document.createElement('div');
-        messageElement.innerHTML = htmlContent;
-        // Apply appropriate classes based on the message type
         messageElement.classList.add('message-bubble', `${type}-message`);
-        
+        messageElement.innerHTML = htmlContent; // Using innerHTML to render line breaks (<br>)
+
         chatMessagesContainer.appendChild(messageElement);
-        // Automatically scroll to the latest message
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
         return messageElement;
     }
@@ -117,40 +89,35 @@ document.addEventListener('DOMContentLoaded', () => {
      */
     async function getGeminiResponse(userMessage) {
         // Construct the prompt with specific instructions for the AI model
+        // In the future, we will add content from your books here.
         const prompt = `You are a helpful legal information assistant for South Africa, named Flamea. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
-        
-        // Prepare the payload for the Gemini API
+
         const payload = {
             contents: [{
                 parts: [{ text: prompt }]
             }]
         };
 
-        const apiKey = ""; // API key is handled by the execution environment.
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+        const apiKey = ""; // This is handled by the execution environment
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
 
-        // Make the POST request to the API
         const response = await fetch(apiUrl, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify(payload)
         });
 
-        // Check if the network request itself was successful
         if (!response.ok) {
             const errorBody = await response.text();
             throw new Error(`API request failed with status ${response.status}: ${errorBody}`);
         }
 
         const result = await response.json();
-        
-        // Safely access the response text
         const botText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
 
         if (botText) {
             return botText;
         } else {
-            // Handle cases where the API returns a valid but empty or unexpected response
             console.error("Invalid response structure from API:", JSON.stringify(result, null, 2));
             throw new Error("Received an invalid response from the AI service.");
         }

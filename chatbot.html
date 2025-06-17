@@ -1,19 +1,45 @@
-<div class="custom-modal-content bg-gray-900 text-white rounded-lg shadow-2xl max-w-lg w-full max-h-[90vh] flex flex-col">
-    <div class="flex justify-between items-center p-4 border-b border-gray-700">
-        <h3 class="text-2xl font-bold text-purple-400"><i class="fas fa-robot mr-3"></i>iSazi AI Assistant</h3>
-        <button data-modal-close class="text-gray-400 hover:text-white text-2xl">&times;</button>
-    </div>
-    <div id="chat-messages" class="flex-grow p-6 space-y-4 overflow-y-auto">
-        <div class="message-bubble bot-message">
-            Hello! I am iSazi, your legal information assistant for South African Family Law. How can I help you today? Please note, I provide information, not legal advice.
+<!--
+  Flamea.org - iSazi AI Chatbot Modal
+  - This file contains the HTML structure for the chatbot interface.
+  - It's designed to be loaded into a modal window.
+  - The 'custom-modal' and 'custom-modal-content' classes are controlled by assets/js/main.js and assets/css/style.css.
+  - The actual chat functionality is powered by assets/js/chatbot.js.
+-->
+<div id="chatbot-modal" class="custom-modal">
+    <div class="custom-modal-content bg-gray-900 text-white rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col">
+        <!-- Modal Header -->
+        <div class="flex justify-between items-center p-4 border-b border-gray-700">
+            <h3 class="text-xl font-bold text-purple-400"><i class="fas fa-robot mr-3"></i>iSazi AI Assistant</h3>
+            <button data-modal-close class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
+        </div>
+
+        <!-- Chat Messages Area -->
+        <div id="chat-messages" class="flex-grow p-6 space-y-4 overflow-y-auto">
+            <!-- Initial message from the bot -->
+            <div class="message-bubble bot-message">
+                Hello! I am iSazi, your legal information assistant for South African Family Law. How can I help you today? Please note, I provide information, not legal advice.
+            </div>
+        </div>
+
+        <!-- "Bot is typing" indicator -->
+        <div id="typing-indicator" class="px-6 pb-2 text-sm text-gray-400" style="display: none;">
+            <i class="fas fa-spinner fa-spin"></i> iSazi is thinking...
+        </div>
+
+        <!-- Chat Input Form -->
+        <div class="p-4 border-t border-gray-700">
+            <form id="chat-form" class="flex gap-2">
+                <input type="text" id="chat-input" placeholder="Ask about family law..." class="w-full flex-grow p-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500" autocomplete="off" required>
+                <button type="submit" class="bg-purple-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-gray-500">
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </form>
         </div>
     </div>
-    <div class="p-4 border-t border-gray-700">
-        <form id="chat-form" class="flex gap-2">
-            <input type="text" id="chat-input" placeholder="Ask a question about family law..." class="w-full flex-grow p-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500" autocomplete="off">
-            <button type="submit" class="bg-purple-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-purple-500 transition-colors">
-                <i class="fas fa-paper-plane"></i>
-            </button>
-        </form>
-    </div>
 </div>
+
+<!-- Scripts for Chatbot Functionality -->
+<!-- Note: These should ideally be loaded only when the modal is first opened, but for simplicity, we can include them here or in the main page footer. -->
+<script type="module" src="assets/js/firebase-config.js"></script>
+<script type="module" src="assets/js/firebase-chatbot-config.js"></script>
+<script type="module" src="assets/js/chatbot.js"></script>
