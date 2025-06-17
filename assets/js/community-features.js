@@ -1,22 +1,27 @@
 /**
- * Flamea.org - Community Page Features
+ * Flamea.org - Community Page Features (Corrected)
  * This script handles all interactive elements on community.html, including:
  * - Countdown timer to the forum launch.
- * - Live polling system with Chart.js visualization.
+ * - Live polling system with Chart.js visualization using Firebase.
  */
-
 import { db, auth } from './firebase-config.js';
 import { onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 import { doc, getDoc, setDoc, onSnapshot, runTransaction, serverTimestamp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
+    // Only run this script on the community page by checking for a key element.
     const countdownEl = document.getElementById('countdown');
-    if (!countdownEl) return; // Only run on the community page
+    if (!countdownEl) return;
 
-    const appId = 'flamea-prod-poll'; // Use a specific identifier
+    // --- State Variables ---
+    const appId = 'flamea-prod-poll-v1'; // Unique ID for our Firestore documents
     let userId;
     let pollChart;
 
+    /**
+     * Initializes all community page features once we have a user ID.
+     * @param {object} user - The Firebase user object (can be anonymous).
+     */
     function initializeFeatures(user) {
         if (!user) return;
         userId = user.uid;
@@ -24,16 +29,19 @@ document.addEventListener('DOMContentLoaded', () => {
         initPoll();
     }
 
+    // --- Authentication Handling ---
+    // We need a user (even an anonymous one) to track votes.
     onAuthStateChanged(auth, (user) => {
         if (user) {
             initializeFeatures(user);
         } else {
             signInAnonymously(auth)
                 .then(cred => initializeFeatures(cred.user))
-                .catch(error => console.error("Anonymous sign-in failed:", error));
+                .catch(error => console.error("Anonymous sign-in for poll failed:", error));
         }
     });
 
+    // --- Countdown Timer ---
     function initCountdown() {
         const countdownDate = new Date("2025-09-16T00:00:00").getTime();
         const msgEl = document.getElementById('countdown-message');
@@ -53,9 +61,11 @@ document.addEventListener('DOMContentLoaded', () => {
         }, 1000);
     }
 
+    // --- Polling System ---
     async function initPoll() {
         const pollRef = doc(db, `artifacts/${appId}/public/data/poll`, "main_poll");
         
+        // Ensure the poll document exists in Firestore
         try {
             const pollDoc = await getDoc(pollRef);
             if (!pollDoc.exists()) {
@@ -68,15 +78,16 @@ document.addEventListener('DOMContentLoaded', () => {
             console.error("Failed to create or get initial poll:", e);
         }
         
+        // Listen for real-time updates to poll results
         onSnapshot(pollRef, (doc) => {
             if(doc.exists()) {
-                renderPoll(doc.data());
+                renderPollUI(doc.data());
                 renderChart(doc.data());
             }
         }, error => console.error("Poll snapshot error:", error));
     }
     
-    async function renderPoll(pollData) {
+    async function renderPollUI(pollData) {
         const container = document.getElementById('poll-options');
         if (!container) return;
         container.innerHTML = '';
@@ -107,10 +118,10 @@ document.addEventListener('DOMContentLoaded', () => {
         try {
             await runTransaction(db, async (transaction) => {
                 const voterDoc = await transaction.get(voterRef);
-                if (voterDoc.exists()) { throw "User has already voted."; }
+                if (voterDoc.exists()) { throw "You have already voted."; }
                 
                 const pollDoc = await transaction.get(pollRef);
-                if (!pollDoc.exists()) { throw "Poll document does not exist!"; }
+                if (!pollDoc.exists()) { throw "Poll does not exist!"; }
                 
                 const newVotes = (pollDoc.data().options[option] || 0) + 1;
                 transaction.update(pollRef, { [`options.${option}`]: newVotes });
