@@ -1,127 +1,100 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Sidebar - Fixed</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        .sidebar-link { transition: all 0.3s ease; }
-        .sidebar-link:hover { background-color: #1f2937; color: white; }
-        .sidebar-link-main:hover { color: white; }
-        .submenu-container { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out; }
-        .submenu-container.open { max-height: 500px; /* Adjust if more items are added */ }
-        .submenu-toggle-icon.rotate-180 { transform: rotate(180deg); }
-        .logo-text { font-family: 'Roboto Slab', serif; }
-        .modal { display: none; }
-        .modal.show { display: flex; align-items: center; justify-content: center; }
-    </style>
-</head>
-<body class="bg-gray-100">
-    <!-- Main container to show sidebar in context -->
-    <div class="flex h-screen">
-        <!-- Sidebar -->
-        <aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300 w-72">
-            <!-- Top Section: Logo & Navigation -->
-            <div class="sidebar-top">
-                <div class="mb-12 flex justify-center">
-                    <a href="index.html" class="flamea-logo dark">
-                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                            <text class="logo-text" x="0" y="45" font-family="'Roboto Slab', serif" font-size="50" font-weight="700" fill="white">Flame</text>
-                            <g transform="translate(135, 0)">
-                                <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path>
-                            </g>
-                            <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
-                        </svg>
-                    </a>
-                </div>
-                
-                <!-- Main Navigation -->
-                <nav id="main-nav" class="flex flex-col space-y-2">
-                    <a href="index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                    <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
-                    
-                    <!-- Tools Hub with Submenu -->
-                    <div class="relative" data-menu-item="tools-hub">
-                        <button class="submenu-toggle w-full flex items-center rounded-lg hover:bg-gray-800" onclick="toggleSubmenu('tools-hub')">
-                            <a href="tools.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
-                            <span class="p-3 pr-4 text-gray-400 hover:text-white"><i class="fas fa-chevron-down submenu-toggle-icon transition-transform duration-300"></i></span>
-                        </button>
-                        <div class="submenu-container pl-8 py-2" id="tools-hub-submenu">
-                           <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
-                           <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-feather-alt w-6 text-center mr-3"></i> Traditional Customs</a>
-                           <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
-                        </div>
-                    </div>
-
-                    <a href="training.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Training Hub</a>
-                    <a href="resources.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resource Hub</a>
-                    <a href="community.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-                    
-                    <div class="border-t border-gray-700 my-2"></div>
-                    
-                    <!-- Modal Trigger Buttons -->
-                    <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: Fatherhood Compass</button>
-                    <button data-modal-target="podcast-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Flamea Podcast</button>
-                    <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
-                </nav>
-            </div>
-
-            <!-- Bottom Section: Join, Auth & Copyright -->
-            <div class="sidebar-bottom text-center">
-                <!-- Join the Movement -->
-                <div class="mb-4" data-menu-item="join-movement">
-                    <button class="submenu-toggle flex items-center justify-center p-3 rounded-lg w-full text-left bg-yellow-600/10 hover:bg-yellow-600/20" onclick="toggleSubmenu('join-movement')">
-                        <i class="fas fa-hands-helping w-6 text-center mr-4 text-yellow-400"></i>
-                        <span class="flex-grow font-semibold">Join the Movement</span>
-                        <i class="fas fa-chevron-down submenu-toggle-icon text-xs transition-transform duration-300"></i>
-                    </button>
-                    <div class="submenu-container text-left text-sm p-4 bg-gray-800 rounded-b-lg" id="join-movement-submenu">
-                        <p class="text-gray-400 mb-4">Flamea is built by the community, for the community. See how you can contribute.</p>
-                        <a href="join-the-movement.html" class="font-bold text-yellow-400 hover:underline">Learn More &rarr;</a>
-                    </div>
-                </div>
-                
-                <!-- Auth Links Section -->
-                <div id="sidebar-auth-links" class="mb-4">
-                    <!-- This will be populated by auth.js -->
-                </div>
-
-                <!-- Copyright Section -->
-                <div class="text-xs text-gray-500 leading-relaxed">
-                    <span>© 2025 Flamea.org</span><br>
-                    <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
+<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300 w-72">
+    <!-- Top Section: Logo & Navigation -->
+    <div class="sidebar-top">
+        <div class="mb-12 flex justify-center">
+            <a href="index.html" class="flamea-logo dark">
+                <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+                    <text class="logo-text" x="0" y="45" font-family="'Roboto Slab', serif" font-size="50" font-weight="700" fill="white">Flame</text>
+                    <g transform="translate(135, 0)">
+                        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path>
+                    </g>
+                    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
+                </svg>
+            </a>
+        </div>
+        
+        <!-- Main Navigation -->
+        <nav id="main-nav" class="flex flex-col space-y-2">
+            <a href="index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+            <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> Our Mission</a>
+            
+            <!-- Tools Hub with Submenu -->
+            <div class="relative">
+                <button class="submenu-toggle w-full flex items-center rounded-lg hover:bg-gray-800">
+                    <a href="tools.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
+                    <span class="p-3 pr-4 text-gray-400 hover:text-white"><i class="fas fa-chevron-down submenu-toggle-icon transition-transform duration-300"></i></span>
+                </button>
+                <div class="submenu-container pl-8 py-2">
+                   <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
+                   <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-feather-alt w-6 text-center mr-3"></i> Traditional Customs</a>
+                   <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
                 </div>
             </div>
-        </aside>
 
-    <script>
-        function toggleSubmenu(menuItemId) {
-            const submenu = document.getElementById(menuItemId + '-submenu');
-            const toggleIcon = document.querySelector(`[data-menu-item="${menuItemId}"] .submenu-toggle-icon`);
-            if (submenu) {
-                const isOpen = submenu.classList.toggle('open');
-                if (isOpen) {
-                    submenu.style.maxHeight = submenu.scrollHeight + "px";
-                } else {
-                    submenu.style.maxHeight = null;
+            <a href="training.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Training Hub</a>
+            <a href="resources.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-open w-6 text-center mr-4"></i> Resource Hub</a>
+            <a href="community.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+            
+            <div class="border-t border-gray-700 my-2"></div>
+            
+            <!-- Modal Trigger Buttons -->
+            <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: Fatherhood Compass</button>
+            <button data-modal-target="podcast-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Flamea Podcast</button>
+            <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+        </nav>
+    </div>
+
+    <!-- Bottom Section: Join, Auth & Copyright -->
+    <div class="sidebar-bottom text-center">
+        <!-- Join the Movement -->
+        <div class="mb-4">
+            <button class="submenu-toggle flex items-center justify-center p-3 rounded-lg w-full text-left bg-yellow-600/10 hover:bg-yellow-600/20">
+                <i class="fas fa-hands-helping w-6 text-center mr-4 text-yellow-400"></i>
+                <span class="flex-grow font-semibold">Join the Movement</span>
+                <i class="fas fa-chevron-down submenu-toggle-icon text-xs transition-transform duration-300"></i>
+            </button>
+            <div class="submenu-container text-left text-sm p-4 bg-gray-800 rounded-b-lg">
+                <p class="text-gray-400 mb-4">Flamea is built by the community, for the community. See how you can contribute.</p>
+                <a href="join-the-movement.html" class="font-bold text-yellow-400 hover:underline">Learn More &rarr;</a>
+            </div>
+        </div>
+        
+        <div id="sidebar-auth-links" class="mb-4"></div>
+
+        <div class="text-xs text-gray-500 leading-relaxed">
+            <span>© 2025 Flamea.org</span><br>
+            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
+        </div>
+    </div>
+</aside>
+
+<!-- NEW SCRIPT to handle collapsible sections and modal triggers -->
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const sidebar = document.querySelector('.sidebar-container');
+        if (!sidebar) return;
+
+        sidebar.addEventListener('click', function(event) {
+            // Handle submenu toggles
+            const toggleButton = event.target.closest('.submenu-toggle');
+            if (toggleButton) {
+                const submenu = toggleButton.nextElementSibling;
+                const icon = toggleButton.querySelector('.submenu-toggle-icon');
+                if (submenu && submenu.classList.contains('submenu-container')) {
+                    submenu.classList.toggle('open');
+                    if (icon) icon.classList.toggle('rotate-180');
                 }
-                toggleIcon.classList.toggle('rotate-180', isOpen);
             }
-        }
 
-        // Initialize all submenus to be closed by default
-        document.addEventListener('DOMContentLoaded', function() {
-            document.querySelectorAll('.submenu-container').forEach(submenu => {
-                submenu.classList.remove('open');
-                submenu.style.maxHeight = null;
-            });
-             document.querySelectorAll('.submenu-toggle-icon').forEach(icon => {
-                icon.classList.remove('rotate-180');
-            });
+            // Handle modal triggers
+            const modalButton = event.target.closest('[data-modal-target]');
+            if (modalButton) {
+                const modalId = modalButton.dataset.modalTarget;
+                const modal = document.getElementById(modalId);
+                if (modal) {
+                    modal.classList.add('visible'); // Use 'visible' to match centralized CSS
+                }
+            }
         });
-    </script>
-</body>
-</html>
+    });
+</script>
