@@ -1,458 +1,94 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - About Us</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content {
-            overflow-y: auto;
-            background-image: linear-gradient(rgba(17, 24, 39, 0.97), rgba(17, 24, 39, 0.97)), url('https://images.unsplash.com/photo-1519120126-16817531a7c7?q=80&w=1974');
-            background-size: cover;
-            background-position: center;
-        }
-        .timeline-item {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .timeline-item.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 1.5rem; /* Center on the icon */
-            transform: translateX(-50%);
-            height: 100%;
-            width: 4px;
-            background-color: #4B5563; /* gray-600 */
-        }
-        .timeline-icon { z-index: 10; }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-        }
-        .accordion-content.open {
-            /* This class will be toggled by JS */
-            max-height: 1000px; /* Large enough for your content */
-        }
-    </style>
-</head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
-
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-3xl mx-auto">
-                <h1 class="text-4xl font-bold font-roboto mb-8 text-white text-center">The Story of FLAMEA</h1>
-                <!-- Timeline Container -->
-                <div class="relative timeline-line pl-12">
-                    
-                    <!-- Timeline Item 1: The Spark -->
-                    <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
-                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                            <h3 class="text-2xl font-bold text-blue-400">Our Mission</h3>
-                            <p class="text-gray-300 mt-2">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality before the law, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 2: The Vision -->
-                    <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
-                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                            <h3 class="text-2xl font-bold text-green-400">Our Vision</h3>
-                            <p class="text-gray-300 mt-2">We envision a South African legal system where family courts prioritize the well-being of children above all, and a society where every child can thrive in the care and support of their entire family network, free from gender discrimination.</p>
-                        </div>
-                    </div>
-
-                    <!-- Timeline Item 3: The Values (UPDATED) -->
-                     <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
-                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                            <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Core Values: The Builder's Ethos</h3>
-                            
-                            <!-- Collapsible Accordion for Values -->
-                            <div class="mb-6">
-                                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow hover:bg-gray-600">
-                                    <span class="font-semibold text-gray-200">The values that guide Flamea are the same that guide all platforms in this ecosystem. They are a commitment to practical, structured, and impactful action.</span>
-                                    <i class="fas fa-chevron-down transform text-gray-400 transition-transform"></i>
-                                </button>
-<div class="accordion-content pt-4 text-gray-300">
-    <!-- Use a container with space-y-4 for vertical spacing between items -->
-    <div class="space-y-4">
-        
-        <!-- Value Item: Structure -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-sitemap text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Structure:</strong> We build organised, logical, and robust systems.
-            </div>
+<!--
+  Flamea.org - Sidebar Component
+  - This is a clean HTML file with no internal scripts.
+  - All functionality (submenu toggles, modal triggers) is now handled by assets/js/main.js.
+  - Added 'data-modal-target' attribute to the iSazi AI link to trigger the chatbot modal.
+  - Added a link to the Podcast RSS feed.
+-->
+<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300 w-72">
+    <!-- Top Section: Logo & Navigation -->
+    <div class="sidebar-top">
+        <div class="mb-12 flex justify-center">
+            <a href="index.html" class="flamea-logo dark">
+                <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+                    <text class="logo-text" x="0" y="45" font-family="'Roboto Slab', serif" font-size="50" font-weight="700" fill="white">Flame</text>
+                    <g transform="translate(135, 0)">
+                        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path>
+                    </g>
+                    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
+                </svg>
+            </a>
         </div>
 
-        <!-- Value Item: Assemble -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-cubes text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Assemble:</strong> We bring together disparate parts—data, ideas, people—to create a cohesive whole.
-            </div>
-        </div>
+        <!-- Main Navigation -->
+        <nav id="main-nav" class="flex flex-col space-y-2">
+            <!-- Home -->
+            <a href="index.html" class="nav-link"><i class="fas fa-home nav-icon"></i>Home</a>
 
-        <!-- Value Item: Legacy -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-landmark text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Legacy:</strong> We build upon the legacy of our predecessors, understanding that all progress stands on the shoulders of giants.
-            </div>
-        </div>
+            <!-- About -->
+            <a href="about.html" class="nav-link"><i class="fas fa-info-circle nav-icon"></i>About</a>
 
-        <!-- Value Item: Architect -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-drafting-compass text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Architect:</strong> We design with vision and purpose, planning for the present and the future.
-            </div>
-        </div>
-
-        <!-- Value Item: Tool-Up -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-tools text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Tool-Up:</strong> We empower our users by giving them the right tools and the knowledge to use them effectively.
-            </div>
-        </div>
-
-        <!-- Value Item: Innovate -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-lightbulb text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Innovate:</strong> We constantly seek better, more efficient ways to solve problems.
-            </div>
-        </div>
-
-        <!-- Value Item: Sustain -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-seedling text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Sustain:</strong> We build things that are meant to last and have a long-term positive impact.
-            </div>
-        </div>
-
-        <!-- Value Item: Observe -->
-        <div class="flex items-start">
-            <div class="w-8 text-center mr-4">
-                <i class="fas fa-eye text-2xl text-indigo-300"></i>
-            </div>
-            <div class="flex-1">
-                <strong class="text-white">Observe:</strong> We pay close attention to the world around us to identify needs and find solutions.
-            </div>
-        </div>
-
-    </div>
-</div>
-
-
-                    <!-- Timeline Item 4: The Call to Action -->
-                    <div class="timeline-item">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
-                        <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                            <h3 class="text-2xl font-bold text-red-400">Your Stand</h3>
-                            <p class="text-gray-300 mt-2">This is your platform. This is your movement. We are not asking for permission—we are taking our rightful place. Join us and lead the change.</p>
-                        </div>
-                    </div>
+            <!-- Training -->
+            <div data-menu-item>
+                <div class="nav-link-header">
+                    <a href="training.html" class="flex-grow"><i class="fas fa-chalkboard-teacher nav-icon"></i>Training</a>
+                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
+                </div>
+                <div class="submenu-container">
+                    <a href="training/course-constitution.html" class="submenu-link">SA Constitution</a>
+                    <a href="training/course-childrens-act.html" class="submenu-link">Children's Act</a>
+                    <a href="training/course-family-law.html" class="submenu-link">Family Law</a>
+                    <a href="training/course-equality-act.html" class="submenu-link">Equality Act</a>
+                    <a href="training/course-maintenance-act.html" class="submenu-link">Maintenance Act</a>
+                    <a href="training/course-domestic-violence.html" class="submenu-link">Domestic Violence</a>
+                    <a href="training/course-criminal-law.html" class="submenu-link">Criminal Law & SAPS</a>
                 </div>
             </div>
-        </main>
-    </div>
-    <!-- Modal for Timeline Details -->
-    <div id="timeline-modal" class="modal-overlay hide-on-print">
-        <div class="modal-content">
-            <span class="modal-close">&times;</span>
-            <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
-            <div id="modal-details" class="text-gray-300"></div>
-            <div id="modal-references">
-                <p><strong>Primary Source:</strong> <span id="modal-primary-source"></span></p>
-                <p><strong>Secondary Source:</strong> <span id="modal-secondary-source"></span></p>
+
+            <!-- Tools -->
+            <div data-menu-item>
+                <div class="nav-link-header">
+                    <a href="tools.html" class="flex-grow"><i class="fas fa-tools nav-icon"></i>Tools</a>
+                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
+                </div>
+                <div class="submenu-container">
+                    <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
+                    <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gavel w-6 text-center mr-3"></i> Traditional Customs</a>
+                    <a href="current-affairs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-newspaper w-6 text-center mr-3"></i> Current Affairs</a>
+                    <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
+                    <a href="tool-parenting-plan.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-clipboard-check w-6 text-center mr-3"></i> Parenting Plan Builder</a>
+                    <a href="tool-childcare-plan.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-baby w-6 text-center mr-3"></i> Childcare Plan Tool</a>
+                    <a href="tool-contact-schedule.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-calendar-alt w-6 text-center mr-3"></i> Contact Schedule Maker</a>
+                </div>
             </div>
+
+            <!-- Publications -->
+            <a href="publications.html" class="nav-link"><i class="fas fa-book-open nav-icon"></i>Publications</a>
+
+            <!-- AI Assistant -->
+            <a href="#" id="chatbot-link" class="nav-link" data-modal-target="chatbot-modal">
+                <i class="fas fa-robot nav-icon"></i>iSazi AI Assistant
+            </a>
+
+            <!-- Podcast -->
+            <a href="https://anchor.fm/s/10357aacc/podcast/rss" target="_blank" class="nav-link">
+                <i class="fas fa-podcast nav-icon"></i>Podcast
+            </a>
+
+            <!-- Community -->
+            <a href="community.html" class="nav-link"><i class="fas fa-users nav-icon"></i>Community</a>
+        </nav>
+    </div>
+
+    <!-- Bottom Section: Auth & Footer -->
+    <div class="sidebar-bottom">
+        <div id="sidebar-auth-links" class="mb-6">
+            <!-- Auth links will be dynamically injected here by auth.js -->
+            <a href="login.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
+        </div>
+        <div class="text-xs text-center text-gray-500">
+            <span>&copy; 2024 Flamea.org</span><br>
+            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
         </div>
     </div>
-
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-
-    const mainContentContainer = document.getElementById('main-content-area');
-    const userSelectedContent = `
-        <h1 class="text-2xl font-bold mb-4">The Unravelling of the Social Fabric</h1>
-        <h2 class="text-xl font-semibold mb-3">Part I: The Ancient Foundations of Society, Family, and Knowledge (Pre-3000 BC – c. 500 AD)</h2>
-        <h3 class="text-lg font-bold mb-2">Chapter 1: The Dawn of Order: Family and Belief in Prehistory and Early Civilizations</h3>
-        <p class="mb-4">To comprehend the trajectory of human civilization and the evolving role of the family within it, one must begin at the genesis of social order itself—a genesis rooted not in formal institutions or statecraft, but in the spiritual and practical imperatives of survival...</p>
-        <p>[...The rest of the selected text from your document would be inserted here...]</p>
-        <h3 class="text-lg font-bold mt-6 mb-2">Chapter 12: Conclusion: Reclaiming Autonomy in the 21st Century</h3>
-        <p>This comprehensive historical analysis has traced a grand narrative arc spanning millennia... At the heart of this restoration lies the figure of the father—present, engaged, and equal—for without strong fathers, the family, and by extension, civilization itself, stands on precarious ground.</p>
-    `;
-    mainContentContainer.innerHTML = userSelectedContent.replace(/\[\d+\]/g, ''); // Remove citation numbers for cleaner display
-
-    const timelineData = [
-        {
-            date: 'c. 200,000 BC',
-            event: 'Emergence of Homo sapiens & Early Religion',
-            details: 'Archaeological evidence, such as intentional burials, suggests the emergence of religious ideas and ancestor worship. This established a continuity across generations, a practice foundational to cultures like the Bantu and Khoisan. The family was the primary social and economic unit.',
-            primarySource: 'Hunter-Gatherers and the Origins of Religion - PMC',
-            secondarySource: 'The Better Angels of Our Nature, S. Pinker'
-        },
-        {
-            date: 'c. 10,000 BC',
-            event: 'The Agricultural Revolution',
-            details: 'The shift from nomadic life to settled agriculture creates concepts of land ownership and inheritance. This solidifies the patriarchal family structure, as fatherhood becomes the primary social mechanism for transferring property and status.',
-            primarySource: 'The Origins of Fatherhood, an ancient family process, PubMed',
-            secondarySource: 'Goliath\'s Reckoning, S. Mdeni'
-        },
-        {
-            date: 'c. 3000 BC',
-            event: 'First Formal Schools in Mesopotamia',
-            details: 'The first schools emerge not for the general populace, but as exclusive institutions to train scribes and priests. This marks the first "outsourcing" of education from the family to a surrogate institution serving the state\'s needs.',
-            primarySource: 'Education in Ancient Mesopotamia, World History Encyclopedia',
-            secondarySource: 'The Homeschooling Father, S. Mdeni'
-        },
-        {
-            date: 'c. 800 BC',
-            event: 'Homer\'s Iliad and the Honor Culture',
-            details: 'The epic poetry of Homer depicts a society where a man\'s identity and worth are inextricably linked to his father\'s legacy and honor. The father is the ultimate benchmark for a son\'s life, a powerful cultural paradigm.',
-            primarySource: 'The Iliad, Homer',
-            secondarySource: 'Intellectuals, P. Johnson'
-        },
-        {
-            date: 'c. 380 BC',
-            event: 'Plato\'s "Allegory of the Cave"',
-            details: 'Plato provides the philosophical justification for surrogate education. He posits that truth is an abstract ideal accessible only to enlightened experts (philosophers), who must lead the ignorant masses out of the "cave" of traditional, familial wisdom.',
-            primarySource: 'The Republic, Plato',
-            secondarySource: 'The Homeschooling Father, S. Mdeni'
-        },
-        {
-            date: 'c. 500 AD - 1500 AD',
-            event: 'The Bible and the Codification of Family',
-            details: 'The Judeo-Christian tradition establishes the patriarchal family as a divinely instituted union. The Bible places the primary responsibility for children\'s education on the parents, particularly the father, solidifying the family as the original and most vital school.',
-            primarySource: 'The Bible (e.g., Ephesians 5, Deuteronomy 6)',
-            secondarySource: 'The Homeschooling Father, S. Mdeni'
-        },
-        {
-            date: '1517 AD',
-            event: 'The Protestant Reformation',
-            details: 'Martin Luther champions universal education so that all believers can read the Bible themselves. This introduces the idea of mass schooling, though Luther still viewed parents as the primary educators, with schools as a support system.',
-            primarySource: 'Martin Luther\'s Educational Approach, ResearchGate',
-            secondarySource: 'The Homeschooling Father, S. Mdeni'
-        },
-        {
-            date: '1658 AD',
-            event: 'First Formal School in South Africa',
-            details: 'The Dutch East India Company (DEIC) establishes a school to instruct enslaved children in Dutch culture and religion. This marks the beginning of institutionalized, surrogate education in South Africa, designed for ideological domination, not indigenous flourishing.',
-            primarySource: 'A New History of Formal Schooling in South Africa, HSRC Press',
-            secondarySource: 'The Homeschooling Father, S. Mdeni, Ch. 1'
-        },
-        {
-            date: 'c. 1760 AD',
-            event: 'The Industrial Revolution',
-            details: 'Work moves from the family unit (farm/workshop) to the factory. This physically separates the father from the home, transforming him from the master of a productive household to a "breadwinner," an employee whose economic life is external to the family.',
-            primarySource: 'Economics of the Family, Cambridge University Press',
-            secondarySource: 'Knowledge and Decisions, T. Sowell'
-        },
-        {
-            date: '1762 AD',
-            event: 'Rousseau and the Ideology of the State Surrogate',
-            details: 'Philosopher Jean-Jacques Rousseau provides the explicit ideology for the state as the ultimate parent, arguing it must control a citizen\'s upbringing from infancy. This is contrasted with his abandonment of his own five children, a pattern of personal hypocrisy among intellectuals.',
-            primarySource: 'The Social Contract, J.J. Rousseau',
-            secondarySource: 'Intellectuals, P. Johnson, Ch. 1'
-        },
-        {
-            date: '1948 AD',
-            event: 'Apartheid Systematized in South Africa',
-            details: 'The National Party comes to power and implements apartheid. Policies like the migrant labor system and influx control deliberately engineer the absence of Black fathers from their families to supply cheap labor to white-owned industries.',
-            primarySource: 'Apartheid and reactions to it, SA History Online',
-            secondarySource: 'Goliath\'s Reckoning, S. Mdeni'
-        },
-        {
-            date: '1953 AD',
-            event: 'The Bantu Education Act',
-            details: 'The apartheid state creates a deliberately inferior education system to engineer a permanent Black underclass, destroying community and mission schools. It is the ultimate cynical use of the "surrogate" school system as a tool of oppression.',
-            primarySource: 'Bantu Education Act, Britannica',
-            secondarySource: 'The Homeschooling Father, S. Mdeni, Ch. 4'
-        },
-        {
-            date: '1956 AD',
-            event: 'Birth of Mlandeli Mdeni (The User\'s Father)',
-            details: 'Salatiso\'s father is born in Nqabane, Transkei. He would grow up to become an inspector and provide for his family, laying the foundation for his son despite the hardships of apartheid.',
-            primarySource: 'The Quest for Buggz (User provided context)',
-            secondarySource: 'Beyond the Grave, S. Mdeni'
-        },
-        {
-            date: 'c. 1970s',
-            event: 'Rise of Second-Wave Feminism',
-            details: 'The movement challenges traditional family structures and gender roles. While achieving necessary gains, it also contributes to rising divorce rates and a cultural and legal environment often punitive towards men, further destabilizing the family unit.',
-            primarySource: 'Feminist Fantasies, Phyllis Schlafly',
-            secondarySource: 'Men on Strike, Helen Smith'
-        },
-        {
-            date: '1982 AD',
-            event: 'Birth of Salatiso Mdeni',
-            details: 'Born in Fort Malan, Transkei, into a Xhosa family shaped by both tradition and the pressures of apartheid South Africa. His name, meaning "show us the way," sets him on a path to lead rather than follow.',
-            primarySource: 'The Quest for Buggz (User provided context)',
-            secondarySource: 'The Homeschooling Father, S. Mdeni'
-        },
-        {
-            date: '1993 AD',
-            event: 'Death of Mlandeli Mdeni',
-            details: 'Salatiso\'s father dies at a young age, thrusting Salatiso, at age 11, into the role of his father\'s successor (*Umlandeli*), a pivotal moment that would shape his entire life and philosophy.',
-            primarySource: 'The Quest for Buggz (User provided context)',
-            secondarySource: 'Lessons from my mother'
-        },
-        {
-            date: '1994 AD',
-            event: 'South Africa\'s First Democratic Election',
-            details: 'Apartheid officially ends, and a new Constitution is adopted, enshrining equality. However, the subsequent implementation of race-based redress policies continues a form of state-sanctioned discrimination.',
-            primarySource: 'The road to democracy in South Africa, Centre for the Study of Democracy',
-            secondarySource: 'Beyond Redress, S. Mdeni'
-        },
-        {
-            date: '2005 AD',
-            event: 'The Children\'s Act is Implemented',
-            details: 'Modern family law is implemented. While ostensibly gender-neutral, its application in Children\'s Courts is argued to be systematically biased against fathers, perpetuating the erosion of the family structure.',
-            primarySource: 'The Children\'s Act 38 of 2005',
-            secondarySource: 'Goliath\'s Stand, S. Mdeni'
-        },
-        {
-            date: '2018 AD',
-            event: 'The Birth of Lukhanyo Sazi "BuggZ" Mkosana',
-            details: 'The birth of Salatiso\'s son. This event marks the start of a direct legal and personal battle against the family court system, becoming the catalyst for all of his subsequent work.',
-            primarySource: 'The Quest for Buggz (User provided context)',
-            secondarySource: 'Goliath\'s Reckoning, S. Mdeni'
-        },
-        {
-            date: '2023 AD',
-            event: 'The Founding of Flamea',
-            details: 'Drawing from years of personal struggle, legal battles, and extensive research, Salatiso launches Flamea.org. The platform is the culmination of his quest, designed to provide tools and knowledge for others facing similar injustices, thereby reclaiming the family\'s autonomy from failing state surrogates.',
-            primarySource: 'Flamea.org (as per user context)',
-            secondarySource: 'The Quest for Buggz (as the origin story)'
-        },
-    ];
-
-    const timelineScroller = document.getElementById('timeline-scroller');
-    const modal = document.getElementById('timeline-modal');
-    const modalTitle = document.getElementById('modal-title');
-    const modalDetails = document.getElementById('modal-details');
-    const modalPrimarySource = document.getElementById('modal-primary-source');
-    const modalSecondarySource = document.getElementById('modal-secondary-source');
-    const closeModalBtn = document.querySelector('.modal-close');
-
-    // Create and append timeline items
-    function createTimeline() {
-        timelineData.forEach(item => {
-            const point = document.createElement('div');
-            point.className = 'timeline-point';
-            point.innerHTML = `
-                <div class="timeline-dot"></div>
-                <div class="timeline-content">
-                    <div class="date">${item.date}</div>
-                    <div class="event">${item.event}</div>
-                </div>
-            `;
-            point.addEventListener('click', () => {
-                modalTitle.textContent = `${item.date}: ${item.event}`;
-                modalDetails.innerHTML = `<p>${item.details}</p>`; // Use innerHTML to allow for formatted text if needed
-                
-                // Check if the source is a link or text
-                if (item.primarySource.startsWith('http')) {
-                    modalPrimarySource.innerHTML = `<a href="${item.primarySource}" target="_blank">${item.primarySource}</a>`;
-                } else {
-                    modalPrimarySource.textContent = item.primarySource;
-                }
-                
-                if (item.secondarySource.startsWith('http')) {
-                     modalSecondarySource.innerHTML = `<a href="${item.secondarySource}" target="_blank">${item.secondarySource}</a>`;
-                } else {
-                    modalSecondarySource.textContent = item.secondarySource;
-                }
-
-                modal.classList.add('visible');
-            });
-            timelineScroller.appendChild(point);
-        });
-    }
-
-    createTimeline();
-    // Clone the timeline for a seamless loop
-    const timelineContent = timelineScroller.innerHTML;
-    timelineScroller.innerHTML += timelineContent;
-
-    closeModalBtn.addEventListener('click', () => modal.classList.remove('visible'));
-    modal.addEventListener('click', (e) => {
-        if (e.target === modal) {
-            modal.classList.remove('visible');
-        }
-    });
-
-});
-    <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // Animated Timeline Logic
-            const timelineItems = document.querySelectorAll('.timeline-item');
-            const observer = new IntersectionObserver((entries) => {
-                entries.forEach(entry => {
-                    if (entry.isIntersecting) {
-                        entry.target.classList.add('is-visible');
-                    }
-                });
-            }, { threshold: 0.1 });
-            timelineItems.forEach(item => observer.observe(item));
-
-            // Accordion Logic
-            const accordionToggles = document.querySelectorAll('.accordion-toggle');
-            accordionToggles.forEach(button => {
-                button.addEventListener('click', () => {
-                    const content = button.nextElementSibling;
-                    const icon = button.querySelector('i');
-                    content.classList.toggle('open');
-                    icon.classList.toggle('rotate-180');
-                });
-            });
-        });
-    </script>
-    <script src="assets/js/sidebar-loader.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-</body>
-</html>
+</aside>
