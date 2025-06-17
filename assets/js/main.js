@@ -14,8 +14,8 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "🎓 Legal & Constitutional Foundations", 
             color: "green-500", 
             courses: [
-                { title: "The SA Constitution", icon: "fas fa-landmark", description: "Understand your foundational rights as a father and a citizen under South Africa's supreme law.", url: "training/course-constitution.html" },
-                { title: "The Children's Act", icon: "fas fa-child", description: "A deep dive into parental rights, responsibilities, care, and contact. Know the law that governs your relationship with your child.", url: "training/course-childrens-act.html" },
+                { title: "The SA Constitution", icon: "fas fa-landmark", description: "Understand your foundational rights as a father and a citizen.", url: "training/course-constitution.html" },
+                { title: "The Children's Act", icon: "fas fa-child", description: "A deep dive into parental rights, responsibilities, care, and contact.", url: "training/course-childrens-act.html" },
                 { title: "Family Law Overview", icon: "fas fa-balance-scale", description: "Navigate the Marriage, Divorce, and Maintenance Acts with confidence.", url: "training/course-family-law.html" }
             ] 
         },
@@ -25,24 +25,24 @@ document.addEventListener('DOMContentLoaded', function() {
             courses: [
                  { title: "Co-Parenting 101", icon: "fas fa-hands-helping", description: "Master communication, conflict resolution, and building effective parenting plans.", url: "training/course-coparenting.html" },
                  { title: "Newborn & Daily Care", icon: "fas fa-baby-carriage", description: "From changing diapers to installing car seats, gain confidence in daily tasks.", url: "training/course-newborn-daily-care.html" },
-                 { title: "Building Your Own Curriculum", icon: "fas fa-pencil-ruler", description: "A guide for the homeschooling father. Move beyond the formal system to create a practical, values-based education.", url: "training/course-build-curriculum.html" }
+                 { title: "Building Your Own Curriculum", icon: "fas fa-pencil-ruler", description: "A guide for the homeschooling father to create a practical, values-based education.", url: "training/course-build-curriculum.html" }
             ]
         },
         {
             title: "🦅 Cultural & Ancestral Wisdom",
             color: "yellow-500",
             courses: [
-                { title: "The Unbroken Chain", icon: "fas fa-link", description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty as `indlalifa` beyond mere inheritance.", url: "training/course-unbroken-chain.html" },
-                { title: "Finding Your Ancestors Within", icon: "fas fa-dna", description: "A guide to modern spirituality, blending science with Xhosa tradition to connect with your ancestral wisdom anywhere.", url: "training/course-ancestors-within.html" },
-                { title: "The Power of the Extended Family", icon: "fas fa-users", description: "Champion the resilient household. Learn how your family structure is a core strength in raising children.", url: "training/course-extended-family.html" }
+                { title: "The Unbroken Chain", icon: "fas fa-link", description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty.", url: "training/course-unbroken-chain.html" },
+                { title: "Finding Your Ancestors Within", icon: "fas fa-dna", description: "A guide to modern spirituality, blending science with tradition.", url: "training/course-ancestors-within.html" },
+                { title: "The Power of the Extended Family", icon: "fas fa-users", description: "Champion the resilient household. Learn how your family structure is a core strength.", url: "training/course-extended-family.html" }
             ]
         },
         {
             title: "🔥 Advanced Advocacy & Self-Sufficiency",
             color: "red-500",
             courses: [
-                { title: "A Father's Shield", icon: "fas fa-gavel", description: "Use the 'Best Interests of the Child' principle (Sec 28) to challenge discriminatory policies and advocate for your child.", url: "training/course-fathers-shield.html" },
-                { title: "Risk Management for Fathers", icon: "fas fa-shield-alt", description: "Apply OHS principles to family life. Identify and mitigate risks to your family's physical, emotional, and financial well-being.", url: "training/course-risk-management.html" }
+                { title: "A Father's Shield", icon: "fas fa-gavel", description: "Use the 'Best Interests of the Child' principle to challenge discriminatory policies.", url: "training/course-fathers-shield.html" },
+                { title: "Risk Management for Fathers", icon: "fas fa-shield-alt", description: "Apply OHS principles to family life to identify and mitigate risks.", url: "training/course-risk-management.html" }
             ]
         }
     ];
@@ -59,11 +59,12 @@ document.addEventListener('DOMContentLoaded', function() {
             ]
         },
         {
-            title: "🗂️ Forms & Templates",
+            title: "🗂️ Knowledge & Reference",
             color: "purple-500",
             tools: [
-                { name: "Forms & Wizards", icon: "fas fa-folder-open", description: "Access legal templates and guided forms.", url: "forms.html" },
-                { name: "Traditional Customs Database", icon: "fas fa-book-reader", description: "Explore a rich database of South African cultural practices and their significance.", url: "customs.html" }
+                { name: "Forms & Templates", icon: "fas fa-folder-open", description: "Access legal templates and guided forms.", url: "forms.html" },
+                { name: "Traditional Customs", icon: "fas fa-feather-alt", description: "Explore a database of cultural practices.", url: "customs.html" },
+                { name: "LegalHelp Hub", icon: "fas fa-hands-helping", description: "A comprehensive legal library. Coming Soon!", url: "legalhelp-coming-soon.html" }
             ]
         },
         {
@@ -79,27 +80,18 @@ document.addEventListener('DOMContentLoaded', function() {
             title: "🎮 Interactive Games",
             color: "pink-500",
             tools: [
-                 { name: "Kid Konstitution", icon: "fas fa-child", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html" },
-                 { name: "Rights Racer", icon: "fas fa-running", description: "Race against time to collect important rights!", url: "games/rights-racer.html" },
-                 { name: "Justice Builder", icon: "fas fa-gavel", description: "A simulator where you build a case from scratch.", url: "games/justice-builder.html" },
                  { name: "See All Games", icon: "fas fa-gamepad", description: "Visit the main arcade to play all available games.", url: "games.html" }
             ]
         }
     ];
 
     const gameData = [
-        { title: "Kid Konstitution", description: "A fun quiz to learn the basics of our country's rules!", url: "games/kid-konstitution.html", icon: "fas fa-child text-yellow-400", category: "kids" },
-        { title: "Rights Racer", description: "Race against time to collect important rights!", url: "games/rights-racer.html", icon: "fas fa-running text-green-400", category: "kids" },
-        { title: "Constitution Defender", description: "Protect the constitution from being changed!", url: "games/constitution-defender.html", icon: "fas fa-shield-alt text-blue-400", category: "kids" },
-        { title: "Constitution Quest", description: "An adventure game exploring the Bill of Rights.", url: "games/constitution-quest.html", icon: "fas fa-map-signs text-purple-400", category: "patriots" },
-        { title: "Law & Layers Quest", description: "Uncover the different layers of South African law.", url: "games/law-layers-quest.html", icon: "fas fa-layer-group text-indigo-400", category: "patriots" },
-        { title: "Mythbuster", description: "Bust common myths about our legal system.", url: "games/mythbuster-game.html", icon: "fas fa-ghost text-teal-400", category: "patriots" },
-        { title: "Constitution Champions", description: "Become a champion of constitutional knowledge.", url: "games/constitution-champions.html", icon: "fas fa-trophy text-yellow-500", category: "patriots" },
-        { title: "Constitution Crusaders", description: "A crusade to protect and uphold the constitution.", url: "games/constitution-crusaders.html", icon: "fas fa-khanda text-gray-400", category: "patriots" },
-        { title: "Goliath's Reckoning", description: "A story-driven game about fighting for justice.", url: "games/goliaths-reckoning.html", icon: "fas fa-balance-scale text-red-500", category: "leaders" },
+        { title: "Cultural Dress-Up Adventure", description: "Learn about traditional attire for different ceremonies.", url: "games/cultural-dress-up.html", icon: "fas fa-tshirt text-pink-400", category: "kids" },
+        { title: "Ancestor's Quest", description: "A point-and-click adventure to gather items for a ceremony.", url: "games/ancestors-quest.html", icon: "fas fa-map-signs text-green-400", category: "kids" },
+        { title: "My Family, My Clan", description: "Build an interactive family tree and learn about your lineage.", url: "games/my-family-my-clan.html", icon: "fas fa-users text-blue-400", category: "kids" },
+        { title: "Customs & Consequences", description: "A scenario-based game to test your decision-making.", url: "games/customs-consequences.html", icon: "fas fa-balance-scale-right text-purple-400", category: "leaders" },
         { title: "Justice Builder", description: "A simulator where you build a case from scratch.", url: "games/justice-builder.html", icon: "fas fa-gavel text-orange-500", category: "leaders" },
-        { title: "The System", description: "A satirical look at the justice system. (Mature)", url: "games/satirical-game.html", icon: "fas fa-theater-masks text-pink-500", category: "leaders" },
-        { title: "Legal Simulator", description: "Experience legal scenarios in a simulated world.", url: "games/legal-simulator.html", icon: "fas fa-laptop-code text-cyan-400", category: "leaders" }
+        { title: "Goliath's Reckoning", description: "A story-driven game about fighting for justice.", url: "games/goliaths-reckoning.html", icon: "fas fa-fist-raised text-red-500", category: "leaders" }
     ];
 
     const customsDatabase = [
@@ -134,9 +126,9 @@ document.addEventListener('DOMContentLoaded', function() {
         },
         {
             id: 'intonjane', name: 'Intonjane', stage: 'coming-of-age', cultures: ['xhosa', 'zulu'],
-            description: 'A rite of passage for young women, marking their transition into womanhood.',
-            procedure: 'When a girl has her first menstruation, she is secluded for a period to be taught by elder women about womanhood, marriage, and her future role in the community. The ceremony involves specific rituals, teachings, and celebrations.',
-            significance: 'Prepares young women for marriage and adult responsibilities, instilling values of respect, loyalty, and family cohesion. It is a celebrated transition that reduces the likelihood of children outside of marriage.',
+            description: "A rite of passage for young women, marking their transition into womanhood.",
+            procedure: "When a girl has her first menstruation, she is secluded for a period to be taught by elder women about womanhood, marriage, and her future role in the community. The ceremony involves specific rituals, teachings, and celebrations.",
+            significance: "Prepares young women for marriage and adult responsibilities, instilling values of respect, loyalty, and family cohesion. It is a celebrated transition.",
             sources: {
                 primary: ['https://www.imvabainstitute.co.za/intonjane-part-1-kwaxhosa/'],
                 secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 6, Rites of passage and initiation ceremonies."]
@@ -156,14 +148,13 @@ document.addEventListener('DOMContentLoaded', function() {
             id: 'umngcwabo', name: 'Umngcwabo', stage: 'death', cultures: ['xhosa', 'zulu', 'ndebele'],
             description: 'A traditional funeral ceremony to honour the deceased and ensure their spirit transitions to the ancestral realm.',
             procedure: 'Involves specific rituals like the slaughter of a cow (ukuherebha) to accompany the spirit, speeches, and traditional songs. The body is traditionally buried in a specific posture (e.g., sitting, facing east). Post-burial rituals like ukubuyisa (bringing the spirit back home) are performed later.',
-            significance: 'Death is seen not as an end but as a transition to becoming an ancestor (idlozi/ithongo). The funeral is a community event that honors the deceased\'s life and reinforces the connection between the living and the dead. Ancestors are revered and believed to guide and protect the living.',
+            significance: "Death is seen not as an end but as a transition to becoming an ancestor (idlozi/ithongo). The funeral is a community event that honors the deceased's life and reinforces the connection between the living and the dead.",
             sources: {
                 primary: ['https://www.news24.com/news24/southafrica/news/the-meaning-of-xhosa-funeral-rituals-20181206', 'https://www.sundaynews.co.zw/ndebele-burial-customs/'],
                 secondary: ["Beyond the Grave: A Son's Journey Through Xhosa Tradition, Spirituality, and Freedom: Preface & Chapter 1."]
             }
         }
     ];
-
 
     // --- Event Delegation ---
     document.body.addEventListener('click', (event) => {
@@ -173,7 +164,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalButton = target.closest('[data-modal-target]');
         if (modalButton) {
             event.preventDefault();
-            openModal(modalButton.dataset.modalTarget);
+            const modal = document.getElementById(modalButton.dataset.modalTarget);
+            if(modal) modal.classList.remove('hidden');
             return;
         }
 
@@ -181,7 +173,8 @@ document.addEventListener('DOMContentLoaded', function() {
         const modalCloseButton = target.closest('[data-modal-close]');
         if (modalCloseButton) {
             event.preventDefault();
-            closeModal(modalCloseButton.closest('.modal'));
+            const modal = modalCloseButton.closest('.modal');
+            if(modal) modal.classList.add('hidden');
             return;
         }
 
@@ -197,7 +190,7 @@ document.addEventListener('DOMContentLoaded', function() {
             }
         }
         
-        // --- Event handlers specific to the customs page ---
+        // Event handlers specific to the customs page
         if (document.getElementById('customs-catalogue')) {
             if (target.id === 'searchBtn' || target.closest('#searchBtn')) {
                 const query = document.getElementById('customSearch').value;
@@ -205,7 +198,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 displayCustomsResults(results);
             }
             if (target.id === 'wizardSearch' || target.closest('#wizardSearch')) {
-                 const stage = document.getElementById('lifeStage').value;
+                const stage = document.getElementById('lifeStage').value;
                 const culture = document.getElementById('culturalFilter').value;
                 const results = searchCustoms('', stage, culture);
                 displayCustomsResults(results);
@@ -213,14 +206,8 @@ document.addEventListener('DOMContentLoaded', function() {
         }
     });
 
-    // --- Modal Functions ---
-    // (Keep your existing modal functions here)
-    async function openModal(modalId) { /* ... */ }
-    function closeModal(modal) { /* ... */ }
-
-
     // --- Render Functions ---
-    // (Keep renderTrainingCatalogue, renderToolsCatalogue, renderGames here)
+    
     function renderTrainingCatalogue() {
         const container = document.getElementById('course-catalogue');
         if (!container) return;
@@ -229,17 +216,17 @@ document.addEventListener('DOMContentLoaded', function() {
             const section = document.createElement('div');
             section.className = 'accordion-item mb-8';
             section.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                     <span class="text-xl md:text-2xl font-bold">${category.title}</span>
                     <i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
                 <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 py-6">
                         ${category.courses.map(course => `
-                            <a href="${course.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700">
+                            <a href="${course.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300">
                                 <div class="flex items-center mb-4"><i class="${course.icon} text-3xl text-${category.color} mr-4"></i><h4 class="text-xl font-bold">${course.title}</h4></div>
-                                <p class="text-gray-400 mb-4 h-20">${course.description}</p>
-                                <span class="bg-${category.color} text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center">Start Module</span>
+                                <p class="text-gray-400 mb-4 h-24">${course.description}</p>
+                                <span class="bg-${category.color} text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center mt-auto">Start Module</span>
                             </a>
                         `).join('')}
                     </div>
@@ -280,11 +267,41 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function renderGames() { /* ... existing function ... */ }
+    function renderGames() {
+        const container = document.getElementById('games-page-container');
+        if (!container) return;
+        container.innerHTML = '';
+        const categories = {
+            kids: { title: "For the Little Ones (Ages 4-12)", games: [] },
+            leaders: { title: "Future Leaders (Ages 13+)", games: [] },
+        };
+        gameData.forEach(game => {
+            if (categories[game.category]) categories[game.category].games.push(game);
+        });
+        for (const key in categories) {
+            const category = categories[key];
+            if (category.games.length > 0) {
+                const categoryWrapper = document.createElement('div');
+                categoryWrapper.className = "mb-12";
+                categoryWrapper.innerHTML = `
+                    <h2 class="text-3xl font-bold mb-6 category-title">${category.title}</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                        ${category.games.map(game => `
+                            <div class="game-card rounded-lg overflow-hidden shadow-lg relative bg-gray-800 border border-gray-700 hover:border-pink-500 transition-all duration-300 transform hover:-translate-y-2">
+                                <a href="${game.url}" class="game-card-link absolute inset-0 z-10"></a>
+                                <div class="p-6">
+                                    <i class="${game.icon} text-4xl mb-4"></i>
+                                    <h3 class="font-bold text-xl mb-2 text-white">${game.title}</h3>
+                                    <p class="text-gray-400 text-base">${game.description}</p>
+                                </div>
+                            </div>
+                        `).join('')}
+                    </div>`;
+                container.appendChild(categoryWrapper);
+            }
+        }
+    }
 
-
-    // --- NEW FUNCTIONS FOR CUSTOMS PAGE ---
-    
     function searchCustoms(query, stage = '', culture = '') {
         return customsDatabase.filter(custom => {
             const nameMatch = custom.name.toLowerCase().includes(query.toLowerCase());
@@ -297,13 +314,11 @@ document.addEventListener('DOMContentLoaded', function() {
     function displayCustomsResults(results) {
         const resultsContainer = document.getElementById('resultsContainer');
         if (!resultsContainer) return;
-
         resultsContainer.innerHTML = '';
         if (results.length === 0) {
             resultsContainer.innerHTML = '<p class="text-gray-400 col-span-1 md:col-span-2 text-center">No customs found matching your criteria.</p>';
             return;
         }
-
         results.forEach(custom => {
             const card = document.createElement('div');
             card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1';
@@ -328,8 +343,7 @@ document.addEventListener('DOMContentLoaded', function() {
                             <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
                         </div>
                     </div>
-                </div>
-            `;
+                </div>`;
             resultsContainer.appendChild(card);
         });
     }
@@ -337,59 +351,73 @@ document.addEventListener('DOMContentLoaded', function() {
     function renderCustomsPage() {
         const container = document.getElementById('customs-catalogue');
         if (!container) return;
+        const customsGames = gameData.filter(game => ['Cultural Dress-Up Adventure', 'Ancestor\'s Quest', 'My Family, My Clan', 'Customs & Consequences'].includes(game.title));
 
         container.innerHTML = `
             <div class="text-center mb-12">
-                <h1 class="text-5xl font-bold font-roboto mb-4">South African Traditional Customs</h1>
+                <h1 class="text-5xl font-bold font-roboto-slab text-white">South African Traditional Customs</h1>
                 <p class="text-xl text-gray-400 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices from birth to death.</p>
             </div>
-            <section class="search-interface bg-gray-800 p-6 rounded-lg mb-12 shadow-lg">
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 items-end">
-                    <div class="manual-search">
-                        <label for="customSearch" class="block text-sm font-semibold mb-2 text-gray-300">Search by Name</label>
-                        <div class="flex">
-                            <input type="text" id="customSearch" placeholder="e.g., Imbeleko, Lobola..." class="w-full bg-gray-700 border border-gray-600 rounded-l-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                            <button id="searchBtn" class="bg-purple-600 hover:bg-purple-700 rounded-r-lg px-6 py-3 font-bold text-white transition-colors">Search</button>
-                        </div>
-                    </div>
-                    <div class="wizard-interface">
-                        <label class="block text-sm font-semibold mb-2 text-gray-300">Filter by Category</label>
-                        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4">
-                            <select id="lifeStage" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <option value="">All Life Stages</option>
-                                <option value="birth">Birth & Early Childhood</option>
-                                <option value="coming-of-age">Coming of Age</option>
-                                <option value="marriage">Marriage & Union</option>
-                                <option value="death">Death & Ancestral</option>
-                            </select>
-                            <select id="culturalFilter" class="w-full bg-gray-700 border border-gray-600 rounded-lg p-3 text-white focus:outline-none focus:ring-2 focus:ring-purple-500">
-                                <option value="all">All Cultures</option>
-                                <option value="xhosa">Xhosa</option>
-                                <option value="zulu">Zulu</option>
-                                <option value="sotho">Sotho</option>
-                                <option value="ndebele">Ndebele</option>
-                                <option value="venda">Venda</option>
-                                <option value="swazi">Swazi</option>
-                                <option value="pedi">Pedi</option>
-                                <option value="tsonga">Tsonga</option>
-                            </select>
-                            <button id="wizardSearch" class="bg-purple-600 hover:bg-purple-700 rounded-lg w-full py-3 font-bold text-white transition-colors">Find</button>
-                        </div>
-                    </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-12">
+                <div class="option-card bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
+                    <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2">Customs Wizard</h4>
+                    <p class="text-gray-400">Answer a few questions to find the customs relevant to you.</p>
                 </div>
-            </section>
-            <section id="resultsContainer" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                <!-- Initial results will be loaded here -->
-            </section>
-        `;
-        // Initial display of all customs
-        displayCustomsResults(customsDatabase);
-    }
+                <div class="option-card bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500">
+                     <i class="fas fa-search text-5xl text-blue-400 mb-4"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2">Manual Search</h4>
+                    <p class="text-gray-400">Search for a specific custom or practice by name.</p>
+                </div>
+                <div class="option-card bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
+                    <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
+                    <p class="text-gray-400">Learn about our traditions through interactive games.</p>
+                </div>
+            </div>
 
+            <div id="customs-accordion" class="space-y-6">
+                <!-- Accordions will be rendered here -->
+            </div>`;
+            
+        const accordionContainer = document.getElementById('customs-accordion');
+        const stages = ['birth', 'coming-of-age', 'marriage', 'death'];
+        const stageTitles = {
+            'birth': '🍼 Birth & Early Childhood',
+            'coming-of-age': '🔥 Coming of Age',
+            'marriage': '💍 Marriage & Union',
+            'death': '🕊️ Death & Ancestral Rites'
+        };
+
+        stages.forEach(stage => {
+            const stageCustoms = customsDatabase.filter(c => c.stage === stage);
+            if(stageCustoms.length > 0) {
+                const section = document.createElement('div');
+                section.className = 'accordion-item';
+                section.innerHTML = `
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
+                        <span class="text-2xl font-bold">${stageTitles[stage]}</span><i class="fas fa-chevron-down transform transition-transform"></i>
+                    </button>
+                    <div class="accordion-content mt-4">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
+                            ${stageCustoms.map(custom => {
+                                 return `<div class="bg-gray-900 p-6 rounded-lg border border-gray-700">
+                                            <h3 class="text-xl font-bold text-purple-400">${custom.name}</h3>
+                                            <p class="text-sm text-gray-400 uppercase mb-2">${custom.cultures.join(', ')}</p>
+                                            <p>${custom.description}</p>
+                                        </div>`
+                            }).join('')}
+                        </div>
+                    </div>`;
+                accordionContainer.appendChild(section);
+            }
+        });
+    }
 
     // --- INITIALIZE ALL DYNAMIC CONTENT ---
     renderTrainingCatalogue();
     renderToolsCatalogue();
     renderGames();
-    renderCustomsPage(); // New function call
+    renderCustomsPage();
 });
