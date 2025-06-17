@@ -1,5 +1,3 @@
-// assets/js/main.js
-
 /**
  * Flamea.org - Unified Main Script
  * This file contains the core sitewide JavaScript functionality for rendering dynamic catalogues.
@@ -156,45 +154,29 @@ document.addEventListener('DOMContentLoaded', function() {
             description: 'A formal initiation and circumcision ritual that marks the transition from boyhood to manhood.',
             procedure: 'Initiates (abakhwetha/bashanyana) are secluded in a specially built hut (iboma/mophato) for several weeks. They undergo circumcision and are taught about manhood, cultural values, and their responsibilities to the community by elders and traditional surgeons (iingcibi/basuwe). The process concludes with a cleansing ceremony and a celebration where the new men (amakrwala) are welcomed back.',
             significance: "This is a pivotal transition into manhood, signifying a man's readiness to take on adult responsibilities, marry, and lead a family. It is deeply embedded in cultural identity and social standing.",
-            variations: {
-                xhosa: 'Typically performed when a young man is 18+ and considered ready to provide for himself.',
-                ndebele: 'Often occurs in the early to mid-teens.',
-                sotho: 'Known as Lebollo, this is also central to the transition to manhood, with age varying between 12-20.'
-            },
-            sources: {
-                primary: ['https://en.wikipedia.org/wiki/Ulwaluko', 'https://en.wikipedia.org/wiki/Lebollo_la_banna'],
-                secondary: ['The HomeSchooling Father - Master Edition 5-9-24.docx: Chapter 1, The formal school system.']
-            }
+            variations: { xhosa: 'Typically performed when a young man is 18+ and considered ready to provide for himself.', ndebele: 'Often occurs in the early to mid-teens.', sotho: 'Known as Lebollo, this is also central to the transition to manhood, with age varying between 12-20.' },
+            sources: { primary: ['https://en.wikipedia.org/wiki/Ulwaluko', 'https://en.wikipedia.org/wiki/Lebollo_la_banna'], secondary: ['The HomeSchooling Father - Master Edition 5-9-24.docx: Chapter 1, The formal school system.'] }
         },
         {
             id: 'intonjane', name: 'Intonjane', stage: 'coming-of-age', cultures: ['xhosa', 'zulu'],
             description: "A rite of passage for young women, marking their transition into womanhood.",
             procedure: "When a girl has her first menstruation, she is secluded for a period to be taught by elder women about womanhood, marriage, and her future role in the community. The ceremony involves specific rituals, teachings, and celebrations.",
             significance: "Prepares young women for marriage and adult responsibilities, instilling values of respect, loyalty, and family cohesion. It is a celebrated transition.",
-            sources: {
-                primary: ['https://www.imvabainstitute.co.za/intonjane-part-1-kwaxhosa/'],
-                secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 6, Rites of passage and initiation ceremonies."]
-            }
+            sources: { primary: ['https://www.imvabainstitute.co.za/intonjane-part-1-kwaxhosa/'], secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 6, Rites of passage and initiation ceremonies."] }
         },
         {
             id: 'lobola', name: 'Lobola', stage: 'marriage', cultures: ['xhosa', 'zulu', 'sotho', 'swazi', 'ndebele', 'pedi', 'tsonga', 'venda'],
             description: "The practice of bride wealth, where the groom's family presents gifts, traditionally cattle, to the bride's family.",
             procedure: 'Negotiations are conducted between the two families, often through intermediaries (abanyana). The number of cattle (or the equivalent monetary value) is agreed upon, and the exchange solidifies the union.',
             significance: 'Lobola is not a "purchase" but a gesture of gratitude and a way to unite the two families. It legitimizes the marriage and demonstrates the groom\'s commitment and ability to provide for his wife.',
-            sources: {
-                primary: ['https://www.sowetanlive.co.za/news/2023-09-15-lobola-a-cultural-practice-of-unity-and-family/'],
-                secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 2, Influence on Xhosa social structure and beliefs."]
-            }
+            sources: { primary: ['https://www.sowetanlive.co.za/news/2023-09-15-lobola-a-cultural-practice-of-unity-and-family/'], secondary: ["Getting to know yourself as a South African, Unravelling Xhosa History: Chapter 2, Influence on Xhosa social structure and beliefs."] }
         },
         {
             id: 'umngcwabo', name: 'Umngcwabo', stage: 'death', cultures: ['xhosa', 'zulu', 'ndebele'],
             description: 'A traditional funeral ceremony to honour the deceased and ensure their spirit transitions to the ancestral realm.',
             procedure: 'Involves specific rituals like the slaughter of a cow (ukuherebha) to accompany the spirit, speeches, and traditional songs. The body is traditionally buried in a specific posture (e.g., sitting, facing east). Post-burial rituals like ukubuyisa (bringing the spirit back home) are performed later.',
             significance: "Death is seen not as an end but as a transition to becoming an ancestor (idlozi/ithongo). The funeral is a community event that honors the deceased's life and reinforces the connection between the living and the dead.",
-            sources: {
-                primary: ['https://www.news24.com/news24/southafrica/news/the-meaning-of-xhosa-funeral-rituals-20181206', 'https://www.sundaynews.co.zw/ndebele-burial-customs/'],
-                secondary: ["Beyond the Grave: A Son's Journey Through Xhosa Tradition, Spirituality, and Freedom: Preface & Chapter 1."]
-            }
+            sources: { primary: ['https://www.news24.com/news24/southafrica/news/the-meaning-of-xhosa-funeral-rituals-20181206', 'https://www.sundaynews.co.zw/ndebele-burial-customs/'], secondary: ["Beyond the Grave: A Son's Journey Through Xhosa Tradition, Spirituality, and Freedom: Preface & Chapter 1."] }
         }
     ];
 
@@ -202,49 +184,23 @@ document.addEventListener('DOMContentLoaded', function() {
     document.body.addEventListener('click', (event) => {
         const target = event.target;
 
-        // Modal triggers
-        const modalButton = target.closest('[data-modal-target]');
-        if (modalButton) {
-            event.preventDefault();
-            const modal = document.getElementById(modalButton.dataset.modalTarget);
-            if(modal) modal.classList.remove('hidden');
-            return;
-        }
-
-        // Modal close buttons
-        const modalCloseButton = target.closest('[data-modal-close]');
-        if (modalCloseButton) {
-            event.preventDefault();
-            const modal = modalCloseButton.closest('.modal');
-            if(modal) modal.classList.add('hidden');
-            return;
-        }
-
         // Accordion toggles
         const accordionButton = target.closest('.accordion-toggle');
         if (accordionButton) {
             const content = accordionButton.nextElementSibling;
-            if (content && content.classList.contains('accordion-content')) {
-                const icon = accordionButton.querySelector('i.fa-chevron-down');
-                const isOpen = content.classList.toggle('open');
-                content.style.maxHeight = isOpen ? content.scrollHeight + 'px' : null;
-                if (icon) icon.classList.toggle('rotate-180', isOpen);
-            }
+            const icon = accordionButton.querySelector('i.fa-chevron-down');
+            const isOpen = content.classList.toggle('open');
+            content.style.maxHeight = isOpen ? content.scrollHeight + 'px' : null;
+            if (icon) icon.classList.toggle('rotate-180', isOpen);
         }
         
         // Event handlers specific to the customs page
-        if (document.getElementById('customs-catalogue')) {
-            if (target.id === 'searchBtn' || target.closest('#searchBtn')) {
-                const query = document.getElementById('customSearch').value;
-                const results = searchCustoms(query);
-                displayCustomsResults(results);
-            }
-            if (target.id === 'wizardSearch' || target.closest('#wizardSearch')) {
-                const stage = document.getElementById('lifeStage').value;
-                const culture = document.getElementById('culturalFilter').value;
-                const results = searchCustoms('', stage, culture);
-                displayCustomsResults(results);
-            }
+        if (target.id === 'customs-search-btn' || target.closest('#customs-search-btn')) {
+            const query = document.getElementById('custom-search-input').value;
+            const stage = document.getElementById('life-stage-filter').value;
+            const culture = document.getElementById('culture-filter').value;
+            const results = searchCustoms(query, stage, culture);
+            displayCustomsResults(results);
         }
     });
 
@@ -259,7 +215,12 @@ document.addEventListener('DOMContentLoaded', function() {
             section.className = 'accordion-item mb-8';
             section.innerHTML = `
                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                    <span class="text-xl md:text-2xl font-bold">${category.title}</span>
+                    <div class="flex items-center">
+                        <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
+                        <div>
+                           <span class="text-xl md:text-2xl font-bold">${category.title}</span>
+                        </div>
+                    </div>
                     <i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
                 <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
@@ -286,7 +247,13 @@ document.addEventListener('DOMContentLoaded', function() {
             section.className = 'accordion-item mb-6';
             section.innerHTML = `
                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                    <span class="text-2xl font-bold">${category.title}</span><i class="fas fa-chevron-down transform transition-transform"></i>
+                     <div class="flex items-center">
+                        <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
+                        <div>
+                           <span class="text-xl md:text-2xl font-bold">${category.title}</span>
+                        </div>
+                    </div>
+                    <i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
                 <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 py-6">
@@ -345,115 +312,120 @@ document.addEventListener('DOMContentLoaded', function() {
         });
     }
 
-    function searchCustoms(query, stage = '', culture = '') {
+    function searchCustoms(query, stage, culture) {
+        const lowerCaseQuery = query.toLowerCase();
         return customsDatabase.filter(custom => {
-            const nameMatch = custom.name.toLowerCase().includes(query.toLowerCase());
-            const stageMatch = !stage || custom.stage === stage;
+            const nameMatch = custom.name.toLowerCase().includes(lowerCaseQuery);
+            const descriptionMatch = custom.description.toLowerCase().includes(lowerCaseQuery);
+            const procedureMatch = custom.procedure.toLowerCase().includes(lowerCaseQuery);
+            const significanceMatch = custom.significance.toLowerCase().includes(lowerCaseQuery);
+            
+            const stageMatch = !stage || stage === 'all' || custom.stage === stage;
             const cultureMatch = !culture || culture === 'all' || custom.cultures.includes(culture);
-            return nameMatch && stageMatch && cultureMatch;
+            
+            return (nameMatch || descriptionMatch || procedureMatch || significanceMatch) && stageMatch && cultureMatch;
         });
     }
 
     function displayCustomsResults(results) {
-        const resultsContainer = document.getElementById('resultsContainer');
-        if (!resultsContainer) return;
-        resultsContainer.innerHTML = '';
+        const container = document.getElementById('customs-results-container');
+        if (!container) return;
+        
+        container.innerHTML = ''; // Clear previous results
         if (results.length === 0) {
-            resultsContainer.innerHTML = '<p class="text-gray-400 col-span-1 md:col-span-2 text-center">No customs found matching your criteria.</p>';
+            container.innerHTML = '<p class="text-gray-400 text-center col-span-full py-8">No customs found matching your criteria.</p>';
             return;
         }
+        
+        const resultsGrid = document.createElement('div');
+        resultsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
+        
         results.forEach(custom => {
             const card = document.createElement('div');
-            card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700 hover:border-purple-500 transition-all duration-300 transform hover:-translate-y-1';
+            card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700';
             card.innerHTML = `
                 <h3 class="text-2xl font-bold text-purple-400 mb-2">${custom.name}</h3>
                 <p class="text-sm uppercase text-gray-400 mb-4">${custom.cultures.join(', ')} - ${custom.stage}</p>
                 <p class="mb-4 text-gray-300">${custom.description}</p>
                 <div class="accordion-item">
-                    <button class="accordion-toggle w-full flex justify-between items-center text-left py-2 text-purple-300">
+                    <button class="accordion-toggle w-full flex justify-between items-center text-left py-2 text-purple-300 hover:text-white">
                         <span class="font-semibold">View Details</span>
                         <i class="fas fa-chevron-down transform transition-transform"></i>
                     </button>
-                    <div class="accordion-content mt-4 pl-4 border-l-2 border-purple-400 text-sm">
-                        <h4 class="font-bold text-lg mb-2">Procedure:</h4>
+                    <div class="accordion-content mt-4 pl-4 border-l-2 border-purple-400 text-sm text-gray-400">
+                        <h4 class="font-bold text-lg mb-2 text-gray-200">Procedure:</h4>
                         <p class="mb-4">${custom.procedure}</p>
-                        <h4 class="font-bold text-lg mb-2">Significance:</h4>
+                        <h4 class="font-bold text-lg mb-2 text-gray-200">Significance:</h4>
                         <p class="mb-4">${custom.significance}</p>
-                        ${custom.variations ? Object.entries(custom.variations).map(([culture, text]) => `<p class="mb-2"><strong>${culture.charAt(0).toUpperCase() + culture.slice(1)} Variation:</strong> ${text}</p>`).join('') : ''}
-                        <div class="mt-4 pt-4 border-t border-gray-700">
-                            <h4 class="font-bold text-lg mb-2">Sources:</h4>
+                        ${Object.keys(custom.variations).length > 0 ? `<h4 class="font-bold text-lg mb-2 text-gray-200">Variations:</h4>` : ''}
+                        ${Object.entries(custom.variations).map(([culture, text]) => `<p class="mb-2"><strong>${culture.charAt(0).toUpperCase() + culture.slice(1)}:</strong> ${text}</p>`).join('')}
+                         <div class="mt-4 pt-4 border-t border-gray-700">
+                            <h4 class="font-bold text-lg mb-2 text-gray-200">Sources:</h4>
                             <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
                             <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
                         </div>
                     </div>
                 </div>`;
-            resultsContainer.appendChild(card);
+            resultsGrid.appendChild(card);
         });
+        container.appendChild(resultsGrid);
     }
-
+    
     function renderCustomsPage() {
         const container = document.getElementById('customs-catalogue');
         if (!container) return;
         
-        // This logic seems incorrect as gameData is not structured for this filter.
-        // I will assume the goal is to render the customs database, not filter games.
-        // Let's proceed with rendering the database in an accordion format.
-        
         container.innerHTML = `
             <div class="text-center mb-12">
-                <h1 class="text-5xl font-bold font-roboto-slab text-white">South African Traditional Customs</h1>
-                <p class="text-xl text-gray-400 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices from birth to death.</p>
+                <h1 class="text-5xl font-bold font-roboto text-white">South African Traditional Customs</h1>
+                <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices, especially as a Xhosa man from the Transkei would know them.</p>
             </div>
-            
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                <div class="option-card bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500">
-                     <i class="fas fa-search text-5xl text-teal-400 mb-4"></i>
-                    <h4 class="text-2xl font-bold text-white mb-2">Search & Filter</h4>
-                    <p class="text-gray-400">Find a specific custom by name, life stage, or cultural group using the controls below.</p>
+
+            <!-- Search and Filter Panel -->
+            <div class="bg-gray-800 p-6 rounded-lg mb-12 sticky top-0 z-10 shadow-lg">
+                <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
+                    <div class="md:col-span-2">
+                        <label for="custom-search-input" class="block text-sm font-medium text-gray-300 mb-1">Search by Keyword</label>
+                        <input type="text" id="custom-search-input" class="form-input" placeholder="e.g., 'imbeleko', 'ancestors'">
+                    </div>
+                    <div>
+                        <label for="life-stage-filter" class="block text-sm font-medium text-gray-300 mb-1">Life Stage</label>
+                        <select id="life-stage-filter" class="form-select">
+                            <option value="all">All Stages</option>
+                            <option value="birth">Birth</option>
+                            <option value="coming-of-age">Coming of Age</option>
+                            <option value="marriage">Marriage</option>
+                            <option value="death">Death</option>
+                        </select>
+                    </div>
+                     <div>
+                        <label for="culture-filter" class="block text-sm font-medium text-gray-300 mb-1">Cultural Group</label>
+                        <select id="culture-filter" class="form-select">
+                            <option value="all">All Cultures</option>
+                            <option value="xhosa">Xhosa</option>
+                            <option value="zulu">Zulu</option>
+                            <option value="sotho">Sotho</option>
+                            <option value="ndebele">Ndebele</option>
+                            <option value="swazi">Swazi</option>
+                            <option value="pedi">Pedi</option>
+                            <option value="tsonga">Tsonga</option>
+                            <option value="venda">Venda</option>
+                        </select>
+                    </div>
+                     <div>
+                        <button id="customs-search-btn" class="btn btn-primary w-full"><i class="fas fa-search mr-2"></i>Search</button>
+                    </div>
                 </div>
-                 <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500">
-                    <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
-                    <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
-                    <p class="text-gray-400">Learn about traditions through related interactive games in our arcade.</p>
-                </a>
             </div>
 
-            <div id="customs-accordion" class="space-y-6">
-                <!-- Accordions will be rendered here -->
-            </div>`;
-            
-        const accordionContainer = document.getElementById('customs-accordion');
-        const stages = ['birth', 'coming-of-age', 'marriage', 'death'];
-        const stageTitles = {
-            'birth': '🍼 Birth & Early Childhood',
-            'coming-of-age': '🔥 Coming of Age',
-            'marriage': '💍 Marriage & Union',
-            'death': '🕊️ Death & Ancestral Rites'
-        };
+            <!-- Results Container -->
+            <div id="customs-results-container">
+                <!-- Search results will be injected here -->
+            </div>
+        `;
 
-        stages.forEach(stage => {
-            const stageCustoms = customsDatabase.filter(c => c.stage === stage);
-            if(stageCustoms.length > 0) {
-                const section = document.createElement('div');
-                section.className = 'accordion-item';
-                section.innerHTML = `
-                    <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                        <span class="text-2xl font-bold">${stageTitles[stage]}</span><i class="fas fa-chevron-down transform transition-transform"></i>
-                    </button>
-                    <div class="accordion-content mt-4">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 py-6">
-                            ${stageCustoms.map(custom => {
-                                 return `<div class="bg-gray-900 p-6 rounded-lg border border-gray-700">
-                                            <h3 class="text-xl font-bold text-purple-400">${custom.name}</h3>
-                                            <p class="text-sm text-gray-400 uppercase mb-2">${custom.cultures.join(', ')}</p>
-                                            <p>${custom.description}</p>
-                                        </div>`
-                            }).join('')}
-                        </div>
-                    </div>`;
-                accordionContainer.appendChild(section);
-            }
-        });
+        // Initial render of all customs
+        displayCustomsResults(customsDatabase);
     }
 
     // --- INITIALIZE ALL DYNAMIC CONTENT ---
