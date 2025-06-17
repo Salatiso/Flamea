@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Dress-Up Adventure - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #111827; font-family: 'Open Sans', sans-serif; }
+        .game-container { width: 100%; max-width: 1200px; height: 80vh; max-height: 800px; }
+        .avatar-area { flex-basis: 35%; }
+        .clothing-area { flex-basis: 65%; }
+        .avatar-placeholder { border: 4px dashed #4B5563; background-color: rgba(255,255,255,0.05); }
+        .clothing-item { cursor: grab; transition: transform 0.2s ease-in-out; }
+        .clothing-item:hover { transform: scale(1.1); }
+        .drop-zone { border: 2px dashed transparent; transition: border-color 0.3s; }
+        .drop-zone.hover { border-color: #a78bfa; background-color: rgba(167, 139, 250, 0.2); }
+        .feedback-message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1.5rem 3rem; border-radius: 12px; font-size: 1.5rem; font-weight: bold; z-index: 100; animation: fadeOut 3s forwards; }
+        .nav-btn { background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s; }
+        .nav-btn:hover { background-color: #6366f1; }
+        .quit-modal { display: none; }
+        .quit-modal.show { display: flex; }
+        @keyframes fadeOut {
+            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+            80% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
+            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+        }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div id="game-container" class="game-container bg-gray-800 rounded-2xl shadow-2xl flex flex-col p-6">
+        <!-- Header: Title and Instructions -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-purple-400">Cultural Dress-Up Adventure</h1>
+            <button id="instructions-btn" class="nav-btn"><i class="fas fa-info-circle mr-2"></i>Instructions</button>
+        </div>
+        <p id="scenario-text" class="text-lg text-center text-gray-300 mb-4">Select an avatar to begin your cultural journey!</p>
+
+        <!-- Main Game Area -->
+        <div class="flex-grow flex gap-6">
+            <!-- Avatar Area -->
+            <div class="avatar-area bg-gray-900 p-4 rounded-lg flex flex-col justify-center items-center">
+                <div id="avatar-placeholder" class="avatar-placeholder w-full h-full rounded-lg flex flex-col justify-center items-center relative">
+                    <!-- Avatar and drop zones will be injected here -->
+                </div>
+            </div>
+
+            <!-- Clothing & Avatar Selection Area -->
+            <div class="clothing-area bg-gray-900 p-4 rounded-lg flex flex-col">
+                <h2 id="selection-title" class="text-xl font-semibold mb-4 text-center">Select Your Character</h2>
+                <div id="selection-grid" class="flex-grow grid grid-cols-3 sm:grid-cols-4 gap-4 overflow-y-auto">
+                    <!-- Avatars or clothing items will be injected here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Footer: Navigation -->
+        <div class="mt-4 flex justify-between">
+            <button id="quit-btn" class="nav-btn bg-red-600 hover:bg-red-700">Quit Game</button>
+            <a href="../games.html" class="nav-btn">Back to Arcade</a>
+            <button id="next-btn" class="nav-btn hidden">Next Challenge</button>
+        </div>
+    </div>
+    
+    <!-- Modals -->
+    <div id="quit-modal" class="quit-modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50">
+        <div class="bg-gray-800 text-white p-8 rounded-lg shadow-xl text-center">
+            <h3 class="text-2xl font-bold mb-4">Are you sure you want to quit?</h3>
+            <p class="mb-6">Your progress will be lost. Sign up to save your scores!</p>
+            <div class="flex justify-center gap-4">
+                <button id="confirm-quit-btn" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded font-bold">Yes, Quit</button>
+                <button id="cancel-quit-btn" class="bg-gray-600 hover:bg-gray-500 px-6 py-2 rounded font-bold">Cancel</button>
+            </div>
+        </div>
+    </div>
+    <div id="instructions-modal" class="quit-modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50">
+        <div class="bg-gray-800 text-white p-8 rounded-lg shadow-xl max-w-lg">
+            <h3 class="text-2xl font-bold mb-4">How to Play</h3>
+            <p class="mb-2">1. Choose an avatar to start the game.</p>
+            <p class="mb-2">2. Read the scenario to understand which ceremony you're preparing for.</p>
+            <p class="mb-2">3. Drag the correct clothing items from the selection panel onto the avatar.</p>
+            <p class="mb-6">4. Complete the outfit to learn about the custom and move to the next challenge!</p>
+            <button id="close-instructions-btn" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold w-full">Got it!</button>
+        </div>
+    </div>
+    
+    <script type="module" src="../assets/js/games.js"></script>
+</body>
+</html>

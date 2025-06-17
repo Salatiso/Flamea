@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Family, My Clan - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #111827; font-family: 'Open Sans', sans-serif; }
+        .game-area { display: grid; grid-template-columns: 1fr 2fr; gap: 1rem; height: 80vh; }
+        .family-tree-panel { background-color: #1f2937; border-right: 2px solid #4f46e5; }
+        .info-panel { background-color: #1f2937; }
+        .family-node { background-color: #374151; border: 2px solid transparent; cursor: pointer; transition: all 0.3s; }
+        .family-node:hover, .family-node.selected { border-color: #818cf8; transform: scale(1.05); }
+        .nav-btn { background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s; }
+        .nav-btn:hover { background-color: #6366f1; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-7xl bg-gray-800 rounded-2xl shadow-2xl flex flex-col p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-purple-400">My Family, My Clan</h1>
+            <a href="../games.html" class="nav-btn">Back to Arcade</a>
+        </div>
+
+        <!-- Game Area -->
+        <div class="game-area">
+            <!-- Family Tree Panel -->
+            <div id="family-tree" class="family-tree-panel rounded-lg p-4 space-y-4 text-center">
+                <h2 class="text-xl font-bold text-purple-300">Your Family Tree</h2>
+                <!-- Nodes will be added by JS -->
+            </div>
+
+            <!-- Information Panel -->
+            <div id="info-panel" class="info-panel rounded-lg p-6 flex flex-col justify-center items-center text-center">
+                <div id="avatar-display" class="mb-4">
+                    <!-- Avatar SVG will be shown here -->
+                </div>
+                <h3 id="info-title" class="text-2xl font-bold">Select a Family Member</h3>
+                <p id="info-description" class="text-gray-400 mt-2 max-w-md">Click on a person in your family tree to learn about their role, clan name, and praise names.</p>
+                <div id="clan-info" class="mt-4 text-left hidden">
+                    <p><strong>Clan Name (Isiduko):</strong> <span id="clan-name"></span></p>
+                    <p><strong>Praise Name (Isithakazelo):</strong> <span id="praise-name"></span></p>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="../assets/js/games.js"></script>
+
+</body>
+</html>

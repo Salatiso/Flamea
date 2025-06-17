@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea - Interactive Constitution of South Africa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Roboto', sans-serif; -webkit-print-color-adjust: exact; background-color: #f1f5f9; }
+        .page { width: 210mm; min-height: 297mm; height: auto; page-break-after: always; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 2rem auto; overflow: hidden; display: flex; flex-direction: column; background: white; }
+        .header, .footer { padding: 1cm; position: absolute; left: 0; right: 0; font-size: 10pt; color: #4a5568;}
+        .header { top: 0; text-align: right; }
+        .footer { bottom: 0; display: flex; justify-content: space-between; }
+        .content { padding: 2cm; flex-grow: 1; }
+        h1 { font-family: 'Roboto Slab', serif; font-size: 20pt; color: #1a202c; text-align: center; text-transform: uppercase; margin-bottom: 1.5rem; }
+        h2 { font-family: 'Roboto Slab', serif; font-size: 16pt; color: #1a202c; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 1px solid #e2e8f0; padding-bottom: 0.5rem;}
+        h3 { font-family: 'Roboto', sans-serif; font-size: 13pt; font-weight: 700; color: #2d3748; margin-top: 1.5rem; margin-bottom: 0.5rem; }
+        p, li { font-size: 11pt; line-height: 1.6; color: #2d3748; margin-bottom: 1rem; }
+        ul { list-style-position: inside; }
+        .editable { background-color: #f1f5f9; padding: 2px 6px; border-radius: 4px; border: 1px dashed #cbd5e1; }
+        .editable:focus { outline: 2px solid #3b82f6; background-color: white; }
+        .cover-page { background-color: #111827; color: white; }
+        .cover-page .content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; flex-grow: 1; padding: 2cm; }
+        .cover-page .footer { color: #9ca3af; }
+        .watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.05; z-index: 0; pointer-events: none; }
+        .page > * { z-index: 1; }
+        .hide-on-print { display: block; }
+        .progress-bar-container { background-color: #e5e7eb; border-radius: 9999px; overflow: hidden; height: 1.5rem; }
+        .progress-bar { background-color: #4ade80; height: 100%; transition: width 0.5s ease-in-out; text-align: center; color: black; font-weight: bold; line-height: 1.5rem; font-size: 0.8rem;}
+        .toc-link { color: #2563eb; text-decoration: underline; cursor: pointer; }
+        .toc-link:hover { color: #1d4ed8; }
+        .section-checkbox { margin-right: 10px; transform: scale(1.2); cursor: pointer; accent-color: #4f46e5; }
+        label { cursor: pointer; }
+        @media print { 
+            body { margin: 0; background-color: white;} 
+            .page { box-shadow: none; margin: 0; } 
+            .hide-on-print { display: none; }
+        }
+    </style>
+</head>
+<body class="bg-slate-200">
+
+    <!-- Cover Page -->
+    <div class="page cover-page">
+        <div class="content">
+            <div class="flamea-logo dark mb-8"><svg width="240" height="72" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="white">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g><line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line></svg></div>
+            <h1 class="text-white text-5xl font-bold font-roboto-slab mt-4">The Constitution of South Africa</h1>
+            <p class="text-gray-300 text-2xl mt-4">Your Interactive Guide to Power & Responsibility</p>
+            <p class="text-gray-400 mt-2">FATHERS. LEADERS. LEGACY.</p>
+        </div>
+        <div class="footer"><span>Doc ID: FLAMEA-CON-1996</span><span>Version: 1.1</span><span>Generated: June 17, 2025</span></div>
+    </div>
+
+    <!-- Dashboard Page -->
+    <div class="page">
+        <div class="watermark"><svg width="400" height="400" viewBox="0 0 200 60"><text x="0" y="45" font-family="Roboto Slab, serif" font-size="50" font-weight="700" fill="#000">Flame</text><g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g></svg></div>
+        <div class="header"><strong>Constitution Dashboard</strong></div>
+        <div class="content">
+            <h1>My Constitution</h1>
+            <p>This copy of the Constitution of the Republic of South Africa belongs to: <span id="user-name" contenteditable="true" class="editable">Enter Your Name Here</span></p>
+            
+            <h2 class="mt-8">Overall Progress</h2>
+            <div class="progress-bar-container">
+                <div id="overall-progress" class="progress-bar">0%</div>
+            </div>
+
+            <h2 class="mt-8">Chapter Progress</h2>
+            <p class="text-sm text-gray-500">Click on a chapter to navigate directly to it. Check the boxes as you read to track your progress.</p>
+            <div id="chapter-progress-container" class="space-y-4 mt-4">
+                <!-- Chapter progress bars and links will be injected here by JS -->
+            </div>
+        </div>
+        <div class="footer"><span>© 2025 Flamea.org</span><span>Fathers. Leaders. Legacy.</span><span class="page-number">Page 1</span></div>
+    </div>
+
+    <!-- Constitution Content Pages will be generated here -->
+    <div id="constitution-content"></div>
+    
+    <script type="module" src="assets/js/constitution.js"></script>
+</body>
+</html>

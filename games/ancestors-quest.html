@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ancestor's Quest - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        body { background-color: #111827; font-family: 'Open Sans', sans-serif; }
+        .game-screen {
+            background-image: url('https://placehold.co/1200x800/2E8B57/FFFFFF?text=Lush+Village');
+            background-size: cover;
+            background-position: center;
+            width: 100%;
+            height: 75vh;
+            position: relative;
+        }
+        .clickable-item {
+            position: absolute;
+            cursor: pointer;
+            transition: transform 0.2s ease-in-out;
+        }
+        .clickable-item:hover {
+            transform: scale(1.15);
+        }
+        .dialogue-box {
+            background-color: rgba(17, 24, 39, 0.9);
+            border-top: 4px solid #8b5cf6;
+        }
+        .inventory-item {
+            background-color: rgba(255, 255, 255, 0.1);
+            border: 2px solid #4b5563;
+        }
+         .inventory-item.collected {
+            border-color: #34d399;
+        }
+        .nav-btn { background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s; }
+        .nav-btn:hover { background-color: #6366f1; }
+    </style>
+</head>
+<body class="flex flex-col items-center justify-center min-h-screen p-4">
+
+    <div class="w-full max-w-6xl bg-gray-800 rounded-2xl shadow-2xl flex flex-col p-6">
+        <!-- Header -->
+        <div class="flex justify-between items-center mb-4">
+            <h1 class="text-3xl font-bold text-purple-400">Ancestor's Quest</h1>
+            <a href="../games.html" class="nav-btn">Back to Arcade</a>
+        </div>
+        
+        <!-- Game Screen -->
+        <div id="game-screen" class="game-screen rounded-lg mb-4">
+            <!-- Game elements will be injected here by JS -->
+            <div id="character" class="absolute bottom-1/2 left-1/2 -translate-x-1/2">
+                <!-- Main character SVG or image -->
+                 <svg width="80" height="120"><rect x="15" y="40" width="50" height="80" fill="#4CAF50"/><circle cx="40" cy="20" r="15" fill="#8B4513"/></svg>
+            </div>
+        </div>
+
+        <!-- Dialogue and Inventory -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+            <div id="dialogue-box" class="dialogue-box md:col-span-2 p-4 rounded-lg">
+                <p id="dialogue-text" class="text-gray-300">Welcome, young one. Your family is preparing for an important ceremony. Please help us gather the items we need.</p>
+            </div>
+            <div id="inventory" class="p-4 bg-gray-900 rounded-lg">
+                <h3 class="font-bold text-lg mb-2">Items to Collect:</h3>
+                <div id="inventory-list" class="space-y-2">
+                    <!-- Inventory items will be injected here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="module" src="../assets/js/games.js"></script>
+</body>
+</html>
