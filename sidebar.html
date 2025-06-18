@@ -1,121 +1,58 @@
-/**
- * Flamea.org - Final Unified Main Script
- * Version: 5.0
- * Description:
- * This script is updated to power the final sidebar structure provided.
- * It manages sidebar injection, submenu toggles based on 'data-menu-item',
- * modal popups, and all other core interactive functionalities.
- */
-document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 1. CORE INITIALIZATION ---
-    const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
-
-    if (sidebarPlaceholder) {
-        // Fetch and inject the sidebar.html content
-        fetch('sidebar.html')
-            .then(response => {
-                if (!response.ok) throw new Error('Could not load sidebar.html');
-                return response.text();
-            })
-            .then(html => {
-                sidebarPlaceholder.innerHTML = html;
-                initializeSiteFeatures(); // Initialize all features AFTER sidebar is loaded
-            })
-            .catch(error => {
-                console.error('Error loading sidebar:', error);
-                sidebarPlaceholder.innerHTML = '<p class="text-red-400 p-4">Error: Sidebar navigation failed to load.</p>';
-            });
-    } else {
-        // If a page has no sidebar, still initialize other features
-        initializeSiteFeatures();
-    }
-
-    // Central function to run all initializations
-    function initializeSiteFeatures() {
-        initializeModals();
-        initializeSubmenus();
-        setActiveSidebarLink();
-        // Other rendering functions can be called here if needed
-        // e.g., renderTrainingCatalogue();
-    }
-
-    // --- 2. INTERACTIVE COMPONENT HANDLERS ---
-
-    /**
-     * Sets the 'active' state on the current page's link in the sidebar.
-     */
-    function setActiveSidebarLink() {
-        const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        const navLinks = document.querySelectorAll('#sidebar-placeholder a');
-
-        navLinks.forEach(link => {
-            // Check if the link's href matches the current page
-            if (link.getAttribute('href').endsWith(currentPage)) {
-                link.classList.add('active'); // Apply active style
-                
-                // If the link is inside a submenu, expand the parent menu
-                const parentSubmenu = link.closest('.submenu-container');
-                if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block';
-                    const toggleButton = parentSubmenu.parentElement.querySelector('.submenu-toggle');
-                    if (toggleButton) {
-                        toggleButton.querySelector('i').classList.add('rotate-180');
-                    }
-                }
-            }
-        });
-    }
-
-    /**
-     * Handles the opening and closing of all collapsible submenus in the sidebar.
-     * This function now specifically targets the structure of your final sidebar.
-     */
-    function initializeSubmenus() {
-        document.body.addEventListener('click', function(event) {
-            const toggleButton = event.target.closest('.submenu-toggle');
-            if (!toggleButton) return;
-
-            // Find the main parent container for the menu item
-            const menuItem = toggleButton.closest('[data-menu-item]');
-            if (!menuItem) return;
-
-            // Find the submenu container within that parent
-            const submenu = menuItem.querySelector('.submenu-container');
-            const icon = toggleButton.querySelector('i.fa-chevron-down');
-
-            if (submenu) {
-                const isVisible = submenu.style.display === 'block';
-                submenu.style.display = isVisible ? 'none' : 'block';
-                if (icon) {
-                    icon.classList.toggle('rotate-180', !isVisible);
-                }
-            }
-        });
-    }
-
-    /**
-     * Manages opening and closing of all modals site-wide (e.g., the chatbot).
-     */
-    function initializeModals() {
-        document.body.addEventListener('click', function(event) {
-            const openTrigger = event.target.closest('[data-modal-target]');
-            const closeTrigger = event.target.closest('[data-modal-close]');
-
-            if (openTrigger) {
-                const modalId = openTrigger.dataset.modalTarget;
-                const modal = document.getElementById(modalId);
-                if (modal) modal.classList.add('visible');
-            } else if (closeTrigger) {
-                const modal = closeTrigger.closest('.custom-modal');
-                if (modal) modal.classList.remove('visible');
-            }
-        });
-
-        window.addEventListener('click', (event) => {
-            if (event.target.classList.contains('custom-modal') && event.target.classList.contains('visible')) {
-                event.target.classList.remove('visible');
-            }
-        });
-    }
-});
+<nav id="main-nav" class="sidebar bg-gray-900 text-white w-64 h-full fixed top-0 left-0 overflow-y-auto">
+    <div class="p-4">
+        <a href="index.html" class="text-2xl font-bold">Flamea</a>
+    </div>
+    <ul>
+        <li data-menu-item>
+            <a data-target="home" class="block p-4 hover:bg-gray-800">Home</a>
+        </li>
+        <li data-menu-item>
+            <a data-target="mission" class="block p-4 hover:bg-gray-800">Mission</a>
+        </li>
+        <li data-menu-item>
+            <a href="dashboard.html" class="submenu-toggle flex justify-between items-center p-4 hover:bg-gray-800">
+                Dashboard <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu-container hidden">
+                <a href="profile.html" class="block p-4 pl-8 hover:bg-gray-800">Profile</a>
+            </div>
+        </li>
+        <li data-menu-item>
+            <a href="training.html" class="submenu-toggle flex justify-between items-center p-4 hover:bg-gray-800">
+                Training <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu-container hidden">
+                <a href="training/course-constitution.html" class="block p-4 pl-8 hover:bg-gray-800">SA Constitution</a>
+                <a href="training/course-childrens-act.html" class="block p-4 pl-8 hover:bg-gray-800">Children's Act</a>
+            </div>
+        </li>
+        <li data-menu-item>
+            <a href="tools.html" class="submenu-toggle flex justify-between items-center p-4 hover:bg-gray-800">
+                Tools <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu-container hidden">
+                <a href="assessment.html" class="block p-4 pl-8 hover:bg-gray-800">Needs Assessment</a>
+                <a href="plan-builder.html" class="block p-4 pl-8 hover:bg-gray-800">Parenting Plan Builder</a>
+            </div>
+        </li>
+        <li data-menu-item>
+            <a href="games.html" class="submenu-toggle flex justify-between items-center p-4 hover:bg-gray-800">
+                Games <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu-container hidden">
+                <a href="games/kid-konstitution.html" class="block p-4 pl-8 hover:bg-gray-800">Kid Konstitution</a>
+            </div>
+        </li>
+        <li data-menu-item>
+            <a href="customs.html" class="submenu-toggle flex justify-between items-center p-4 hover:bg-gray-800">
+                Customs <i class="fas fa-chevron-down"></i>
+            </a>
+            <div class="submenu-container hidden">
+                <a href="customs.html#imbeleko" class="block p-4 pl-8 hover:bg-gray-800">Imbeleko</a>
+            </div>
+        </li>
+        <li class="p-4" id="sidebar-auth-links">
+            <!-- Auth links injected by auth.js -->
+        </li>
+    </ul>
+</nav>

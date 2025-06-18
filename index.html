@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA - Fathers. Leaders. Legacy.</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -21,7 +21,7 @@
         .content-panel { 
             display: none; 
             animation: slideIn 0.6s forwards;
-            overflow-y: auto; /* Allow content to scroll if it overflows */
+            overflow-y: auto;
         }
         .content-panel.active { display: flex; }
         @keyframes slideIn {
@@ -33,20 +33,20 @@
             transform: translateX(0);
         }
         .sidebar-direct-link.active, .sidebar-direct-link:hover {
-            background-color: #2563EB; /* blue-600 */
+            background-color: #2563EB;
             color: white;
             transform: translateX(10px);
         }
         .buildup-box {
-            min-height: 120px; /* Ensure a consistent height for the content area */
+            min-height: 120px;
             transition: all 0.5s ease-in-out;
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
+        <!-- Standardized Sidebar -->
+        <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
         <main class="bg-gray-800 bg-cover bg-center" style="background-image: linear-gradient(rgba(31, 41, 55, 0.8), rgba(31, 41, 55, 0.8)), url('https://images.unsplash.com/photo-1594541337994-399a5e3a890b?q=80&w=2070');">
@@ -58,7 +58,6 @@
                 <!-- Marketing Buildup Box -->
                 <div id="marketing-buildup-container" class="max-w-3xl w-full mx-auto bg-white/90 backdrop-blur-sm text-gray-800 rounded-lg shadow-xl p-6">
                     <div id="buildup-content" class="buildup-box flex items-center justify-center">
-                        <!-- Dynamic message will be loaded here -->
                         <p>Loading weekly insights...</p>
                     </div>
                     <div class="flex justify-between items-center mt-4">
@@ -83,30 +82,30 @@
         </main>
     </div>
 
+    <!-- Footer -->
+    <footer class="text-center p-4 bg-gray-900 text-gray-400">
+        <p>&copy; <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
+    </footer>
+
     <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
+            // Set current year
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
             // Panel switching logic
             document.querySelectorAll('[data-target]').forEach(link => {
                 link.addEventListener('click', function(e) {
-                    // Only process links with a data-target attribute
                     if (this.dataset.target) {
                         e.preventDefault();
                         const targetId = this.dataset.target;
-                        
-                        // Update active link in the sidebar
                         document.querySelectorAll('[data-target]').forEach(l => l.classList.remove('active'));
                         this.classList.add('active');
-                        
-                        // Switch content panels
                         document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
                         document.getElementById(targetId)?.classList.add('active');
                     }
                 });
             });
-
-            // Set current year
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
 
             // Marketing Buildup Logic
             const weeklyThemes = {
@@ -120,12 +119,11 @@
                         { text: "Knowledge is power. Dive into our Resources to understand the legal landscape.", link: "resources.html" }
                     ]
                 }
-                // Add more weekly themes here as needed
             };
 
-            const currentWeek = 1; // This could be determined dynamically
+            const currentWeek = 1;
             const theme = weeklyThemes[currentWeek];
-            let currentMessageIndex = Math.floor(Math.random() * (theme.messages.length + 1)); // Include CTA
+            let currentMessageIndex = Math.floor(Math.random() * (theme.messages.length + 1));
 
             const contentContainer = document.getElementById('buildup-content');
             const themeNameEl = document.getElementById('theme-name');
@@ -136,7 +134,7 @@
                 const messageData = theme.messages[currentMessageIndex];
                 contentContainer.innerHTML = `
                     <div class="text-center" style="animation: fadeIn 0.5s;">
-                        <p class="text-xl italic mb-4">"${messageData.text}"</p>
+                        <p class="text-xl italic mb-4">"${MESSAGEData.text}"</p>
                         <a href="${messageData.link}" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Learn More</a>
                     </div>
                 `;
@@ -174,11 +172,9 @@
             if (themeNameEl) {
                 themeNameEl.textContent = theme.name;
             }
-            // Initial display
             updateMessage();
         });
     </script>
-    <script src="assets/js/sidebar-loader.js"></script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
 </body>
