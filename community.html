@@ -25,6 +25,13 @@
         .btn-green:hover {
             background-color: #38a169;
         }
+        .social-icon {
+            color: #60a5fa;
+            margin-right: 0.5rem;
+        }
+        .social-icon:hover {
+            color: #3b82f6;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -69,8 +76,8 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div class="col-span-2 card bg-gray-800 p-6 rounded-lg shadow-md">
                                 <h3 class="text-2xl font-bold mb-4 text-green-400">Get In Touch</h3>
-                                <form>
-                                    <select class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+                                <form id="contact-form">
+                                    <select name="category" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
                                         <option>General Feedback</option>
                                         <option>Tool Suggestion</option>
                                         <option>Training Topic Request</option>
@@ -78,19 +85,20 @@
                                         <option>Collaborate or Donate</option>
                                         <option>Other...</option>
                                     </select>
-                                    <input type="text" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <input type="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <textarea placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200" rows="3"></textarea>
+                                    <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+                                    <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+                                    <textarea name="message" placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200" rows="3"></textarea>
                                     <label class="flex items-center mb-4 text-gray-300">
-                                        <input type="checkbox" class="mr-2"> Submit Anonymously
+                                        <input type="checkbox" name="anonymous" class="mr-2"> Submit Anonymously
                                     </label>
-                                    <button type="button" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit</button>
+                                    <button type="submit" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit</button>
                                 </form>
                             </div>
                             <div class="col-span-1 card bg-gray-800 p-6 rounded-lg shadow-md">
                                 <h3 class="text-2xl font-bold mb-4 text-green-400">Follow Us</h3>
-                                <p><a href="#" class="text-blue-400 hover:underline">@flamea2024</a></p>
-                                <p><a href="#" class="text-blue-400 hover:underline">@Flamea2024</a></p>
+                                <p><i class="fab fa-x-twitter social-icon"></i><a href="#" class="text-blue-400 hover:underline">@flamea2024</a></p>
+                                <p><i class="fab fa-instagram social-icon"></i><a href="#" class="text-blue-400 hover:underline">@Flamea2024</a></p>
+                                <p><i class="fas fa-envelope social-icon"></i><a href="mailto:admin@flamea.org" class="text-blue-400 hover:underline">admin@flamea.org</a></p>
                             </div>
                         </div>
                     </div>
@@ -105,14 +113,83 @@
             <p class="text-gray-300 mb-4">Personal Information: By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you.</p>
             <p class="text-gray-300 mb-4">Contributor Agreement: By sharing your story or suggestion, you agree that your contribution becomes part of the Flamea project, to be used to support the community.</p>
             <div class="flex justify-between gap-2">
-                <button class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Confirm & Send</button>
-                <button class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900">Submit Anonymously</button>
-                <button class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Cancel</button>
+                <button id="confirm-send" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Confirm & Send</button>
+                <button id="submit-anonymous" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900">Submit Anonymously</button>
+                <button id="cancel-modal" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Cancel</button>
             </div>
         </div>
     </div>
     <!-- Scripts -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
+    <script type="module">
+        import { getFunctions, httpsCallable } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-functions.js';
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.appspot.com",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const functions = getFunctions(app);
+
+        const contactForm = document.getElementById('contact-form');
+        const confirmModal = document.getElementById('confirm-modal');
+        const confirmSendBtn = document.getElementById('confirm-send');
+        const submitAnonymousBtn = document.getElementById('submit-anonymous');
+        const cancelBtn = document.getElementById('cancel-modal');
+
+        let formData = {};
+
+        contactForm.addEventListener('submit', (e) => {
+            e.preventDefault();
+            formData = {
+                category: contactForm.category.value,
+                name: contactForm.name.value,
+                email: contactForm.email.value,
+                message: contactForm.message.value,
+                anonymous: contactForm.anonymous.checked
+            };
+            confirmModal.classList.remove('hidden');
+        });
+
+        confirmSendBtn.addEventListener('click', async () => {
+            await sendFormData(formData, false);
+            confirmModal.classList.add('hidden');
+        });
+
+        submitAnonymousBtn.addEventListener('click', async () => {
+            await sendFormData({ ...formData, name: '', email: '', anonymous: true }, true);
+            confirmModal.classList.add('hidden');
+        });
+
+        cancelBtn.addEventListener('click', () => {
+            confirmModal.classList.add('hidden');
+        });
+
+        async function sendFormData(data, isAnonymous) {
+            try {
+                const sendContactEmail = httpsCallable(functions, 'sendContactEmail');
+                await sendContactEmail({
+                    category: data.category,
+                    name: isAnonymous ? 'Anonymous' : data.name,
+                    email: isAnonymous ? '' : data.email,
+                    message: data.message,
+                    to: 'admin@flamea.org'
+                });
+                alert('Message sent successfully!');
+                contactForm.reset();
+            } catch (error) {
+                console.error('Error sending message:', error);
+                alert('Failed to send message. Please try again.');
+            }
+        }
+    </script>
 </body>
 </html>
