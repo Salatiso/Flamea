@@ -1,94 +1,89 @@
-<!--
-  Flamea.org - Sidebar Component
-  - This is a clean HTML file with no internal scripts.
-  - All functionality (submenu toggles, modal triggers) is now handled by assets/js/main.js.
-  - Added 'data-modal-target' attribute to the iSazi AI link to trigger the chatbot modal.
-  - Added a link to the Podcast RSS feed.
--->
-<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300 w-72">
-    <!-- Top Section: Logo & Navigation -->
-    <div class="sidebar-top">
-        <div class="mb-12 flex justify-center">
-            <a href="index.html" class="flamea-logo dark">
-                <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                    <text class="logo-text" x="0" y="45" font-family="'Roboto Slab', serif" font-size="50" font-weight="700" fill="white">Flame</text>
-                    <g transform="translate(135, 0)">
-                        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path>
-                    </g>
-                    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
-                </svg>
-            </a>
-        </div>
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea Theme Mockups</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* Base styles for the demonstration */
+        body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
+        .page-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; background-size: cover; background-position: center; background-attachment: fixed; position: relative; border-bottom: 2px solid #4ade80; }
+        .font-roboto-slab { font-family: 'Roboto Slab', serif; }
+        .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+        .flip-card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; width: 100%; max-w-6xl; }
+        .flip-card { background-color: transparent; width: 100%; height: 220px; perspective: 1000px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.7s; transform-style: preserve-3d; }
+        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border: 1px solid #4b5563; }
+        .flip-card-front { background-color: #1f2937; /* gray-800 */ }
+        .flip-card-back { background-color: #4f46e5; transform: rotateY(180deg); }
+        .flip-card h3 { font-family: 'Roboto Slab', serif; font-size: 1.5rem; }
+    </style>
+</head>
+<body>
 
-        <!-- Main Navigation -->
-        <nav id="main-nav" class="flex flex-col space-y-2">
-            <!-- Home -->
-            <a href="index.html" class="nav-link"><i class="fas fa-home nav-icon"></i>Home</a>
-
-            <!-- About -->
-            <a href="about.html" class="nav-link"><i class="fas fa-info-circle nav-icon"></i>About</a>
-
-            <!-- Training -->
-            <div data-menu-item>
-                <div class="nav-link-header">
-                    <a href="training.html" class="flex-grow"><i class="fas fa-chalkboard-teacher nav-icon"></i>Training</a>
-                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
-                </div>
-                <div class="submenu-container">
-                    <a href="training/course-constitution.html" class="submenu-link">SA Constitution</a>
-                    <a href="training/course-childrens-act.html" class="submenu-link">Children's Act</a>
-                    <a href="training/course-family-law.html" class="submenu-link">Family Law</a>
-                    <a href="training/course-equality-act.html" class="submenu-link">Equality Act</a>
-                    <a href="training/course-maintenance-act.html" class="submenu-link">Maintenance Act</a>
-                    <a href="training/course-domestic-violence.html" class="submenu-link">Domestic Violence</a>
-                    <a href="training/course-criminal-law.html" class="submenu-link">Criminal Law & SAPS</a>
-                </div>
-            </div>
-
-            <!-- Tools -->
-            <div data-menu-item>
-                <div class="nav-link-header">
-                    <a href="tools.html" class="flex-grow"><i class="fas fa-tools nav-icon"></i>Tools</a>
-                    <button class="submenu-toggle"><i class="fas fa-chevron-down submenu-toggle-icon"></i></button>
-                </div>
-                <div class="submenu-container">
-                    <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
-                    <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gavel w-6 text-center mr-3"></i> Traditional Customs</a>
-                    <a href="current-affairs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-newspaper w-6 text-center mr-3"></i> Current Affairs</a>
-                    <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
-                    <a href="tool-parenting-plan.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-clipboard-check w-6 text-center mr-3"></i> Parenting Plan Builder</a>
-                    <a href="tool-childcare-plan.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-baby w-6 text-center mr-3"></i> Childcare Plan Tool</a>
-                    <a href="tool-contact-schedule.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-calendar-alt w-6 text-center mr-3"></i> Contact Schedule Maker</a>
-                </div>
-            </div>
-
-            <!-- Publications -->
-            <a href="publications.html" class="nav-link"><i class="fas fa-book-open nav-icon"></i>Publications</a>
-
-            <!-- AI Assistant -->
-            <a href="#" id="chatbot-link" class="nav-link" data-modal-target="chatbot-modal">
-                <i class="fas fa-robot nav-icon"></i>iSazi AI Assistant
-            </a>
-
-            <!-- Podcast -->
-            <a href="https://anchor.fm/s/10357aacc/podcast/rss" target="_blank" class="nav-link">
-                <i class="fas fa-podcast nav-icon"></i>Podcast
-            </a>
-
-            <!-- Community -->
-            <a href="community.html" class="nav-link"><i class="fas fa-users nav-icon"></i>Community</a>
-        </nav>
-    </div>
-
-    <!-- Bottom Section: Auth & Footer -->
-    <div class="sidebar-bottom">
-        <div id="sidebar-auth-links" class="mb-6">
-            <!-- Auth links will be dynamically injected here by auth.js -->
-            <a href="login.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
-        </div>
-        <div class="text-xs text-center text-gray-500">
-            <span>&copy; 2024 Flamea.org</span><br>
-            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599121848248-c833f0ed4866');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Fatherhood</h1>
         </div>
     </div>
-</aside>
+
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1556139943-4bd56244742a');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Accountability</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Responsibility</h1>
+        </div>
+    </div>
+
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Coming Home</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726a');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Technology</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1603038171421-93c7a2312686');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Transkei Rondavels</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1542202277-26806969106b');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Ocean Rocks</h1>
+        </div>
+    </div>
+
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Mountains</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599228249821-1772b2a65a26');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Aloe Plants</h1>
+        </div>
+    </div>
+    
+    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1503435824534-a83a06a5b025');">
+        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
+            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Boyhood to Manhood</h1>
+        </div>
+    </div>
+    
+</body>
+</html>
