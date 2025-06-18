@@ -1,6 +1,6 @@
 /**
  * Flamea.org - Final Unified Main Script
- * Version: 7.0
+ * Version: 8.0
  * Description:
  * This single script manages all core interactive functionalities for Flamea.org.
  * - Dynamically loads the sidebar from sidebar.html.
@@ -10,14 +10,12 @@
  * - Includes full search and filter functionality for the Customs page.
  * - Implements a dynamic background theme that changes based on the time of day.
  *
- * This file combines the structure of the original script with the new features
- * and improvements.
+ * This file combines all features from previous versions for the Flamea website.
  */
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. CORE INITIALIZATION ---
     // This section loads the sidebar and then triggers all other JS features.
-
     const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
 
     if (sidebarPlaceholder) {
@@ -28,7 +26,6 @@ document.addEventListener('DOMContentLoaded', () => {
             })
             .then(html => {
                 sidebarPlaceholder.innerHTML = html;
-                // Once sidebar is loaded, initialize all other site features
                 initializeSiteFeatures();
             })
             .catch(error => {
@@ -42,19 +39,15 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Central function to run all initializations
     function initializeSiteFeatures() {
-        // Initialize dynamic and interactive components
-        setDynamicBackground(); // NEW: Sets the background based on time
+        setDynamicBackground(); // Sets the background based on time
         initializeModals();
         initializeAccordionsAndSubmenus();
         setActiveSidebarLink();
-
-        // Render dynamic page content last
         renderTrainingCatalogue();
         renderToolsCatalogue();
         renderGamesCatalogue();
         renderCustomsPage();
     }
-
 
     // --- 2. DYNAMIC BACKGROUND LOGIC ---
     /**
@@ -87,9 +80,7 @@ document.addEventListener('DOMContentLoaded', () => {
         mainContent.classList.add(themeClass);
     }
 
-
     // --- 3. INTERACTIVE COMPONENT HANDLERS ---
-
     /**
      * Finds the current page's link in the sidebar and applies the 'active' class.
      * Also expands the parent submenu if the active link is inside one.
@@ -97,31 +88,22 @@ document.addEventListener('DOMContentLoaded', () => {
     function setActiveSidebarLink() {
         const currentPage = window.location.pathname.split("/").pop() || "index.html";
         const navLinks = document.querySelectorAll('#sidebar-placeholder a');
-
         navLinks.forEach(link => {
-            // Check if the link's href matches the current page filename
             const linkPage = link.getAttribute('href').split("/").pop();
             if (linkPage === currentPage) {
                 link.classList.add('active');
-
-                // Find the closest parent submenu container
                 const parentSubmenu = link.closest('.submenu-container');
                 if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block'; // Expand the submenu
-
-                    // Find the toggle button associated with this submenu and rotate its icon
-                    const parentToggle = parentSubmenu.previousElementSibling;
-                    if (parentToggle && parentToggle.matches('.submenu-toggle')) {
+                    parentSubmenu.style.display = 'block';
+                    const parentToggle = parentSubmenu.closest('[data-menu-item]').querySelector('.submenu-toggle');
+                    if (parentToggle) {
                         const icon = parentToggle.querySelector('i.fa-chevron-down');
-                        if (icon) {
-                            icon.classList.add('rotate-180');
-                        }
+                        if (icon) icon.classList.add('rotate-180');
                     }
                 }
             }
         });
     }
-
 
     /**
      * Adds delegated click listeners for all accordions (main content) and submenus (sidebar).
@@ -131,23 +113,16 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.addEventListener('click', function(event) {
             const toggleButton = event.target.closest('.accordion-toggle, .submenu-toggle');
             if (!toggleButton) return;
-
-            // Use .closest() for a more robust way to find the parent container
             const parentItem = toggleButton.closest('.accordion-item, [data-menu-item]');
-             if (!parentItem) return;
-
+            if (!parentItem) return;
             const content = parentItem.querySelector('.accordion-content, .submenu-container');
             const icon = toggleButton.querySelector('i.fa-chevron-down');
-
             if (content) {
-                // Accordions in the main content use maxHeight for a smooth transition.
                 if (content.classList.contains('accordion-content')) {
                     const isOpen = content.style.maxHeight && content.style.maxHeight !== '0px';
                     content.style.maxHeight = isOpen ? '0px' : content.scrollHeight + 'px';
                     if (icon) icon.classList.toggle('rotate-180', !isOpen);
-                }
-                // Sidebar submenus use display block/none for an instant toggle.
-                else if (content.classList.contains('submenu-container')) {
+                } else if (content.classList.contains('submenu-container')) {
                     const isVisible = content.style.display === 'block';
                     content.style.display = isVisible ? 'none' : 'block';
                     if (icon) icon.classList.toggle('rotate-180', !isVisible);
@@ -156,7 +131,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     /**
      * Manages opening and closing of all modals site-wide using data attributes.
      */
@@ -164,7 +138,6 @@ document.addEventListener('DOMContentLoaded', () => {
         document.body.addEventListener('click', function(event) {
             const openTrigger = event.target.closest('[data-modal-target]');
             const closeTrigger = event.target.closest('[data-modal-close]');
-
             if (openTrigger) {
                 const modalId = openTrigger.dataset.modalTarget;
                 const modal = document.getElementById(modalId);
@@ -174,8 +147,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 if (modal) modal.classList.remove('visible');
             }
         });
-
-        // Add event listener to close modal when clicking on the background overlay
         window.addEventListener('click', (event) => {
             if (event.target.classList.contains('custom-modal') && event.target.classList.contains('visible')) {
                 event.target.classList.remove('visible');
@@ -183,9 +154,7 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-
     // --- 4. DYNAMIC CONTENT DATA & RENDERERS ---
-
     const trainingData = [{
         title: "🎓 Legal & Constitutional Foundations",
         color: "green-500",
@@ -286,7 +255,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Resource Locator",
             icon: "fas fa-map-marked-alt",
             description: "Find Family Advocates, courts, and father-friendly NGOs.",
-            url: "locator.html"
+            url: "resources.html"
         }]
     }, {
         title: "🗂️ Knowledge & Reference",
@@ -372,7 +341,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "Test your knowledge by separating legal facts from common myths.",
             url: "games/mythbuster-game.html",
             icon: "fas fa-ghost text-teal-400"
-        }, ]
+        }]
     }, {
         title: "🛡️ Strategic Defenders",
         color: "red-500",
@@ -408,7 +377,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "A branching narrative game where your choices determine your success as a lawyer.",
             url: "games/legal-simulator.html",
             icon: "fas fa-briefcase text-cyan-400"
-        }, ]
+        }]
     }, {
         title: "🌍 Cultural & Satirical Explorations",
         color: "purple-500",
@@ -439,7 +408,7 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "A text-based satirical adventure poking fun at the legal system.",
             url: "games/satirical-game.html",
             icon: "fas fa-theater-masks text-gray-500"
-        }, ]
+        }]
     }];
 
     const customsDatabase = [{
@@ -560,9 +529,9 @@ document.addEventListener('DOMContentLoaded', () => {
             section.className = 'accordion-item mb-6';
             section.innerHTML = `
                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
-                     <div class="flex items-center">
-                         <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
-                         <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
+                    <div class="flex items-center">
+                        <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
+                        <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
                     </div>
                     <i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
@@ -606,8 +575,8 @@ document.addEventListener('DOMContentLoaded', () => {
                     <i class="fas fa-chevron-down transform transition-transform text-gray-400"></i>
                 </button>
                 <div class="accordion-content" style="max-height: 0px; overflow: hidden; transition: max-height 0.5s ease-out;">
-                     <div class="pt-6 pl-4 border-l-4 border-${category.color}">
-                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                    <div class="pt-6 pl-4 border-l-4 border-${category.color}">
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             ${category.games.map(game => `
                                 <a href="${game.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300 flex flex-col text-left">
                                     <div class="flex items-start mb-4">
@@ -635,10 +604,8 @@ document.addEventListener('DOMContentLoaded', () => {
             const descriptionMatch = custom.description.toLowerCase().includes(lowerCaseQuery);
             const procedureMatch = custom.procedure.toLowerCase().includes(lowerCaseQuery);
             const significanceMatch = custom.significance.toLowerCase().includes(lowerCaseQuery);
-
             const stageMatch = !stage || stage === 'all' || custom.stage === stage;
             const cultureMatch = !culture || culture === 'all' || custom.cultures.includes(culture);
-
             return (nameMatch || descriptionMatch || procedureMatch || significanceMatch) && stageMatch && cultureMatch;
         });
     }
@@ -649,16 +616,13 @@ document.addEventListener('DOMContentLoaded', () => {
     function displayCustomsResults(results) {
         const container = document.getElementById('customs-results-container');
         if (!container) return;
-
-        container.innerHTML = ''; // Clear previous results
+        container.innerHTML = '';
         if (results.length === 0) {
             container.innerHTML = '<p class="text-gray-400 text-center col-span-full py-8">No customs found matching your criteria.</p>';
             return;
         }
-
         const resultsGrid = document.createElement('div');
         resultsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
-
         results.forEach(custom => {
             const card = document.createElement('div');
             card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700 flex flex-col';
@@ -679,11 +643,11 @@ document.addEventListener('DOMContentLoaded', () => {
                             <p class="mb-4">${custom.significance}</p>
                             ${Object.keys(custom.variations).length > 0 ? `<h4 class="font-bold text-lg mb-2 text-gray-200">Variations:</h4>` : ''}
                             ${Object.entries(custom.variations).map(([culture, text]) => `<p class="mb-2"><strong>${culture.charAt(0).toUpperCase() + culture.slice(1)}:</strong> ${text}</p>`).join('')}
-                             <div class="mt-4 pt-4 border-t border-gray-700">
-                                 <h4 class="font-bold text-lg mb-2 text-gray-200">Sources:</h4>
-                                 <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
-                                 <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
-                             </div>
+                            <div class="mt-4 pt-4 border-t border-gray-700">
+                                <h4 class="font-bold text-lg mb-2 text-gray-200">Sources:</h4>
+                                <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
+                                <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
+                            </div>
                         </div>
                     </div>
                 </div>`;
@@ -698,14 +662,11 @@ document.addEventListener('DOMContentLoaded', () => {
     function renderCustomsPage() {
         const container = document.getElementById('customs-catalogue');
         if (!container) return;
-
         container.innerHTML = `
             <div class="text-center mb-12">
                 <h1 class="text-5xl font-bold font-roboto text-white">South African Traditional Customs</h1>
                 <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices, especially as a Xhosa man from the Transkei would know them.</p>
             </div>
-
-            <!-- Search and Filter Panel -->
             <div class="bg-gray-800 p-6 rounded-lg mb-12 sticky top-4 z-10 shadow-lg border border-gray-700">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <div class="md:col-span-2">
@@ -722,7 +683,7 @@ document.addEventListener('DOMContentLoaded', () => {
                             <option value="death">Death</option>
                         </select>
                     </div>
-                     <div>
+                    <div>
                         <label for="culture-filter" class="block text-sm font-medium text-gray-300 mb-1">Cultural Group</label>
                         <select id="culture-filter" class="form-select">
                             <option value="all">All Cultures</option>
@@ -736,19 +697,12 @@ document.addEventListener('DOMContentLoaded', () => {
                             <option value="venda">Venda</option>
                         </select>
                     </div>
-                     <div>
+                    <div>
                         <button id="customs-search-btn" class="btn btn-primary w-full"><i class="fas fa-search mr-2"></i>Search</button>
                     </div>
                 </div>
             </div>
-
-            <!-- Results Container -->
-            <div id="customs-results-container">
-                <!-- Search results will be injected here -->
-            </div>
-        `;
-
-        // Add event listener for the search button *after* it's been rendered
+            <div id="customs-results-container"></div>`;
         const searchBtn = document.getElementById('customs-search-btn');
         if (searchBtn) {
             searchBtn.addEventListener('click', () => {
@@ -759,8 +713,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 displayCustomsResults(results);
             });
         }
-
-        // Initial render of all customs
         displayCustomsResults(customsDatabase);
     }
 });
