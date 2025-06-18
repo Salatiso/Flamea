@@ -3,82 +3,99 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Theme Mockups (Revised)</title>
+    <title>Flamea Theme Mockups (Round 2)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
+        body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
         .font-roboto-slab { font-family: 'Roboto Slab', serif; }
         .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
         .main-layout { display: flex; height: 100vh; }
-        
-        /* Sidebar Styling */
-        .sidebar { width: 288px; /* 72 in tailwind units */ flex-shrink: 0; background-color: #111827; /* gray-900 */ }
-        
-        /* Main Content Styling */
+        .sidebar { width: 288px; flex-shrink: 0; background-color: #111827; }
         .main-content { flex-grow: 1; overflow-y: auto; }
-        .page-container { min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; background-size: cover; background-position: center; background-attachment: fixed; position: relative; }
-        .content-overlay { width: 100%; max-w-7xl; margin: auto; background-color: rgba(17, 24, 39, 0.85); /* gray-900 with 85% opacity */ backdrop-filter: blur(8px); padding: 2rem 3rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
+        .page-container { min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; background-size: cover; background-position: center; background-attachment: fixed; position: relative; border-bottom: 2px solid #4ade80; }
+        .content-overlay { width: 100%; max-w-7xl; margin: auto; background-color: rgba(17, 24, 39, 0.85); backdrop-filter: blur(8px); padding: 2rem 3rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
     </style>
 </head>
-<body class="bg-gray-900">
+<body>
 
     <div class="main-layout">
-        <!-- A placeholder for the sidebar to show the layout -->
+        <!-- Sidebar Placeholder -->
         <aside class="sidebar p-6">
             <h2 class="text-white text-xl font-bold">Sidebar</h2>
         </aside>
 
-        <!-- Main content area that will have the changing backgrounds -->
+        <!-- Main content area -->
         <main class="main-content">
 
-            <!-- Theme: Fatherhood -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599121848248-c833f0ed4866?q=80&w=2070&auto=format&fit=crop');">
+            <!-- New Theme 1: Fatherhood -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1484980972926-ed5d62f02737?q=80&w=2070&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Fatherhood</h1>
                 </div>
             </div>
 
-            <!-- Theme: Technology -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726a?q=80&w=2070&auto=format&fit=crop');">
+            <!-- New Theme 2: Technology -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Technology</h1>
                 </div>
             </div>
 
-            <!-- Theme: Transkei Rondavels -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1603038171421-93c7a2312686?q=80&w=2008&auto=format&fit=crop');">
+            <!-- New Theme 3: Transkei Rondavels -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1622384349548-3b303cb7935c?q=80&w=1932&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Transkei Rondavels</h1>
                 </div>
             </div>
 
-            <!-- Theme: Aloe Plants -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599228249821-1772b2a65a26?q=80&w=2070&auto=format&fit=crop');">
+            <!-- New Theme 4: Aloe Plants -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1545229789-491334966236?q=80&w=1974&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Aloe Plants</h1>
                 </div>
             </div>
             
-            <!-- Theme: Boyhood to Manhood -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1503435824534-a83a06a5b025?q=80&w=2070&auto=format&fit=crop');">
+            <!-- New Theme 5: Boyhood to Manhood -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1543802593-7487212a203f?q=80&w=1964&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Boyhood to Manhood</h1>
                 </div>
             </div>
 
-            <!-- Theme: Ocean Rocks (Purpose) -->
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1542202277-26806969106b?q=80&w=2070&auto=format&fit=crop');">
+            <!-- New Theme 6: Ocean Rocks (Purpose) -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1494791361126-177637fe2330?q=80&w=2070&auto=format&fit=crop');">
                  <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Ocean Rocks (Purpose)</h1>
                 </div>
             </div>
 
-            <!-- Theme: Accountability (Action) -->
-             <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1556139943-4bd56244742a?q=80&w=1974&auto=format&fit=crop');">
+            <!-- New Theme 7: Accountability (Action) -->
+             <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop');">
                 <div class="content-overlay">
                     <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Accountability (Action)</h1>
+                </div>
+            </div>
+
+            <!-- Previously Working Theme 1: Responsibility -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Responsibility</h1>
+                </div>
+            </div>
+
+            <!-- Previously Working Theme 2: Coming Home -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Coming Home</h1>
+                </div>
+            </div>
+            
+            <!-- Previously Working Theme 3: Mountains -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Mountains</h1>
                 </div>
             </div>
 
