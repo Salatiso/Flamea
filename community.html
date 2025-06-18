@@ -1,123 +1,62 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Community Hub - Flamea</title>
-    
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background-color: #0f172a; /* A darker slate background */
-        }
-        .main-content {
-             background-color: #0f172a;
-        }
-        /* Custom scrollbar for the message box */
-        #contact-message::-webkit-scrollbar {
-            width: 8px;
-        }
-        #contact-message::-webkit-scrollbar-track {
-            background: #1e293b; /* slate-800 */
-        }
-        #contact-message::-webkit-scrollbar-thumb {
-            background-color: #475569; /* slate-600 */
-            border-radius: 4px;
-        }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
-<body class="bg-slate-900 text-gray-200">
-
-    <div class="main-container">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container flex">
+        <!-- Standardized Sidebar -->
         <div id="sidebar-placeholder"></div>
 
-        <main class="main-content p-6">
-            <div class="max-w-7xl mx-auto h-full flex flex-col">
-                <div class="mb-6 text-center">
-                    <h1 class="text-3xl font-bold text-white">Community Hub</h1>
-                    <p class="text-gray-400 mt-1">Connect, engage, and grow with the Flamea community.</p>
+        <!-- Main Content Area -->
+        <main class="main-content flex-1 p-6">
+            <!-- Community Hub Panel -->
+            <div id="community-hub" class="content-panel active">
+                <div class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-5xl font-bold font-roboto mb-4">Community Hub</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed">Connect, engage, and grow with the Flamea community.</p>
                 </div>
-
-                <div class="grid grid-cols-1 lg:grid-cols-2 gap-6 flex-grow">
-                    <!-- Left Column -->
-                    <div class="flex flex-col gap-6">
-                        <!-- Countdown Timer -->
-                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center flex flex-col justify-center flex-grow">
-                            <i class="fas fa-hourglass-half text-4xl text-green-400 mx-auto mb-3"></i>
-                            <h2 class="text-2xl font-bold text-green-400">The Flamea Forum is Coming!</h2>
-                            <p class="text-gray-400 mt-1 text-sm">A safe space for fathers to connect, share, and support each other.</p>
-                            <div id="countdown" class="flex justify-center gap-4 mt-4 text-white">
-                                <div><span id="days" class="text-3xl font-bold">00</span><p class="text-xs">Days</p></div>
-                                <div><span id="hours" class="text-3xl font-bold">00</span><p class="text-xs">Hours</p></div>
-                                <div><span id="minutes" class="text-3xl font-bold">00</span><p class="text-xs">Minutes</p></div>
-                                <div><span id="seconds" class="text-3xl font-bold">00</span><p class="text-xs">Seconds</p></div>
-                            </div>
-                            <div id="countdown-message" class="mt-3 text-yellow-400 font-semibold hidden">Join the discussion!</div>
-                        </div>
-                        <!-- Polling Chart -->
-                        <div class="bg-gray-800 p-4 rounded-xl shadow-lg flex-grow flex flex-col">
-                             <h3 class="text-lg font-bold mb-2 text-center text-gray-300">Live Poll Results</h3>
-                            <div class="relative flex-grow min-h-[150px]"><canvas id="poll-chart"></canvas></div>
-                        </div>
+                <div class="mt-8">
+                    <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                        <h3 class="text-2xl font-bold mb-4">Vote on Topics</h3>
+                        <p>Your voice matters. Help us decide what to talk about first.</p>
+                        <p>Loading poll...</p>
                     </div>
-
-                    <!-- Right Column -->
-                    <div class="flex flex-col gap-6">
-                        <!-- Polling Options -->
-                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
-                            <h3 class="text-xl font-bold mb-3 flex items-center"><i class="fas fa-poll w-6 mr-2 text-blue-400"></i>Vote on Topics</h3>
-                            <p class="text-gray-400 mb-4 text-sm">Your voice matters. Help us decide what to talk about first.</p>
-                            <div id="poll-options" class="space-y-2"><p class="text-gray-500">Loading poll...</p></div>
-                            <p id="poll-status" class="text-xs text-yellow-400 mt-3 h-4"></p>
-                        </div>
-                        <!-- NEW: Contact Section Wrapper -->
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6 flex-grow">
-                            <!-- Contact Form -->
-                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col">
-                                <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-paper-plane w-6 mr-2 text-purple-400"></i>Get In Touch</h3>
-                                <form id="contact-form" novalidate class="flex flex-col flex-grow">
-                                    <div class="mb-3">
-                                        <select id="contact-category" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm">
-                                            <option>General Feedback</option><option>Tool Suggestion</option><option>Training Topic Request</option>
-                                            <option>Share My Story</option><option>Collaborate or Donate</option><option value="other">Other...</option>
-                                        </select>
-                                    </div>
-                                    <div id="other-category-wrapper" class="hidden mb-3">
-                                        <input type="text" id="other-category-input" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm" placeholder="Please specify">
-                                    </div>
-                                    <div class="mb-3 flex-grow flex flex-col">
-                                        <textarea id="contact-message" rows="4" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm flex-grow" placeholder="Your message..." required></textarea>
-                                    </div>
-                                     <div id="personal-info-fields" class="mb-3">
-                                        <input type="text" id="contact-name" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm" placeholder="Your Name (Required)" required>
-                                        <input type="email" id="contact-email" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 mt-2 text-sm" placeholder="Your Email (Required)" required>
-                                    </div>
-                                    <div class="mb-3">
-                                        <label class="flex items-center"><input type="checkbox" id="anonymous-checkbox" class="h-4 w-4 bg-gray-600 border-gray-500 rounded text-blue-500"><span class="ml-2 text-sm text-gray-400">Submit Anonymously</span></label>
-                                    </div>
-                                    <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg hover:bg-green-500 transition-transform transform hover:scale-105">Submit</button>
-                                    <p id="form-status" class="text-center text-xs mt-2 h-4"></p>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mt-6">
+                        <div class="md:col-span-2">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                                <h3 class="text-2xl font-bold mb-4">Get In Touch</h3>
+                                <form>
+                                    <select class="w-full p-2 mb-4 bg-gray-700 rounded">
+                                        <option>General Feedback</option>
+                                        <option>Tool Suggestion</option>
+                                        <option>Training Topic Request</option>
+                                        <option>Share My Story</option>
+                                        <option>Collaborate or Donate</option>
+                                        <option>Other...</option>
+                                    </select>
+                                    <input type="text" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded">
+                                    <input type="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded">
+                                    <textarea placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded" rows="4"></textarea>
+                                    <label class="flex items-center mb-4">
+                                        <input type="checkbox" class="mr-2"> Submit Anonymously
+                                    </label>
+                                    <button type="button" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Submit</button>
                                 </form>
                             </div>
-                             <!-- Social Media Links -->
-                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center">
-                                <h3 class="text-xl font-bold mb-6">Follow Us</h3>
-                                <div class="space-y-6">
-                                    <a href="https://twitter.com/flamea2024" target="_blank" class="flex flex-col items-center text-gray-400 hover:text-sky-400 transition-all duration-300 transform hover:scale-110">
-                                        <i class="fab fa-twitter fa-3x"></i>
-                                        <span class="text-sm mt-2">@flamea2024</span>
-                                    </a>
-                                    <a href="https://youtube.com/@Flamea2024" target="_blank" class="flex flex-col items-center text-gray-400 hover:text-red-500 transition-all duration-300 transform hover:scale-110">
-                                        <i class="fab fa-youtube fa-3x"></i>
-                                        <span class="text-sm mt-2">@Flamea2024</span>
-                                    </a>
-                                </div>
+                        </div>
+                        <div class="md:col-span-1">
+                            <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+                                <h3 class="text-2xl font-bold mb-4">Follow Us</h3>
+                                <p><a href="#" class="text-blue-400 hover:underline">@flamea2024</a></p>
+                                <p><a href="#" class="text-blue-400 hover:underline">@Flamea2024</a></p>
                             </div>
                         </div>
                     </div>
@@ -125,26 +64,21 @@
             </div>
         </main>
     </div>
-
-    <!-- Modals -->
-    <div id="confirmation-modal" class="custom-modal">
-        <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl w-11/12 max-w-lg p-6 text-center">
-             <h3 class="text-2xl font-bold mb-4">Confirm Submission</h3>
-             <div class="text-left text-sm text-gray-300 space-y-3 mb-6">
-                 <p><i class="fas fa-shield-alt text-green-400 mr-2"></i><span class="font-bold">Personal Information:</span> By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you.</p>
-                 <p><i class="fas fa-lightbulb text-yellow-400 mr-2"></i><span class="font-bold">Contributor Agreement:</span> By sharing your story or suggestion, you agree that your contribution becomes part of the Flamea project, to be used to support the community.</p>
-             </div>
-             <div class="flex flex-col sm:flex-row justify-center gap-4">
-                 <button id="confirm-send-btn" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Confirm & Send</button>
-                 <button id="confirm-anonymous-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors">Submit Anonymously</button>
-                 <button id="cancel-btn" class="w-full sm:w-auto bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 transition-colors">Cancel</button>
-             </div>
+    <!-- Confirmation Modal -->
+    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-2xl font-bold mb-4">Confirm Submission</h3>
+            <p class="mb-4">Personal Information: By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you.</p>
+            <p class="mb-4">Contributor Agreement: By sharing your story or suggestion, you agree that your contribution becomes part of the Flamea project, to be used to support the community.</p>
+            <div class="flex justify-between">
+                <button class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Confirm & Send</button>
+                <button class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900">Submit Anonymously</button>
+                <button class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Cancel</button>
+            </div>
         </div>
     </div>
-    <div id="modal-container"></div>
+    <!-- Scripts -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/community-features.js"></script>
-    <script type="module" src="assets/js/modal-loaders.js"></script>
 </body>
 </html>

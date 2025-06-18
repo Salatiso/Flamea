@@ -716,3 +716,11 @@ document.addEventListener('DOMContentLoaded', () => {
         displayCustomsResults(customsDatabase);
     }
 });
+document.addEventListener('DOMContentLoaded', () => {
+    const currentPage = window.location.pathname.split("/").pop() || "index.html";
+    document.querySelectorAll('.sidebar-link, .sidebar-link-main').forEach(link => {
+        if (link.getAttribute('href') === currentPage) {
+            link.classList.add('active');
+        }
+    });
+});

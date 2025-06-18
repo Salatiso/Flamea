@@ -11,32 +11,16 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
 </head>
 <body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
+    <div class="main-container flex">
         <!-- Standardized Sidebar -->
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
-        <main class="main-content flex-1 p-6">
+        <main class="main-content flex-1 p-6 flex justify-center items-center min-h-screen">
             <!-- Home Panel -->
-            <div id="home" class="content-panel active">
+            <div id="home" class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md text-center">
                 <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
                 <p class="text-xl md:text-2xl text-gray-300 max-w-2xl mb-8">Empowering South African fathers to reclaim their role.</p>
-                <!-- Marketing Buildup Box -->
-                <div id="marketing-buildup-container" class="max-w-3xl w-full mx-auto bg-white/90 backdrop-blur-sm text-gray-800 rounded-lg shadow-xl p-6">
-                    <div id="buildup-content" class="buildup-box flex items-center justify-center">
-                        <p>Loading weekly insights...</p>
-                    </div>
-                    <div class="flex justify-between items-center mt-4">
-                        <button id="prev-message" class="text-gray-500 hover:text-gray-900 p-2 rounded-full transition-colors duration-200"><i class="fas fa-arrow-left"></i></button>
-                        <div id="buildup-theme" class="text-center">
-                            <p class="font-bold text-lg">Weekly Theme:</p>
-                            <p id="theme-name" class="text-md"></p>
-                        </div>
-                        <button id="next-message" class="text-gray-500 hover:text-gray-900 p-2 rounded-full transition-colors duration-200"><i class="fas fa-arrow-right"></i></button>
-                    </div>
-                </div>
-            </div>
-
             </div>
         </main>
     </div>
@@ -45,94 +29,12 @@
         <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
     </footer>
     <!-- Scripts -->
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        // Set current year
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
-
-        // Panel switching logic
-        document.querySelectorAll('[data-target]').forEach(link => {
-            link.addEventListener('click', function(e) {
-                if (this.dataset.target) {
-                    e.preventDefault();
-                    const targetId = this.dataset.target;
-                    document.querySelectorAll('[data-target]').forEach(l => l.classList.remove('active'));
-                    this.classList.add('active');
-                    document.querySelectorAll('.content-panel').forEach(panel => panel.classList.remove('active'));
-                    document.getElementById(targetId)?.classList.add('active');
-                }
-            });
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
         });
-
-        // Marketing Buildup Logic
-        const weeklyThemes = {
-            1: {
-                name: "Know Your Rights",
-                messages: [
-                    { text: "The Constitution is your shield. Understand its power in your fight for fairness.", link: "training/course-constitution.html" },
-                    { text: "The Children's Act champions the 'best interests of the child'. Learn how to make it work for you.", link: "training/course-childrens-act.html" },
-                    { text: "Don't just fight, fight smart. Our Needs Assessment tool helps you build a winning strategy.", link: "assessment.html" },
-                    { text: "A solid Parenting Plan is your roadmap to stability. Build yours with our guided tool.", link: "parenting-plan.html" },
-                    { text: "Knowledge is power. Dive into our Resources to understand the legal landscape.", link: "resources.html" }
-                ]
-            }
-        };
-
-        const currentWeek = 1;
-        const theme = weeklyThemes[currentWeek];
-        let currentMessageIndex = Math.floor(Math.random() * (theme.messages.length + 1));
-
-        const contentContainer = document.getElementById('buildup-content');
-        const themeNameEl = document.getElementById('theme-name');
-        const prevBtn = document.getElementById('prev-message');
-        const nextBtn = document.getElementById('next-message');
-
-        function displayMessage() {
-            const messageData = theme.messages[currentMessageIndex];
-            contentContainer.innerHTML = `
-                <div class="text-center" style="animation: fadeIn 0.5s;">
-                    <p class="text-xl italic mb-4">"${messageData.text}"</p>
-                    <a href="${messageData.link}" class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Learn More</a>
-                </div>
-            `;
-        }
-
-        function displayCTA() {
-            contentContainer.innerHTML = `
-                <div class="text-center" style="animation: fadeIn 0.5s;">
-                    <p class="text-xl font-bold mb-4">Your Voice Matters. Your Legacy Awaits.</p>
-                    <p class="mb-4">Join the community, share your ideas, and let's build a better future for our children, together.</p>
-                    <a href="community.html" class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700 transition-colors mr-2">Join the Community</a>
-                    <a href="login.html" class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900 transition-colors">Sign Up Now</a>
-                </div>
-            `;
-        }
-
-        function updateMessage() {
-            if (currentMessageIndex === theme.messages.length) {
-                displayCTA();
-            } else {
-                displayMessage();
-            }
-        }
-
-        prevBtn.addEventListener('click', () => {
-            currentMessageIndex = (currentMessageIndex - 1 + theme.messages.length + 1) % (theme.messages.length + 1);
-            updateMessage();
-        });
-
-        nextBtn.addEventListener('click', () => {
-            currentMessageIndex = (currentMessageIndex + 1) % (theme.messages.length + 1);
-            updateMessage();
-        });
-
-        if (themeNameEl) {
-            themeNameEl.textContent = theme.name;
-        }
-        updateMessage();
-    });
-</script>
-<script type="module" src="assets/js/main.js"></script>
-<script type="module" src="assets/js/auth.js"></script>
+    </script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>

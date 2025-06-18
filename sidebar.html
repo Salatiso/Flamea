@@ -1,5 +1,4 @@
-<!DOCTYPE html>
-<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300">
+<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300" style="width: 288px;">
     <!-- Top Section: Logo & Navigation -->
     <div class="sidebar-top">
         <div class="mb-12 flex justify-center">
@@ -15,13 +14,9 @@
         </div>
         <!-- Main Navigation -->
         <nav id="main-nav" class="flex flex-col space-y-2">
-            <!-- Home -->
             <a href="index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-            <!-- About -->
-            <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-info-circle w-6 text-center mr-4"></i> About</a>
-            
-            <!-- Tools -->
-            <div class="relative" data-menu-item="tools">
+            <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> About</a>
+            <div class="relative" data-menu-item="tools-hub">
                 <div class="flex items-center rounded-lg hover:bg-gray-800">
                     <a href="tools.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
                     <button class="submenu-toggle p-3 pr-4 text-gray-400 hover:text-white">
@@ -30,48 +25,30 @@
                 </div>
                 <div class="submenu-container pl-8 py-2" style="display: none;">
                     <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3"></i> Forms & Templates</a>
-                    <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gavel w-6 text-center mr-3"></i> Traditional Customs</a>
-                    <a href="current-affairs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-newspaper w-6 text-center mr-3"></i> Current Affairs</a>
+                    <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-globe w-6 text-center mr-3"></i> Traditional Customs</a>
+                    <a href="affairs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-newspaper w-6 text-center mr-3"></i> Current Affairs</a>
                     <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3"></i> Interactive Games</a>
                 </div>
             </div>
-            <!-- Training -->
-            <div class="relative" data-menu-item="training">
+            <div class="relative" data-menu-item="training-hub">
                 <div class="flex items-center rounded-lg hover:bg-gray-800">
-                    <a href="training.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-chalkboard-teacher w-6 text-center mr-4"></i> Training Hub</a>
+                    <a href="training.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Training Hub</a>
                     <button class="submenu-toggle p-3 pr-4 text-gray-400 hover:text-white">
                         <i class="fas fa-chevron-down transition-transform duration-300"></i>
                     </button>
                 </div>
                 <div class="submenu-container pl-8 py-2" style="display: none;">
-                    <a href="training/course-constitution.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-landmark w-6 text-center mr-3"></i> SA Constitution</a>
-                    <a href="training/course-childrens-act.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-child w-6 text-center mr-3"></i> Children's Act</a>
-                    <a href="training/course-family-law.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-balance-scale w-6 text-center mr-3"></i> Family Law</a>
+                    <a href="constitution.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gavel w-6 text-center mr-3"></i> SA Constitution</a>
+                    <a href="childrens-act.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-child w-6 text-center mr-3"></i> Children's Act</a>
+                    <a href="family-law.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-balance-scale w-6 text-center mr-3"></i> Family Law</a>
                 </div>
             </div>
-            <!-- Community -->
             <a href="community.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
-
             <div class="border-t border-gray-700 my-2"></div>
-
-            <!-- iSazi AI Assistant -->
-                        </button>
-            <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg">
-                <i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment
-            </a>
-            <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi AI Assistant
-            </a>
-
-            <!-- Publications -->
-            <a href="publications.html" target="_blank" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left">
-                <i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> Publications
-            </a>
-
-            <!-- Podcast -->
-            <a href="https://anchor.fm/s/10357aacc/podcast/rss" target="_blank" class="sidebar-link flex items-center p-3 rounded-lg">
-                <i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Podcast
-            </a>
+            <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+            <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: The Fatherhood Guide</button>
+            <a href="publications.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book w-6 text-center mr-4 text-blue-400"></i> Publications</a>
+            <a href="https://anchor.fm/s/10357aacc/podcast/rss" target="_blank" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Podcast</a>
         </nav>
     </div>
     <!-- Bottom Section: Join, Auth & Copyright -->
@@ -92,7 +69,7 @@
         </div>
         <div class="text-xs text-gray-500 leading-relaxed">
             <span>© 2025 Flamea.org</span><br>
-            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span><br>
+            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span>
         </div>
     </div>
 </aside>
