@@ -3,87 +3,106 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Theme Mockups</title>
+    <title>Flamea Theme Mockups (Round 3)</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles for the demonstration */
         body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
-        .page-container { min-height: 100vh; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; background-size: cover; background-position: center; background-attachment: fixed; position: relative; border-bottom: 2px solid #4ade80; }
         .font-roboto-slab { font-family: 'Roboto Slab', serif; }
         .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
-        .flip-card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; width: 100%; max-w-6xl; }
-        .flip-card { background-color: transparent; width: 100%; height: 220px; perspective: 1000px; }
-        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.7s; transform-style: preserve-3d; }
-        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border: 1px solid #4b5563; }
-        .flip-card-front { background-color: #1f2937; /* gray-800 */ }
-        .flip-card-back { background-color: #4f46e5; transform: rotateY(180deg); }
-        .flip-card h3 { font-family: 'Roboto Slab', serif; font-size: 1.5rem; }
+        .main-layout { display: flex; height: 100vh; }
+        .sidebar { width: 288px; flex-shrink: 0; background-color: #111827; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        .page-container { min-height: 100%; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 4rem 2rem; background-size: cover; background-position: center; background-attachment: fixed; position: relative; border-bottom: 2px solid #4ade80; }
+        .content-overlay { width: 100%; max-w-7xl; margin: auto; background-color: rgba(17, 24, 39, 0.85); backdrop-filter: blur(8px); padding: 2rem 3rem; border-radius: 1rem; border: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37); }
     </style>
 </head>
 <body>
 
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599121848248-c833f0ed4866');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Fatherhood</h1>
-        </div>
+    <div class="main-layout">
+        <!-- Sidebar Placeholder -->
+        <aside class="sidebar p-6">
+            <h2 class="text-white text-xl font-bold">Sidebar</h2>
+        </aside>
+
+        <!-- Main content area -->
+        <main class="main-content">
+
+            <!-- New Attempt 1: Fatherhood -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1505325055313-353fac19293e?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Fatherhood</h1>
+                </div>
+            </div>
+
+            <!-- New Attempt 2: Transkei Rondavels -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1621232353755-9a8c62c64973?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Transkei Rondavels</h1>
+                </div>
+            </div>
+
+            <!-- New Attempt 3: Aloe Plants -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1615195627988-5c12f2c16135?q=80&w=1974&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Aloe Plants</h1>
+                </div>
+            </div>
+            
+            <!-- New Attempt 4: Boyhood to Manhood -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1534536281715-e28d76689b4d?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Boyhood to Manhood</h1>
+                </div>
+            </div>
+
+            <!-- New Attempt 5: Ocean Rocks (Purpose) -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1507525428034-b723a9ce6890?q=80&w=2070&auto=format&fit=crop');">
+                 <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Theme: Ocean Rocks (Purpose)</h1>
+                </div>
+            </div>
+
+            <!-- --- CONFIRMED WORKING THEMES --- -->
+            
+            <!-- Confirmed 1: Technology -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Confirmed: Technology</h1>
+                </div>
+            </div>
+
+            <!-- Confirmed 2: Accountability (Action) -->
+             <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Confirmed: Accountability (Action)</h1>
+                </div>
+            </div>
+
+            <!-- Confirmed 3: Responsibility -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Confirmed: Responsibility</h1>
+                </div>
+            </div>
+
+            <!-- Confirmed 4: Coming Home -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Confirmed: Coming Home</h1>
+                </div>
+            </div>
+            
+            <!-- Confirmed 5: Mountains -->
+            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-overlay">
+                    <h1 class="text-5xl font-black font-roboto-slab text-shadow text-white">Confirmed: Mountains</h1>
+                </div>
+            </div>
+
+        </main>
     </div>
 
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1556139943-4bd56244742a');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Accountability</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Responsibility</h1>
-        </div>
-    </div>
-
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Coming Home</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1550745165-9bc0b252726a');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Technology</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1603038171421-93c7a2312686');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Transkei Rondavels</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1542202277-26806969106b');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Ocean Rocks</h1>
-        </div>
-    </div>
-
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Mountains</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1599228249821-1772b2a65a26');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Aloe Plants</h1>
-        </div>
-    </div>
-    
-    <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1503435824534-a83a06a5b025');">
-        <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-            <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-2 text-shadow text-white">Theme: Boyhood to Manhood</h1>
-        </div>
-    </div>
-    
 </body>
 </html>
