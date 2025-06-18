@@ -76,24 +76,66 @@
                         <div class="grid grid-cols-3 gap-4">
                             <div class="col-span-2 card bg-gray-800 p-6 rounded-lg shadow-md">
                                 <h3 class="text-2xl font-bold mb-4 text-green-400">Get In Touch</h3>
-                                <form id="https://formspree.io/f/xanjbvge">
-                                    <select name="category" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                        <option>General Feedback</option>
-                                        <option>Tool Suggestion</option>
-                                        <option>Training Topic Request</option>
-                                        <option>Share My Story</option>
-                                        <option>Collaborate or Donate</option>
-                                        <option>Other...</option>
+                                <form id="contact-form" action="https://formspree.io/f/xanjbvge" method="POST">
+    <input type="hidden" name="_to" value="admin@flamea.org">
+    <select name="category" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+        <option>General Feedback</option>
+        <option>Tool/ Game Suggestion</option>
+        <option>Template Suggestion</option>
+        <option>Training Topic Request</option>
+        <option>Share My Story</option>
+        <option>Collaborate or Donate</option>
+        <option>Other...</option>
+    </select>
+    <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+    <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
+    <textarea name="message" placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200" rows="3"></textarea>
+    <label class="flex items-center mb-4 text-gray-300">
+        <input type="checkbox" name="anonymous" class="mr-2"> Submit Anonymously
+    </label>
+    <button type="submit" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit</button>
+</form>
+                            
+                    <div>
+                         <div class="bg-gray-900 bg-opacity-75 p-8 rounded-xl shadow-lg">
+                            <h3 class="text-2xl font-bold mb-4">Quick Website Feedback</h3>
+                            <form action="mailto:info@flamea.org" method="post" enctype="text/plain">
+                                <!-- Question 1 -->
+                                <div class="mb-6">
+                                    <label class="block mb-2">1. How easy was it to find what you were looking for?</label>
+                                    <select name="Q1_Ease" class="w-full p-2 rounded-md form-input">
+                                        <option>Very Easy</option><option>Easy</option><option>Neutral</option><option>Difficult</option><option>Very Difficult</option>
                                     </select>
-                                    <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <textarea name="message" placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200" rows="3"></textarea>
-                                    <label class="flex items-center mb-4 text-gray-300">
-                                        <input type="checkbox" name="anonymous" class="mr-2"> Submit Anonymously
-                                    </label>
-                                    <button type="submit" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit</button>
-                                </form>
-                            </div>
+                                </div>
+                                <!-- Question 2 -->
+                                <div class="mb-6">
+                                    <label class="block mb-2">2. How would you rate the visual design and appeal?</label>
+                                     <select name="Q2_Design" class="w-full p-2 rounded-md form-input">
+                                        <option>Excellent</option><option>Good</option><option>Average</option><option>Poor</option><option>Very Poor</option>
+                                    </select>
+                                </div>
+                                <!-- Question 3 -->
+                                <div class="mb-6">
+                                    <label class="block mb-2">3. How valuable are the tools and resources to you?</label>
+                                    <select name="Q3_Value" class="w-full p-2 rounded-md form-input">
+                                        <option>Extremely Valuable</option><option>Valuable</option><option>Somewhat Valuable</option><option>Not Very Valuable</option><option>Not Valuable At All</option>
+                                    </select>
+                                </div>
+                                <!-- Question 4 -->
+                                <div class="mb-6">
+                                    <label class="block mb-2">4. Does the website make you feel empowered?</label>
+                                    <select name="Q4_Empowerment" class="w-full p-2 rounded-md form-input">
+                                        <option>Strongly Agree</option><option>Agree</option><option>Neutral</option><option>Disagree</option><option>Strongly Disagree</option>
+                                    </select>
+                                </div>
+                                 <!-- Question 5 -->
+                               <div class="mb-6">
+                                    <label class="block mb-2">4. How would you rate the website overall?</label>
+                                    <select name="Q4_Empowerment" class="w-full p-2 rounded-md form-input">
+                                        <option>Strongly Agree</option><option>Agree</option><option>Neutral</option><option>Disagree</option><option>Strongly Disagree</option>
+                                    </select>
+                                </div>
+</div>
                             <div class="col-span-1 card bg-gray-800 p-6 rounded-lg shadow-md">
                                 <h3 class="text-2xl font-bold mb-4 text-green-400">Follow Us</h3>
                                 <p><i class="fab fa-x-twitter social-icon"></i><a href="#" class="text-blue-400 hover:underline">@flamea2024</a></p>
