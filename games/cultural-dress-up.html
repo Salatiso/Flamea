@@ -1,91 +1,163 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Cultural Dress-Up Adventure - Flamea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="assets/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { background-color: #111827; font-family: 'Open Sans', sans-serif; }
-        .game-container { width: 100%; max-width: 1200px; height: 80vh; max-height: 800px; }
-        .avatar-area { flex-basis: 35%; }
-        .clothing-area { flex-basis: 65%; }
-        .avatar-placeholder { border: 4px dashed #4B5563; background-color: rgba(255,255,255,0.05); }
-        .clothing-item { cursor: grab; transition: transform 0.2s ease-in-out; }
-        .clothing-item:hover { transform: scale(1.1); }
-        .drop-zone { border: 2px dashed transparent; transition: border-color 0.3s; }
-        .drop-zone.hover { border-color: #a78bfa; background-color: rgba(167, 139, 250, 0.2); }
-        .feedback-message { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); padding: 1.5rem 3rem; border-radius: 12px; font-size: 1.5rem; font-weight: bold; z-index: 100; animation: fadeOut 3s forwards; }
-        .nav-btn { background-color: #4f46e5; color: white; padding: 10px 20px; border-radius: 8px; font-weight: bold; transition: background-color 0.3s; }
-        .nav-btn:hover { background-color: #6366f1; }
-        .quit-modal { display: none; }
-        .quit-modal.show { display: flex; }
-        @keyframes fadeOut {
-            0% { opacity: 1; transform: translate(-50%, -50%) scale(1); }
-            80% { opacity: 1; transform: translate(-50%, -50%) scale(1.05); }
-            100% { opacity: 0; transform: translate(-50%, -50%) scale(1.1); }
+        #game-container {
+            background: url('assets/images/xhosa-village-bg.jpg') no-repeat center/cover;
+            min-height: 100vh;
+        }
+        .clothing-item {
+            transition: transform 0.3s ease;
+        }
+        .clothing-item:hover {
+            transform: scale(1.1);
+        }
+        .avatar-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+        }
+        .snap-point {
+            position: absolute;
+            width: 50px;
+            height: 50px;
+            border: 2px dashed #4ade80;
+            opacity: 0.5;
         }
     </style>
 </head>
-<body class="flex flex-col items-center justify-center min-h-screen p-4">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container flex">
+        <!-- Standardized Sidebar -->
+        <div id="sidebar-placeholder"></div>
 
-    <div id="game-container" class="game-container bg-gray-800 rounded-2xl shadow-2xl flex flex-col p-6">
-        <!-- Header: Title and Instructions -->
-        <div class="flex justify-between items-center mb-4">
-            <h1 class="text-3xl font-bold text-purple-400">Cultural Dress-Up Adventure</h1>
-            <button id="instructions-btn" class="nav-btn"><i class="fas fa-info-circle mr-2"></i>Instructions</button>
-        </div>
-        <p id="scenario-text" class="text-lg text-center text-gray-300 mb-4">Select an avatar to begin your cultural journey!</p>
-
-        <!-- Main Game Area -->
-        <div class="flex-grow flex gap-6">
-            <!-- Avatar Area -->
-            <div class="avatar-area bg-gray-900 p-4 rounded-lg flex flex-col justify-center items-center">
-                <div id="avatar-placeholder" class="avatar-placeholder w-full h-full rounded-lg flex flex-col justify-center items-center relative">
-                    <!-- Avatar and drop zones will be injected here -->
+        <!-- Main Content Area -->
+        <main class="main-content flex-1 p-6" id="game-container">
+            <div class="text-box bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-md text-center mb-6">
+                <h2 class="text-5xl font-bold font-roboto mb-4 text-green-400">Cultural Dress-Up Adventure</h2>
+                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Select an avatar to begin your cultural journey!</p>
+            </div>
+            <div class="flex flex-col md:flex-row gap-6">
+                <!-- Avatar Selection -->
+                <div class="avatar-selection card bg-gray-800 p-6 rounded-lg shadow-md">
+                    <h3 class="text-2xl font-bold mb-4 text-green-400">Select Your Character</h3>
+                    <div class="flex gap-4 justify-center">
+                        <button class="avatar-btn" data-avatar="boy">
+                            <img src="assets/images/inkwenkwe.png" alt="Inkwenkwe" class="w-24 h-24 rounded-lg">
+                            <p class="text-gray-300">Inkwenkwe</p>
+                        </button>
+                        <button class="avatar-btn" data-avatar="girl">
+                            <img src="assets/images/intombazana.png" alt="Intombazana" class="w-24 h-24 rounded-lg">
+                            <p class="text-gray-300">Intombazana</p>
+                        </button>
+                    </div>
+                </div>
+                <!-- Game Area -->
+                <div class="game-area flex-grow card bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-md">
+                    <div class="avatar-container mx-auto">
+                        <img id="avatar-img" src="" alt="Selected Avatar" class="w-full h-full hidden">
+                        <!-- Snap Points -->
+                        <div class="snap-point" style="top: 10%; left: 40%;" data-slot="head"></div>
+                        <div class="snap-point" style="top: 30%; left: 40%;" data-slot="neck"></div>
+                        <div class="snap-point" style="top: 50%; left: 40%;" data-slot="body"></div>
+                    </div>
+                    <div id="clothing-panel" class="flex gap-4 mt-4 justify-center">
+                        <img src="assets/images/beaded-necklace.png" draggable="true" class="clothing-item w-16 h-16" data-slot="neck">
+                        <img src="assets/images/xhosa-skirt.png" draggable="true" class="clothing-item w-16 h-16" data-slot="body">
+                        <img src="assets/images/headwrap.png" draggable="true" class="clothing-item w-16 h-16" data-slot="head">
+                    </div>
+                    <p id="game-message" class="text-center text-gray-300 mt-4">Select an avatar to start!</p>
                 </div>
             </div>
-
-            <!-- Clothing & Avatar Selection Area -->
-            <div class="clothing-area bg-gray-900 p-4 rounded-lg flex flex-col">
-                <h2 id="selection-title" class="text-xl font-semibold mb-4 text-center">Select Your Character</h2>
-                <div id="selection-grid" class="flex-grow grid grid-cols-3 sm:grid-cols-4 gap-4 overflow-y-auto">
-                    <!-- Avatars or clothing items will be injected here -->
-                </div>
+            <div class="flex justify-center gap-4 mt-6">
+                <button class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Quit Game</button>
+                <button class="bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700">Back to Arcade</button>
+                <button class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Next Challenge</button>
             </div>
-        </div>
-
-        <!-- Footer: Navigation -->
-        <div class="mt-4 flex justify-between">
-            <button id="quit-btn" class="nav-btn bg-red-600 hover:bg-red-700">Quit Game</button>
-            <a href="../games.html" class="nav-btn">Back to Arcade</a>
-            <button id="next-btn" class="nav-btn hidden">Next Challenge</button>
-        </div>
+        </main>
     </div>
-    
-    <!-- Modals -->
-    <div id="quit-modal" class="quit-modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50">
-        <div class="bg-gray-800 text-white p-8 rounded-lg shadow-xl text-center">
-            <h3 class="text-2xl font-bold mb-4">Are you sure you want to quit?</h3>
-            <p class="mb-6">Your progress will be lost. Sign up to save your scores!</p>
-            <div class="flex justify-center gap-4">
-                <button id="confirm-quit-btn" class="bg-red-600 hover:bg-red-700 px-6 py-2 rounded font-bold">Yes, Quit</button>
-                <button id="cancel-quit-btn" class="bg-gray-600 hover:bg-gray-500 px-6 py-2 rounded font-bold">Cancel</button>
+    <!-- Quit Confirmation Modal -->
+    <div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-2xl font-bold mb-4 text-green-400">Are you sure you want to quit?</h3>
+            <p class="text-gray-300 mb-4">Your progress will be lost. Sign up to save your scores!</p>
+            <div class="flex justify-between gap-2">
+                <button class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Yes, Quit</button>
+                <button class="bg-gray-700 text-white font-bold py-2 px-4 rounded-lg hover:bg-gray-900">Cancel</button>
             </div>
         </div>
     </div>
-    <div id="instructions-modal" class="quit-modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50">
-        <div class="bg-gray-800 text-white p-8 rounded-lg shadow-xl max-w-lg">
-            <h3 class="text-2xl font-bold mb-4">How to Play</h3>
-            <p class="mb-2">1. Choose an avatar to start the game.</p>
-            <p class="mb-2">2. Read the scenario to understand which ceremony you're preparing for.</p>
-            <p class="mb-2">3. Drag the correct clothing items from the selection panel onto the avatar.</p>
-            <p class="mb-6">4. Complete the outfit to learn about the custom and move to the next challenge!</p>
-            <button id="close-instructions-btn" class="bg-purple-600 hover:bg-purple-700 px-6 py-2 rounded font-bold w-full">Got it!</button>
+    <!-- How to Play Modal -->
+    <div id="how-to-play-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
+            <h3 class="text-2xl font-bold mb-4 text-green-400">How to Play</h3>
+            <ol class="text-gray-300 mb-4 list-decimal list-inside">
+                <li>Choose an avatar to start the game.</li>
+                <li>Read the scenario to understand which ceremony you're preparing for.</li>
+                <li>Drag the correct clothing items from the selection panel onto the avatar.</li>
+                <li>Complete the outfit to learn about the custom and move to the next challenge!</li>
+            </ol>
+            <button class="bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Got it!</button>
         </div>
     </div>
-    
-    <script type="module" src="../assets/js/games.js"></script>
+    <!-- Scripts -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const avatarButtons = document.querySelectorAll('.avatar-btn');
+            const avatarImg = document.getElementById('avatar-img');
+            const clothingItems = document.querySelectorAll('.clothing-item');
+            const snapPoints = document.querySelectorAll('.snap-point');
+            const gameMessage = document.getElementById('game-message');
+
+            avatarButtons.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    const avatar = btn.dataset.avatar;
+                    avatarImg.src = avatar === 'boy' ? 'assets/images/inkwenkwe.png' : 'assets/images/intombazana.png';
+                    avatarImg.classList.remove('hidden');
+                    gameMessage.textContent = 'Drag clothing items to the avatar!';
+                });
+            });
+
+            clothingItems.forEach(item => {
+                item.addEventListener('dragstart', e => {
+                    e.dataTransfer.setData('text', JSON.stringify({
+                        src: item.src,
+                        slot: item.dataset.slot
+                    }));
+                });
+            });
+
+            snapPoints.forEach(point => {
+                point.addEventListener('dragover', e => e.preventDefault());
+                point.addEventListener('drop', e => {
+                    e.preventDefault();
+                    const data = JSON.parse(e.dataTransfer.getData('text'));
+                    if (data.slot === point.dataset.slot) {
+                        const img = document.createElement('img');
+                        img.src = data.src;
+                        img.className = 'absolute w-12 h-12';
+                        img.style.top = point.style.top;
+                        img.style.left = point.style.left;
+                        point.appendChild(img);
+                        gameMessage.textContent = 'Correct placement! Try another item.';
+                        new Audio('assets/sounds/success.mp3').play();
+                    } else {
+                        gameMessage.textContent = 'Wrong slot! Try again.';
+                        new Audio('assets/sounds/error.mp3').play();
+                    }
+                });
+            });
+        });
+    </script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
