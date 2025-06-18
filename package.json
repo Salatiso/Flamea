@@ -1,0 +1,14 @@
+{
+  "name": "flamea",
+  "version": "1.0.0",
+  "description": "A static HTML site for Flamea",
+  "main": "index.html",
+  "scripts": {
+    "build:css": "tailwindcss -i ./assets/css/style.css -o ./assets/css/style.min.css --minify"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1",
+    "postcss": "^8.4.31",
+    "autoprefixer": "^10.4.16"
+  }
+}
