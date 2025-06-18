@@ -1,6 +1,6 @@
 /**
  * Flamea.org - Final Unified Main Script
- * Version: 4.0
+ * Version: 7.0
  * Description:
  * This single script manages all core interactive functionalities for Flamea.org.
  * - Dynamically loads the sidebar from sidebar.html.
@@ -8,9 +8,10 @@
  * - Manages all collapsible accordion sections and sidebar submenus.
  * - Renders dynamic catalogues for Training, Tools, Games, and Customs pages.
  * - Includes full search and filter functionality for the Customs page.
+ * - Implements a dynamic background theme that changes based on the time of day.
  *
- * This file combines the structure of main-js-2.txt with the complete data and
- * functionality of main-JS.txt.
+ * This file combines the structure of the original script with the new features
+ * and improvements.
  */
 document.addEventListener('DOMContentLoaded', () => {
 
@@ -41,7 +42,8 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Central function to run all initializations
     function initializeSiteFeatures() {
-        // Initialize interactive components first
+        // Initialize dynamic and interactive components
+        setDynamicBackground(); // NEW: Sets the background based on time
         initializeModals();
         initializeAccordionsAndSubmenus();
         setActiveSidebarLink();
@@ -54,7 +56,39 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- 2. INTERACTIVE COMPONENT HANDLERS ---
+    // --- 2. DYNAMIC BACKGROUND LOGIC ---
+    /**
+     * Checks the current time and applies a corresponding theme class to the main content area.
+     * The theme reflects the journey of a Xhosa man, from boyhood to elderhood.
+     */
+    function setDynamicBackground() {
+        const mainContent = document.querySelector('.main-content');
+        if (!mainContent) return;
+
+        const now = new Date();
+        const hour = now.getHours();
+        let themeClass = '';
+
+        // Determine theme based on the specified time slots
+        if (hour >= 4 && hour < 10) { // 4:00 AM - 9:59 AM (Morning)
+            themeClass = 'bg-theme-accountability'; // Accountability & new beginnings
+        } else if (hour >= 10 && hour < 13) { // 10:00 AM - 12:59 PM (Mid-day)
+            themeClass = 'bg-theme-technology'; // Harnessing modern tools
+        } else if (hour >= 13 && hour < 16) { // 1:00 PM - 3:59 PM (Afternoon)
+            themeClass = 'bg-theme-coming-home'; // The journey back to roots
+        } else if (hour >= 16 && hour < 18) { // 4:00 PM - 5:59 PM (Late Afternoon)
+            themeClass = 'bg-theme-responsibility'; // Uthwalo, taking on responsibility
+        } else if (hour >= 18 && hour < 23) { // 6:00 PM - 10:59 PM (Evening)
+            themeClass = 'bg-theme-mountains'; // Wisdom of the elders, looking over the land
+        } else { // 11:00 PM - 3:59 AM (Night)
+            themeClass = 'bg-theme-boyhood'; // Dreams and potential of youth
+        }
+
+        mainContent.classList.add(themeClass);
+    }
+
+
+    // --- 3. INTERACTIVE COMPONENT HANDLERS ---
 
     /**
      * Finds the current page's link in the sidebar and applies the 'active' class.
@@ -65,12 +99,17 @@ document.addEventListener('DOMContentLoaded', () => {
         const navLinks = document.querySelectorAll('#sidebar-placeholder a');
 
         navLinks.forEach(link => {
+            // Check if the link's href matches the current page filename
             const linkPage = link.getAttribute('href').split("/").pop();
             if (linkPage === currentPage) {
                 link.classList.add('active');
+
+                // Find the closest parent submenu container
                 const parentSubmenu = link.closest('.submenu-container');
                 if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block';
+                    parentSubmenu.style.display = 'block'; // Expand the submenu
+
+                    // Find the toggle button associated with this submenu and rotate its icon
                     const parentToggle = parentSubmenu.previousElementSibling;
                     if (parentToggle && parentToggle.matches('.submenu-toggle')) {
                         const icon = parentToggle.querySelector('i.fa-chevron-down');
@@ -83,15 +122,20 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
+
     /**
      * Adds delegated click listeners for all accordions (main content) and submenus (sidebar).
+     * This single listener handles all toggle events efficiently.
      */
     function initializeAccordionsAndSubmenus() {
         document.body.addEventListener('click', function(event) {
             const toggleButton = event.target.closest('.accordion-toggle, .submenu-toggle');
             if (!toggleButton) return;
 
-            const parentItem = toggleButton.parentElement;
+            // Use .closest() for a more robust way to find the parent container
+            const parentItem = toggleButton.closest('.accordion-item, [data-menu-item]');
+             if (!parentItem) return;
+
             const content = parentItem.querySelector('.accordion-content, .submenu-container');
             const icon = toggleButton.querySelector('i.fa-chevron-down');
 
@@ -102,7 +146,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     content.style.maxHeight = isOpen ? '0px' : content.scrollHeight + 'px';
                     if (icon) icon.classList.toggle('rotate-180', !isOpen);
                 }
-                // Sidebar submenus use display block/none for instant toggle.
+                // Sidebar submenus use display block/none for an instant toggle.
                 else if (content.classList.contains('submenu-container')) {
                     const isVisible = content.style.display === 'block';
                     content.style.display = isVisible ? 'none' : 'block';
@@ -140,9 +184,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
 
-    // --- 3. DYNAMIC CONTENT DATA & RENDERERS ---
+    // --- 4. DYNAMIC CONTENT DATA & RENDERERS ---
 
-    // Data is now the complete version from Main-JS.txt
     const trainingData = [{
         title: "🎓 Legal & Constitutional Foundations",
         color: "green-500",
@@ -518,8 +561,8 @@ document.addEventListener('DOMContentLoaded', () => {
             section.innerHTML = `
                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                      <div class="flex items-center">
-                        <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
-                        <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
+                         <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
+                         <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
                     </div>
                     <i class="fas fa-chevron-down transform transition-transform"></i>
                 </button>
@@ -531,8 +574,8 @@ document.addEventListener('DOMContentLoaded', () => {
                                 const tag = isModal ? 'button' : 'a';
                                 const attrs = isModal ? `type="button" data-modal-target="${tool.modal}"` : `href="${tool.url}" ${tool.external ? 'target="_blank" rel="noopener noreferrer"' : ''}`;
                                 return `<${tag} ${attrs} class="tool-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300">
-                                       <i class="${tool.icon} text-4xl text-${category.color.split('-')[0]}-400 mb-4"></i><h3 class="text-xl font-bold mb-2">${tool.name}</h3>
-                                       <p class="text-gray-400 flex-grow">${tool.description}</p></${tag}>`;
+                                    <i class="${tool.icon} text-4xl text-${category.color.split('-')[0]}-400 mb-4"></i><h3 class="text-xl font-bold mb-2">${tool.name}</h3>
+                                    <p class="text-gray-400 flex-grow">${tool.description}</p></${tag}>`;
                             }).join('')}
                         </div>
                     </div>
@@ -564,7 +607,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 </button>
                 <div class="accordion-content" style="max-height: 0px; overflow: hidden; transition: max-height 0.5s ease-out;">
                      <div class="pt-6 pl-4 border-l-4 border-${category.color}">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             ${category.games.map(game => `
                                 <a href="${game.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300 flex flex-col text-left">
                                     <div class="flex items-start mb-4">
@@ -637,10 +680,10 @@ document.addEventListener('DOMContentLoaded', () => {
                             ${Object.keys(custom.variations).length > 0 ? `<h4 class="font-bold text-lg mb-2 text-gray-200">Variations:</h4>` : ''}
                             ${Object.entries(custom.variations).map(([culture, text]) => `<p class="mb-2"><strong>${culture.charAt(0).toUpperCase() + culture.slice(1)}:</strong> ${text}</p>`).join('')}
                              <div class="mt-4 pt-4 border-t border-gray-700">
-                                <h4 class="font-bold text-lg mb-2 text-gray-200">Sources:</h4>
-                                <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
-                                <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
-                            </div>
+                                 <h4 class="font-bold text-lg mb-2 text-gray-200">Sources:</h4>
+                                 <p class="text-sm"><strong>Primary:</strong> ${custom.sources.primary.map(src => `<a href="${src}" target="_blank" rel="noopener noreferrer" class="text-purple-400 hover:underline">Reference</a>`).join(', ')}</p>
+                                 <p class="text-sm"><strong>Secondary:</strong> ${custom.sources.secondary.join(', ')}</p>
+                             </div>
                         </div>
                     </div>
                 </div>`;

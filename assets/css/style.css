@@ -8,19 +8,39 @@ body {
 
 /* --- MAIN LAYOUT --- */
 .main-container {
-    display: grid;
-    grid-template-columns: 280px 1fr; 
+    display: flex; 
     height: 100vh;
     width: 100vw;
     overflow: hidden;
 }
+.sidebar {
+    width: 288px; /* Equivalent to w-72 */
+    flex-shrink: 0;
+    background-color: #111827; /* gray-900 */
+    /* Add other sidebar styles if needed */
+}
 .main-content {
+    flex-grow: 1;
     overflow-y: auto;
-    background-color: #111827;
+    background-color: #111827; /* Default background */
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    transition: background-image 1s ease-in-out; /* Smooth transition */
 }
 
+/* --- DYNAMIC BACKGROUND THEMES (ADD THIS SECTION) --- */
+.bg-theme-accountability { background-image: url('https://images.unsplash.com/photo-1517048676732-d65bc937f952?q=80&w=2070&auto=format&fit=crop'); }
+.bg-theme-technology { background-image: url('https://images.unsplash.com/photo-1519389950473-47ba0277781c?q=80&w=2070&auto=format&fit=crop'); }
+.bg-theme-coming-home { background-image: url('https://images.unsplash.com/photo-1488190211105-8b0e65b80b4e?q=80&w=2070&auto=format&fit=crop'); }
+.bg-theme-responsibility { background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2070&auto=format&fit=crop'); }
+.bg-theme-mountains { background-image: url('https://images.unsplash.com/photo-1464822759023-fed622ff2c3b?q=80&w=2070&auto=format&fit=crop'); }
+.bg-theme-boyhood { background-image: url('https://images.unsplash.com/photo-1506748686214-e9df14d4d9d0?q=80&w=1974&auto=format&fit=crop'); }
+/* --- END OF THEMES --- */
+
+
 /* --- MODAL STYLES (CENTRALIZED) --- */
-.modal-overlay {
+.custom-modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -33,79 +53,11 @@ body {
     z-index: 1000;
     opacity: 0;
     visibility: hidden;
-    transition: opacity 0.3s, visibility 0.3s;
+    transition: opacity 0.3s, visibility 0s 0.3s;
 }
-.modal-overlay.visible {
+.custom-modal.visible {
     opacity: 1;
     visibility: visible;
+    transition: opacity 0.3s;
 }
-.modal-content {
-    background-color: #1f2937;
-    color: #e5e7eb;
-    padding: 2rem;
-    border-radius: 8px;
-    width: 90%;
-    max-width: 700px;
-    max-height: 80vh;
-    overflow-y: auto;
-    position: relative;
-    transform: scale(0.9);
-    transition: transform 0.3s;
-}
-.modal-overlay.visible .modal-content {
-    transform: scale(1);
-}
-.modal-close {
-    position: absolute;
-    top: 1rem;
-    right: 1rem;
-    font-size: 1.5rem;
-    cursor: pointer;
-    color: #9ca3af;
-}
-
-/* --- ACCORDION STYLES --- */
-.accordion-content {
-    max-height: 0;
-    overflow: hidden;
-    transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
-}
-.accordion-content.open {
-    max-height: 1500px; /* Adjust as needed */
-}
-.accordion-toggle .fa-chevron-down {
-    transition: transform 0.3s ease;
-}
-.accordion-toggle .rotate-180 {
-    transform: rotate(180deg);
-}
-
-/* --- FORM & BUTTON STYLES --- */
-.form-input, .form-select {
-    width: 100%;
-    padding: 0.75rem;
-    border-radius: 0.375rem;
-    background-color: #374151;
-    border: 1px solid #4B5563;
-    color: #F3F4F6;
-    transition: border-color 0.2s, box-shadow 0.2s;
-}
-.form-input:focus, .form-select:focus {
-    outline: none;
-    border-color: #6366F1; /* indigo-500 */
-    box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.5);
-}
-.btn {
-    padding: 0.75rem 1.5rem;
-    border-radius: 0.375rem;
-    font-weight: bold;
-    transition: all 0.2s;
-    cursor: pointer;
-}
-.btn-primary {
-    background-color: #4F46E5; /* indigo-600 */
-    color: white;
-}
-.btn-primary:hover {
-    background-color: #4338CA; /* indigo-700 */
-}
+/* etc... rest of your style.css file */
