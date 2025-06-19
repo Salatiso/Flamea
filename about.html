@@ -3,44 +3,217 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>About Flamea</title>
+    <title>FLAMEA - About Us</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
     <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
     <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
+    <style>
+        :root {
+            --timeline-speed: 80s;
+        }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container {
+            display: grid;
+            grid-template-columns: 280px 1fr 300px;
+            height: 100vh;
+            width: 100vw;
+            overflow: hidden;
+        }
+        .main-content {
+            grid-column: 2 / 3;
+            overflow-y: auto;
+        }
+        .timeline-item {
+            opacity: 0;
+            transform: translateY(50px);
+            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+        }
+        .timeline-item.is-visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .timeline-line::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 1.5rem;
+            transform: translateX(-50%);
+            height: 100%;
+            width: 4px;
+            background-color: #4B5563;
+        }
+        .timeline-icon { z-index: 10; }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+        .accordion-content.open {
+            max-height: 1000px;
+        }
+        .vertical-timeline-container {
+            grid-column: 3 / 4;
+            height: 100vh;
+            background-color: #111827;
+            color: #d1d5db;
+            padding: 2rem 1rem;
+            overflow: hidden;
+            border-left: 1px solid #374151;
+        }
+        .timeline-wrapper {
+            position: relative;
+            height: 100%;
+        }
+        .timeline-track {
+            position: absolute;
+            left: 20px;
+            top: 0;
+            height: 100%;
+            width: 4px;
+            background-image: linear-gradient(to bottom, #4f46e5, #10b981, #ef4444, #f59e0b);
+        }
+        .timeline-scroller {
+            animation: scroll-vertical var(--timeline-speed) linear infinite;
+        }
+        .timeline-scroller:hover {
+            animation-play-state: paused;
+        }
+        .timeline-point {
+            position: relative;
+            margin-bottom: 120px;
+            padding-left: 50px;
+        }
+        .timeline-dot {
+            position: absolute;
+            left: 22px;
+            top: 5px;
+            transform: translateX(-50%);
+            width: 16px;
+            height: 16px;
+            background-color: #374151;
+            border: 3px solid #6366f1;
+            border-radius: 50%;
+            cursor: pointer;
+            transition: transform 0.2s, background-color 0.2s;
+            z-index: 10;
+        }
+        .timeline-point:hover .timeline-dot {
+            transform: translateX(-50%) scale(1.3);
+            background-color: #818cf8;
+        }
+        .timeline-content .date {
+            font-family: 'Roboto Slab', serif;
+            font-weight: 700;
+            color: #a5b4fc;
+            font-size: 1.1rem;
+        }
+        .timeline-content .event {
+            font-size: 0.9rem;
+            color: #d1d5db;
+        }
+        @keyframes scroll-vertical {
+            0% { transform: translateY(0); }
+            100% { transform: translateY(-100%); }
+        }
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s, visibility 0.3s;
+        }
+        .modal-overlay.visible {
+            opacity: 1;
+            visibility: visible;
+        }
+        .modal-content {
+            background-color: #1f2937;
+            color: #e5e7eb;
+            padding: 2rem;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 700px;
+            max-height: 80vh;
+            overflow-y: auto;
+            position: relative;
+            transform: scale(0.9);
+            transition: transform 0.3s;
+        }
+        .modal-overlay.visible .modal-content {
+            transform: scale(1);
+        }
+        .modal-close {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: #9ca3af;
+        }
+        #modal-title {
+            font-family: 'Roboto Slab', serif;
+            color: #818cf8;
+            border-bottom: 1px solid #4b5563;
+            padding-bottom: 0.5rem;
+            margin-bottom: 1rem;
+        }
+        #modal-details p {
+            line-height: 1.7;
+            margin-bottom: 1rem;
+        }
+        #modal-references {
+            margin-top: 1.5rem;
+            font-size: 0.9rem;
+            border-top: 1px solid #374151;
+            padding-top: 1rem;
+        }
+        #modal-references a {
+            color: #6ee7b7;
+            text-decoration: none;
+        }
+        #modal-references a:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
-        <div id="sidebar-placeholder"></div>
-
-        <!-- Main Content Area -->
+        <div id="sidebar-placeholder" class="w-64 flex-shrink-0"></div>
         <main class="main-content p-8 md:p-12">
             <div class="max-w-3xl mx-auto">
                 <h1 class="text-4xl font-bold font-roboto mb-8 text-white text-center">The Story of FLAMEA</h1>
-                <!-- Existing Timeline Container -->
-                <div class="relative timeline-line pl-12">
-                    
-                    <!-- Timeline Item 1: The Spark -->
+                <div class="relative timeline-line pl-12 max-h-[70vh] overflow-y-auto">
                     <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
                             <h3 class="text-2xl font-bold text-blue-400">Our Mission</h3>
                             <p class="text-gray-300 mt-2">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality before the law, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
                         </div>
                     </div>
-
-                    <!-- Timeline Item 2: The Vision -->
                     <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
                             <h3 class="text-2xl font-bold text-green-400">Our Vision</h3>
                             <p class="text-gray-300 mt-2">We envision a South African legal system where family courts prioritize the well-being of children above all, and a society where every child can thrive in the care and support of their entire family network, free from gender discrimination.</p>
                         </div>
                     </div>
-
-                    <!-- Timeline Item 3: The Values (UPDATED) -->
-                     <div class="timeline-item mb-12">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
+                    <div class="timeline-item mb-12">
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
                             <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Core Values: The Builder's Ethos</h3>
                             <div class="mb-6">
@@ -63,9 +236,8 @@
                             </div>
                         </div>
                     </div>
-                    <!-- Timeline Item 4: The Call to Action -->
                     <div class="timeline-item">
-                         <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
+                        <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
                             <h3 class="text-2xl font-bold text-red-400">Your Stand</h3>
                             <p class="text-gray-300 mt-2">This is your platform. This is your movement. We are not asking for permission—we are taking our rightful place. Join us and lead the change.</p>
@@ -74,22 +246,16 @@
                 </div>
             </div>
         </main>
-
-        <!-- Vertical Timeline Column -->
         <div class="vertical-timeline-container">
             <div class="timeline-wrapper">
                 <div class="timeline-track"></div>
-                <div class="timeline-scroller" id="timeline-scroller">
-                    <!-- Vertical timeline points will be injected here by JS -->
-                </div>
+                <div class="timeline-scroller" id="timeline-scroller"></div>
             </div>
         </div>
     </div>
-    
-    <!-- Modal for Timeline Details -->
     <div id="timeline-modal" class="modal-overlay">
         <div class="modal-content">
-            <span class="modal-close">&times;</span>
+            <span class="modal-close">×</span>
             <h2 id="modal-title" class="text-2xl font-bold mb-4"></h2>
             <div id="modal-details" class="text-gray-300"></div>
             <div id="modal-references">
@@ -98,12 +264,54 @@
             </div>
         </div>
     </div>
-
-
-    <!-- Scripts -->
+    <div id="chatbot-modal" class="custom-modal"></div>
+    <div id="podcast-modal" class="custom-modal"></div>
+    <div id="login-modal" class="custom-modal">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Login</h2>
+            <form id="login-form">
+                <div class="mb-4">
+                    <label for="email" class="block text-sm font-medium text-gray-700">Email</label>
+                    <input type="email" id="email" class="form-input w-full" placeholder="Your email">
+                </div>
+                <div class="mb-4">
+                    <label for="password" class="block text-sm font-medium text-gray-700">Password</label>
+                    <input type="password" id="password" class="form-input w-full" placeholder="Your password">
+                </div>
+                <div class="flex justify-between items-center mb-4">
+                    <a href="register.html" class="text-blue-600 hover:underline">Register</a>
+                    <a href="forgot-password.html" class="text-blue-600 hover:underline">Forgot Password?</a>
+                </div>
+                <button type="submit" class="btn btn-primary w-full">Login</button>
+            </form>
+            <button class="btn btn-secondary w-full mt-4" data-modal-close>Close</button>
+        </div>
+    </div>
     <script>
-        // Existing script for about.html page
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        window.flamea = {
+            auth: firebase.auth(),
+            db: firebase.firestore()
+        };
+
+        // Prevent duplicate chatbot initialization
         document.addEventListener('DOMContentLoaded', () => {
+            const existingChatbot = document.querySelector('.chatbot-container:not(#sidebar-placeholder *)');
+            if (existingChatbot) {
+                existingChatbot.remove();
+            }
+
+            // Main content timeline animation
             const timelineItems = document.querySelectorAll('.main-content .timeline-item');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -114,6 +322,7 @@
             }, { threshold: 0.1 });
             timelineItems.forEach(item => observer.observe(item));
 
+            // Accordion toggle for Core Values
             const accordionToggles = document.querySelectorAll('.accordion-toggle');
             accordionToggles.forEach(button => {
                 button.addEventListener('click', () => {
@@ -123,134 +332,29 @@
                     icon.classList.toggle('rotate-180');
                 });
             });
-        });
-    </script>
-    
-    <!-- NEW SCRIPT FOR VERTICAL TIMELINE -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
+
+            // Vertical timeline
             const verticalTimelineData = [
-                {
-                    date: 'c. 200,000 BC', event: 'Emergence of Homo sapiens & Early Religion',
-                    details: 'Archaeological evidence, such as intentional burials, suggests the emergence of religious ideas and ancestor worship. This established a continuity across generations, a practice foundational to cultures like the Bantu and Khoisan. The family was the primary social and economic unit.',
-                    primarySource: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3997530/',
-                    secondarySource: 'The Better Angels of Our Nature, S. Pinker'
-                },
-                {
-                    date: 'c. 10,000 BC', event: 'The Agricultural Revolution',
-                    details: 'The shift from nomadic life to settled agriculture creates concepts of land ownership and inheritance. This solidifies the patriarchal family structure, as fatherhood becomes the primary social mechanism for transferring property and status.',
-                    primarySource: 'https://pubmed.ncbi.nlm.nih.gov/11608585/',
-                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
-                },
-                {
-                    date: 'c. 3000 BC', event: 'First Formal Schools in Mesopotamia',
-                    details: 'The first schools emerge not for the general populace, but as exclusive institutions to train scribes and priests. This marks the first "outsourcing" of education from the family to a surrogate institution serving the state\'s needs.',
-                    primarySource: 'https://www.worldhistory.org/article/1493/education-in-ancient-mesopotamia/',
-                    secondarySource: 'The Homeschooling Father, Salatiso'
-                },
-                {
-                    date: 'c. 800 BC', event: 'Homer\'s Iliad and the Honor Culture',
-                    details: 'The epic poetry of Homer depicts a society where a man\'s identity and worth are inextricably linked to his father\'s legacy and honor. The father is the ultimate benchmark for a son\'s life, a powerful cultural paradigm.',
-                    primarySource: 'The Iliad, Homer',
-                    secondarySource: 'Intellectuals, P. Johnson'
-                },
-                {
-                    date: 'c. 380 BC', event: 'Plato\'s "Allegory of the Cave"',
-                    details: 'Plato provides the philosophical justification for surrogate education. He posits that truth is an abstract ideal accessible only to enlightened experts (philosophers), who must lead the ignorant masses out of the "cave" of traditional, familial wisdom.',
-                    primarySource: 'The Republic, Plato',
-                    secondarySource: 'The Homeschooling Father, Salatiso'
-                },
-                {
-                    date: 'c. 500 AD - 1500 AD', event: 'The Bible and the Codification of Family',
-                    details: 'The Judeo-Christian tradition establishes the patriarchal family as a divinely instituted union. The Bible places the primary responsibility for children\'s education on the parents, particularly the father, solidifying the family as the original and most vital school.',
-                    primarySource: 'The Bible (e.g., Ephesians 5, Deuteronomy 6)',
-                    secondarySource: 'The Homeschooling Father, Salatiso'
-                },
-                {
-                    date: '1517 AD', event: 'The Protestant Reformation',
-                    details: 'Martin Luther champions universal education so that all believers can read the Bible themselves. This introduces the idea of mass schooling, though Luther still viewed parents as the primary educators, with schools as a support system.',
-                    primarySource: 'https://www.researchgate.net/publication/272332616_Martin_Luther\'s_Educational_Approach',
-                    secondarySource: 'The Homeschooling Father, Salatiso'
-                },
-                {
-                    date: '1658', event: 'First Formal School in South Africa',
-                    details: 'The Dutch East India Company (DEIC) establishes a school to instruct enslaved children in Dutch culture and religion. This marks the beginning of institutionalized, surrogate education in South Africa, designed for ideological domination, not indigenous flourishing.',
-                    primarySource: 'https://www.hsrcpress.ac.za/books/a-new-history-of-formal-schooling-in-south-africa-1658-1910',
-                    secondarySource: 'The Homeschooling Father, Salatiso, Ch. 1'
-                },
-                {
-                    date: 'c. 1760', event: 'The Industrial Revolution',
-                    details: 'Work moves from the family unit (farm/workshop) to the factory. This physically separates the father from the home, transforming him from the master of a productive household to a "breadwinner," an employee whose economic life is external to the family.',
-                    primarySource: 'https://www.cambridge.org/core/books/abs/economics-of-the-family/introduction-to-the-economics-of-the-family/0B4D5D4E6A7A6679589A644D251C7A92',
-                    secondarySource: 'Knowledge and Decisions, T. Sowell'
-                },
-                {
-                    date: '1762', event: 'Rousseau and the Ideology of the State Surrogate',
-                    details: 'Philosopher Jean-Jacques Rousseau provides the explicit ideology for the state as the ultimate parent, arguing it must control a citizen\'s upbringing from infancy. This is contrasted with his abandonment of his own five children, a pattern of personal hypocrisy among intellectuals.',
-                    primarySource: 'The Social Contract, J.J. Rousseau',
-                    secondarySource: 'Intellectuals, P. Johnson, Ch. 1'
-                },
-                {
-                    date: '1948', event: 'Apartheid Systematized in South Africa',
-                    details: 'The National Party comes to power and implements apartheid. Policies like the migrant labor system and influx control deliberately engineer the absence of Black fathers from their families to supply cheap labor to white-owned industries.',
-                    primarySource: 'https://www.sahistory.org.za/article/apartheid-and-reactions-it',
-                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
-                },
-                {
-                    date: '1953 AD', event: 'The Bantu Education Act',
-                    details: 'The apartheid state creates a deliberately inferior education system to engineer a permanent Black underclass, destroying community and mission schools. It is the ultimate cynical use of the "surrogate" school system as a tool of oppression.',
-                    primarySource: 'https://www.britannica.com/topic/Bantu-Education-Act',
-                    secondarySource: 'The Homeschooling Father, Salatiso, Ch. 4'
-                },
-                 {
-                    date: '1956 AD', event: 'Birth of Mlandeli, a Successor to his Father to be Provider for his Family ',
-                    details: 'Salatiso\'s father is born in Nqabane, Transkei. He would grow up to become an inspector and provide for his family, laying the foundation for his son despite the hardships of apartheid.',
-                    primarySource: 'The Quest for Buggz, Salatiso',
-                    secondarySource: 'Beyond the Grave, Salatiso'
-                },
-                {
-                    date: 'c. 1970s', event: 'Rise of Second-Wave Feminism',
-                    details: 'The movement challenges traditional family structures and gender roles. While achieving necessary gains, it also contributes to rising divorce rates and a cultural and legal environment often punitive towards men, further destabilizing the family unit.',
-                    primarySource: 'Feminist Fantasies, Phyllis Schlafly',
-                    secondarySource: 'Men on Strike, Helen Smith'
-                },
-                {
-                    date: '1982', event: 'Birth of the Son, Mlandeli has his Successor',
-                    details: 'Born in Fort Malan, Transkei, into a Xhosa family shaped by both tradition and the pressures of apartheid South Africa. His name, meaning "show us the way," sets him on a path to lead rather than follow.',
-                    primarySource: 'The Quest for Buggz, Salatiso',
-                    secondarySource: 'The Homeschooling Father, Salatiso'
-                },
-                {
-                    date: '1993', event: 'Death of the Father, Salatiso Becomes Umlandeli',
-                    details: 'Salatiso\'s father dies at a young age, thrusting Salatiso, at age 11, into the role of his father\'s successor (Umlandeli), a pivotal moment that would shape his entire life and philosophy.',
-                    // FIX: Removed extra comma and quote that was causing a JavaScript syntax error.
-                    primarySource: 'The Quest for Buggz, Salatiso',
-                    secondarySource: 'Lessons from my mother, Salatiso'
-                },
-                {
-                    date: '1994', event: 'South Africa\'s First Democratic Election',
-                    details: 'Apartheid officially ends, and a new Constitution is adopted, enshrining equality. However, the subsequent implementation of race-based redress policies continues a form of state-sanctioned discrimination.',
-                    primarySource: 'https://study-democracy.sun.ac.za/the-road-to-democracy-in-south-africa/',
-                    secondarySource: 'Beyond Redress, Salatiso'
-                },
-                {
-                    date: '2005', event: 'The Children\'s Act is Implemented',
-                    details: 'Modern family law is implemented. While ostensibly gender-neutral, its application in Children\'s Courts is argued to be systematically biased against fathers, perpetuating the erosion of the family structure.',
-                    primarySource: 'The Children\'s Act 38 of 2005',
-                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
-                },
-                {
-                    date: '2018', event: 'The Birth of Sazi a.k.a "BuggZ"',
-                    details: 'The birth of Salatiso\'s son. This event marks the start of a direct legal and personal battle against the family court system, becoming the catalyst for all of his subsequent work.',
-                    primarySource: 'The Quest for Buggz ',
-                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
-                },
-                {
-                    date: '2023', event: 'The Founding of Flamea',
-                    details: 'Drawing from years of personal struggle, legal battles, and extensive research, Salatiso launches Flamea.org. The platform is the culmination of his quest, designed to provide tools and knowledge for others facing similar injustices, thereby reclaiming the family\'s autonomy from failing state surrogates.',
-                    primarySource: 'Goliath\'s Reckoning, Salatiso',
-                    secondarySource: 'The Quest for Buggz, Salatiso '
-                },
+                { date: 'c. 200,000 BC', event: 'Emergence of Homo sapiens & Early Religion', details: 'Archaeological evidence, such as intentional burials, suggests the emergence of religious ideas and ancestor worship. This established a continuity across generations, a practice foundational to cultures like the Bantu and Khoisan. The family was the primary social and economic unit.', primarySource: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3997530/', secondarySource: 'The Better Angels of Our Nature, S. Pinker' },
+                { date: 'c. 10,000 BC', event: 'The Agricultural Revolution', details: 'The shift from nomadic life to settled agriculture creates concepts of land ownership and inheritance. This solidifies the patriarchal family structure, as fatherhood becomes the primary social mechanism for transferring property and status.', primarySource: 'https://pubmed.ncbi.nlm.nih.gov/11608585/', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
+                { date: 'c. 3000 BC', event: 'First Formal Schools in Mesopotamia', details: 'The first schools emerge not for the general populace, but as exclusive institutions to train scribes and priests. This marks the first "outsourcing" of education from the family to a surrogate institution serving the state\'s needs.', primarySource: 'https://www.worldhistory.org/article/1493/education-in-ancient-mesopotamia/', secondarySource: 'The Homeschooling Father, Salatiso' },
+                { date: 'c. 800 BC', event: 'Homer\'s Iliad and the Honor Culture', details: 'The epic poetry of Homer depicts a society where a man\'s identity and worth are inextricably linked to his father\'s legacy and honor. The father is the ultimate benchmark for a son\'s life, a powerful cultural paradigm.', primarySource: 'The Iliad, Homer', secondarySource: 'Intellectuals, P. Johnson' },
+                { date: 'c. 380 BC', event: 'Plato\'s "Allegory of the Cave"', details: 'Plato provides the philosophical justification for surrogate education. He posits that truth is an abstract ideal accessible only to enlightened experts (philosophers), who must lead the ignorant masses out of the "cave" of traditional, familial wisdom.', primarySource: 'The Republic, Plato', secondarySource: 'The Homeschooling Father, Salatiso' },
+                { date: 'c. 500 AD - 1500 AD', event: 'The Bible and the Codification of Family', details: 'The Judeo-Christian tradition establishes the patriarchal family as a divinely instituted union. The Bible places the primary responsibility for children\'s education on the parents, particularly the father, solidifying the family as the original and most vital school.', primarySource: 'The Bible (e.g., Ephesians 5, Deuteronomy 6)', secondarySource: 'The Homeschooling Father, Salatiso' },
+                { date: '1517 AD', event: 'The Protestant Reformation', details: 'Martin Luther champions universal education so that all believers can read the Bible themselves. This introduces the idea of mass schooling, though Luther still viewed parents as the primary educators, with schools as a support system.', primarySource: 'https://www.researchgate.net/publication/272332616_Martin_Luther\'s_Educational_Approach', secondarySource: 'The Homeschooling Father, Salatiso' },
+                { date: '1658', event: 'First Formal School in South Africa', details: 'The Dutch East India Company (DEIC) establishes a school to instruct enslaved children in Dutch culture and religion. This marks the beginning of institutionalized, surrogate education in South Africa, designed for ideological domination, not indigenous flourishing.', primarySource: 'https://www.hsrcpress.ac.za/books/a-new-history-of-formal-schooling-in-south-africa-1658-1910', secondarySource: 'The Homeschooling Father, Salatiso, Ch. 1' },
+                { date: 'c. 1760', event: 'The Industrial Revolution', details: 'Work moves from the family unit (farm/workshop) to the factory. This physically separates the father from the home, transforming him from the master of a productive household to a "breadwinner," an employee whose economic life is external to the family.', primarySource: 'https://www.cambridge.org/core/books/abs/economics-of-the-family/introduction-to-the-economics-of-the-family/0B4D5D4E6A7A6679589A644D251C7A92', secondarySource: 'Knowledge and Decisions, T. Sowell' },
+                { date: '1762', event: 'Rousseau and the Ideology of the State Surrogate', details: 'Philosopher Jean-Jacques Rousseau provides the explicit ideology for the state as the ultimate parent, arguing it must control a citizen\'s upbringing from infancy. This is contrasted with his abandonment of his own five children, a pattern of personal hypocrisy among intellectuals.', primarySource: 'The Social Contract, J.J. Rousseau', secondarySource: 'Intellectuals, P. Johnson, Ch. 1' },
+                { date: '1948', event: 'Apartheid Systematized in South Africa', details: 'The National Party comes to power and implements apartheid. Policies like the migrant labor system and influx control deliberately engineer the absence of Black fathers from their families to supply cheap labor to white-owned industries.', primarySource: 'https://www.sahistory.org.za/article/apartheid-and-reactions-it', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
+                { date: '1953 AD', event: 'The Bantu Education Act', details: 'The apartheid state creates a deliberately inferior education system to engineer a permanent Black underclass, destroying community and mission schools. It is the ultimate cynical use of the "surrogate" school system as a tool of oppression.', primarySource: 'https://www.britannica.com/topic/Bantu-Education-Act', secondarySource: 'The Homeschooling Father, Salatiso, Ch. 4' },
+                { date: '1956 AD', event: 'Birth of Mlandeli, a Successor to his Father to be Provider for his Family', details: 'Salatiso\'s father is born in Nqabane, Transkei. He would grow up to become an inspector and provide for his family, laying the foundation for his son despite the hardships of apartheid.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'Beyond the Grave, Salatiso' },
+                { date: 'c. 1970s', event: 'Rise of Second-Wave Feminism', details: 'The movement challenges traditional family structures and gender roles. While achieving necessary gains, it also contributes to rising divorce rates and a cultural and legal environment often punitive towards men, further destabilizing the family unit.', primarySource: 'Feminist Fantasies, Phyllis Schlafly', secondarySource: 'Men on Strike, Helen Smith' },
+                { date: '1982', event: 'Birth of the Son, Mlandeli has his Successor', details: 'Born in Fort Malan, Transkei, into a Xhosa family shaped by both tradition and the pressures of apartheid South Africa. His name, meaning "show us the way," sets him on a path to lead rather than follow.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'The Homeschooling Father, Salatiso' },
+                { date: '1993', event: 'Death of the Father, Salatiso Becomes Umlandeli', details: 'Salatiso\'s father dies at a young age, thrusting Salatiso, at age 11, into the role of his father\'s successor (Umlandeli), a pivotal moment that would shape his entire life and philosophy.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'Lessons from my mother, Salatiso' },
+                { date: '1994', event: 'South Africa\'s First Democratic Election', details: 'Apartheid officially ends, and a new Constitution is adopted, enshrining equality. However, the subsequent implementation of race-based redress policies continues a form of state-sanctioned discrimination.', primarySource: 'https://study-democracy.sun.ac.za/the-road-to-democracy-in-south-africa/', secondarySource: 'Beyond Redress, Salatiso' },
+                { date: '2005', event: 'The Children\'s Act is Implemented', details: 'Modern family law is implemented. While ostensibly gender-neutral, its application in Children\'s Courts is argued to be systematically biased against fathers, perpetuating the erosion of the family structure.', primarySource: 'The Children\'s Act 38 of 2005', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
+                { date: '2018', event: 'The Birth of Sazi a.k.a "BuggZ"', details: 'The birth of Salatiso\'s son. This event marks the start of a direct legal and personal battle against the family court system, becoming the catalyst for all of his subsequent work.', primarySource: 'The Quest for Buggz', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
+                { date: '2023', event: 'The Founding of Flamea', details: 'Drawing from years of personal struggle, legal battles, and extensive research, Salatiso launches Flamea.org. The platform is the culmination of his quest, designed to provide tools and knowledge for others facing similar injustices, thereby reclaiming the family\'s autonomy from failing state surrogates.', primarySource: 'Goliath\'s Reckoning, Salatiso', secondarySource: 'The Quest for Buggz, Salatiso' }
             ];
 
             const timelineScroller = document.getElementById('timeline-scroller');
@@ -275,19 +379,8 @@
                     point.addEventListener('click', () => {
                         modalTitle.textContent = `${item.date}: ${item.event}`;
                         modalDetails.innerHTML = `<p>${item.details}</p>`;
-                        
-                        if (item.primarySource.startsWith('http')) {
-                            modalPrimarySource.innerHTML = `<a href="${item.primarySource}" target="_blank" rel="noopener noreferrer">${item.primarySource.split('/')[2]}</a>`;
-                        } else {
-                            modalPrimarySource.textContent = item.primarySource;
-                        }
-                        
-                        if (item.secondarySource.startsWith('http')) {
-                            modalSecondarySource.innerHTML = `<a href="${item.secondarySource}" target="_blank" rel="noopener noreferrer">${item.secondarySource}</a>`;
-                        } else {
-                            modalSecondarySource.textContent = item.secondarySource;
-                        }
-
+                        modalPrimarySource.innerHTML = item.primarySource.startsWith('http') ? `<a href="${item.primarySource}" target="_blank" rel="noopener noreferrer">${item.primarySource.split('/')[2]}</a>` : item.primarySource;
+                        modalSecondarySource.innerHTML = item.secondarySource.startsWith('http') ? `<a href="${item.secondarySource}" target="_blank" rel="noopener noreferrer">${item.secondarySource}</a>` : item.secondarySource;
                         modal.classList.add('visible');
                     });
                     timelineScroller.appendChild(point);
@@ -295,7 +388,6 @@
             }
 
             createVerticalTimeline();
-            // Clone the timeline for a seamless loop
             const timelineContent = timelineScroller.innerHTML;
             timelineScroller.innerHTML += timelineContent;
 
@@ -305,9 +397,30 @@
                     modal.classList.remove('visible');
                 }
             });
+
+            // Login Functionality
+            const loginForm = document.getElementById('login-form');
+            if (loginForm) {
+                loginForm.addEventListener('submit', async (e) => {
+                    e.preventDefault();
+                    const email = document.getElementById('email').value;
+                    const password = document.getElementById('password').value;
+                    try {
+                        await firebase.auth().signInWithEmailAndPassword(email, password);
+                        alert('Login successful!');
+                        document.getElementById('login-modal').classList.remove('visible');
+                    } catch (error) {
+                        console.error('Login error:', error);
+                        alert('Error logging in: ' + error.message);
+                    }
+                });
+            }
         });
-</script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/auth.js"></script>
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>
 </body>
 </html>
