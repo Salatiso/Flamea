@@ -1,81 +1,256 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Current Affairs & Community Hub - Flamea.org</title>
+    <title>Community Hub - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* Base styles from our established template */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        .hub-card {
+            background: rgba(31, 41, 55, 0.7);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .hub-card:hover {
+            transform: translateY(-5px);
+            border-color: #3b82f6;
+        }
+        .status-dot {
+            width: 1rem; height: 1rem; border-radius: 9999px;
+            box-shadow: 0 0 8px 2px var(--status-color, #6b7280);
+            transition: background-color 0.5s ease;
+        }
+        .form-input, .form-select {
+            background-color: rgba(17, 24, 39, 0.8);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+    </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-roboto">
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <div class="animated-gradient fixed inset-0 z-0"></div>
+    
+    <div class="relative z-10 flex">
+        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
 
-    <div class="flex">
-        <!-- Sidebar Placeholder -->
-        <div id="sidebar-placeholder"></div>
-
-        <!-- Main Content -->
-        <main class="flex-grow p-6 md:p-10">
-            <div class="max-w-7xl mx-auto">
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
                 
-                <!-- Header -->
-                <header class="mb-10">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">Current Affairs & Community Hub</h1>
-                    <p class="text-lg text-gray-400 mt-2">Your daily briefing on news, community insights, and essential services.</p>
-                </header>
-
-                 <!-- NEW: Community Service Locator -->
-                <section id="community-locator" class="mb-12 bg-gray-800 p-6 rounded-lg border border-gray-700">
-                    <h2 class="text-3xl font-bold text-teal-400 mb-4">Community Service Locator</h2>
-                    <p class="text-gray-400 mb-6">Find essential public services near you. Use the map to explore or search for specific services.</p>
-                    
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
-                        <!-- Map -->
-                        <div id="map" class="lg:col-span-2 h-96 lg:h-full rounded-lg bg-gray-700 border border-gray-600"></div>
-                        
-                        <!-- Search & Filters -->
-                        <div class="space-y-4">
-                            <div>
-                                <label for="service-category-filter" class="block text-sm font-medium text-gray-300 mb-1">Service Category</label>
-                                <select id="service-category-filter" class="form-select w-full"></select>
+                <!-- Main Dashboard -->
+                <section id="community-dashboard" class="mb-12">
+                     <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Community Dashboard</h1>
+                        <p class="text-lg text-gray-400 mt-2">Live status based on your location and community reports.</p>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                        <!-- Electricity Card -->
+                        <div class="hub-card rounded-xl p-6">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">Electricity Status</h3>
+                                <div id="electricity-status-dot" class="status-dot" style="background-color:#4ade80; --status-color:#4ade80;"></div>
                             </div>
-                             <div>
-                                <label for="service-search-input" class="block text-sm font-medium text-gray-300 mb-1">Quick Search</label>
-                                <input type="text" id="service-search-input" placeholder="e.g., 'SAPS', 'Home Affairs'" class="form-input w-full">
-                            </div>
-                            <div>
-                                <label for="radius-slider" class="block text-sm font-medium text-gray-300 mb-1">Search Radius: <span id="radius-value">20</span> km</label>
-                                <input type="range" id="radius-slider" min="1" max="100" value="20" class="w-full h-2 bg-gray-700 rounded-lg appearance-none cursor-pointer">
-                            </div>
-                             <button id="geolocate-btn" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 rounded-lg flex items-center justify-center gap-2">
-                                <i class="fas fa-map-marker-alt"></i> Find Services Near Me
-                            </button>
-                            <div id="locator-status" class="text-center text-yellow-400 text-sm h-4"></div>
+                            <p id="electricity-status-text" class="text-gray-400 mt-2">All services normal. No reported outages.</p>
                         </div>
+                        <!-- Water Supply Card -->
+                        <div class="hub-card rounded-xl p-6">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">Water Supply</h3>
+                                <div id="water-status-dot" class="status-dot" style="background-color:#4ade80; --status-color:#4ade80;"></div>
+                            </div>
+                            <p id="water-status-text" class="text-gray-400 mt-2">All services normal. No reported outages.</p>
+                        </div>
+                        <!-- Traffic Card -->
+                        <div class="hub-card rounded-xl p-6">
+                            <div class="flex justify-between items-center">
+                                <h3 class="text-xl font-bold text-white">Traffic</h3>
+                                <div id="traffic-status-dot" class="status-dot" style="background-color:#4ade80; --status-color:#4ade80;"></div>
+                            </div>
+                            <p id="traffic-status-text" class="text-gray-400 mt-2">Traffic is flowing smoothly.</p>
+                        </div>
+                        <!-- Report Incident Card -->
+                        <a href="#incident-reporter" class="hub-card rounded-xl p-6 bg-blue-600 hover:bg-blue-700 border-blue-500 flex flex-col items-center justify-center text-center">
+                            <i class="fas fa-bullhorn text-3xl mb-2"></i>
+                            <h3 class="text-xl font-bold text-white">Report an Incident</h3>
+                            <p class="text-blue-200 mt-1 text-sm">Power out? Leaking pipe? Let the community know.</p>
+                        </a>
                     </div>
                 </section>
 
-                <!-- Category Selector Carousel -->
-                <section class="mb-12">
-                     <h2 class="text-2xl font-bold mb-4 text-white">Browse Articles by Category</h2>
-                     <div id="category-carousel" class="flex space-x-4 overflow-x-auto pb-4"></div>
+                <!-- Content Sections -->
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+                    <!-- Main Content -->
+                    <div class="lg:col-span-2 space-y-8">
+                        <section id="featured-book" class="hub-card rounded-xl p-6">
+                           <!-- ... Featured Book Content ... -->
+                        </section>
+                        <section id="breaking-news" class="hub-card rounded-xl p-6">
+                           <!-- ... News Content ... -->
+                        </section>
+                    </div>
+                    <!-- Side Content -->
+                    <div class="lg:col-span-1 space-y-8">
+                        <!-- ... Community Voice & Quick Links ... -->
+                    </div>
+                </div>
+
+                <!-- Incident Reporter -->
+                <section id="incident-reporter" class="mt-12">
+                     <div class="hub-card rounded-xl p-6">
+                        <h2 class="text-3xl font-bold text-white mb-6 text-center">Report a Community Incident</h2>
+                        <form id="incident-form" class="space-y-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="service-type" class="block text-sm font-medium mb-1">Service Affected</label>
+                                    <select id="service-type" name="service-type" class="form-select w-full rounded-md" required>
+                                        <option value="electricity">Electricity</option>
+                                        <option value="water">Water & Sanitation</option>
+                                        <option value="traffic">Roads & Traffic</option>
+                                        <option value="other">Other</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label for="incident-cause" class="block text-sm font-medium mb-1">Reason for Interruption</label>
+                                    <select id="incident-cause" name="incident-cause" class="form-select w-full rounded-md" required>
+                                        <option value="unplanned-fault">Unplanned Fault</option>
+                                        <option value="loadshedding">Loadshedding / Load Management</option>
+                                        <option value="maintenance">Scheduled Maintenance</option>
+                                        <option value="unknown">Unknown</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div>
+                                <label for="incident-description" class="block text-sm font-medium mb-1">Description</label>
+                                <textarea id="incident-description" name="incident-description" rows="3" class="form-input w-full rounded-md" placeholder="e.g., Power has been off in our street since 10 AM. No warning was given." required></textarea>
+                            </div>
+                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div>
+                                    <label for="media-upload" class="block text-sm font-medium mb-1">Upload Photo/Video/Audio</label>
+                                    <input type="file" id="media-upload" name="media-upload" class="form-input w-full text-sm">
+                                </div>
+                                <div id="location-section">
+                                    <label class="block text-sm font-medium mb-1">Location</label>
+                                    <button type="button" id="get-location-btn" class="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg"><i class="fas fa-map-marker-alt mr-2"></i>Get My Location</button>
+                                    <p id="location-status" class="text-xs text-gray-400 mt-1"></p>
+                                </div>
+                            </div>
+                             <div>
+                                <label class="block text-sm font-medium mb-1">I am reporting as a:</label>
+                                <div class="flex gap-4">
+                                    <label class="flex items-center"><input type="radio" name="user-role" value="SuperDad" class="mr-2">SuperDad</label>
+                                    <label class="flex items-center"><input type="radio" name="user-role" value="SuperCitizen" checked class="mr-2">SuperCitizen</label>
+                                </div>
+                            </div>
+                            <div class="text-center pt-4">
+                                <button type="submit" id="submit-report-btn" class="w-full md:w-auto bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-8 rounded-lg text-lg">Submit Report</button>
+                            </div>
+                             <div id="report-success-msg" class="hidden text-center p-4 bg-green-900/50 border border-green-500 rounded-lg"></div>
+                        </form>
+                    </div>
                 </section>
-
-                <!-- Articles Section -->
-                <section id="articles-container"></section>
-
             </div>
         </main>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places,geometry" async defer></script>
-    <script type="module" src="assets/js/firebase-config.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/articles-db.js"></script>
-    <script type="module" src="assets/js/articles.js"></script>
-    <script type="module" src="assets/js/current-affairs-map.js"></script>
+    <script type="module">
+        // --- Sidebar Loader ---
+        fetch('sidebar.html')
+            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
+            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
+            .catch(error => console.error('Error loading sidebar:', error));
+
+        // --- Community Hub Logic ---
+        document.addEventListener('DOMContentLoaded', () => {
+            const form = document.getElementById('incident-form');
+            const getLocationBtn = document.getElementById('get-location-btn');
+            const locationStatus = document.getElementById('location-status');
+            const successMsg = document.getElementById('report-success-msg');
+            
+            let userLocation = null;
+
+            // Handle location fetching
+            getLocationBtn.addEventListener('click', () => {
+                locationStatus.textContent = "Fetching location...";
+                if (navigator.geolocation) {
+                    navigator.geolocation.getCurrentPosition(position => {
+                        userLocation = {
+                            lat: position.coords.latitude,
+                            lng: position.coords.longitude
+                        };
+                        locationStatus.textContent = `✅ Location captured: ${userLocation.lat.toFixed(4)}, ${userLocation.lng.toFixed(4)}`;
+                        locationStatus.classList.add('text-green-400');
+                    }, () => {
+                        locationStatus.textContent = "❌ Unable to retrieve location. Please check browser permissions.";
+                        locationStatus.classList.add('text-red-400');
+                    });
+                } else {
+                    locationStatus.textContent = "Geolocation is not supported by your browser.";
+                }
+            });
+
+            // Handle form submission
+            form.addEventListener('submit', (e) => {
+                e.preventDefault();
+                const formData = new FormData(form);
+                const report = {
+                    service: formData.get('service-type'),
+                    cause: formData.get('incident-cause'),
+                    description: formData.get('incident-description'),
+                    role: formData.get('user-role'),
+                    location: userLocation,
+                    timestamp: new Date().toISOString()
+                };
+
+                // In a real app, this would be sent to a backend.
+                // For now, we simulate the effect on the UI.
+                console.log("New Incident Report:", report);
+                updateDashboard(report);
+
+                // Show success message
+                successMsg.textContent = `Thank you, ${report.role}! Your report has been logged. Ref: ${Date.now()}`;
+                successMsg.classList.remove('hidden');
+                form.reset();
+                locationStatus.textContent = '';
+                userLocation = null;
+                setTimeout(() => successMsg.classList.add('hidden'), 5000);
+            });
+
+            // Update dashboard based on report
+            function updateDashboard(report) {
+                let statusDot, statusText;
+                switch(report.service) {
+                    case 'electricity':
+                        statusDot = document.getElementById('electricity-status-dot');
+                        statusText = document.getElementById('electricity-status-text');
+                        break;
+                    case 'water':
+                        statusDot = document.getElementById('water-status-dot');
+                        statusText = document.getElementById('water-status-text');
+                        break;
+                     case 'traffic':
+                        statusDot = document.getElementById('traffic-status-dot');
+                        statusText = document.getElementById('traffic-status-text');
+                        break;
+                    default: return;
+                }
+
+                // Change status to red to indicate an issue
+                statusDot.style.backgroundColor = '#f87171'; // Red
+                statusDot.style.setProperty('--status-color', '#f87171');
+                statusText.textContent = `Community report of a(n) ${report.cause.replace('-', ' ')} in the area.`;
+            }
+        });
+    </script>
 </body>
 </html>
