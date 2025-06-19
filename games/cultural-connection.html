@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cultural Connection - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Mali', cursive;
+            background: #f0f9ff; /* sky-50 */
+            color: #0c4a6e; /* sky-900 */
+        }
+        .game-title {
+            font-family: 'Fredoka One', cursive;
+            color: #0369a1; /* sky-700 */
+        }
+        .selection-card {
+            background: white;
+            border-radius: 20px;
+            border: 4px solid #7dd3fc; /* sky-300 */
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.05);
+        }
+        .selection-card:hover {
+            transform: translateY(-10px) rotate(-2deg);
+            box-shadow: 0 20px 30px rgba(0,0,0,0.1);
+        }
+        .btn-primary {
+            background-color: #0ea5e9; /* sky-500 */
+            color: white;
+            font-family: 'Fredoka One', cursive;
+            padding: 1rem 2rem;
+            border-radius: 50px;
+            border-bottom: 5px solid #0284c7; /* sky-600 */
+            transition: all 0.2s ease;
+        }
+        .btn-primary:hover {
+            background-color: #38bdf8; /* sky-400 */
+            transform: translateY(-2px);
+            border-bottom-width: 7px;
+        }
+        .btn-primary:active {
+            transform: translateY(1px);
+            border-bottom-width: 5px;
+        }
+        .view { display: none; }
+        .view.active { display: block; }
+        .accordion-header {
+            background-color: #e0f2fe; /* sky-100 */
+            border: 2px solid #bae6fd; /* sky-200 */
+            cursor: pointer;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 1000px; /* Adjust as needed */
+            padding: 1.5rem;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(180deg);
+        }
+        .wizard-option {
+            background: #fff;
+            border: 3px solid #7dd3fc;
+            transition: all 0.2s;
+        }
+        .wizard-option.selected {
+            background-color: #38bdf8;
+            color: white;
+            border-color: #0ea5e9;
+            transform: scale(1.05);
+        }
+        .wizard-option.correct { background-color: #4ade80; border-color: #22c55e; color: white;}
+        .wizard-option.wrong { background-color: #f87171; border-color: #ef4444; color: white;}
+
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .fade-in { animation: fadeIn 0.5s ease-out forwards; }
+    </style>
+</head>
+<body class="p-4 md:p-8">
+
+    <div class="max-w-4xl mx-auto">
+        <!-- SELECTION VIEW -->
+        <div id="selection-view" class="view active text-center">
+            <h1 class="text-5xl md:text-7xl game-title mb-2">Cultural Connection</h1>
+            <p class="text-xl text-sky-700 mb-12">Learn about amazing traditions in South Africa!</p>
+            <div class="flex flex-col md:flex-row gap-8 justify-center">
+                <div id="start-wizard-btn" class="selection-card p-8 flex-1">
+                    <div class="text-8xl mb-4">🧙‍♂️</div>
+                    <h2 class="text-4xl game-title text-purple-600">Wizard Quest</h2>
+                    <p class="text-gray-600 mt-2">Let a wise elder guide you on a learning journey.</p>
+                </div>
+                <div id="start-explorer-btn" class="selection-card p-8 flex-1">
+                    <div class="text-8xl mb-4">🗺️</div>
+                    <h2 class="text-4xl game-title text-green-600">Explorer Hub</h2>
+                    <p class="text-gray-600 mt-2">Discover facts about different cultures at your own pace.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- EXPLORER VIEW -->
+        <div id="explorer-view" class="view">
+            <button class="back-btn btn-primary mb-6"><i class="fas fa-arrow-left mr-2"></i>Home</button>
+            <h1 class="text-5xl game-title mb-8 text-center">Explorer Hub</h1>
+            <div id="explorer-content" class="space-y-4">
+                <!-- Accordion items will be injected here -->
+            </div>
+        </div>
+        
+        <!-- WIZARD VIEW -->
+        <div id="wizard-view" class="view">
+            <button class="back-btn btn-primary mb-6"><i class="fas fa-arrow-left mr-2"></i>Home</button>
+            <div id="wizard-content" class="bg-white p-8 rounded-2xl shadow-lg border-4 border-sky-300">
+                <!-- Wizard steps will be injected here -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- DATABASE ---
+        const customsData = {
+            'initiation-rites': {
+                title: 'Initiation Rites',
+                icon: 'fa-child-reaching',
+                content: {
+                    xhosa: { name: 'Ulwaluko & Intonjane', text: `<strong>Ulwaluko (Male):</strong> A sacred male initiation involving seclusion to teach manhood and cultural values. It's now governed by law to ensure safety.`, quiz: { q: 'What is the Xhosa initiation for boys called?', o: ['Umemulo', 'Ulwaluko', 'Lebollo'], a: 'Ulwaluko' } },
+                    zulu: { name: 'Thomba & Umemulo', text: '<strong>Umemulo:</strong> A coming-of-age ceremony for young women at 21, celebrating their journey to womanhood and readiness for marriage, involving gifts of a spear and blanket.' , quiz: { q: 'What ceremony marks a Zulu woman\'s coming-of-age?', o: ['Umemulo', 'Ulwaluko', 'Thomba'], a: 'Umemulo' }},
+                    sotho: { name: 'Lebollo', text: 'An initiation for both males and females marking their transition to adulthood. The secrecy of the rituals strengthens community bonds.' , quiz: { q: 'Which culture practises Lebollo for both genders?', o: ['Xhosa', 'Zulu', 'Sotho'], a: 'Sotho' } },
+                }
+            },
+            'marriage-customs': {
+                title: 'Marriage Customs',
+                icon: 'fa-ring',
+                content: {
+                    xhosa: { name: 'Lobola & Ukuthwala', text: `<strong>Lobola:</strong> The negotiation and gift from the groom's family to the bride's, creating a bond between families. It is not "buying" a wife, but a gesture of uniting families.`, quiz: { q: 'What is the purpose of Lobola?', o: ['Buying a wife', 'Uniting families', 'A party'], a: 'Uniting families' } },
+                    zulu: { name: 'Lobola & Umembeso', text: '<strong>Umembeso:</strong> A gift-giving ceremony from the groom\'s family to the bride\'s family, following the completion of Lobola negotiations.' , quiz: { q: 'What is the Zulu gift-giving ceremony called?', o: ['Lobola', 'Umembeso', 'Ukuthwala'], a: 'Umembeso' }},
+                    sotho: { name: 'Bohali', text: 'Similar to Lobola, Bohali involves the transfer of cattle or equivalent wealth to the bride\'s family to formalize the union.' , quiz: { q: 'In Sotho culture, what is the marriage negotiation called?', o: ['Bohali', 'Umemulo', 'Lobola'], a: 'Bohali' }},
+                }
+            },
+            'cultural-foods': {
+                title: 'Traditional Foods',
+                icon: 'fa-utensils',
+                content: {
+                    xhosa: { name: 'Umngqusho', text: 'A delicious and hearty dish made from samp (dried corn kernels) and beans, often served with meat or gravy. It was a favourite of Nelson Mandela.', quiz: { q: 'What are the two main ingredients in Umngqusho?', o: ['Rice and Lentils', 'Samp and Beans', 'Potatoes and Cabbage'], a: 'Samp and Beans' }},
+                    zulu: { name: 'Ujeqe nobhontshisi', text: 'A popular meal consisting of steamed bread (Ujeqe) and beans (nobhontshisi), often cooked with potatoes or meat.', quiz: { q: 'What does "Ujeqe" mean in English?', o: ['Steamed Bread', 'Beans', 'Gravy'], a: 'Steamed Bread' }},
+                    sotho: { name: 'Papa le Moroho', text: 'A staple food, "Papa" (maize porridge) is served with "Moroho" (wild greens or spinach), providing essential nutrients.', quiz: { q: 'What is "Papa" made from?', o: ['Wheat', 'Rice', 'Maize'], a: 'Maize' }}
+                }
+            }
+        };
+
+        // --- DOM ELEMENTS ---
+        const views = {
+            selection: document.getElementById('selection-view'),
+            explorer: document.getElementById('explorer-view'),
+            wizard: document.getElementById('wizard-view')
+        };
+        const startWizardBtn = document.getElementById('start-wizard-btn');
+        const startExplorerBtn = document.getElementById('start-explorer-btn');
+        const backBtns = document.querySelectorAll('.back-btn');
+        const explorerContent = document.getElementById('explorer-content');
+        const wizardContent = document.getElementById('wizard-content');
+        
+        let wizardState = {};
+
+        // --- NAVIGATION ---
+        function showView(viewName) {
+            Object.values(views).forEach(v => v.classList.remove('active'));
+            views[viewName].classList.add('active');
+            views[viewName].classList.add('fade-in');
+        }
+
+        startWizardBtn.addEventListener('click', () => {
+            showView('wizard');
+            startWizard();
+        });
+        startExplorerBtn.addEventListener('click', () => {
+            showView('explorer');
+            buildExplorer();
+        });
+        backBtns.forEach(btn => btn.addEventListener('click', () => showView('selection')));
+
+        // --- EXPLORER MODE ---
+        function buildExplorer() {
+            let html = '';
+            for (const [key, category] of Object.entries(customsData)) {
+                html += `
+                    <div class="accordion-item bg-white rounded-lg shadow-md overflow-hidden">
+                        <div class="accordion-header flex justify-between items-center p-4">
+                            <h3 class="text-2xl font-bold"><i class="fas ${category.icon} mr-4 text-sky-500"></i>${category.title}</h3>
+                            <i class="fas fa-chevron-down accordion-icon transition-transform"></i>
+                        </div>
+                        <div class="accordion-content border-t border-sky-200">
+                            ${Object.entries(category.content).map(([culture, details]) => `
+                                <div class="mb-4">
+                                    <h4 class="font-bold text-xl text-sky-600 capitalize">${culture}: ${details.name}</h4>
+                                    <p class="text-gray-700">${details.text}</p>
+                                </div>
+                            `).join('<hr class="my-4 border-sky-100">')}
+                        </div>
+                    </div>
+                `;
+            }
+            explorerContent.innerHTML = html;
+            explorerContent.querySelectorAll('.accordion-header').forEach(header => {
+                header.addEventListener('click', () => {
+                    header.parentElement.classList.toggle('active');
+                });
+            });
+        }
+        
+        // --- WIZARD MODE ---
+        function startWizard() {
+            wizardState = {
+                step: 0,
+                score: 0,
+                questions: Object.values(customsData).flatMap(cat => Object.values(cat.content).map(details => details.quiz))
+            };
+            // Shuffle questions
+            wizardState.questions.sort(() => 0.5 - Math.random());
+            renderWizardStep();
+        }
+        
+        function renderWizardStep() {
+            if (wizardState.step >= wizardState.questions.length) {
+                renderWizardCompletion();
+                return;
+            }
+            
+            const currentQuestion = wizardState.questions[wizardState.step];
+            const optionsHtml = currentQuestion.o.map(opt => 
+                `<button class="wizard-option w-full text-left p-4 rounded-lg font-semibold text-lg" data-answer="${opt}">${opt}</button>`
+            ).join('');
+
+            wizardContent.innerHTML = `
+                <div class="fade-in">
+                    <p class="text-sm text-gray-500 mb-2">Question ${wizardState.step + 1} of ${wizardState.questions.length}</p>
+                    <h2 class="text-3xl font-bold mb-6">${currentQuestion.q}</h2>
+                    <div class="space-y-4">${optionsHtml}</div>
+                    <div id="wizard-feedback" class="mt-6 text-xl font-bold h-8"></div>
+                </div>
+            `;
+            
+            wizardContent.querySelectorAll('.wizard-option').forEach(btn => {
+                btn.addEventListener('click', handleWizardAnswer);
+            });
+        }
+        
+        function handleWizardAnswer(e) {
+            const selectedButton = e.currentTarget;
+            const selectedAnswer = selectedButton.dataset.answer;
+            const currentQuestion = wizardState.questions[wizardState.step];
+            const feedbackEl = document.getElementById('wizard-feedback');
+
+            wizardContent.querySelectorAll('.wizard-option').forEach(btn => btn.disabled = true);
+            
+            if (selectedAnswer === currentQuestion.a) {
+                selectedButton.classList.add('correct');
+                feedbackEl.textContent = 'Correct! Well done! 🎉';
+                feedbackEl.style.color = '#22c55e';
+                wizardState.score++;
+            } else {
+                selectedButton.classList.add('wrong');
+                feedbackEl.textContent = `Not quite. The correct answer is: ${currentQuestion.a}`;
+                feedbackEl.style.color = '#ef4444';
+                // Highlight correct answer
+                 wizardContent.querySelector(`.wizard-option[data-answer="${currentQuestion.a}"]`).classList.add('correct');
+            }
+            
+            wizardState.step++;
+            setTimeout(renderWizardStep, 2000);
+        }
+        
+        function renderWizardCompletion() {
+             wizardContent.innerHTML = `
+                <div class="text-center fade-in">
+                    <h2 class="text-4xl game-title mb-4">Quest Complete!</h2>
+                     <div class="text-7xl mb-4">🏆</div>
+                    <p class="text-2xl text-gray-700 mb-6">You answered ${wizardState.score} out of ${wizardState.questions.length} questions correctly!</p>
+                    <button id="restart-wizard-btn" class="btn-primary">Play Again</button>
+                </div>
+            `;
+            document.getElementById('restart-wizard-btn').addEventListener('click', startWizard);
+        }
+    });
+    </script>
+</body>
+</html>
