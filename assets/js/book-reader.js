@@ -37,7 +37,7 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Book Data ---
     const bookDatabase = {
-        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/documents/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliaths_reckoning.png' },
+        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/documents/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
         'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/documents/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
         'beyond-redress': { title: "Beyond Redress", path: 'assets/documents/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
     };
