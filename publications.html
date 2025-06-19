@@ -1,136 +1,195 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Publications</title>
+    <title>Flamea - Publications</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        /* Base font for the site */
-        body { font-family: 'Open Sans', sans-serif; }
-        
-        /* Main grid layout for sidebar and content */
         .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+            display: flex;
+            min-height: 100vh;
         }
-
-        /* The main content area that will scroll if content overflows */
-        .content-scroll-area {
+        .main-content {
+            flex-grow: 1;
             overflow-y: auto;
-            height: 100%;
+            background-color: #111827; /* Fallback */
         }
-
-        /* Animation for content panels fading in */
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(20px); }
-            to { opacity: 1; transform: translateY(0); }
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
         }
-
-        .content-panel { 
-            animation: fadeIn 0.6s forwards;
+        .book-cover {
+            width: 80%;
+            max-width: 280px;
+            height: auto;
+            object-fit: cover;
+            border-radius: 8px;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.4);
+            transition: transform 0.3s ease;
         }
-
-        /* Sidebar link styling and transitions */
-        .sidebar-direct-link {
-            transition: all 0.3s ease;
-            transform: translateX(0);
+        .swiper-slide-active .book-cover {
+            transform: scale(1.05);
         }
-
-        /* Styling for the active or hovered sidebar link */
-        .sidebar-direct-link.active, .sidebar-direct-link:hover {
-            background-color: #2563EB; /* blue-600 */
-            color: white;
-            transform: translateX(10px);
+        .swiper-button-next, .swiper-button-prev {
+            color: #fde047; /* yellow-300 */
+        }
+        .coming-soon-card {
+            border: 2px dashed #475569;
+            background-color: rgba(30, 41, 59, 0.5);
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- ===== Standardized Sidebar ===== -->
-<div id="sidebar-placeholder"></div>
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content Area for Publications -->
-        <main class="content-scroll-area">
-            <div id="publications" class="content-panel p-6 md:p-12">
-                <h2 class="text-4xl md:text-5xl font-bold font-roboto mb-8 text-white">Our Publications</h2>
-                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">
-                    Explore our collection of books and guides, written to empower and educate fathers on their rights, responsibilities, and the journey of fatherhood.
-                </p>
-
-                <!-- Grid for displaying publication cards -->
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-
-                    <!-- Publication Card: Goliath's Stand -->
-                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                        <img src="assets/images/goliath.jpg" alt="Goliath's Stand book cover" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <i class="fas fa-balance-scale text-4xl text-green-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold font-roboto mb-3">Goliath's Stand</h3>
-                            <p class="text-gray-400 mb-4">A father's guide to navigating the legal system and fighting for your rights.</p>
-                            <a href="book-reader.html?book=BK-Goliaths_Stand" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
-                        </div>
-                    </div>
-
-                    <!-- Publication Card: Beyond Redress -->
-                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                        <img src="assets/images/redress.jpg" alt="Beyond Redress book cover" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <i class="fas fa-gavel text-4xl text-green-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold font-roboto mb-3">Beyond Redress</h3>
-                            <p class="text-gray-400 mb-4">Exploring restorative justice and alternative dispute resolution for family matters.</p>
-                            <a href="book-reader.html?book=BK-Beyond_ Redress" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
-                        </div>
-                    </div>
-
-                    <!-- Publication Card: The Homeschooling Father -->
-                    <div class="bg-gray-900/80 backdrop-blur-sm rounded-lg shadow-xl overflow-hidden transform hover:scale-105 transition-transform duration-300">
-                        <img src="assets/images/homeschooling_father.jpg" alt="The Homeschooling Father book cover" class="w-full h-56 object-cover">
-                        <div class="p-6">
-                            <i class="fas fa-school text-4xl text-green-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold font-roboto mb-3">The Homeschooling Father</h3>
-                            <p class="text-gray-400 mb-4">A practical guide for fathers taking an active role in their children's education.</p>
-                            <a href="book-reader.html?book=BK-HomeSchooling_Father" class="inline-block bg-blue-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">Read Now</a>
-                        </div>
-                    </div>
-                    
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-center mb-12">
+                    <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">Our Publications</h1>
+                    <p class="text-lg text-gray-400">Essential reading for the modern father. Arm yourself with knowledge.</p>
                 </div>
+
+                <!-- Book Carousel -->
+                <div class="swiper my-12">
+                    <div class="swiper-wrapper">
+                        <!-- Slide 1: Goliath's Reckoning -->
+                        <div class="swiper-slide" data-book-id="goliaths-reckoning">
+                            <a href="book-reader.html?book=goliaths-reckoning">
+                                <img src="assets/images/goliaths_reckoning.png" alt="Goliath's Reckoning Book Cover" class="book-cover">
+                            </a>
+                        </div>
+                        <!-- Slide 2: The Homeschooling Father -->
+                        <div class="swiper-slide" data-book-id="homeschooling-father">
+                            <a href="book-reader.html?book=homeschooling-father">
+                                <img src="assets/images/homeschooling_father.jpg" alt="The Homeschooling Father Book Cover" class="book-cover">
+                            </a>
+                        </div>
+                        <!-- Slide 3: Beyond Redress -->
+                        <div class="swiper-slide" data-book-id="beyond-redress">
+                            <a href="book-reader.html?book=beyond-redress">
+                                <img src="assets/images/redress.jpg" alt="Beyond Redress Book Cover" class="book-cover">
+                            </a>
+                        </div>
+                    </div>
+                    <!-- Navigation Buttons -->
+                    <div class="swiper-button-prev"></div>
+                    <div class="swiper-button-next"></div>
+                </div>
+                
+                <!-- Book Title & Description Section -->
+                 <div id="book-info" class="text-center max-w-2xl mx-auto min-h-[100px]">
+                    <h2 id="book-title" class="text-3xl font-bold font-roboto-slab text-yellow-300"></h2>
+                    <p id="book-description" class="mt-2 text-gray-400"></p>
+                </div>
+
+
+                <!-- Coming Soon Section -->
+                <div class="mt-20">
+                    <h3 class="text-3xl font-bold font-roboto-slab text-center text-white mb-8">Coming Soon...</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                        <!-- Goliath's Stand -->
+                        <div class="coming-soon-card rounded-lg p-6 flex flex-col md:flex-row items-center gap-6">
+                            <div class="flex-shrink-0 bg-gray-700 w-32 h-48 rounded-md flex items-center justify-center">
+                                <i class="fas fa-fist-raised text-6xl text-red-500"></i>
+                            </div>
+                            <div>
+                                <h4 class="text-2xl font-bold text-red-400">Goliath's Stand</h4>
+                                <p class="text-sm text-gray-400 mt-2">A philosophical and practical guide for the individual man standing against a corrupt, faceless bureaucracy. This isn't just a book; it's a declaration of war against mediocrity and injustice.</p>
+                            </div>
+                        </div>
+                        <!-- The Unfairness of Fair Discrimination -->
+                        <div class="coming-soon-card rounded-lg p-6 flex flex-col md:flex-row items-center gap-6">
+                            <div class="flex-shrink-0 bg-gray-700 w-32 h-48 rounded-md flex items-center justify-center">
+                                <i class="fas fa-balance-scale-left text-6xl text-purple-400"></i>
+                            </div>
+                             <div>
+                                <h4 class="text-2xl font-bold text-purple-300">The Unfairness of Fair Discrimination</h4>
+                                <p class="text-sm text-gray-400 mt-2">This book dismantles the notion of collective guilt and argues that any system judging men by their skin color instead of their character is a betrayal of true justice. Prepare to have your assumptions about fairness turned upside down.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
             </div>
         </main>
     </div>
     
-    <!-- General purpose scripts for site-wide functionality -->
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Set current year in the footer
-            const yearSpan = document.getElementById('currentYear');
-            if(yearSpan) {
-                yearSpan.textContent = new Date().getFullYear();
-            }
-
-            // Automatically highlight the active link in the sidebar
-            const currentPage = window.location.pathname.split('/').pop() || 'index.html';
-            const navLinks = document.querySelectorAll('#main-nav a.sidebar-direct-link');
+        document.addEventListener('DOMContentLoaded', () => {
+            const bookInfo = {
+                'goliaths-reckoning': {
+                    title: "Goliath's Reckoning",
+                    description: "An explosive exposé of the systemic biases that discriminate against fathers in the family court system, and a guide to fighting back using the Constitution itself."
+                },
+                'homeschooling-father': {
+                    title: "The Homeschooling Father",
+                    description: "A practical and philosophical guide to taking charge of your children's education, building a curriculum rooted in values, and raising self-reliant, critical thinkers."
+                },
+                'beyond-redress': {
+                    title: "Beyond Redress",
+                    description: "A critical examination of how well-intentioned redress policies can create new injustices, and how a focus on the 'child's best interests' can forge a path to true equality."
+                }
+            };
             
-            navLinks.forEach(link => {
-                const linkPage = link.getAttribute('href');
-                if (linkPage === currentPage) {
-                    link.classList.add('active');
+            const titleEl = document.getElementById('book-title');
+            const descriptionEl = document.getElementById('book-description');
+
+            const swiper = new Swiper('.swiper', {
+                loop: true,
+                slidesPerView: 1,
+                spaceBetween: 20,
+                grabCursor: true,
+                effect: 'coverflow',
+                centeredSlides: true,
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                },
+                breakpoints: {
+                    640: {
+                        slidesPerView: 2,
+                    },
+                    1024: {
+                        slidesPerView: 3,
+                    }
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                on: {
+                    slideChange: function () {
+                        const activeSlide = this.slides[this.activeIndex];
+                        const bookId = activeSlide.dataset.bookId;
+                        if (bookInfo[bookId]) {
+                            titleEl.textContent = bookInfo[bookId].title;
+                            descriptionEl.textContent = bookInfo[bookId].description;
+                        }
+                    }
                 }
             });
+
+            // Initial population
+            const initialBookId = swiper.slides[swiper.activeIndex].dataset.bookId;
+            if (bookInfo[initialBookId]) {
+                titleEl.textContent = bookInfo[initialBookId].title;
+                descriptionEl.textContent = bookInfo[initialBookId].description;
+            }
         });
     </script>
-    <!-- These scripts handle auth, chatbot modals, and other dynamic features -->
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/chatbot.js"></script>
-    <script type="module" src="assets/js/book-reader.js"></script>
 </body>
 </html>

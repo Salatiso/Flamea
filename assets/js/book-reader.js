@@ -1,197 +1,220 @@
-import {
-    getAuth,
-    onAuthStateChanged
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import {
-    getFirestore,
-    doc,
-    setDoc,
-    getDoc,
-    collection,
-    addDoc, 
-    query, 
-    where, 
-    getDocs,
-    onSnapshot
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// This script assumes a Firebase configuration is available via main.js or a similar global setup.
+// For now, it will use localStorage and alert for non-logged-in users.
 
-document.addEventListener('DOMContentLoaded', () => {
-    const auth = getAuth();
-    const db = getFirestore();
-    let currentUser = null;
-
-    const bookData = {
-        'beyond-redress': {
-            title: "Beyond Redress",
-            path: 'assets/documents/BK-Beyond_ Redress.txt',
-            cover: 'assets/images/redress.jpg'
-        },
-        'homeschooling-father': {
-            title: "The Homeschooling Father",
-            path: 'assets/documents/BK-HomeSchooling_Father.txt',
-            cover: 'assets/images/homeschooling_father.jpg'
-        },
-        'goliaths-stand': {
-            title: "Goliath's Stand",
-            path: 'assets/documents/BK-Goliaths_Stand.txt',
-            cover: 'assets/images/goliath.jpg'
-        }
-    };
-    
-    const urlParams = new URLSearchParams(window.location.search);
-    const bookId = urlParams.get('book');
-    const book = bookData[bookId];
-
-    const flipbook = $('#flipbook');
+document.addEventListener('DOMContentLoaded', async () => {
+    // --- Basic Elements ---
+    const bookTitleHeader = document.getElementById('book-title-header');
+    const loadingSpinner = document.getElementById('loading-spinner');
+    const bookCoverView = document.getElementById('book-cover-view');
+    const bookCoverImg = document.getElementById('book-cover-img');
+    const contentContainer = document.getElementById('book-content-container');
+    const bookContent = document.getElementById('book-content');
+    const progressBar = document.getElementById('progress-bar');
     const pageIndicator = document.getElementById('page-indicator');
-    let currentFontSize = 16;
-    let currentZoom = 1;
+    const prevPageBtn = document.getElementById('prev-page-btn');
+    const nextPageBtn = document.getElementById('next-page-btn');
+    
+    // --- Toolbar Elements ---
+    const viewSingleBtn = document.getElementById('view-single-btn');
+    const viewColumnsBtn = document.getElementById('view-columns-btn');
+    const fontIncBtn = document.getElementById('font-inc-btn');
+    const fontDecBtn = document.getElementById('font-dec-btn');
+    const fontSelect = document.getElementById('font-select');
+    const themeToggleBtn = document.getElementById('theme-toggle-btn');
+    
+    // --- State Variables ---
+    let bookText = '';
+    let totalPages = 1;
+    let currentPage = 1;
+    let bookId = '';
+    
+    const settings = {
+        fontSize: 18, // in pixels
+        fontFamily: 'font-lora',
+        viewMode: 'columns', // 'columns' or 'single'
+        theme: 'dark',
+    };
 
-    async function loadBook() {
-        if (!book) {
-            flipbook.html('<div class="page">Book not found.</div>');
+    // --- Book Data ---
+    const bookDatabase = {
+        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/documents/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliaths_reckoning.png' },
+        'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/documents/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
+        'beyond-redress': { title: "Beyond Redress", path: 'assets/documents/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
+    };
+
+    // --- CORE FUNCTIONS ---
+
+    /**
+     * Initializes the reader by getting book ID from URL and loading data.
+     */
+    async function init() {
+        const urlParams = new URLSearchParams(window.location.search);
+        bookId = urlParams.get('book');
+        const bookData = bookDatabase[bookId];
+
+        if (!bookData) {
+            displayError('Book not found.');
             return;
         }
 
-        const response = await fetch(book.path);
-        const text = await response.text();
-
-        const pages = paginate(text, 250); // words per page
+        bookTitleHeader.textContent = bookData.title;
+        bookCoverImg.src = bookData.cover;
         
-        // Add cover
-        flipbook.append(`<div class="hard"><img src="${book.cover}" class="w-full h-full object-cover"/></div>`);
-        flipbook.append('<div class="hard"></div>');
-
-        pages.forEach(pageContent => {
-            const pageDiv = document.createElement('div');
-            pageDiv.className = 'page';
-            pageDiv.innerHTML = `<div class="p-5" style="font-size: ${currentFontSize}px;">${pageContent.replace(/\n/g, '<br>')}</div>`;
-            flipbook.append(pageDiv);
-        });
-
-        // Add back cover
-        flipbook.append('<div class="hard"></div>');
-        flipbook.append(`<div class="hard"></div>`);
-
-        flipbook.turn({
-            width: '100%',
-            height: '100%',
-            autoCenter: true,
-            display: 'double',
-            acceleration: true,
-            gradients: true,
-            when: {
-                turned: function(event, page, view) {
-                    pageIndicator.textContent = `Page ${page} of ${flipbook.turn('pages')}`;
-                    if(currentUser) saveBookmark(page);
-                }
-            }
-        });
-
-        parseAndDisplayTOC(text);
-        if (currentUser) {
-            loadBookmark();
-            loadHighlightsAndNotes();
+        // Show cover first
+        loadingSpinner.style.display = 'none';
+        bookCoverView.style.display = 'block';
+        
+        // Add a click listener to the cover to start reading
+        bookCoverView.addEventListener('click', startReading, { once: true });
+        
+        // Pre-fetch book content
+        try {
+            const response = await fetch(bookData.path);
+            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
+            bookText = await response.text();
+        } catch (error) {
+            console.error('Error fetching book content:', error);
+            displayError('Could not load book text.');
         }
+    }
+
+    /**
+     * Hides cover and shows the paginated text content.
+     */
+    function startReading() {
+        bookCoverView.style.display = 'none';
+        contentContainer.style.display = 'block';
+        bookContent.innerHTML = bookText; // Load full text
+        applySettings();
+        calculatePages();
+        goToPage(1);
+    }
+
+    /**
+     * Calculates total pages based on scroll width and client width.
+     */
+    function calculatePages() {
+        if (settings.viewMode === 'single') {
+            totalPages = 1;
+        } else {
+             // Ensure content is visible to measure
+            const initialDisplay = contentContainer.style.display;
+            contentContainer.style.display = 'block';
+
+            const scrollWidth = bookContent.scrollWidth;
+            const clientWidth = bookContent.clientWidth;
+            totalPages = Math.max(1, Math.round(scrollWidth / clientWidth));
+            
+            contentContainer.style.display = initialDisplay;
+        }
+        updatePagination();
     }
     
-    function paginate(text, wordsPerPage) {
-        const words = text.split(/\s+/);
-        const pages = [];
-        for (let i = 0; i < words.length; i += wordsPerPage) {
-            pages.push(words.slice(i, i + wordsPerPage).join(' '));
+    /**
+     * Navigates to a specific page.
+     */
+    function goToPage(pageNumber) {
+        currentPage = Math.max(1, Math.min(pageNumber, totalPages));
+        if (settings.viewMode === 'columns') {
+             bookContent.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
         }
-        return pages;
+        updatePagination();
     }
 
-    function parseAndDisplayTOC(text) {
-        const tocList = document.getElementById('content-list');
-        const lines = text.split('\n');
-        const toc = lines.filter(line => /^\d+\..*/.test(line.trim()));
-
-        toc.forEach(item => {
-            const li = document.createElement('li');
-            li.textContent = item.trim();
-            li.className = "cursor-pointer hover:text-blue-400";
-            // This is a simplified jump-to-page. A real implementation would need to map titles to page numbers.
-            li.onclick = () => { /* ... */ };
-            tocList.appendChild(li);
-        });
+    /**
+     * Updates the progress bar and page indicator text.
+     */
+    function updatePagination() {
+        pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
+        const progress = totalPages > 1 ? ((currentPage - 1) / (totalPages - 1)) * 100 : 100;
+        progressBar.style.width = `${progress}%`;
+        prevPageBtn.disabled = currentPage === 1;
+        nextPageBtn.disabled = currentPage === totalPages;
     }
 
-    // Toolbar controls
-    document.getElementById('prev-page-btn').addEventListener('click', () => flipbook.turn('previous'));
-    document.getElementById('next-page-btn').addEventListener('click', () => flipbook.turn('next'));
+    /**
+     * Applies all current settings (font, view mode) to the content.
+     */
+    function applySettings() {
+        // Font size
+        bookContent.style.fontSize = `${settings.fontSize}px`;
+        
+        // Font family
+        bookContent.classList.remove('font-lora', 'font-opensans', 'font-robotoslab');
+        bookContent.classList.add(settings.fontFamily);
 
-    document.getElementById('font-inc-btn').addEventListener('click', () => {
-        currentFontSize += 1;
-        $('.page > div').css('font-size', `${currentFontSize}px`);
-    });
-    document.getElementById('font-dec-btn').addEventListener('click', () => {
-        currentFontSize -= 1;
-        $('.page > div').css('font-size', `${currentFontSize}px`);
-    });
-     document.getElementById('zoom-in-btn').addEventListener('click', () => {
-        currentZoom += 0.1;
-        $('#flipbook-container').css('transform', `scale(${currentZoom})`);
-    });
-    document.getElementById('zoom-out-btn').addEventListener('click', () => {
-        currentZoom -= 0.1;
-        $('#flipbook-container').css('transform', `scale(${currentZoom})`);
-    });
-
-    document.getElementById('toggle-sidebar-btn').addEventListener('click', () => {
-        document.getElementById('sidebar').classList.toggle('closed');
-    });
-
-    // Authentication and Firestore logic
-    onAuthStateChanged(auth, user => {
-        currentUser = user;
-        loadBook();
-
-        if (!user) {
-            window.addEventListener('beforeunload', (event) => {
-                event.returnValue = "Your progress will be lost unless you register. Are you sure you want to exit?";
-                return "Your progress will be lost unless you register. Are you sure you want to exit?";
-            });
+        // View mode
+        if (settings.viewMode === 'single') {
+            bookContent.classList.add('single-page');
+            bookContent.style.transform = 'translateX(0)';
+        } else {
+            bookContent.classList.remove('single-page');
         }
-    });
+        
+        // Theme
+        document.documentElement.className = settings.theme;
+        themeToggleBtn.innerHTML = settings.theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
 
-    async function saveBookmark(page) {
-        if (!currentUser) return;
-        const bookmarkRef = doc(db, `users/${currentUser.uid}/bookmarks`, bookId);
-        await setDoc(bookmarkRef, { page });
-    }
-
-    async function loadBookmark() {
-        if (!currentUser) return;
-        const bookmarkRef = doc(db, `users/${currentUser.uid}/bookmarks`, bookId);
-        const docSnap = await getDoc(bookmarkRef);
-        if (docSnap.exists()) {
-            flipbook.turn('page', docSnap.data().page);
-        }
+        // Recalculate pages as settings change layout
+        setTimeout(calculatePages, 50);
     }
     
-    // Note taking and highlighting logic
-    const highlightPopup = document.getElementById('highlight-popup');
-    let currentSelection;
+    /**
+     * Displays an error message in the reader.
+     */
+    function displayError(message) {
+        loadingSpinner.style.display = 'none';
+        contentContainer.style.display = 'block';
+        bookContent.innerHTML = `<p class="text-red-400 text-center">${message}</p>`;
+    }
 
-    flipbook.on('mouseup', '.page', (e) => {
-        const selection = window.getSelection();
-        if (selection.toString().length > 0) {
-            currentSelection = selection.getRangeAt(0).cloneRange();
-            highlightPopup.style.left = `${e.clientX}px`;
-            highlightPopup.style.top = `${e.clientY}px`;
-            highlightPopup.classList.remove('hidden');
-        }
+    // --- EVENT LISTENERS ---
+    
+    // Navigation
+    prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
+    nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
+    window.addEventListener('resize', () => {
+        calculatePages();
+        goToPage(currentPage);
     });
 
-    document.addEventListener('mousedown', (e) => {
-        if (!highlightPopup.contains(e.target)) {
-            highlightPopup.classList.add('hidden');
-        }
+    // Toolbar
+    viewSingleBtn.addEventListener('click', () => {
+        settings.viewMode = 'single';
+        applySettings();
+        goToPage(1); // Reset to first page in single view
+    });
+    viewColumnsBtn.addEventListener('click', () => {
+        settings.viewMode = 'columns';
+        applySettings();
     });
 
-    // ... Note saving and sharing logic to be implemented here
+    fontIncBtn.addEventListener('click', () => {
+        settings.fontSize = Math.min(settings.fontSize + 1, 32);
+        applySettings();
+    });
+    fontDecBtn.addEventListener('click', () => {
+        settings.fontSize = Math.max(settings.fontSize - 1, 12);
+        applySettings();
+    });
+    fontSelect.addEventListener('change', (e) => {
+        settings.fontFamily = e.target.value;
+        applySettings();
+    });
+
+    themeToggleBtn.addEventListener('click', () => {
+        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
+        applySettings();
+    });
+
+    // Authentication modal
+    const authModal = document.getElementById('auth-modal');
+    if (authModal) {
+        document.getElementById('close-auth-modal').addEventListener('click', () => {
+            authModal.classList.add('hidden');
+        });
+    }
+    
+    // --- Start the application ---
+    init();
 });
-
