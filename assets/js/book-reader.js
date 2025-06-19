@@ -43,6 +43,7 @@ document.addEventListener('DOMContentLoaded', async () => {
         'know-yourself': { title: "Getting to know yourself as a South African, Unravelling Xhosa History", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
         'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika, Yazi inombo yomXhosasi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
         'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_Ozifundiselayo_Ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' }
+        
     };
 
     // --- CORE FUNCTIONS ---
