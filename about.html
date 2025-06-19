@@ -10,13 +10,17 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
         <div id="sidebar-placeholder"></div>
 
+        <!-- Main Content Area -->
         <main class="main-content p-8 md:p-12">
             <div class="max-w-3xl mx-auto">
                 <h1 class="text-4xl font-bold font-roboto mb-8 text-white text-center">The Story of FLAMEA</h1>
+                <!-- Existing Timeline Container -->
                 <div class="relative timeline-line pl-12">
                     
+                    <!-- Timeline Item 1: The Spark -->
                     <div class="timeline-item mb-12">
                          <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
@@ -25,6 +29,7 @@
                         </div>
                     </div>
 
+                    <!-- Timeline Item 2: The Vision -->
                     <div class="timeline-item mb-12">
                          <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
@@ -33,7 +38,8 @@
                         </div>
                     </div>
 
-                    <div class="timeline-item mb-12">
+                    <!-- Timeline Item 3: The Values (UPDATED) -->
+                     <div class="timeline-item mb-12">
                          <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
                             <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Core Values: The Builder's Ethos</h3>
@@ -57,6 +63,7 @@
                             </div>
                         </div>
                     </div>
+                    <!-- Timeline Item 4: The Call to Action -->
                     <div class="timeline-item">
                          <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
                         <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
@@ -68,15 +75,18 @@
             </div>
         </main>
 
+        <!-- Vertical Timeline Column -->
         <div class="vertical-timeline-container">
             <div class="timeline-wrapper">
                 <div class="timeline-track"></div>
                 <div class="timeline-scroller" id="timeline-scroller">
-                    </div>
+                    <!-- Vertical timeline points will be injected here by JS -->
+                </div>
             </div>
         </div>
     </div>
     
+    <!-- Modal for Timeline Details -->
     <div id="timeline-modal" class="modal-overlay">
         <div class="modal-content">
             <span class="modal-close">&times;</span>
@@ -89,9 +99,11 @@
         </div>
     </div>
 
+
+    <!-- Scripts -->
     <script>
+        // Existing script for about.html page
         document.addEventListener('DOMContentLoaded', () => {
-            // --- HORIZONTAL TIMELINE SCRIPT ---
             const timelineItems = document.querySelectorAll('.main-content .timeline-item');
             const observer = new IntersectionObserver((entries) => {
                 entries.forEach(entry => {
@@ -111,30 +123,134 @@
                     icon.classList.toggle('rotate-180');
                 });
             });
-
-            // --- VERTICAL TIMELINE SCRIPT ---
+        });
+    </script>
+    
+    <!-- NEW SCRIPT FOR VERTICAL TIMELINE -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
             const verticalTimelineData = [
-                // Data remains the same...
-                { date: 'c. 200,000 BC', event: 'Emergence of Homo sapiens & Early Religion', details: 'Archaeological evidence, such as intentional burials, suggests the emergence of religious ideas and ancestor worship. This established a continuity across generations, a practice foundational to cultures like the Bantu and Khoisan. The family was the primary social and economic unit.', primarySource: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3997530/', secondarySource: 'The Better Angels of Our Nature, S. Pinker' },
-                { date: 'c. 10,000 BC', event: 'The Agricultural Revolution', details: 'The shift from nomadic life to settled agriculture creates concepts of land ownership and inheritance. This solidifies the patriarchal family structure, as fatherhood becomes the primary social mechanism for transferring property and status.', primarySource: 'https://pubmed.ncbi.nlm.nih.gov/11608585/', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
-                { date: 'c. 3000 BC', event: 'First Formal Schools in Mesopotamia', details: 'The first schools emerge not for the general populace, but as exclusive institutions to train scribes and priests. This marks the first "outsourcing" of education from the family to a surrogate institution serving the state\'s needs.', primarySource: 'https://www.worldhistory.org/article/1493/education-in-ancient-mesopotamia/', secondarySource: 'The Homeschooling Father, Salatiso' },
-                { date: 'c. 800 BC', event: 'Homer\'s Iliad and the Honor Culture', details: 'The epic poetry of Homer depicts a society where a man\'s identity and worth are inextricably linked to his father\'s legacy and honor. The father is the ultimate benchmark for a son\'s life, a powerful cultural paradigm.', primarySource: 'The Iliad, Homer', secondarySource: 'Intellectuals, P. Johnson' },
-                { date: 'c. 380 BC', event: 'Plato\'s "Allegory of the Cave"', details: 'Plato provides the philosophical justification for surrogate education. He posits that truth is an abstract ideal accessible only to enlightened experts (philosophers), who must lead the ignorant masses out of the "cave" of traditional, familial wisdom.', primarySource: 'The Republic, Plato', secondarySource: 'The Homeschooling Father, Salatiso' },
-                { date: 'c. 500 AD - 1500 AD', event: 'The Bible and the Codification of Family', details: 'The Judeo-Christian tradition establishes the patriarchal family as a divinely instituted union. The Bible places the primary responsibility for children\'s education on the parents, particularly the father, solidifying the family as the original and most vital school.', primarySource: 'The Bible (e.g., Ephesians 5, Deuteronomy 6)', secondarySource: 'The Homeschooling Father, Salatiso' },
-                { date: '1517 AD', event: 'The Protestant Reformation', details: 'Martin Luther champions universal education so that all believers can read the Bible themselves. This introduces the idea of mass schooling, though Luther still viewed parents as the primary educators, with schools as a support system.', primarySource: 'https://www.researchgate.net/publication/272332616_Martin_Luther\'s_Educational_Approach', secondarySource: 'The Homeschooling Father, Salatiso' },
-                { date: '1658', event: 'First Formal School in South Africa', details: 'The Dutch East India Company (DEIC) establishes a school to instruct enslaved children in Dutch culture and religion. This marks the beginning of institutionalized, surrogate education in South Africa, designed for ideological domination, not indigenous flourishing.', primarySource: 'https://www.hsrcpress.ac.za/books/a-new-history-of-formal-schooling-in-south-africa-1658-1910', secondarySource: 'The Homeschooling Father, Salatiso, Ch. 1' },
-                { date: 'c. 1760', event: 'The Industrial Revolution', details: 'Work moves from the family unit (farm/workshop) to the factory. This physically separates the father from the home, transforming him from the master of a productive household to a "breadwinner," an employee whose economic life is external to the family.', primarySource: 'https://www.cambridge.org/core/books/abs/economics-of-the-family/introduction-to-the-economics-of-the-family/0B4D5D4E6A7A6679589A644D251C7A92', secondarySource: 'Knowledge and Decisions, T. Sowell' },
-                { date: '1762', event: 'Rousseau and the Ideology of the State Surrogate', details: 'Philosopher Jean-Jacques Rousseau provides the explicit ideology for the state as the ultimate parent, arguing it must control a citizen\'s upbringing from infancy. This is contrasted with his abandonment of his own five children, a pattern of personal hypocrisy among intellectuals.', primarySource: 'The Social Contract, J.J. Rousseau', secondarySource: 'Intellectuals, P. Johnson, Ch. 1' },
-                { date: '1948', event: 'Apartheid Systematized in South Africa', details: 'The National Party comes to power and implements apartheid. Policies like the migrant labor system and influx control deliberately engineer the absence of Black fathers from their families to supply cheap labor to white-owned industries.', primarySource: 'https://www.sahistory.org.za/article/apartheid-and-reactions-it', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
-                { date: '1953 AD', event: 'The Bantu Education Act', details: 'The apartheid state creates a deliberately inferior education system to engineer a permanent Black underclass, destroying community and mission schools. It is the ultimate cynical use of the "surrogate" school system as a tool of oppression.', primarySource: 'https://www.britannica.com/topic/Bantu-Education-Act', secondarySource: 'The Homeschooling Father, Salatiso, Ch. 4' },
-                { date: '1956 AD', event: 'Birth of Mlandeli, a Successor to his Father to be Provider for his Family ', details: 'Salatiso\'s father is born in Nqabane, Transkei. He would grow up to become an inspector and provide for his family, laying the foundation for his son despite the hardships of apartheid.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'Beyond the Grave, Salatiso' },
-                { date: 'c. 1970s', event: 'Rise of Second-Wave Feminism', details: 'The movement challenges traditional family structures and gender roles. While achieving necessary gains, it also contributes to rising divorce rates and a cultural and legal environment often punitive towards men, further destabilizing the family unit.', primarySource: 'Feminist Fantasies, Phyllis Schlafly', secondarySource: 'Men on Strike, Helen Smith' },
-                { date: '1982', event: 'Birth of the Son, Mlandeli has his Successor', details: 'Born in Fort Malan, Transkei, into a Xhosa family shaped by both tradition and the pressures of apartheid South Africa. His name, meaning "show us the way," sets him on a path to lead rather than follow.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'The Homeschooling Father, Salatiso' },
-                { date: '1993', event: 'Death of the Father, Salatiso Becomes Umlandeli', details: 'Salatiso\'s father dies at a young age, thrusting Salatiso, at age 11, into the role of his father\'s successor (Umlandeli), a pivotal moment that would shape his entire life and philosophy.', primarySource: 'The Quest for Buggz, Salatiso', secondarySource: 'Lessons from my mother, Salatiso' },
-                { date: '1994', event: 'South Africa\'s First Democratic Election', details: 'Apartheid officially ends, and a new Constitution is adopted, enshrining equality. However, the subsequent implementation of race-based redress policies continues a form of state-sanctioned discrimination.', primarySource: 'https://study-democracy.sun.ac.za/the-road-to-democracy-in-south-africa/', secondarySource: 'Beyond Redress, Salatiso' },
-                { date: '2005', event: 'The Children\'s Act is Implemented', details: 'Modern family law is implemented. While ostensibly gender-neutral, its application in Children\'s Courts is argued to be systematically biased against fathers, perpetuating the erosion of the family structure.', primarySource: 'The Children\'s Act 38 of 2005', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
-                { date: '2018', event: 'The Birth of Sazi a.k.a "BuggZ"', details: 'The birth of Salatiso\'s son. This event marks the start of a direct legal and personal battle against the family court system, becoming the catalyst for all of his subsequent work.', primarySource: 'The Quest for Buggz ', secondarySource: 'Goliath\'s Reckoning, Salatiso' },
-                { date: '2023', event: 'The Founding of Flamea', details: 'Drawing from years of personal struggle, legal battles, and extensive research, Salatiso launches Flamea.org. The platform is the culmination of his quest, designed to provide tools and knowledge for others facing similar injustices, thereby reclaiming the family\'s autonomy from failing state surrogates.', primarySource: 'Goliath\'s Reckoning, Salatiso', secondarySource: 'The Quest for Buggz, Salatiso ' },
+                {
+                    date: 'c. 200,000 BC', event: 'Emergence of Homo sapiens & Early Religion',
+                    details: 'Archaeological evidence, such as intentional burials, suggests the emergence of religious ideas and ancestor worship. This established a continuity across generations, a practice foundational to cultures like the Bantu and Khoisan. The family was the primary social and economic unit.',
+                    primarySource: 'https://www.ncbi.nlm.nih.gov/pmc/articles/PMC3997530/',
+                    secondarySource: 'The Better Angels of Our Nature, S. Pinker'
+                },
+                {
+                    date: 'c. 10,000 BC', event: 'The Agricultural Revolution',
+                    details: 'The shift from nomadic life to settled agriculture creates concepts of land ownership and inheritance. This solidifies the patriarchal family structure, as fatherhood becomes the primary social mechanism for transferring property and status.',
+                    primarySource: 'https://pubmed.ncbi.nlm.nih.gov/11608585/',
+                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
+                },
+                {
+                    date: 'c. 3000 BC', event: 'First Formal Schools in Mesopotamia',
+                    details: 'The first schools emerge not for the general populace, but as exclusive institutions to train scribes and priests. This marks the first "outsourcing" of education from the family to a surrogate institution serving the state\'s needs.',
+                    primarySource: 'https://www.worldhistory.org/article/1493/education-in-ancient-mesopotamia/',
+                    secondarySource: 'The Homeschooling Father, Salatiso'
+                },
+                {
+                    date: 'c. 800 BC', event: 'Homer\'s Iliad and the Honor Culture',
+                    details: 'The epic poetry of Homer depicts a society where a man\'s identity and worth are inextricably linked to his father\'s legacy and honor. The father is the ultimate benchmark for a son\'s life, a powerful cultural paradigm.',
+                    primarySource: 'The Iliad, Homer',
+                    secondarySource: 'Intellectuals, P. Johnson'
+                },
+                {
+                    date: 'c. 380 BC', event: 'Plato\'s "Allegory of the Cave"',
+                    details: 'Plato provides the philosophical justification for surrogate education. He posits that truth is an abstract ideal accessible only to enlightened experts (philosophers), who must lead the ignorant masses out of the "cave" of traditional, familial wisdom.',
+                    primarySource: 'The Republic, Plato',
+                    secondarySource: 'The Homeschooling Father, Salatiso'
+                },
+                {
+                    date: 'c. 500 AD - 1500 AD', event: 'The Bible and the Codification of Family',
+                    details: 'The Judeo-Christian tradition establishes the patriarchal family as a divinely instituted union. The Bible places the primary responsibility for children\'s education on the parents, particularly the father, solidifying the family as the original and most vital school.',
+                    primarySource: 'The Bible (e.g., Ephesians 5, Deuteronomy 6)',
+                    secondarySource: 'The Homeschooling Father, Salatiso'
+                },
+                {
+                    date: '1517 AD', event: 'The Protestant Reformation',
+                    details: 'Martin Luther champions universal education so that all believers can read the Bible themselves. This introduces the idea of mass schooling, though Luther still viewed parents as the primary educators, with schools as a support system.',
+                    primarySource: 'https://www.researchgate.net/publication/272332616_Martin_Luther\'s_Educational_Approach',
+                    secondarySource: 'The Homeschooling Father, Salatiso'
+                },
+                {
+                    date: '1658', event: 'First Formal School in South Africa',
+                    details: 'The Dutch East India Company (DEIC) establishes a school to instruct enslaved children in Dutch culture and religion. This marks the beginning of institutionalized, surrogate education in South Africa, designed for ideological domination, not indigenous flourishing.',
+                    primarySource: 'https://www.hsrcpress.ac.za/books/a-new-history-of-formal-schooling-in-south-africa-1658-1910',
+                    secondarySource: 'The Homeschooling Father, Salatiso, Ch. 1'
+                },
+                {
+                    date: 'c. 1760', event: 'The Industrial Revolution',
+                    details: 'Work moves from the family unit (farm/workshop) to the factory. This physically separates the father from the home, transforming him from the master of a productive household to a "breadwinner," an employee whose economic life is external to the family.',
+                    primarySource: 'https://www.cambridge.org/core/books/abs/economics-of-the-family/introduction-to-the-economics-of-the-family/0B4D5D4E6A7A6679589A644D251C7A92',
+                    secondarySource: 'Knowledge and Decisions, T. Sowell'
+                },
+                {
+                    date: '1762', event: 'Rousseau and the Ideology of the State Surrogate',
+                    details: 'Philosopher Jean-Jacques Rousseau provides the explicit ideology for the state as the ultimate parent, arguing it must control a citizen\'s upbringing from infancy. This is contrasted with his abandonment of his own five children, a pattern of personal hypocrisy among intellectuals.',
+                    primarySource: 'The Social Contract, J.J. Rousseau',
+                    secondarySource: 'Intellectuals, P. Johnson, Ch. 1'
+                },
+                {
+                    date: '1948', event: 'Apartheid Systematized in South Africa',
+                    details: 'The National Party comes to power and implements apartheid. Policies like the migrant labor system and influx control deliberately engineer the absence of Black fathers from their families to supply cheap labor to white-owned industries.',
+                    primarySource: 'https://www.sahistory.org.za/article/apartheid-and-reactions-it',
+                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
+                },
+                {
+                    date: '1953 AD', event: 'The Bantu Education Act',
+                    details: 'The apartheid state creates a deliberately inferior education system to engineer a permanent Black underclass, destroying community and mission schools. It is the ultimate cynical use of the "surrogate" school system as a tool of oppression.',
+                    primarySource: 'https://www.britannica.com/topic/Bantu-Education-Act',
+                    secondarySource: 'The Homeschooling Father, Salatiso, Ch. 4'
+                },
+                 {
+                    date: '1956 AD', event: 'Birth of Mlandeli, a Successor to his Father to be Provider for his Family ',
+                    details: 'Salatiso\'s father is born in Nqabane, Transkei. He would grow up to become an inspector and provide for his family, laying the foundation for his son despite the hardships of apartheid.',
+                    primarySource: 'The Quest for Buggz, Salatiso',
+                    secondarySource: 'Beyond the Grave, Salatiso'
+                },
+                {
+                    date: 'c. 1970s', event: 'Rise of Second-Wave Feminism',
+                    details: 'The movement challenges traditional family structures and gender roles. While achieving necessary gains, it also contributes to rising divorce rates and a cultural and legal environment often punitive towards men, further destabilizing the family unit.',
+                    primarySource: 'Feminist Fantasies, Phyllis Schlafly',
+                    secondarySource: 'Men on Strike, Helen Smith'
+                },
+                {
+                    date: '1982', event: 'Birth of the Son, Mlandeli has his Successor',
+                    details: 'Born in Fort Malan, Transkei, into a Xhosa family shaped by both tradition and the pressures of apartheid South Africa. His name, meaning "show us the way," sets him on a path to lead rather than follow.',
+                    primarySource: 'The Quest for Buggz, Salatiso',
+                    secondarySource: 'The Homeschooling Father, Salatiso'
+                },
+                {
+                    date: '1993', event: 'Death of the Father, Salatiso Becomes Umlandeli',
+                    details: 'Salatiso\'s father dies at a young age, thrusting Salatiso, at age 11, into the role of his father\'s successor (Umlandeli), a pivotal moment that would shape his entire life and philosophy.',
+                    // FIX: Removed extra comma and quote that was causing a JavaScript syntax error.
+                    primarySource: 'The Quest for Buggz, Salatiso',
+                    secondarySource: 'Lessons from my mother, Salatiso'
+                },
+                {
+                    date: '1994', event: 'South Africa\'s First Democratic Election',
+                    details: 'Apartheid officially ends, and a new Constitution is adopted, enshrining equality. However, the subsequent implementation of race-based redress policies continues a form of state-sanctioned discrimination.',
+                    primarySource: 'https://study-democracy.sun.ac.za/the-road-to-democracy-in-south-africa/',
+                    secondarySource: 'Beyond Redress, Salatiso'
+                },
+                {
+                    date: '2005', event: 'The Children\'s Act is Implemented',
+                    details: 'Modern family law is implemented. While ostensibly gender-neutral, its application in Children\'s Courts is argued to be systematically biased against fathers, perpetuating the erosion of the family structure.',
+                    primarySource: 'The Children\'s Act 38 of 2005',
+                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
+                },
+                {
+                    date: '2018', event: 'The Birth of Sazi a.k.a "BuggZ"',
+                    details: 'The birth of Salatiso\'s son. This event marks the start of a direct legal and personal battle against the family court system, becoming the catalyst for all of his subsequent work.',
+                    primarySource: 'The Quest for Buggz ',
+                    secondarySource: 'Goliath\'s Reckoning, Salatiso'
+                },
+                {
+                    date: '2023', event: 'The Founding of Flamea',
+                    details: 'Drawing from years of personal struggle, legal battles, and extensive research, Salatiso launches Flamea.org. The platform is the culmination of his quest, designed to provide tools and knowledge for others facing similar injustices, thereby reclaiming the family\'s autonomy from failing state surrogates.',
+                    primarySource: 'Goliath\'s Reckoning, Salatiso',
+                    secondarySource: 'The Quest for Buggz, Salatiso '
+                },
             ];
 
             const timelineScroller = document.getElementById('timeline-scroller');
