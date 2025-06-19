@@ -1,107 +1,179 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Traditional Customs - Flamea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        /* Consistent layout for sidebar and main content */
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        .main-content {
-            flex-grow: 1;
-        }
-        /* Accordion styles copied from forms.html for consistency */
-        .accordion-header {
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .accordion-header:hover {
-            background-color: #374151;
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-        }
-        .accordion-item.active .accordion-content {
-            max-height: 2000px; /* Increased height for potentially long content */
-        }
-        .accordion-icon {
-            transition: transform 0.3s;
-        }
-        .accordion-item.active .accordion-icon {
-            transform: rotate(180deg);
-        }
-    </style>
+    <title>Customs & Traditions Hub</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <!-- Sidebar Placeholder -->
-        <div id="sidebar-placeholder"></div>
-
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-            <div id="customs-catalogue" class="max-w-5xl mx-auto">
-                 <div class="text-center mb-12">
-                    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">Traditional Customs Hub</h1>
-                    <p class="text-lg text-gray-400">Explore the rich tapestry of cultural practices, especially as a Xhosa man from the Transkei would know them.</p>
-                </div>
-
-                <!-- User choice section -->
-                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer">
-                        <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Simple Start Wizard</h4>
-                        <p class="text-gray-400">Answer a few questions to find a custom.</p>
-                    </div>
-                    <div id="explore-customs-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer">
-                        <i class="fas fa-search text-5xl text-blue-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Manual Explorer</h4>
-                        <p class="text-gray-400">Browse all customs by category and culture.</p>
-                    </div>
-                </div>
-                
-                <!-- Wizard Section (Initially hidden) -->
-                <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg mb-12">
-                    <!-- Wizard content will be injected by customs.js -->
-                </div>
-
-                <!-- Explorer Section (Initially hidden) -->
-                <div id="explorer-section" class="hidden">
-                    <div class="bg-gray-800 p-6 rounded-lg mb-8 sticky top-4 z-10 shadow-lg border border-gray-700">
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end">
-                            <div class="md:col-span-1">
-                                <label for="life-stage-filter" class="block text-sm font-medium text-gray-300 mb-1">Filter by Life Stage</label>
-                                <select id="life-stage-filter" class="form-select w-full bg-gray-700 border-gray-600 rounded-md p-2"></select>
-                            </div>
-                            <div class="md:col-span-1">
-                                <label for="culture-filter" class="block text-sm font-medium text-gray-300 mb-1">Filter by Culture</label>
-                                <select id="culture-filter" class="form-select w-full bg-gray-700 border-gray-600 rounded-md p-2"></select>
-                            </div>
-                             <div class="md:col-span-1">
-                                <label for="custom-search-input" class="block text-sm font-medium text-gray-300 mb-1">Search by Keyword</label>
-                                <input type="text" id="custom-search-input" class="form-input w-full bg-gray-700 border-gray-600 rounded-md p-2" placeholder="e.g., 'imbeleko'">
-                            </div>
-                        </div>
-                    </div>
-                    <div id="customs-results-container" class="space-y-4">
-                        <!-- Customs accordion will be injected here -->
-                    </div>
-                     <button id="back-to-selection" class="mt-8 text-sm text-gray-400 hover:text-white">&larr; Back to selection</button>
-                </div>
+<body>
+    <header>
+        <h1>Customs & Traditions Hub</h1>
+        <p>Learn about South African customs and similar traditions around the world.</p>
+    </header>
+    <main>
+        <section id="selection">
+            <div class="option">
+                <h2><i class="fas fa-magic"></i> Cultural Explorer Wizard</h2>
+                <p>Not sure where to begin? We'll guide you.</p>
+                <button id="start-wizard">Start Wizard</button>
             </div>
-        </main>
-    </div>
-    
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/customs.js"></script>
+            <div class="option">
+                <h2><i class="fas fa-book-open"></i> Manual Customs Browser</h2>
+                <p>Know what you need? Browse all customs.</p>
+                <button id="show-manual">Browse All</button>
+            </div>
+        </section>
+
+        <section id="wizard" style="display: none;">
+            <h2>Select a Cultural Aspect:</h2>
+            <select id="aspect-select">
+                <option value="">--Choose an aspect--</option>
+                <option value="initiation">Initiation Rites</option>
+                <option value="marriage">Marriage Customs</option>
+                <option value="attire">Traditional Attire</option>
+                <option value="cuisine">Cuisine</option>
+                <option value="festivals">Festivals</option>
+                <option value="arts">Arts and Crafts</option>
+                <option value="beliefs">Beliefs and Spirituality</option>
+                <option value="governance">Governance and Social Structure</option>
+            </select>
+            <button id="show-aspect">Show Information</button>
+        </section>
+
+        <section id="manual" style="display: none;">
+            <h2>Browse All Customs</h2>
+            <ul>
+                <li><a href="#initiation"><i class="fas fa-child"></i> Initiation Rites</a></li>
+                <li><a href="#marriage"><i class="fas fa-ring"></i> Marriage Customs</a></li>
+                <li><a href="#attire"><i class="fas fa-tshirt"></i> Traditional Attire</a></li>
+                <li><a href="#cuisine"><i class="fas fa-utensils"></i> Cuisine</a></li>
+                <li><a href="#festivals"><i class="fas fa-calendar-alt"></i> Festivals</a></li>
+                <li><a href="#arts"><i class="fas fa-paint-brush"></i> Arts and Crafts</a></li>
+                <li><a href="#beliefs"><i class="fas fa-pray"></i> Beliefs and Spirituality</a></li>
+                <li><a href="#governance"><i class="fas fa-gavel"></i> Governance and Social Structure</a></li>
+            </ul>
+        </section>
+
+        <section id="initiation" style="display: none;">
+            <h2>Initiation Rites</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: The <em>Ulwaluko</em> is a male initiation ceremony involving circumcision and a period of seclusion, where boys learn responsibilities and values of manhood. The <em>Intonjane</em> is a female initiation rite for girls who have begun menstruating, focusing on womanhood and community roles. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: The <em>thomba</em> ceremony involves seclusion for both boys and girls, teaching them about adulthood. [Citation: https://southafrica.co.za/zulu-puberty-ceremonies.html]</p>
+            <p><strong>Sotho</strong>: <em>Lebollo</em> includes circumcision for males and rituals for females, marking their transition to adulthood. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: Transition ceremonies signify adulthood, though details vary by community. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Maasai (Kenya)</strong>: Boys undergo circumcision and warrior training, similar to Ulwaluko. [Citation: https://blog.rhinoafrica.com/2018/08/13/7-amazing-african-tribal-traditions/]</p>
+            <p><strong>Aboriginal Australians</strong>: The walkabout is a rite of passage for boys, akin to thomba. [Citation: https://www.africanbudgetsafaris.com/blog/african-tribes/]</p>
+            <p><strong>Jewish Culture</strong>: <em>Brit Milah</em> is a circumcision ritual for newborn boys. [Citation: https://en.wikipedia.org/wiki/Brit_milah]</p>
+            <p><strong>Japanese Culture</strong>: <em>Seijin no Hi</em> honors young adults reaching maturity. [Citation: https://en.wikipedia.org/wiki/Coming_of_Age_Day]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="marriage" style="display: none;">
+            <h2>Marriage Customs</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: <em>Lobola</em> involves the groom’s family negotiating a bride price, often cattle, to honor the bride’s family and unite the two households. Weddings feature traditional attire and rituals. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: <em>Ilobolo</em> mirrors Lobola with bride price negotiations, followed by vibrant ceremonies. [Citation: https://en.wikipedia.org/wiki/Zulu_people]</p>
+            <p><strong>Sotho</strong>: Lobola precedes a two-part wedding involving both families. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: Bride wealth strengthens family bonds. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Yoruba (Nigeria)</strong>: Bride price payments enhance family ties, like Ilobolo. [Citation: https://en.wikipedia.org/wiki/Yoruba_culture]</p>
+            <p><strong>China</strong>: The groom’s family offers a bride price, akin to Lobola. [Citation: https://en.wikipedia.org/wiki/Bride_price]</p>
+            <p><strong>Historical Europe</strong>: Dowries were paid by the bride’s family, contrasting with Sotho practices. [Citation: https://en.wikipedia.org/wiki/Dowry]</p>
+            <p><strong>Native American</strong>: Gift exchanges formalize unions, similar to Tsonga customs. [Citation: https://www.britannica.com/topic/Native-American]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="attire" style="display: none;">
+            <h2>Traditional Attire</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: Features vibrant beadwork and blankets; beads signify status or age. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: Beadwork and animal skins display social standing. [Citation: https://www.krugerpark.co.za/africa_zulu.html]</p>
+            <p><strong>Sotho</strong>: <em>Basotho</em> blankets and <em>mokorotlo</em> hats are richly colored. [Citation: https://en.wikipedia.org/wiki/Sotho_people]</p>
+            <p><strong>Tsonga</strong>: Face scarring and beadwork denote beauty. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Himba (Namibia)</strong>: Ochre adornments resemble Tsonga scarring. [Citation: https://en.wikipedia.org/wiki/Himba_people]</p>
+            <p><strong>Native American</strong>: Beadwork tells stories, like Zulu designs. [Citation: https://www.britannica.com/topic/Native-American]</p>
+            <p><strong>Peruvian Quechua</strong>: Woven textiles echo Sotho blankets. [Citation: https://en.wikipedia.org/wiki/Quechua_people]</p>
+            <p><strong>Indian</strong>: Beaded clothing parallels Xhosa styles. [Citation: https://en.wikipedia.org/wiki/Clothing_in_India]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="cuisine" style="display: none;">
+            <h2>Cuisine</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: <em>Umngqusho</em> (maize and beans), <em>umxhaxha</em> (sour porridge), and <em>umqombothi</em> (beer) are staples. [Citation: Mdeni, S. L. (2024). Beyond the Grave: A Son's Journey Through Xhosa Tradition, p. XX]</p>
+            <p><strong>Zulu</strong>: <em>Pap</em> (maize porridge) and <em>amazi</em> (fermented milk) are common. [Citation: https://www.krugerpark.co.za/africa_zulu.html]</p>
+            <p><strong>Sotho</strong>: Pap, <em>motoho</em> (fermented porridge), and stews dominate. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: Fish and crops are key due to regional conditions. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <p><strong>Afrikaner</strong>: <em>Braai</em> (barbecue) and <em>potjiekos</em> (stew) reflect Dutch influences. [Citation: https://www.worldatlas.com/articles/south-african-culture.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>East Africa</strong>: <em>Ugali</em> (maize porridge) mirrors pap. [Citation: https://en.wikipedia.org/wiki/Ugali]</p>
+            <p><strong>Southern US</strong>: Grits resemble Sotho pap. [Citation: https://en.wikipedia.org/wiki/Grits]</p>
+            <p><strong>Mexico</strong>: Tortillas, made from maize, align with umngqusho’s role. [Citation: https://en.wikipedia.org/wiki/Tortilla]</p>
+            <p><strong>India</strong>: <em>Roti</em> flatbreads share preparation with Sotho dishes. [Citation: https://en.wikipedia.org/wiki/Roti]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="festivals" style="display: none;">
+            <h2>Festivals</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: <em>Ukwaluka</em> celebrates male initiation, while <em>iKhwelo</em> marks the New Year. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: <em>Umhlanga</em> (Reed Dance) honors purity. [Citation: https://www.krugerpark.co.za/africa_zulu.html]</p>
+            <p><strong>Sotho</strong>: <em>Mokorotlo</em> and <em>Mokhibo</em> dances celebrate community. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: <em>Muchongolo</em> dance is performed by women. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Lozi (Zambia)</strong>: <em>Kuomboka</em> marks seasonal floods. [Citation: https://en.wikipedia.org/wiki/Kuomboka]</p>
+            <p><strong>India</strong>: <em>Pongal</em> harvest festival resembles Umhlanga. [Citation: https://en.wikipedia.org/wiki/Pongal_(festival)]</p>
+            <p><strong>Germany</strong>: Oktoberfest mirrors Afrikaner braai gatherings. [Citation: https://en.wikipedia.org/wiki/Oktoberfest]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="arts" style="display: none;">
+            <h2>Arts and Crafts</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: Beadwork, pottery, and weaving feature cultural symbols. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: Beadwork communicates status and messages. [Citation: https://future-trans.com/facts-about-zulu-culture/]</p>
+            <p><strong>Sotho</strong>: Blankets and pottery reflect pride. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: Music and storytelling are prominent. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Himba (Namibia)</strong>: Ochre adornments align with Tsonga styles. [Citation: https://en.wikipedia.org/wiki/Himba_people]</p>
+            <p><strong>Native American</strong>: Beadwork tells stories, like Zulu patterns. [Citation: https://www.britannica.com/topic/Native-American]</p>
+            <p><strong>Peruvian</strong>: Woven textiles resemble Sotho blankets. [Citation: https://en.wikipedia.org/wiki/Quechua_people]</p>
+            <p><strong>Australian Aboriginal</strong>: Dot paintings echo Xhosa storytelling. [Citation: https://en.wikipedia.org/wiki/Indigenous_Australian_art]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="beliefs" style="display: none;">
+            <h2>Beliefs and Spirituality</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: Veneration of <em>Qamata</em> and ancestors blends with Christianity. [Citation: Mdeni, S. L. (2024). Beyond the Grave: A Son's Journey Through Xhosa Tradition, p. XX]</p>
+            <p><strong>Zulu</strong>: Worship of <em>amaThongo</em> (ancestors) and <em>uNkulunkulu</em> (creator). [Citation: https://en.wikipedia.org/wiki/Zulu_people]</p>
+            <p><strong>Sotho</strong>: Ancestor worship integrates with Christianity. [Citation: https://briefly.co.za/31802-sotho-culture.html]</p>
+            <p><strong>Tsonga</strong>: <em>Tilo</em> (supreme being) is revered, with healers using herbs. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Yoruba (Nigeria)</strong>: Ancestor veneration mirrors Xhosa practices. [Citation: https://en.wikipedia.org/wiki/Yoruba_culture]</p>
+            <p><strong>China</strong>: Ancestor worship with offerings resembles amaThongo. [Citation: https://en.wikipedia.org/wiki/Ancestor_veneration_in_China]</p>
+            <p><strong>Celtic</strong>: Nature spirits align with Xhosa sacred sites. [Citation: https://en.wikipedia.org/wiki/Celtic_polytheism]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+
+        <section id="governance" style="display: none;">
+            <h2>Governance and Social Structure</h2>
+            <h3>South African Tribes</h3>
+            <p><strong>Xhosa</strong>: Chiefs (<em>Inkosi</em>) and elder councils govern via patrilineal succession. [Citation: Mdeni, S. L. (2024). Getting to know yourself as a South African, Unravelling Xhosa History, p. XX]</p>
+            <p><strong>Zulu</strong>: Kings and chiefs lead, with a military tradition from Shaka. [Citation: https://en.wikipedia.org/wiki/Zulu_people]</p>
+            <p><strong>Sotho</strong>: Chiefs and kings (in Lesotho) oversee communities. [Citation: https://en.wikipedia.org/wiki/Sotho_people]</p>
+            <p><strong>Tsonga</strong>: Chiefs lead tribal areas. [Citation: https://www.krugerpark.co.za/africa_shangaan_tsonga.html]</p>
+            <h3>Global Customs</h3>
+            <p><strong>Ashanti (Ghana)</strong>: Chief-led systems resemble Sotho governance. [Citation: https://en.wikipedia.org/wiki/Ashanti_people]</p>
+            <p><strong>Japan</strong>: Feudal structures historically echo Zulu monarchy. [Citation: https://en.wikipedia.org/wiki/Feudal_Japan]</p>
+            <p><strong>Scotland</strong>: Clan systems parallel Xhosa kinship ties. [Citation: https://en.wikipedia.org/wiki/Scottish_clan]</p>
+            <button class="back-btn">Back to Selection</button>
+        </section>
+    </main>
+    <script src="customs.js"></script>
 </body>
 </html>
