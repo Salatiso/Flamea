@@ -1,225 +1,137 @@
-// This script assumes a Firebase configuration is available via main.js or a similar global setup.
-// For now, it will use localStorage and alert for non-logged-in users.
+document.addEventListener('DOMContentLoaded', function() {
+    // --- DOM Element Selection ---
+    // Get references to all the necessary elements in the book-reader.html file.
+    const bookContentEl = document.getElementById('book-content');
+    const bookTitleEl = document.getElementById('book-title');
+    const prevPageBtn = document.getElementById('prev-page');
+    const nextPageBtn = document.getElementById('next-page');
+    const pageNumSpan = document.getElementById('page-num');
+    const totalPagesSpan = document.getElementById('total-pages');
+    const fontSizeSlider = document.getElementById('font-size-slider');
+    const fontDisplay = document.getElementById('font-display');
 
-document.addEventListener('DOMContentLoaded', async () => {
-    // --- Basic Elements ---
-    const bookTitleHeader = document.getElementById('book-title-header');
-    const loadingSpinner = document.getElementById('loading-spinner');
-    const bookCoverView = document.getElementById('book-cover-view');
-    const bookCoverImg = document.getElementById('book-cover-img');
-    const contentContainer = document.getElementById('book-content-container');
-    const bookContent = document.getElementById('book-content');
-    const progressBar = document.getElementById('progress-bar');
-    const pageIndicator = document.getElementById('page-indicator');
-    const prevPageBtn = document.getElementById('prev-page-btn');
-    const nextPageBtn = document.getElementById('next-page-btn');
-    
-    // --- Toolbar Elements ---
-    const viewSingleBtn = document.getElementById('view-single-btn');
-    const viewColumnsBtn = document.getElementById('view-columns-btn');
-    const fontIncBtn = document.getElementById('font-inc-btn');
-    const fontDecBtn = document.getElementById('font-dec-btn');
-    const fontSelect = document.getElementById('font-select');
-    const themeToggleBtn = document.getElementById('theme-toggle-btn');
-    
     // --- State Variables ---
-    let bookText = '';
-    let totalPages = 1;
+    // Initialize variables to hold the book's content and manage pagination.
+    let fullBookContent = '';
     let currentPage = 1;
-    let bookId = '';
-    
-    const settings = {
-        fontSize: 18, // in pixels
-        fontFamily: 'font-lora',
-        viewMode: 'columns', // 'columns' or 'single'
-        theme: 'dark',
-    };
-
-    // --- Book Data ---
-    const bookDatabase = {
-        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/books/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
-        'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/books/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
-        'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
-        'know-yourself': { title: "Getting to know yourself as a South African, Unravelling Xhosa History", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
-        'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika, Yazi inombo yomXhosasi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
-        'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_Ozifundiselayo_Ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' }
-        'safety-first-essentials-for-your-ohs-career-journey': { title: "Safety First: Essentials for Your OHS Career Journey", path: 'assets/books/BK-SF_Career.txt', cover: 'assets/images/SF_Career.jpg' }
-        'safety-first-the-essentials-of-ohs-plans': { title: "Safety First: The Essentials of OHS Plans", path: 'assets/books/BK-SF_Plans.txt', cover: 'assets/images/SF_Plans.jpg' }
-    };
-
-    // --- CORE FUNCTIONS ---
+    let totalPages = 0;
+    const charsPerPage = 2500; // The number of characters to display on each page.
 
     /**
-     * Initializes the reader by getting book ID from URL and loading data.
+     * Retrieves a URL query parameter by its name.
+     * This is used to figure out which book to load based on the URL.
+     * e.g., book-reader.html?book=BK-Know_Yourself.txt
+     * @param {string} param - The name of the parameter to get.
+     * @returns {string|null} The value of the parameter, or null if not found.
      */
-    async function init() {
+    function getQueryParam(param) {
         const urlParams = new URLSearchParams(window.location.search);
-        bookId = urlParams.get('book');
-        const bookData = bookDatabase[bookId];
-
-        if (!bookData) {
-            displayError('Book not found.');
-            return;
-        }
-
-        bookTitleHeader.textContent = bookData.title;
-        bookCoverImg.src = bookData.cover;
-        
-        // Show cover first
-        loadingSpinner.style.display = 'none';
-        bookCoverView.style.display = 'block';
-        
-        // Add a click listener to the cover to start reading
-        bookCoverView.addEventListener('click', startReading, { once: true });
-        
-        // Pre-fetch book content
-        try {
-            const response = await fetch(bookData.path);
-            if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
-            bookText = await response.text();
-        } catch (error) {
-            console.error('Error fetching book content:', error);
-            displayError('Could not load book text.');
-        }
+        return urlParams.get(param);
     }
 
     /**
-     * Hides cover and shows the paginated text content.
+     * Displays a specific page of the book.
+     * It calculates the part of the text to show and updates the HTML.
+     * @param {number} page - The page number to display.
      */
-    function startReading() {
-        bookCoverView.style.display = 'none';
-        contentContainer.style.display = 'block';
-        bookContent.innerHTML = bookText; // Load full text
-        applySettings();
-        calculatePages();
-        goToPage(1);
+    function displayPage(page) {
+        if (!fullBookContent) return;
+        const start = (page - 1) * charsPerPage;
+        const end = start + charsPerPage;
+        // Extract the text for the current page and format it by replacing newlines with <br> tags.
+        const pageText = fullBookContent.substring(start, end).replace(/\n/g, '<br>');
+        bookContentEl.innerHTML = `<div class="prose max-w-none">${pageText}</div>`;
+        pageNumSpan.textContent = page;
+        window.scrollTo(0, 0); // Scroll to the top of the page on page turn.
+        updatePaginationButtons();
     }
 
     /**
-     * Calculates total pages based on scroll width and client width.
+     * Updates the state of the 'Previous' and 'Next' buttons.
+     * It disables the buttons when the user is on the first or last page.
      */
-    function calculatePages() {
-        if (settings.viewMode === 'single') {
-            totalPages = 1;
-        } else {
-             // Ensure content is visible to measure
-            const initialDisplay = contentContainer.style.display;
-            contentContainer.style.display = 'block';
-
-            const scrollWidth = bookContent.scrollWidth;
-            const clientWidth = bookContent.clientWidth;
-            totalPages = Math.max(1, Math.round(scrollWidth / clientWidth));
-            
-            contentContainer.style.display = initialDisplay;
-        }
-        updatePagination();
-    }
-    
-    /**
-     * Navigates to a specific page.
-     */
-    function goToPage(pageNumber) {
-        currentPage = Math.max(1, Math.min(pageNumber, totalPages));
-        if (settings.viewMode === 'columns') {
-             bookContent.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
-        }
-        updatePagination();
-    }
-
-    /**
-     * Updates the progress bar and page indicator text.
-     */
-    function updatePagination() {
-        pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
-        const progress = totalPages > 1 ? ((currentPage - 1) / (totalPages - 1)) * 100 : 100;
-        progressBar.style.width = `${progress}%`;
+    function updatePaginationButtons() {
         prevPageBtn.disabled = currentPage === 1;
         nextPageBtn.disabled = currentPage === totalPages;
+
+        // Apply different styles for enabled/disabled states
+        prevPageBtn.classList.toggle('opacity-50', prevPageBtn.disabled);
+        prevPageBtn.classList.toggle('cursor-not-allowed', prevPageBtn.disabled);
+        nextPageBtn.classList.toggle('opacity-50', nextPageBtn.disabled);
+        nextPageBtn.classList.toggle('cursor-not-allowed', nextPageBtn.disabled);
     }
 
     /**
-     * Applies all current settings (font, view mode) to the content.
+     * Updates the font size of the book content based on the slider.
      */
-    function applySettings() {
-        // Font size
-        bookContent.style.fontSize = `${settings.fontSize}px`;
-        
-        // Font family
-        bookContent.classList.remove('font-lora', 'font-opensans', 'font-robotoslab');
-        bookContent.classList.add(settings.fontFamily);
+    function updateFontSize() {
+        const fontSize = fontSizeSlider.value;
+        bookContentEl.style.fontSize = `${fontSize}px`;
+        fontDisplay.textContent = `${fontSize}px`;
+    }
 
-        // View mode
-        if (settings.viewMode === 'single') {
-            bookContent.classList.add('single-page');
-            bookContent.style.transform = 'translateX(0)';
-        } else {
-            bookContent.classList.remove('single-page');
+    // --- Main Logic ---
+    // Get the book file name from the URL.
+    const bookFile = getQueryParam('book');
+
+    if (bookFile) {
+        // If a book file is specified in the URL, fetch and load it.
+        const bookPath = `assets/books/${bookFile}`;
+        fetch(bookPath)
+            .then(response => {
+                if (!response.ok) {
+                    // If the book file can't be found or another error occurs.
+                    throw new Error(`Network response was not ok. Could not load ${bookPath}`);
+                }
+                return response.text();
+            })
+            .then(text => {
+                // --- Book Loaded Successfully ---
+                fullBookContent = text;
+                totalPages = Math.ceil(fullBookContent.length / charsPerPage);
+                
+                // Set the book title in the H1 tag
+                const formattedTitle = bookFile.replace(/_/g, ' ').replace('.txt', '').replace('BK-', '');
+                bookTitleEl.textContent = formattedTitle;
+                
+                // Display the first page and update pagination info.
+                totalPagesSpan.textContent = totalPages;
+                displayPage(currentPage);
+            })
+            .catch(error => {
+                // --- Error Handling ---
+                console.error('Error fetching book:', error);
+                bookContentEl.innerHTML = `<p class="text-red-500 text-center">We're sorry, but the book could not be loaded. Please ensure you have selected a valid book from the <a href="publications.html" class="font-bold">Publications</a> page.</p>`;
+                bookTitleEl.textContent = 'Error';
+            });
+    } else {
+        // --- No Book Specified ---
+        // If the URL doesn't specify a book, show a message prompting the user.
+        // This was the line with the syntax error. Corrected to use double quotes.
+        bookTitleEl.textContent = 'No Book Selected';
+        bookContentEl.innerHTML = "<p class='text-center'>It looks like you're trying to access the reader directly. Please go back to the <a href='publications.html' class='font-bold text-blue-600 hover:underline'>Publications</a> page and select a book to read.</p>";
+    }
+
+    // --- Event Listeners ---
+    // Set up click events for the pagination buttons.
+    prevPageBtn.addEventListener('click', () => {
+        if (currentPage > 1) {
+            currentPage--;
+            displayPage(currentPage);
         }
-        
-        // Theme
-        document.documentElement.className = settings.theme;
-        themeToggleBtn.innerHTML = settings.theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+    });
 
-        // Recalculate pages as settings change layout
-        setTimeout(calculatePages, 50);
+    nextPageBtn.addEventListener('click', () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            displayPage(currentPage);
+        }
+    });
+
+    // Set up the event listener for the font size slider.
+    if (fontSizeSlider) {
+        fontSizeSlider.addEventListener('input', updateFontSize);
+        // Set initial font size display
+        fontDisplay.textContent = `${fontSizeSlider.value}px`;
     }
-    
-    /**
-     * Displays an error message in the reader.
-     */
-    function displayError(message) {
-        loadingSpinner.style.display = 'none';
-        contentContainer.style.display = 'block';
-        bookContent.innerHTML = `<p class="text-red-400 text-center">${message}</p>`;
-    }
-
-    // --- EVENT LISTENERS ---
-    
-    // Navigation
-    prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
-    nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
-    window.addEventListener('resize', () => {
-        calculatePages();
-        goToPage(currentPage);
-    });
-
-    // Toolbar
-    viewSingleBtn.addEventListener('click', () => {
-        settings.viewMode = 'single';
-        applySettings();
-        goToPage(1); // Reset to first page in single view
-    });
-    viewColumnsBtn.addEventListener('click', () => {
-        settings.viewMode = 'columns';
-        applySettings();
-    });
-
-    fontIncBtn.addEventListener('click', () => {
-        settings.fontSize = Math.min(settings.fontSize + 1, 32);
-        applySettings();
-    });
-    fontDecBtn.addEventListener('click', () => {
-        settings.fontSize = Math.max(settings.fontSize - 1, 12);
-        applySettings();
-    });
-    fontSelect.addEventListener('change', (e) => {
-        settings.fontFamily = e.target.value;
-        applySettings();
-    });
-
-    themeToggleBtn.addEventListener('click', () => {
-        settings.theme = settings.theme === 'dark' ? 'light' : 'dark';
-        applySettings();
-    });
-
-    // Authentication modal
-    const authModal = document.getElementById('auth-modal');
-    if (authModal) {
-        document.getElementById('close-auth-modal').addEventListener('click', () => {
-            authModal.classList.add('hidden');
-        });
-    }
-    
-    // --- Start the application ---
-    init();
 });
