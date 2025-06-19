@@ -1,68 +1,244 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - The Co-Parenting Compass</title>
+    <title>Parenting Plan Builder - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; }
-        .option-card { transition: all 0.3s ease; border: 1px solid #374151; }
-        .option-card:hover { transform: translateY(-5px) scale(1.02); box-shadow: 0 10px 20px rgba(0,0,0,0.2); }
+        /* Base styles from our established template */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
+        }
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
+        }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; }
+        .progress-bar-fill {
+            transition: width 0.5s ease-in-out;
+        }
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+        }
+        .form-input:focus {
+            background-color: rgba(255, 255, 255, 0.1);
+            border-color: #3b82f6;
+            outline: none;
+        }
+        label {
+            color: #d1d5db;
+        }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
-    <div class="main-container">
-        <!-- Sidebar Navigation -->
-<div id="sidebar-placeholder"></div>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <div class="animated-gradient fixed inset-0 z-0"></div>
+    
+    <div class="relative z-10 flex">
+        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
 
-        <!-- Main Content Area -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-5xl mx-auto text-center">
-                <h2 class="text-4xl font-bold font-roboto text-white mb-2">The Co-Parenting Compass</h2>
-                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Build a fair, comprehensive, and legally-sound Parenting Plan.</p>
-                
-                <!-- Legal Foundation Block -->
-                <div class="text-left bg-gray-900 bg-opacity-75 p-6 rounded-xl shadow-lg border-l-4 border-green-400 mb-10">
-                    <h3 class="text-xl font-bold text-green-400 mb-3"><i class="fas fa-landmark mr-2"></i>The Law is Your Foundation</h3>
-                    <p class="text-gray-300">
-                        The <strong class="text-white">Constitution's Bill of Rights</strong> is the supreme law. <strong class="text-white">Section 9</strong> guarantees equality, and <strong class="text-white">Section 28</strong> states the "best interests of the child" are paramount. A good parenting plan, as outlined in the <strong class="text-white">Children's Act 38 of 2005</strong>, is your agreement to uphold these principles. It is the roadmap to cooperative and effective co-parenting.
-                    </p>
+        <main class="flex-1">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div id="hub-header" class="text-center mb-12">
+                     <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Parenting Plan Builder</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Create a comprehensive, court-ready parenting plan step-by-step.</p>
+                    </div>
                 </div>
 
-                <!-- Tool Options -->
-                <h3 class="text-2xl font-bold text-white mb-6">Choose Your Starting Point</h3>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <!-- Option 1: Needs Assessment -->
-                    <a href="assessment.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center hover:border-teal-500">
-                        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Start with Smart Wizard</h4>
-                        <p class="text-gray-400">Unsure where to begin? Answer a few questions, and we'll recommend a starting point for your plan.</p>
-                    </a>
-                    
-                    <!-- Option 2: Manual Builder -->
-                    <a href="plan-builder.html" class="option-card block bg-gray-900 p-8 rounded-xl text-center hover:border-blue-500">
-                        <i class="fas fa-edit text-5xl text-blue-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Build Manually</h4>
-                        <p class="text-gray-400">Know what you need? Jump straight into the step-by-step plan builder.</p>
-                    </a>
+                <!-- Wizard Section -->
+                <div id="wizard-section">
+                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
+                        <!-- Progress Bar -->
+                        <div class="mb-8">
+                            <div class="flex justify-between mb-2">
+                                <span id="progress-text" class="text-base font-medium text-blue-400">Getting Started</span>
+                                <span id="progress-percent" class="text-sm font-medium text-blue-400">0%</span>
+                            </div>
+                            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                <div id="progress-bar-fill" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                            </div>
+                        </div>
+
+                        <form id="parenting-plan-form">
+                            <!-- Step 1: Parent A -->
+                            <div id="step-1" class="wizard-step active">
+                                <h3 class="text-2xl font-bold text-white mb-6">Parent A Details</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                    <div><label for="parentA-name">Full Name</label><input type="text" id="parentA-name" class="form-input w-full rounded-md mt-1"></div>
+                                    <div><label for="parentA-id">ID Number</label><input type="text" id="parentA-id" class="form-input w-full rounded-md mt-1"></div>
+                                    <div><label for="parentA-address">Residential Address</label><input type="text" id="parentA-address" class="form-input w-full rounded-md mt-1"></div>
+                                    <div><label for="parentA-phone">Phone Number</label><input type="tel" id="parentA-phone" class="form-input w-full rounded-md mt-1"></div>
+                                </div>
+                            </div>
+                            <!-- Step 2: Parent B -->
+                            <div id="step-2" class="wizard-step">
+                                <h3 class="text-2xl font-bold text-white mb-6">Parent B Details</h3>
+                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                     <div><label for="parentB-name">Full Name</label><input type="text" id="parentB-name" class="form-input w-full rounded-md mt-1"></div>
+                                     <div><label for="parentB-id">ID Number</label><input type="text" id="parentB-id" class="form-input w-full rounded-md mt-1"></div>
+                                     <div><label for="parentB-address">Residential Address</label><input type="text" id="parentB-address" class="form-input w-full rounded-md mt-1"></div>
+                                     <div><label for="parentB-phone">Phone Number</label><input type="tel" id="parentB-phone" class="form-input w-full rounded-md mt-1"></div>
+                                </div>
+                            </div>
+                            <!-- Step 3: Child Details -->
+                             <div id="step-3" class="wizard-step">
+                                <h3 class="text-2xl font-bold text-white mb-6">Child Details</h3>
+                                <div id="children-container" class="space-y-4">
+                                    <div class="child-entry grid grid-cols-1 md:grid-cols-3 gap-6">
+                                        <div><label>Full Name</label><input type="text" name="child-name" class="form-input w-full rounded-md mt-1"></div>
+                                        <div><label>Date of Birth</label><input type="date" name="child-dob" class="form-input w-full rounded-md mt-1"></div>
+                                        <div><label>ID Number</label><input type="text" name="child-id" class="form-input w-full rounded-md mt-1"></div>
+                                    </div>
+                                </div>
+                                <button type="button" id="add-child-btn" class="mt-4 text-blue-400 hover:text-blue-300"><i class="fas fa-plus-circle mr-2"></i>Add Another Child</button>
+                            </div>
+                            <!-- Step 4: Communication -->
+                             <div id="step-4" class="wizard-step">
+                                <h3 class="text-2xl font-bold text-white mb-6">Communication Plan</h3>
+                                <div>
+                                    <label for="communication-plan">Describe how the parents will communicate about the child(ren).</label>
+                                    <textarea id="communication-plan" rows="6" class="form-input w-full rounded-md mt-1" placeholder="e.g., Via a dedicated co-parenting app, weekly phone calls, monthly meetings..."></textarea>
+                                </div>
+                            </div>
+                            <!-- Add more steps as needed -->
+                             <div id="step-5" class="wizard-step">
+                                <h3 class="text-2xl font-bold text-white mb-6">Review & Generate</h3>
+                                <p class="text-gray-300">You have completed all the steps. Please review your information before generating the final document. The next page will allow you to preview and download your parenting plan.</p>
+                            </div>
+                        </form>
+
+                        <!-- Navigation -->
+                        <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
+                            <button id="prev-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 disabled:opacity-50" disabled>
+                                <i class="fas fa-arrow-left mr-2"></i> Previous
+                            </button>
+                            <button id="next-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
+                                Next <i class="fas fa-arrow-right ml-2"></i>
+                            </button>
+                            <button id="generate-btn" class="hidden inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                                <i class="fas fa-file-invoice mr-2"></i> Generate Plan
+                            </button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </main>
     </div>
-    
-    <script>document.getElementById('currentYear').textContent = new Date().getFullYear();</script>
 
-         <script type="module" src="assets/js/main.js"></script>
-         <script type="module" src="assets/js/auth.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Sidebar Loader ---
+        fetch('sidebar.html')
+            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
+            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
+            .catch(error => console.error('Error loading sidebar:', error));
+
+        // --- Wizard Logic ---
+        const steps = Array.from(document.querySelectorAll('.wizard-step'));
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const generateBtn = document.getElementById('generate-btn');
+        const progressFill = document.getElementById('progress-bar-fill');
+        const progressText = document.getElementById('progress-text');
+        const progressPercent = document.getElementById('progress-percent');
+        const addChildBtn = document.getElementById('add-child-btn');
+
+        let currentStep = 0;
+
+        const stepTitles = [
+            "Step 1: Parent A Details", "Step 2: Parent B Details", "Step 3: Child Details",
+            "Step 4: Communication", "Step 5: Review & Generate"
+        ];
+
+        function updateWizardState() {
+            steps.forEach((step, index) => {
+                step.classList.toggle('active', index === currentStep);
+            });
+            
+            const progress = (currentStep / (steps.length - 1)) * 100;
+            progressFill.style.width = `${progress}%`;
+            progressText.textContent = stepTitles[currentStep];
+            progressPercent.textContent = `${Math.round(progress)}%`;
+
+            prevBtn.disabled = currentStep === 0;
+            nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
+            generateBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
+        }
+
+        nextBtn.addEventListener('click', () => {
+            if (currentStep < steps.length - 1) {
+                currentStep++;
+                updateWizardState();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            if (currentStep > 0) {
+                currentStep--;
+                updateWizardState();
+            }
+        });
+
+        addChildBtn.addEventListener('click', () => {
+            const container = document.getElementById('children-container');
+            const newChildEntry = document.createElement('div');
+            newChildEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-6';
+            newChildEntry.innerHTML = `
+                <div><label>Full Name</label><input type="text" name="child-name" class="form-input w-full rounded-md mt-1"></div>
+                <div><label>Date of Birth</label><input type="date" name="child-dob" class="form-input w-full rounded-md mt-1"></div>
+                <div><label>ID Number</label><input type="text" name="child-id" class="form-input w-full rounded-md mt-1"></div>
+            `;
+            container.appendChild(newChildEntry);
+        });
+        
+        generateBtn.addEventListener('click', () => {
+            const formData = {
+                parentA: {
+                    name: document.getElementById('parentA-name').value,
+                    id: document.getElementById('parentA-id').value,
+                    address: document.getElementById('parentA-address').value,
+                    phone: document.getElementById('parentA-phone').value,
+                },
+                parentB: {
+                    name: document.getElementById('parentB-name').value,
+                    id: document.getElementById('parentB-id').value,
+                    address: document.getElementById('parentB-address').value,
+                    phone: document.getElementById('parentB-phone').value,
+                },
+                children: [],
+                communication: document.getElementById('communication-plan').value,
+            };
+            
+            document.querySelectorAll('.child-entry').forEach(entry => {
+                formData.children.push({
+                    name: entry.querySelector('[name="child-name"]').value,
+                    dob: entry.querySelector('[name="child-dob"]').value,
+                    id: entry.querySelector('[name="child-id"]').value,
+                });
+            });
+
+            const queryString = encodeURIComponent(JSON.stringify(formData));
+            window.location.href = `plan-builder.html?data=${queryString}`;
+        });
+
+        updateWizardState();
+    });
+    </script>
 </body>
 </html>
