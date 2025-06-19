@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp Hub - Flamea</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.min.css">
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
+</head>
+<body class="font-sans bg-gray-900 text-gray-200">
+    <div class="flex flex-row min-h-screen">
+        <div id="sidebar-placeholder" class="w-64 flex-shrink-0"></div>
+        <main class="flex-grow main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-5xl font-bold font-roboto mb-4 text-white">LegalHelp Hub</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Knowledge of the law should not be a privilege; it is a fundamental tool for survival and progress.</p>
+                </div>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-12 max-h-[60vh] overflow-y-auto">
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-purple-500 transition-all duration-300">
+                        <i class="fas fa-hands-helping text-4xl text-purple-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Empower Flamea</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Flamea's Legal Engine</p>
+                        <p class="text-gray-400 text-sm">Tools for fathers' rights are linked directly to the Children's Act and relevant case law, providing instant, verifiable context for your fight.</p>
+                    </div>
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-blue-500 transition-all duration-300">
+                        <i class="fas fa-database text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">One Source of Truth</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Centralized & Searchable</p>
+                        <p class="text-gray-400 text-sm">A comprehensive digital library of all South African law—Constitution, statutes, regulations, and case law—in one accessible place.</p>
+                    </div>
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300">
+                        <i class="fas fa-users text-4xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Community Driven</h3>
+                        <p class="text-gray-400 flex-grow mb-4">The Community Watch</p>
+                        <p class="text-gray-400 text-sm">Legislation changes weekly. We empower a community of lawyers, students, and citizens to keep the database current and accurate for everyone.</p>
+                    </div>
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
+                        <i class="fas fa-network-wired text-4xl text-yellow-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Ecosystem Power</h3>
+                        <p class="text-gray-400 flex-grow mb-4">The Foundation</p>
+                        <p class="text-gray-400 text-sm">LegalHelp is the engine for all Salatiso platforms, including SafetyFirst.help and Sazi.life, ensuring all guidance is legally sound.</p>
+                    </div>
+                </div>
+                <div class="text-center mt-8">
+                    <a href="join-the-movement.html" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Join the Community Watch</a>
+                </div>
+            </div>
+        </main>
+    </div>
+    <div id="chatbot-modal" class="custom-modal"></div>
+    <div id="podcast-modal" class="custom-modal"></div>
+    <script>
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        window.flamea = {
+            auth: firebase.auth(),
+            db: firebase.firestore()
+        };
+
+        // Prevent duplicate chatbot initialization
+        document.addEventListener('DOMContentLoaded', () => {
+            const existingChatbot = document.querySelector('.chatbot-container:not(#sidebar-placeholder *)');
+            if (existingChatbot) {
+                existingChatbot.remove();
+            }
+        });
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>
+</body>
+</html>
