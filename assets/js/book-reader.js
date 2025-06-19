@@ -77,6 +77,7 @@ document.addEventListener('DOMContentLoaded', async () => {
             const response = await fetch(bookData.path);
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             bookText = await response.text();
+            console.log('Book text loaded:', bookText.slice(0, 200)); // Show first 200 chars
         } catch (error) {
             console.error('Error fetching book content:', error);
             displayError('Could not load book text.');
