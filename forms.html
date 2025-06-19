@@ -8,37 +8,82 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        /* Ensure sidebar and main content are displayed as a flex row */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex-grow: 1;
+        }
+        /* Accordion styles */
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .accordion-header:hover {
+            background-color: #374151; /* gray-700 */
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 1000px; /* Adjust as needed for content */
+        }
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(90deg);
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- Sidebar will be loaded here -->
         <div id="sidebar-placeholder"></div>
+        
         <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <div class="text-center">
+            <div class="max-w-5xl mx-auto">
+                <div class="text-center mb-12">
                     <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">Forms & Documents Hub</h1>
-                    <p class="text-lg text-gray-400 mb-12">Prepare for your journey with the right tools. Honest communication and our resources can help you salvage everything for your child’s sake.</p>
+                    <p class="text-lg text-gray-400">Prepare for your journey with the right tools. Honest communication and our resources can help you salvage everything for your child’s sake.</p>
                 </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
-                    <div id="start-wizard-btn" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer">
+
+                <!-- User choice section -->
+                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer">
                         <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Simple Start Wizard</h4>
                         <p class="text-gray-400">Not sure where to begin? We’ll guide you to the right form.</p>
                     </div>
-                    <div id="explore-forms-btn" class="option-card block bg-gray-900 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer">
+                    <div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer">
                         <i class="fas fa-search text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Manual Explorer</h4>
                         <p class="text-gray-400">Know what you need? Browse all forms by category.</p>
                     </div>
                 </div>
+
+                <!-- Wizard Section (Initially hidden) -->
                 <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg mb-12">
-                    <!-- Wizard content will be injected by forms.js -->
+                    <h2 class="text-2xl font-bold text-green-400 mb-6">Simple Start Wizard</h2>
+                    <p>Wizard functionality will be implemented here. It will ask a series of questions to guide the user to the correct document.</p>
+                    <button id="back-to-selection-wizard" class="mt-6 text-sm text-gray-400 hover:text-white">&larr; Back to selection</button>
                 </div>
-                <div id="explorer-section" class="hidden space-y-8 mb-12">
-                    <!-- Explorer content will be injected by forms.js -->
+
+                <!-- Explorer Section for browsing all documents (Initially hidden) -->
+                <div id="explorer-section" class="hidden space-y-4 mb-12">
+                    <!-- Form categories and links will be injected here by forms.js -->
+                     <button id="back-to-selection-explorer" class="mt-6 text-sm text-gray-400 hover:text-white">&larr; Back to selection</button>
                 </div>
             </div>
         </main>
     </div>
+
+    <!-- Scripts -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script type="module" src="assets/js/forms.js"></script>

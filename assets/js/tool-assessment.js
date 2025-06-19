@@ -1,62 +1,77 @@
-// assets/js/tool-assessment.js
-
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM ELEMENTS ---
-    const wizard = document.getElementById('assessment-wizard');
+    // --- Element References ---
+    const wizardContainer = document.getElementById('assessment-wizard');
+    const explorerSection = document.getElementById('explorer-section');
+    const selectionArea = document.getElementById('selection-area');
+    
+    const wizardBtn = document.getElementById('start-wizard-btn');
+    const explorerBtn = document.getElementById('explore-tools-btn');
+    const backToSelectionWizard = document.getElementById('back-to-selection-wizard');
+    const backToSelectionExplorer = document.getElementById('back-to-selection-explorer');
+    
     const progressBar = document.getElementById('progress-bar');
-    const wizardOptions = document.querySelectorAll('.wizard-option');
     const backBtn = document.getElementById('back-btn');
     const recommendationContainer = document.getElementById('recommendation-text');
+    const wizardNav = document.getElementById('wizard-nav');
+    const stepCounter = document.getElementById('step-counter');
 
-    // --- STATE ---
+    // Exit if the main container isn't on this page
+    if (!wizardContainer) return;
+    
+    // --- State ---
     const userAnswers = {};
-    const stepHistory = ['1']; // Start with the first step
-    const totalSteps = 2; // Total number of question steps
+    let stepHistory = ['1'];
+    const totalSteps = 2;
 
-    // --- TOOL DATA ---
+    // --- Data: Tools Database ---
     const tools = {
         'plan-builder': {
             name: 'Parenting Plan Builder',
             icon: 'fa-file-signature',
             description: 'Create a comprehensive, court-ready parenting plan step-by-step.',
-            url: 'plan-builder.html'
+            url: 'plan-builder.html',
+            category: 'planning'
         },
         'activity-tracker': {
             name: 'Family Activity Tracker',
             icon: 'fa-chart-line',
             description: 'Log every contribution—financial, time, and effort—to build an undeniable record.',
-            url: 'activity-tracker.html'
+            url: 'activity-tracker.html',
+            category: 'tracking'
         },
         'forms': {
-            name: 'Forms & Wizards',
+            name: 'Forms & Templates Hub',
             icon: 'fa-folder-open',
             description: 'Access a library of legal templates, affidavits, and official forms.',
-            url: 'forms.html'
+            url: 'forms.html',
+            category: 'legal'
         },
         'locator': {
             name: 'Resource Locator',
             icon: 'fa-map-marked-alt',
             description: 'Find Family Advocates, courts, and father-friendly support services near you.',
-            url: 'locator.html'
+            url: 'locator.html',
+            category: 'external'
         },
         'chatbot': {
             name: 'AI Legal Assistant',
             icon: 'fa-robot',
             description: 'Get instant, 24/7 answers to your legal questions. Best for urgent queries.',
-            url: '#', // This will open a modal
+            url: '#',
             isModal: true,
-            modalTarget: 'chatbot-modal'
+            modalTarget: 'chatbot-modal',
+            category: 'legal'
         }
     };
 
-    // --- EVENT LISTENERS ---
-    wizardOptions.forEach(button => {
-        button.addEventListener('click', () => {
-            const currentStepEl = button.closest('.wizard-step');
+    // --- WIZARD LOGIC ---
+    document.querySelectorAll('.wizard-option').forEach(button => {
+        button.addEventListener('click', (e) => {
+            const currentStepEl = e.currentTarget.closest('.wizard-step');
             const currentStep = currentStepEl.id.split('-')[1];
-            const nextStepId = button.dataset.next;
+            const nextStepId = e.currentTarget.dataset.next;
             
-            userAnswers[currentStep] = button.dataset.answer;
+            userAnswers[currentStep] = e.currentTarget.dataset.answer;
             
             if (nextStepId === 'results') {
                 showResults();
@@ -75,34 +90,28 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-
-    // --- FUNCTIONS ---
     function goToStep(stepId) {
         document.querySelectorAll('.wizard-step').forEach(step => {
-            step.classList.remove('active');
+            step.style.display = 'none';
         });
-        document.getElementById(`step-${stepId}`).classList.add('active');
-        
-        // Update progress bar
-        const progress = (parseInt(stepId) / (totalSteps + 1)) * 100;
-        progressBar.style.width = `${progress}%`;
-        
-        // Enable/disable back button
+        const nextStepEl = document.getElementById(`step-${stepId}`);
+        if(nextStepEl) {
+             nextStepEl.style.display = 'block';
+        }
+       
+        // Update progress bar and counter
+        const progress = ((parseInt(stepId) - 1) / totalSteps) * 100;
+        if(progressBar) progressBar.style.width = `${progress}%`;
+        if(stepCounter) stepCounter.textContent = `Step ${stepId} of ${totalSteps}`;
+
         backBtn.disabled = stepId === '1';
     }
 
     function showResults() {
-        // Finalize progress bar
-        progressBar.style.width = '100%';
-
-        // Hide other steps and show results
-        document.querySelectorAll('.wizard-step').forEach(step => {
-            step.classList.remove('active');
-        });
-        document.getElementById('step-results').classList.add('active');
-        backBtn.disabled = false; // Allow going back from results
-
-        // Generate recommendations
+        goToStep('results');
+        if(progressBar) progressBar.style.width = '100%';
+        if(stepCounter) stepCounter.textContent = 'Results';
+        wizardNav.style.display = 'none';
         generateRecommendations();
     }
 
@@ -133,44 +142,71 @@ document.addEventListener('DOMContentLoaded', () => {
                 break;
         }
 
-        renderRecommendations(Array.from(recommendations));
+        renderRecommendations(Array.from(recommendations), recommendationContainer);
     }
+    
+    // --- EXPLORER LOGIC ---
+    const renderExplorer = () => {
+        let html = '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
+        Object.values(tools).forEach(tool => {
+             html += createToolCard(tool);
+        });
+        html += '</div>';
+        explorerSection.innerHTML = html + explorerSection.innerHTML; // Prepend cards, keep back button
+    };
 
-    function renderRecommendations(recs) {
+    function createToolCard(tool) {
+        const link = tool.isModal ? '#' : tool.url;
+        const target = tool.isModal ? `data-modal-target="${tool.modalTarget}"` : `href="${link}"`;
+        const tag = tool.isModal ? 'button' : 'a';
+
+        return `
+            <${tag} ${target} class="tool-card flex flex-col items-center text-center p-6 bg-gray-800 rounded-lg border border-gray-700 hover:border-blue-500 transition-all duration-300">
+                <i class="fas ${tool.icon} text-4xl text-blue-400 mb-4"></i>
+                <h3 class="text-xl font-bold mb-2">${tool.name}</h3>
+                <p class="text-gray-400 flex-grow">${tool.description}</p>
+            </${tag}>
+        `;
+    }
+    
+     function renderRecommendations(recs, container) {
+        if (!container) return;
         if (recs.length === 0) {
-            recommendationContainer.innerHTML = '<p>Based on your answers, we recommend exploring all our tools to see what fits best.</p>';
+            container.innerHTML = '<p>Based on your answers, we recommend exploring all our tools to see what fits best.</p>';
             return;
         }
-
-        let html = '<p class="font-bold text-lg mb-4">Here are the best tools for you:</p>';
-        recs.forEach(tool => {
-            const link = tool.isModal ? '#' : tool.url;
-            const target = tool.isModal ? `data-modal-target="${tool.modalTarget}"` : `href="${link}"`;
-            const tag = tool.isModal ? 'button' : 'a';
-
-            html += `
-                <${tag} ${target} class="flex items-start gap-4 p-4 rounded-lg bg-gray-800 hover:bg-gray-900 transition-colors w-full text-left">
-                    <i class="fas ${tool.icon} text-2xl text-teal-400 mt-1 w-8 text-center"></i>
-                    <div>
-                        <h4 class="font-bold text-white">${tool.name}</h4>
-                        <p class="text-sm text-gray-400">${tool.description}</p>
-                    </div>
-                </${tag}>
-            `;
-        });
-        recommendationContainer.innerHTML = html;
-        
-        // Re-add modal listeners if any modal buttons were created
-        // This is a simplified version; a full event delegation model in main.js is more robust
-        document.querySelectorAll('[data-modal-target]').forEach(button => {
-             button.addEventListener('click', () => {
-                const modalId = button.getAttribute('data-modal-target');
-                const modal = document.getElementById(modalId);
-                if (modal) {
-                   // This assumes main.js is loaded and handles the .active class
-                   modal.classList.add('active');
-                }
-            });
-        });
+        container.innerHTML = recs.map(tool => createToolCard(tool)).join('');
     }
+
+    // --- UI TOGGLING ---
+    const showExplorerView = () => {
+        selectionArea.style.display = 'none';
+        wizardContainer.style.display = 'none';
+        explorerSection.style.display = 'block';
+    };
+
+    const showWizardView = () => {
+        selectionArea.style.display = 'none';
+        explorerSection.style.display = 'none';
+        wizardContainer.style.display = 'block';
+        goToStep('1');
+    };
+
+    const showSelectionView = () => {
+        explorerSection.style.display = 'none';
+        wizardContainer.style.display = 'none';
+        selectionArea.style.display = 'grid';
+    };
+    
+    explorerBtn.addEventListener('click', showExplorerView);
+    wizardBtn.addEventListener('click', showWizardView);
+    
+    // Add event listeners for the new "back" buttons in each section
+    const backExplorer = document.getElementById('back-to-selection-explorer');
+    const backWizard = document.getElementById('back-to-selection-wizard');
+    if (backExplorer) backExplorer.addEventListener('click', showSelectionView);
+    if (backWizard) backWizard.addEventListener('click', showSelectionView);
+
+    // Initial page setup
+    renderExplorer();
 });

@@ -1,186 +1,151 @@
-// assets/js/forms.js
-
-// Note: Firebase is initialized in main.js and attached to the window.
-// This script assumes window.flamea.auth and window.flamea.db are available.
-
 document.addEventListener('DOMContentLoaded', () => {
-    // Check if we are on the forms page by looking for a key element.
+    // --- DOM Element References ---
     const wizardBtn = document.getElementById('start-wizard-btn');
-    if (!wizardBtn) return; 
-    
-    // --- DOM ELEMENTS ---
     const explorerBtn = document.getElementById('explore-forms-btn');
     const wizardSection = document.getElementById('wizard-section');
     const explorerSection = document.getElementById('explorer-section');
+    const selectionArea = document.getElementById('selection-area');
+    const backToSelectionWizard = document.getElementById('back-to-selection-wizard');
+    const backToSelectionExplorer = document.getElementById('back-to-selection-explorer');
 
-    // --- DATA ---
-    const formsData = {
-        parental: {
-            title: "Parental Rights & Obligations",
-            icon: "fa-child",
-            color: "blue-500",
+    // --- Data: Form Templates Categorized ---
+    const formCategories = [
+        {
+            category: 'Legal & Affidavits',
+            icon: 'fa-gavel',
+            description: 'Sworn statements and official declarations for legal use.',
             forms: [
-                { name: "Form for Acknowledging Paternity", act: "Births and Deaths Registration Act", purpose: "To legally register the father’s name when a child is born out of wedlock.", interactive: true, id: "ack-paternity" },
-                { name: "Application to Confirm Paternity (Court)", act: "Children’s Act, Sec. 21", purpose: "Used when the mother refuses to acknowledge the father, to compel testing or secure parental rights.", interactive: true, id: "confirm-paternity" },
-                { name: "Form 02 [J767]: Bring Matters to Children’s Court", act: "Children’s Act, Sec. 53", purpose: "To file disputes about care, guardianship, contact (access), or protection of a child.", interactive: true, id: "form-j767" },
-                { name: "Form 10 [J779]: Register Parenting Plan", act: "Children’s Act, Sec. 34", purpose: "To register a finalized parenting plan with the Family Advocate or court to make it legally enforceable.", interactive: false, externalUrl: "https://www.justice.gov.za/forms/form_cj.html" },
-                { name: "Request for Mediation (Family Advocate)", act: "Mediation in Certain Divorce Matters Act", purpose: "To formally request mediation services for disputes over parental rights and responsibilities.", interactive: true, id: "req-mediation" },
-                { name: "Affidavit", act: "Justices of the Peace and Commissioners of Oaths Act", purpose: "A general sworn statement of facts to support any court application or legal process.", interactive: true, id: "affidavit" },
+                { name: 'General Affidavit', file: 'Affidavit_General_Template.html' },
+                { name: 'SAPS Complaint Affidavit', file: 'Affidavit-SAPS_Complaint_.html' },
+                { name: 'Commissioner of Oaths Declaration', file: 'Commissioner_of_Oaths_Declaration.html' }
             ]
         },
-        equality: {
-            title: "Equality & Criminal Law",
-            icon: "fa-gavel",
-            color: "red-500",
+        {
+            category: 'Parental Rights & Communication',
+            icon: 'fa-comments',
+            description: 'Establish rights, responsibilities, and communication protocols.',
             forms: [
-                { name: "Equality Court Form 2: Complaint of Unfair Discrimination", act: "Promotion of Equality and Prevention of Unfair Discrimination Act", purpose: "To formally lodge a complaint of discrimination based on gender, race, or other grounds.", interactive: false, externalUrl: "https://www.justice.gov.za/forms/form_eq.html" },
-                { name: "Criminal Complaint Affidavit", act: "Criminal Procedure Act", purpose: "To provide a sworn statement to the South African Police Service (SAPS) when reporting a crime like abduction.", interactive: true, id: "saps-complaint" },
-                { name: "Victim Impact Statement", act: "Criminal Procedure Act", purpose: "To explain to the court how a crime has affected you, which is considered during sentencing.", interactive: true, id: "victim-impact" },
+                { name: 'Informal Notification of Parental Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html' },
+                { name: 'Formal Notification of Parental Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_Formal.html' },
+                { name: 'Final Letter on Constitutional Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_final.html' },
+                { name: 'Father’s Notification (Accepting Damages)', file: 'Damages_Accepting_Letter.html' },
+                { name: 'General Letter to School', file: 'School_Letter_General_Template.html' },
+                { name: 'Request for School Transfer', file: 'School_Letter_Transfer_Template.html' }
+            ]
+        },
+        {
+            category: 'Financial & Relationship Agreements',
+            icon: 'fa-file-signature',
+            description: 'Define financial duties and structure relationship terms.',
+            forms: [
+                { name: 'Budgeting Tool for Couples', file: 'Budget_Couples.html' },
+                { name: 'Child Support Agreement', file: 'Child_Support_Agreement.html' },
+                { name: 'Cohabitation Agreement', file: 'Cohabitation_Agreement.html' }
+            ]
+        },
+        {
+            category: 'Official Complaints & Requests',
+            icon: 'fa-bullhorn',
+            description: 'Lodge formal complaints or make official requests to institutions.',
+            forms: [
+                { name: 'Commission for Gender Equality Complaint', file: 'Commission_Gender_Equality.html' },
+                { name: 'Legal Practice Council Complaint', file: 'Legal_Practice_Council_Complaint.html' },
+                { name: 'Magistrates Commission Complaint', file: 'Magistrates_Commission_Complaint_Template.html' },
+                { name: 'Public Protector Complaint', file: 'Public_Protector_Complaint.html' },
+                { name: 'SA Law Reform Commission Request', file: 'SALRC_Request_Family_Law_Reform.html' },
+                { name: 'Medical Record Request', file: 'Medical_Record_Request_Template.html' }
+            ]
+        },
+        {
+            category: 'Planning, Mediation & Worksheets',
+            icon: 'fa-tasks',
+            description: 'Tools for planning, resolving disputes, and organizing co-parenting.',
+            forms: [
+                { name: 'Pre-Birth Planning Guide', file: 'Pre_Birth_Planning_Guide.html' },
+                { name: 'Comprehensive Parenting Plan', file: 'Parenting_Plan_Template.html' },
+                { name: 'Post-Separation Communication Plan', file: 'Communication_Plan.html' },
+                { name: 'Mediation Request Letter', file: 'Mediation_Request_Letter.html' },
+                { name: 'Conflict Resolution Worksheet', file: 'Conflict_Resolution_Worksheet.html' }
             ]
         }
-    };
+    ];
 
-    const wizardLogic = {
-        parental: [
-            { text: "Acknowledge I am the father", formId: "ack-paternity" },
-            { text: "Go to court to prove I am the father", formId: "confirm-paternity" },
-            { text: "Settle a dispute about my child (custody/access)", formId: "form-j767" },
-            { text: "Ask for a mediator to help", formId: "req-mediation" },
-        ],
-        court: [
-            { text: "Start a case in the Children's Court", formId: "form-j767" },
-            { text: "Make a sworn statement (Affidavit)", formId: "affidavit" },
-        ]
-    };
-
-    // --- RENDER FUNCTIONS ---
-    const renderWizard = () => {
-        wizardSection.innerHTML = `
-            <h2 class="text-3xl font-bold mb-6 text-white">Simple Start Wizard</h2>
-            <div class="space-y-6">
-                <div>
-                    <label for="wizard-step1" class="block mb-2 text-lg font-semibold text-gray-300">What is your primary goal?</label>
-                    <select id="wizard-step1" class="form-select w-full bg-gray-700 p-3 rounded-lg border border-gray-600">
-                        <option value="">-- Select a goal --</option>
-                        <option value="parental">I need to establish or manage my parental rights.</option>
-                        <option value="court">I need to prepare for a court-related matter.</option>
-                    </select>
-                </div>
-                <div id="wizard-step2-container" class="hidden">
-                    <label for="wizard-step2" class="block mb-2 text-lg font-semibold text-gray-300">What specific action do you need to take?</label>
-                    <select id="wizard-step2" class="form-select w-full bg-gray-700 p-3 rounded-lg border border-gray-600">
-                        <!-- Options will be populated here -->
-                    </select>
-                </div>
-            </div>
-            <div id="wizard-results" class="mt-8 hidden">
-                <h3 class="text-xl font-bold text-green-400 mb-4">Recommended Form:</h3>
-                <div id="wizard-form-recommendation"></div>
-            </div>
-        `;
-        attachWizardListeners();
-    };
-
-    const renderExplorer = () => {
-        explorerSection.innerHTML = `
-            <h2 class="text-3xl font-bold mb-6 text-white">Manual Explorer</h2>
-            <div id="forms-container" class="space-y-6">
-                <!-- Accordions will be rendered here -->
-            </div>
-        `;
-        const formsContainer = explorerSection.querySelector('#forms-container');
-        for (const categoryKey in formsData) {
-            const category = formsData[categoryKey];
+    // --- Function to build the explorer HTML ---
+    const buildExplorer = () => {
+        // Clear existing content except for the 'back' button
+        explorerSection.innerHTML = '';
+        formCategories.forEach((cat) => {
             const accordionItem = document.createElement('div');
-            accordionItem.className = 'accordion-item';
-            accordionItem.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg">
-                    <span class="text-xl font-bold"><i class="fas ${category.icon} mr-3 text-${category.color}"></i>${category.title}</span>
-                    <i class="fas fa-chevron-down transform transition-transform"></i>
-                </button>
-                <div class="accordion-content mt-4 pl-4 border-l-4 border-${category.color}">
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4 py-4">
-                        ${category.forms.map(form => createFormCard(form)).join('')}
+            accordionItem.className = 'accordion-item bg-gray-800 rounded-lg shadow-md';
+
+            const header = document.createElement('div');
+            header.className = 'accordion-header flex justify-between items-center p-5';
+            header.innerHTML = `
+                <div class="flex items-center space-x-4">
+                    <i class="fas ${cat.icon} text-2xl text-green-400 w-8 text-center"></i>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">${cat.category}</h3>
+                        <p class="text-sm text-gray-400">${cat.description}</p>
                     </div>
                 </div>
+                <i class="fas fa-chevron-right accordion-icon text-gray-400"></i>
             `;
-            formsContainer.appendChild(accordionItem);
-        }
+
+            const content = document.createElement('div');
+            content.className = 'accordion-content border-t border-gray-700';
+            
+            const list = document.createElement('ul');
+            list.className = 'p-5 space-y-3';
+            
+            cat.forms.forEach(form => {
+                const listItem = document.createElement('li');
+                listItem.innerHTML = `
+                    <a href="assets/templates/${form.file}" target="_blank" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-700 transition-colors duration-200">
+                        <span><i class="far fa-file-alt mr-3 text-gray-400"></i>${form.name}</span>
+                        <i class="fas fa-external-link-alt text-sm text-gray-500"></i>
+                    </a>
+                `;
+                list.appendChild(listItem);
+            });
+
+            content.appendChild(list);
+            accordionItem.appendChild(header);
+            accordionItem.appendChild(content);
+            explorerSection.appendChild(accordionItem);
+
+            header.addEventListener('click', () => {
+                accordionItem.classList.toggle('active');
+            });
+        });
+        // Re-append the back button after clearing
+        explorerSection.appendChild(backToSelectionExplorer);
     };
 
-    const createFormCard = (form) => {
-        const link = form.externalUrl ? form.externalUrl : (form.interactive ? `#${form.id}` : `/templates/${form.id}.html`);
-        const target = form.externalUrl ? 'target="_blank"' : '';
-        return `
-            <div class="bg-gray-900 p-4 rounded-lg border border-gray-700 flex flex-col">
-                <h5 class="font-bold text-white">${form.name}</h5>
-                <p class="text-sm text-gray-400 mt-2 flex-grow"><strong>Purpose:</strong> ${form.purpose}</p>
-                <div class="mt-4 pt-3 border-t border-gray-600">
-                     <a href="${link}" ${target} class="text-blue-400 hover:underline">
-                        ${form.externalUrl ? 'Visit Official Site' : 'View Template'} <i class="fas fa-arrow-right ml-1"></i>
-                     </a>
-                </div>
-            </div>
-        `;
-    };
-
-    // --- EVENT LISTENERS & LOGIC ---
-    wizardBtn.addEventListener('click', () => {
-        wizardSection.classList.remove('hidden');
-        explorerSection.classList.add('hidden');
-        renderWizard(); 
-    });
-
-    explorerBtn.addEventListener('click', () => {
-        explorerSection.classList.remove('hidden');
+    // --- Event Listeners for Wizard/Explorer Buttons ---
+    const showExplorer = () => {
+        selectionArea.classList.add('hidden');
         wizardSection.classList.add('hidden');
-        renderExplorer();
-    });
+        explorerSection.classList.remove('hidden');
+    };
 
-    function attachWizardListeners() {
-        const wizardStep1 = document.getElementById('wizard-step1');
-        const wizardStep2Container = document.getElementById('wizard-step2-container');
-        const wizardStep2 = document.getElementById('wizard-step2');
-        const wizardResults = document.getElementById('wizard-results');
-        const wizardRecommendation = document.getElementById('wizard-form-recommendation');
+    const showWizard = () => {
+        selectionArea.classList.add('hidden');
+        explorerSection.classList.add('hidden');
+        wizardSection.classList.remove('hidden');
+    };
 
-        wizardStep1.addEventListener('change', () => {
-            const selection = wizardStep1.value;
-            wizardStep2.innerHTML = '<option value="">-- Please select --</option>';
-            wizardResults.classList.add('hidden');
-            if (selection && wizardLogic[selection]) {
-                wizardLogic[selection].forEach(option => {
-                    const opt = document.createElement('option');
-                    opt.value = option.formId;
-                    opt.textContent = option.text;
-                    wizardStep2.appendChild(opt);
-                });
-                wizardStep2Container.classList.remove('hidden');
-            } else {
-                wizardStep2Container.classList.add('hidden');
-            }
-        });
+    const showSelection = () => {
+        wizardSection.classList.add('hidden');
+        explorerSection.classList.add('hidden');
+        selectionArea.classList.remove('hidden');
+    };
+    
+    if (explorerBtn) explorerBtn.addEventListener('click', showExplorer);
+    if (wizardBtn) wizardBtn.addEventListener('click', showWizard);
+    if (backToSelectionExplorer) backToSelectionExplorer.addEventListener('click', showSelection);
+    if (backToSelectionWizard) backToSelectionWizard.addEventListener('click', showSelection);
 
-        wizardStep2.addEventListener('change', () => {
-            const formId = wizardStep2.value;
-            if (!formId) {
-                wizardResults.classList.add('hidden');
-                return;
-            }
-            let foundForm = null;
-            for (const category in formsData) {
-                const form = formsData[category].forms.find(f => f.id === formId);
-                if (form) {
-                    foundForm = form;
-                    break;
-                }
-            }
-            if (foundForm) {
-                wizardRecommendation.innerHTML = createFormCard(foundForm);
-                wizardResults.classList.remove('hidden');
-            }
-        });
-    }
 
+    // --- Initial Page Load ---
+    buildExplorer();
 });
-
