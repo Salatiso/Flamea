@@ -23,20 +23,30 @@
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">A comprehensive suite of powerful tools and legal templates designed to empower you at every stage of your journey.</p>
                 </div>
                 
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
-                     <!-- Feature Card 1: Podcast -->
+                <!-- Updated grid to be md:grid-cols-3 to accommodate the new card -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                     <!-- Feature Card: Podcast -->
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
                         <i class="fas fa-podcast text-4xl text-yellow-400 mb-4"></i>
                         <h3 class="text-2xl font-bold mb-2">Flamea Podcast</h3>
                         <p class="text-gray-400 flex-grow mb-4">Listen to discussions and interviews on key topics for modern fathers.</p>
                         <button data-modal-target="podcast-modal" class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Listen Now</button>
                     </div>
-                     <!-- Feature Card 2: Current Affairs Hub -->
+
+                     <!-- Feature Card: Current Affairs Hub -->
                     <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300">
                         <i class="fas fa-newspaper text-4xl text-green-400 mb-4"></i>
                         <h3 class="text-2xl font-bold mb-2">Current Affairs Hub</h3>
                         <p class="text-gray-400 flex-grow mb-4">Explore news, community articles, and find services near you.</p>
                         <a href="current-affairs.html" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full">Visit Hub</a>
+                    </div>
+                    
+                    <!-- New Feature Card: LegalHelp -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-indigo-500 transition-all duration-300">
+                        <i class="fas fa-balance-scale text-4xl text-indigo-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">LegalHelp Hub</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Access a comprehensive, single-view archive of South African legislation.</p>
+                        <a href="legalhelp.html" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors w-full">Explore LegalHelp</a>
                     </div>
                 </div>
 
@@ -48,7 +58,7 @@
         </main>
     </div>
 
-    <!-- Modals will be loaded and managed by main.js -->
+    <!-- Modals -->
     <div id="chatbot-modal" class="custom-modal"></div>
     <div id="podcast-modal" class="custom-modal"></div>
 

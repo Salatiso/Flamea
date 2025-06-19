@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp Hub - A Flamea Ecosystem Project</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.min.css">
+    <style>
+        .page-container {
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 2rem;
+            position: relative;
+        }
+        .font-roboto-slab { font-family: 'Roboto Slab', serif; }
+        .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
+
+        .flip-card-container {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 2rem;
+            width: 100%;
+            max-w-7xl;
+        }
+        .flip-card {
+            background-color: transparent;
+            width: 100%;
+            height: 250px;
+            perspective: 1000px;
+        }
+        .flip-card-inner {
+            position: relative;
+            width: 100%;
+            height: 100%;
+            text-align: center;
+            transition: transform 0.8s;
+            transform-style: preserve-3d;
+        }
+        .flip-card:hover .flip-card-inner {
+            transform: rotateY(180deg);
+        }
+        .flip-card-front, .flip-card-back {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            -webkit-backface-visibility: hidden;
+            backface-visibility: hidden;
+            border-radius: 0.75rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 1.5rem;
+            border: 1px solid #4a5563; /* border-gray-600 */
+        }
+        .flip-card-front {
+            background-color: rgba(31, 41, 55, 0.8); /* bg-gray-800 with opacity */
+            backdrop-filter: blur(5px);
+        }
+        .flip-card-back {
+            background-color: #4f46e5; /* indigo-600 */
+            color: white;
+            transform: rotateY(180deg);
+        }
+        .flip-card h3 {
+            font-family: 'Roboto Slab', serif;
+            font-size: 1.75rem;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar placeholder -->
+        <div id="sidebar-placeholder"></div>
+
+        <!-- Main Content Area -->
+        <main class="main-content bg-theme-mountains">
+            <div class="page-container">
+                <div class="relative z-10 text-center w-full max-w-7xl mx-auto">
+                    <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-4 text-shadow text-white">LegalHelp Hub</h1>
+                    <p class="text-2xl text-indigo-200 mb-12 text-shadow">Knowledge of the law should not be a privilege; it is a fundamental tool for survival and progress.</p>
+                    
+                    <div class="flip-card-container">
+                        <!-- Card 1: Flamea Integration -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <i class="fas fa-fire text-5xl text-orange-400 mb-3"></i>
+                                    <h3 class="text-white">Empower Flamea</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h4>Flamea's Legal Engine</h4>
+                                    <p class="mt-2">Tools for fathers' rights are linked directly to the Children's Act and relevant case law, providing instant, verifiable context for your fight.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 2: Centralized Knowledge -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <i class="fas fa-database text-5xl text-cyan-400 mb-3"></i>
+                                    <h3 class="text-white">One Source of Truth</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h4>Centralized & Searchable</h4>
+                                    <p class="mt-2">A comprehensive digital library of all South African law—Constitution, statutes, regulations, and case law—in one accessible place.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Card 3: Community Driven -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <i class="fas fa-users text-5xl text-green-400 mb-3"></i>
+                                    <h3 class="text-white">Community Driven</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h4>The Community Watch</h4>
+                                    <p class="mt-2">Legislation changes weekly. We empower a community of lawyers, students, and citizens to keep the database current and accurate for everyone.</p>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Card 4: Ecosystem Integration -->
+                        <div class="flip-card">
+                            <div class="flip-card-inner">
+                                <div class="flip-card-front">
+                                    <i class="fas fa-project-diagram text-5xl text-purple-400 mb-3"></i>
+                                    <h3 class="text-white">Ecosystem Power</h3>
+                                </div>
+                                <div class="flip-card-back">
+                                    <h4>The Foundation</h4>
+                                    <p class="mt-2">LegalHelp is the engine for all Salatiso platforms, including SafetyFirst.help and Sazi.life, ensuring all guidance is legally sound.</p>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div class="mt-12">
+                         <a href="community.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform hover:scale-105 inline-block shadow-lg">
+                            Join the Community Watch <i class="fas fa-arrow-right ml-2"></i>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+      <script type="module" src="assets/js/main.js"></script>
+      <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>
