@@ -3,76 +3,174 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan Builder - Flamea</title>
+    <title>Generated Parenting Plan - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <style>
-        .step-content { display: none; }
-        .step-content.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        .form-label { @apply block text-sm font-medium text-gray-400 mb-1; }
-        .form-input, .form-textarea, .form-select { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-green-500 focus:border-green-500; }
-        .step-indicator { @apply px-4 py-2 rounded-full text-sm font-semibold transition-colors duration-300; }
-        .step-indicator.active { @apply bg-green-500 text-white; }
-        .step-indicator.completed { @apply bg-blue-600 text-white; }
-        .step-indicator.inactive { @apply bg-gray-700 text-gray-400; }
-        .contribution-bar { height: 10px; transition: width 0.3s ease-in-out; }
+        /* Base styles from our established template */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        /* Styles for the printable/PDF area */
+        #plan-content {
+            background-color: white;
+            color: black;
+            font-family: 'Times New Roman', Times, serif;
+        }
+        #plan-content h2 {
+            font-size: 1.5rem;
+            font-weight: bold;
+            border-bottom: 2px solid #333;
+            padding-bottom: 0.5rem;
+            margin-top: 1.5rem;
+            margin-bottom: 1rem;
+        }
+         #plan-content h3 {
+            font-size: 1.2rem;
+            font-weight: bold;
+            margin-top: 1rem;
+            margin-bottom: 0.5rem;
+        }
+        #plan-content p, #plan-content li {
+            line-height: 1.6;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <!-- FIX: Added main-container div -->
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <div class="animated-gradient fixed inset-0 z-0"></div>
+    
+    <div class="relative z-10 flex">
+        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
 
-        <!-- FIX: Added main-content class -->
-        <main class="main-content p-4 sm:p-6 md:p-8">
-            <div class="max-w-6xl mx-auto">
+        <main class="flex-1">
+            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div id="hub-header" class="text-center mb-12">
+                     <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Your Parenting Plan</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Review your generated plan below and download it as a PDF.</p>
+                    </div>
+                </div>
+
                 <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold font-roboto">Parenting Plan Builder</h1>
-                    <p class="text-gray-400 mt-2">Create a comprehensive, court-ready parenting plan step-by-step.</p>
+                     <button id="download-btn" class="inline-flex items-center px-8 py-4 border border-transparent text-lg font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
+                        <i class="fas fa-file-pdf mr-3"></i> Download as PDF
+                    </button>
                 </div>
 
-                <!-- Progress Bar & Steps -->
-                <div class="mb-8">
-                    <div class="flex items-center justify-between mb-2">
-                        <span class="text-sm font-semibold text-gray-300">Progress</span>
-                        <span id="progress-percent" class="text-sm font-bold text-green-400">0%</span>
+                <!-- Printable Content Area -->
+                <div id="plan-content" class="p-8 md:p-12 rounded-lg shadow-2xl">
+                    <h1 class="text-3xl font-bold text-center mb-8">Parenting Plan</h1>
+                    
+                    <h2>1. Parties Involved</h2>
+                    <h3>Parent A</h3>
+                    <p><strong>Full Name:</strong> <span id="plan-parentA-name"></span></p>
+                    <p><strong>ID Number:</strong> <span id="plan-parentA-id"></span></p>
+                    <p><strong>Address:</strong> <span id="plan-parentA-address"></span></p>
+                    <p><strong>Phone:</strong> <span id="plan-parentA-phone"></span></p>
+                    
+                    <h3>Parent B</h3>
+                    <p><strong>Full Name:</strong> <span id="plan-parentB-name"></span></p>
+                    <p><strong>ID Number:</strong> <span id="plan-parentB-id"></span></p>
+                    <p><strong>Address:</strong> <span id="plan-parentB-address"></span></p>
+                    <p><strong>Phone:</strong> <span id="plan-parentB-phone"></span></p>
+                    
+                    <h2>2. Children Subject to this Plan</h2>
+                    <div id="plan-children-container"></div>
+                    
+                    <h2>3. Communication</h2>
+                    <p id="plan-communication"></p>
+                    
+                    <!-- Add other sections as needed -->
+                    
+                    <h2>4. Signatures</h2>
+                    <div class="mt-16 grid grid-cols-2 gap-16">
+                        <div>
+                            <div class="border-t-2 border-black pt-2">Parent A Signature</div>
+                        </div>
+                         <div>
+                            <div class="border-t-2 border-black pt-2">Parent B Signature</div>
+                        </div>
                     </div>
-                    <div class="w-full bg-gray-700 rounded-full h-2.5">
-                        <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
-                    </div>
-                    <div id="step-indicators" class="flex justify-between mt-4 text-xs md:text-sm flex-wrap">
-                        <!-- Step indicators will be generated here -->
-                    </div>
-                </div>
-
-                <form id="plan-form" class="bg-gray-800 p-6 sm:p-8 rounded-lg shadow-2xl">
-                    <!-- Step Content will be injected here -->
-                </form>
-
-                <!-- Navigation -->
-                <div class="flex justify-between items-center mt-8">
-                    <button id="prev-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg transition-colors disabled:opacity-50" disabled>Previous</button>
-                    <div>
-                        <button id="save-btn" class="bg-blue-600 hover:bg-blue-500 text-white font-bold py-2 px-6 rounded-lg transition-colors mr-2">Save Progress</button>
-                        <button id="quit-btn" class="text-red-500 hover:text-red-400 font-bold py-2 px-4 rounded-lg">Quit</button>
-                    </div>
-                    <button id="next-btn" class="bg-green-600 hover:bg-green-500 text-white font-bold py-2 px-6 rounded-lg transition-colors">Next</button>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Modals -->
-    <div id="quit-modal" class="fixed inset-0 bg-black bg-opacity-60 flex items-center justify-center hidden z-50">
-        <div class="bg-white dark:bg-gray-800 p-8 rounded-lg text-center max-w-sm w-full"><h2 class="text-xl font-bold mb-4">Are you sure?</h2><p class="text-gray-600 dark:text-gray-400 mb-6">Unsaved progress will be lost.</p><div class="flex justify-center gap-4"><button id="resume-btn" class="py-2 px-6 rounded-lg bg-gray-300 dark:bg-gray-600">Stay</button><a href="parenting-plan.html" class="py-2 px-6 rounded-lg bg-red-600 text-white">Quit</a></div></div>
-    </div>
-    <div id="chatbot-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
-    <div id="podcast-modal" class="modal fixed inset-0 bg-black bg-opacity-75 items-center justify-center z-50 p-4"></div>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // --- Sidebar Loader ---
+        fetch('sidebar.html')
+            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
+            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
+            .catch(error => console.error('Error loading sidebar:', error));
 
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/plan-builder.js"></script>
+        // --- Populate Data from URL ---
+        const urlParams = new URLSearchParams(window.location.search);
+        const dataParam = urlParams.get('data');
+        
+        if (dataParam) {
+            try {
+                const formData = JSON.parse(decodeURIComponent(dataParam));
+
+                // Parent A
+                document.getElementById('plan-parentA-name').textContent = formData.parentA.name || 'N/A';
+                document.getElementById('plan-parentA-id').textContent = formData.parentA.id || 'N/A';
+                document.getElementById('plan-parentA-address').textContent = formData.parentA.address || 'N/A';
+                document.getElementById('plan-parentA-phone').textContent = formData.parentA.phone || 'N/A';
+                
+                // Parent B
+                document.getElementById('plan-parentB-name').textContent = formData.parentB.name || 'N/A';
+                document.getElementById('plan-parentB-id').textContent = formData.parentB.id || 'N/A';
+                document.getElementById('plan-parentB-address').textContent = formData.parentB.address || 'N/A';
+                document.getElementById('plan-parentB-phone').textContent = formData.parentB.phone || 'N/A';
+                
+                // Children
+                const childrenContainer = document.getElementById('plan-children-container');
+                if(formData.children && formData.children.length > 0){
+                    let childrenHtml = '<ul>';
+                    formData.children.forEach(child => {
+                        if(child.name){
+                           childrenHtml += `<li><strong>${child.name}</strong> (DOB: ${child.dob || 'N/A'}, ID: ${child.id || 'N/A'})</li>`;
+                        }
+                    });
+                    childrenHtml += '</ul>';
+                    childrenContainer.innerHTML = childrenHtml;
+                } else {
+                    childrenContainer.innerHTML = '<p>No children listed.</p>';
+                }
+
+                // Communication
+                document.getElementById('plan-communication').textContent = formData.communication || 'No specific communication plan was entered.';
+
+            } catch (e) {
+                console.error("Error parsing form data:", e);
+                document.getElementById('plan-content').innerHTML = '<p class="text-red-500 text-center">Could not load plan data. It may be corrupted. Please go back and try again.</p>';
+            }
+        } else {
+             document.getElementById('plan-content').innerHTML = '<p class="text-center">No plan data received. Please start by filling out the parenting plan wizard.</p>';
+        }
+
+        // --- PDF Download ---
+        document.getElementById('download-btn').addEventListener('click', () => {
+            const element = document.getElementById('plan-content');
+            const opt = {
+                margin:       0.5,
+                filename:     'Parenting-Plan.pdf',
+                image:        { type: 'jpeg', quality: 0.98 },
+                html2canvas:  { scale: 2 },
+                jsPDF:        { unit: 'in', format: 'letter', orientation: 'portrait' }
+            };
+            html2pdf().set(opt).from(element).save();
+        });
+    });
+    </script>
 </body>
 </html>
