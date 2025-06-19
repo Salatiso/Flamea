@@ -37,9 +37,12 @@ document.addEventListener('DOMContentLoaded', async () => {
 
     // --- Book Data ---
     const bookDatabase = {
-        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/documents/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
-        'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/documents/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
-        'beyond-redress': { title: "Beyond Redress", path: 'assets/documents/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
+        'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/books/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
+        'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/books/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
+        'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
+        'know-yourself': { title: "Getting to know yourself as a South African, Unravelling Xhosa History", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
+        'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika, Yazi inombo yomXhosasi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
+        'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_Ozifundiselayo_Ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' }
     };
 
     // --- CORE FUNCTIONS ---
