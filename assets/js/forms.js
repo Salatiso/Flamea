@@ -5,22 +5,12 @@ document.addEventListener('DOMContentLoaded', () => {
     const explorerBtn = document.getElementById('explore-forms-btn');
     const wizardSection = document.getElementById('wizard-section');
     const explorerSection = document.getElementById('explorer-section');
-    const backToSelectionWizard = document.getElementById('back-to-selection-wizard');
-    const backToSelectionExplorer = document.getElementById('back-to-selection-explorer');
     const hubHeader = document.getElementById('hub-header');
 
-    // Wizard-specific elements
-    const progressBar = document.getElementById('progress-bar');
-    const backBtn = document.getElementById('back-btn');
-    const stepCounterEl = document.getElementById('step-counter');
-    const recommendationContainer = document.getElementById('recommendation-container');
-    
-    // Exit if the main container isn't on this page
-    if (!selectionArea) return;
+    if (!selectionArea) return; // Exit if not on the correct page
 
     // --- Data Definitions ---
     const resources = {
-        // Forms
         'Informal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html' },
         'Formal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Formal.html' },
         'Final Letter on Constitutional Rights': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_final.html' },
@@ -38,204 +28,175 @@ document.addEventListener('DOMContentLoaded', () => {
         'Cohabitation Agreement': { type: 'form', file: 'Cohabitation_Agreement.html' },
         'Budgeting Tool for Couples': { type: 'form', file: 'Budget_Couples.html' },
         'Child Support Agreement': { type: 'form', file: 'Child_Support_Agreement.html' },
-        // Training
         'The SA Constitution': { type: 'training', url: 'training/course-constitution.html' },
-        'The Children\'s Act': { type: 'training', url: 'training/course-childrens-act.html' },
+        "The Children's Act": { type: 'training', url: 'training/course-childrens-act.html' },
         'Co-Parenting 101': { type: 'training', url: 'training/course-coparenting.html' },
         'Family Law Overview': { type: 'training', url: 'training/course-family-law.html' },
-        'A Father\'s Shield': { type: 'training', url: 'training/course-fathers-shield.html' },
+        "A Father's Shield": { type: 'training', url: 'training/course-fathers-shield.html' },
     };
 
     const wizardLogic = {
-        'establish_rights': {
-            forms: ['Informal Parental Rights Letter', 'Formal Parental Rights Letter', 'Final Letter on Constitutional Rights'],
-            training: ['The SA Constitution', 'The Children\'s Act']
-        },
-        'resolve_conflict': {
-            forms: ['Mediation Request Letter', 'Conflict Resolution Worksheet', 'Comprehensive Parenting Plan'],
-            training: ['The SA Constitution', 'Co-Parenting 101']
-        },
-        'court_action': {
-            forms: ['General Affidavit', 'Comprehensive Parenting Plan'],
-            training: ['The SA Constitution', 'The Children\'s Act', 'Family Law Overview']
-        },
-        'school': {
-            forms: ['General Letter to School', 'Request for School Transfer'],
-            training: ['The SA Constitution', 'The Children\'s Act']
-        },
-        'legal_body': {
-            forms: ['General Affidavit', 'Legal Practice Council Complaint', 'Magistrates Commission Complaint'],
-            training: ['The SA Constitution', "A Father's Shield"]
-        },
-        'gov_body': {
-            forms: ['General Affidavit', 'Public Protector Complaint', 'Commission for Gender Equality Complaint', 'SA Law Reform Commission Request'],
-            training: ['The SA Constitution', "A Father's Shield"]
-        },
-        'cohabitation': {
-            forms: ['Cohabitation Agreement', 'Budgeting Tool for Couples'],
-            training: ['The SA Constitution', 'Family Law Overview']
-        },
-        'child_support': {
-            forms: ['Child Support Agreement', 'Comprehensive Parenting Plan'],
-            training: ['The SA Constitution', 'The Children\'s Act']
-        },
+        'establish_rights': { forms: ['Informal Parental Rights Letter', 'Formal Parental Rights Letter', 'Final Letter on Constitutional Rights'], training: ['The SA Constitution', "The Children's Act"] },
+        'resolve_conflict': { forms: ['Mediation Request Letter', 'Conflict Resolution Worksheet', 'Comprehensive Parenting Plan'], training: ['The SA Constitution', 'Co-Parenting 101'] },
+        'court_action': { forms: ['General Affidavit', 'Comprehensive Parenting Plan'], training: ['The SA Constitution', "The Children's Act", 'Family Law Overview'] },
+        'school': { forms: ['General Letter to School', 'Request for School Transfer'], training: ['The SA Constitution', "The Children's Act"] },
+        'legal_body': { forms: ['General Affidavit', 'Legal Practice Council Complaint', 'Magistrates Commission Complaint'], training: ['The SA Constitution', "A Father's Shield"] },
+        'gov_body': { forms: ['General Affidavit', 'Public Protector Complaint', 'Commission for Gender Equality Complaint', 'SA Law Reform Commission Request'], training: ['The SA Constitution', "A Father's Shield"] },
+        'cohabitation': { forms: ['Cohabitation Agreement', 'Budgeting Tool for Couples'], training: ['The SA Constitution', 'Family Law Overview'] },
+        'child_support': { forms: ['Child Support Agreement', 'Comprehensive Parenting Plan'], training: ['The SA Constitution', "The Children's Act"] },
     };
 
-    // --- State Variables ---
-    let userAnswers = {};
+    // --- State & UI Control ---
     let stepHistory = [];
+    let userAnswers = {};
 
-    // --- WIZARD FUNCTIONS ---
+    const showView = (viewName) => {
+        hubHeader.style.display = viewName === 'selection' ? 'block' : 'none';
+        selectionArea.style.display = viewName === 'selection' ? 'grid' : 'none';
+        wizardSection.style.display = viewName === 'wizard' ? 'block' : 'none';
+        explorerSection.style.display = viewName === 'explorer' ? 'block' : 'none';
+    };
 
-    function startWizard() {
-        hubHeader.classList.add('hidden');
-        selectionArea.classList.add('hidden');
-        explorerSection.classList.add('hidden');
-        wizardSection.classList.remove('hidden');
-        goToStep('1');
-    }
+    // --- Wizard Functionality ---
+    const startWizard = () => {
+        userAnswers = {};
+        stepHistory = ['1'];
+        showView('wizard');
+        renderStep('1');
+    };
 
-    function goToStep(stepId) {
+    const goToStep = (stepId) => {
         stepHistory.push(stepId);
-        document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
-        const nextStepEl = document.getElementById(`step-${stepId}`);
-        if(nextStepEl) nextStepEl.classList.add('active');
-        updateWizardNav();
-    }
-
-    function goBack() {
+        renderStep(stepId);
+    };
+    
+    const goBack = () => {
         if (stepHistory.length <= 1) return;
         stepHistory.pop();
-        const previousStepId = stepHistory[stepHistory.length - 1];
-        document.querySelectorAll('.wizard-step').forEach(step => step.classList.remove('active'));
-        document.getElementById(`step-${previousStepId}`).classList.add('active');
+        renderStep(stepHistory[stepHistory.length - 1]);
+    };
+
+    const renderStep = (stepId) => {
+        document.querySelectorAll('.wizard-step').forEach(s => s.classList.remove('active'));
+        const stepEl = document.getElementById(`step-${stepId}`);
+        if(stepEl) stepEl.classList.add('active');
         updateWizardNav();
-    }
-    
-    function updateWizardNav() {
-        const currentStep = stepHistory[stepHistory.length - 1];
-        backBtn.disabled = stepHistory.length <= 1;
+    };
 
-        const totalSteps = 2;
-        const currentStepNumber = stepHistory.filter(s => !s.endsWith('A') && !s.endsWith('B') && !s.endsWith('C')).length;
+    const updateWizardNav = () => {
+        const backBtn = document.getElementById('back-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const stepCounter = document.getElementById('step-counter');
+        const progressContainer = document.getElementById('progress-container');
+
+        const isResultStep = stepHistory[stepHistory.length - 1] === 'results';
         
-        if (progressBar) {
-            progressBar.style.width = `${(currentStepNumber / totalSteps) * 100}%`;
+        backBtn.disabled = stepHistory.length <= 1;
+        progressContainer.style.visibility = isResultStep ? 'hidden' : 'visible';
+        
+        if (!isResultStep) {
+            const stepNumber = stepHistory.length;
+            const totalSteps = 2;
+            progressBar.style.width = `${(stepNumber / totalSteps) * 100}%`;
+            stepCounter.textContent = `Step ${stepNumber} of ${totalSteps}`;
         }
-        if (stepCounterEl) {
-             stepCounterEl.textContent = currentStep === 'results' ? 'Results' : `Step ${currentStepNumber} of ${totalSteps}`;
-        }
-    }
+    };
 
-    function showResults() {
-        const finalAnswer = userAnswers['final'];
+    const renderResults = () => {
+        const finalAnswer = userAnswers.finalAnswer;
         const recommendations = wizardLogic[finalAnswer];
+        const recommendationContainer = document.getElementById('recommendation-container');
         
         if (!recommendations) {
-            recommendationContainer.innerHTML = `<p class="text-center text-gray-400">Could not determine recommendation. Please try again.</p>`;
+            recommendationContainer.innerHTML = `<p class="text-center text-gray-400">Could not determine recommendation. Please try again or use the Manual Explorer.</p>`;
         } else {
-            let formsHtml = recommendations.forms.map(key => {
-                const resource = resources[key];
-                return `<li><a href="assets/templates/${resource.file}" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors"><i class="fas fa-file-alt text-lg text-blue-400"></i><span>${key}</span></a></li>`;
-            }).join('');
-
-            let trainingHtml = recommendations.training.map(key => {
-                const resource = resources[key];
-                return `<li><a href="${resource.url}" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors"><i class="fas fa-graduation-cap text-lg text-yellow-400"></i><span>${key}</span></a></li>`;
-            }).join('');
+            const createLink = (key, resource) => {
+                const iconClass = resource.type === 'form' ? 'fa-file-alt text-blue-400' : 'fa-graduation-cap text-yellow-400';
+                const url = resource.type === 'form' ? `assets/templates/${resource.file}` : resource.url;
+                return `<li><a href="${url}" target="_blank" class="flex items-center gap-3 p-3 rounded-lg hover:bg-gray-700 transition-colors"><i class="fas ${iconClass} text-lg w-6 text-center"></i><span>${key}</span></a></li>`;
+            };
+            
+            const formsHtml = recommendations.forms.map(key => createLink(key, resources[key])).join('');
+            const trainingHtml = recommendations.training.map(key => createLink(key, resources[key])).join('');
 
             recommendationContainer.innerHTML = `
                 <div>
-                    <h4 class="text-xl font-bold text-white mb-3">Recommended Forms & Tools</h4>
+                    <h4 class="text-xl font-bold text-white mb-3"><i class="fas fa-file-signature mr-2"></i>Recommended Forms</h4>
                     <ul class="space-y-2">${formsHtml}</ul>
                 </div>
                 <div class="mt-6">
-                    <h4 class="text-xl font-bold text-white mb-3">Recommended Training</h4>
+                    <h4 class="text-xl font-bold text-white mb-3"><i class="fas fa-book-reader mr-2"></i>Recommended Training</h4>
                     <ul class="space-y-2">${trainingHtml}</ul>
-                </div>
-            `;
+                </div>`;
         }
+        
         goToStep('results');
-    }
+    };
 
-    // --- EXPLORER FUNCTIONS ---
-    function showExplorer() {
-        // Logic for showing explorer... (from previous version)
-        hubHeader.classList.add('hidden');
-        selectionArea.classList.add('hidden');
-        wizardSection.classList.add('hidden');
-        explorerSection.classList.remove('hidden');
-    }
+    // --- Explorer Functionality ---
+    const buildExplorer = () => {
+        const explorerContent = document.getElementById('explorer-content');
+        const categories = {
+            'Legal & Affidavits': { icon: 'fa-gavel', forms: ['General Affidavit', 'SAPS Complaint Affidavit', 'Commissioner of Oaths Declaration'] },
+            'Parental Rights & Communication': { icon: 'fa-comments', forms: ['Informal Parental Rights Letter', 'Formal Parental Rights Letter', 'Final Letter on Constitutional Rights', 'General Letter to School', 'Request for School Transfer'] },
+            'Financial & Relationship Agreements': { icon: 'fa-file-signature', forms: ['Budgeting Tool for Couples', 'Child Support Agreement', 'Cohabitation Agreement'] },
+            'Official Complaints & Requests': { icon: 'fa-bullhorn', forms: ['Commission for Gender Equality Complaint', 'Legal Practice Council Complaint', 'Magistrates Commission Complaint', 'Public Protector Complaint', 'SA Law Reform Commission Request', 'Medical Record Request'] },
+            'Planning, Mediation & Worksheets': { icon: 'fa-tasks', forms: ['Pre-Birth Planning Guide', 'Comprehensive Parenting Plan', 'Post-Separation Communication Plan', 'Mediation Request Letter', 'Conflict Resolution Worksheet'] }
+        };
+
+        let explorerHtml = '';
+        for (const category in categories) {
+            explorerHtml += `
+                <div class="accordion-item bg-gray-800 rounded-lg shadow-md">
+                    <div class="accordion-header flex justify-between items-center p-5">
+                        <div class="flex items-center space-x-4">
+                            <i class="fas ${categories[category].icon} text-2xl text-blue-400 w-8 text-center"></i>
+                            <h3 class="text-xl font-bold text-white">${category}</h3>
+                        </div>
+                        <i class="fas fa-chevron-right accordion-icon text-gray-400"></i>
+                    </div>
+                    <div class="accordion-content border-t border-gray-700 p-5">
+                        <ul class="space-y-2">
+                            ${categories[category].forms.map(key => {
+                                const resource = resources[key];
+                                return `<li><a href="assets/templates/${resource.file}" target="_blank" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-700 transition-colors duration-200">
+                                    <span><i class="far fa-file-alt mr-3 text-gray-400"></i>${key}</span><i class="fas fa-external-link-alt text-sm text-gray-500"></i></a></li>`;
+                            }).join('')}
+                        </ul>
+                    </div>
+                </div>`;
+        }
+        explorerContent.innerHTML = explorerHtml;
+        
+        explorerContent.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('active');
+            });
+        });
+    };
     
-    // --- UI TOGGLING & EVENT LISTENERS ---
-    function resetToSelection() {
-        hubHeader.classList.remove('hidden');
-        selectionArea.classList.remove('hidden');
-        wizardSection.classList.add('hidden');
-        explorerSection.classList.add('hidden');
-        stepHistory = [];
-        userAnswers = {};
-    }
-
+    // --- Event Listeners ---
     wizardBtn.addEventListener('click', startWizard);
-    backBtn.addEventListener('click', goBack);
-    backToSelectionWizard.addEventListener('click', resetToSelection);
-    backToSelectionExplorer.addEventListener('click', resetToSelection);
+    explorerBtn.addEventListener('click', () => showView('explorer'));
+    document.getElementById('back-to-selection-wizard').addEventListener('click', () => showView('selection'));
+    document.getElementById('back-to-selection-explorer').addEventListener('click', () => showView('selection'));
+    document.getElementById('back-btn').addEventListener('click', goBack);
 
     document.querySelectorAll('.wizard-option').forEach(button => {
-        button.addEventListener('click', (e) => {
-            const currentStepEl = e.currentTarget.closest('.wizard-step');
-            const stepId = currentStepEl.id;
-            const nextStepId = e.currentTarget.dataset.next;
+        button.addEventListener('click', e => {
+            const target = e.currentTarget;
+            const nextStepId = target.dataset.next;
             
-            // This is the final decision point before results
             if (nextStepId === 'results') {
-                userAnswers['final'] = e.currentTarget.dataset.answer;
-                showResults();
+                userAnswers.finalAnswer = target.dataset.answer;
+                renderResults();
             } else {
                 goToStep(nextStepId);
             }
         });
     });
 
-    // --- MANUAL EXPLORER --- (copied from previous version, simplified)
-    explorerBtn.addEventListener('click', showExplorer);
-    
-    const allForms = [
-        { name: 'General Affidavit', file: 'Affidavit_General_Template.html' },
-        { name: 'SAPS Complaint Affidavit', file: 'Affidavit-SAPS_Complaint_.html' },
-        { name: 'Commissioner of Oaths Declaration', file: 'Commissioner_of_Oaths_Declaration.html' },
-        { name: 'Informal Notification of Parental Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html' },
-        { name: 'Formal Notification of Parental Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_Formal.html' },
-        { name: 'Final Letter on Constitutional Rights', file: 'Affirmation_Parental_Rights_and_Responsibilities_final.html' },
-        { name: 'Father’s Notification (Accepting Damages)', file: 'Damages_Accepting_Letter.html' },
-        { name: 'General Letter to School', file: 'School_Letter_General_Template.html' },
-        { name: 'Request for School Transfer', file: 'School_Letter_Transfer_Template.html' },
-        { name: 'Budgeting Tool for Couples', file: 'Budget_Couples.html' },
-        { name: 'Child Support Agreement', file: 'Child_Support_Agreement.html' },
-        { name: 'Cohabitation Agreement', file: 'Cohabitation_Agreement.html' },
-        { name: 'Commission for Gender Equality Complaint', file: 'Commission_Gender_Equality.html' },
-        { name: 'Legal Practice Council Complaint', file: 'Legal_Practice_Council_Complaint.html' },
-        { name: 'Magistrates Commission Complaint', file: 'Magistrates_Commission_Complaint_Template.html' },
-        { name: 'Public Protector Complaint', file: 'Public_Protector_Complaint.html' },
-        { name: 'SA Law Reform Commission Request', file: 'SALRC_Request_Family_Law_Reform.html' },
-        { name: 'Medical Record Request', file: 'Medical_Record_Request_Template.html' },
-        { name: 'Pre-Birth Planning Guide', file: 'Pre_Birth_Planning_Guide.html' },
-        { name: 'Comprehensive Parenting Plan', file: 'Parenting_Plan_Template.html' },
-        { name: 'Post-Separation Communication Plan', file: 'Communication_Plan.html' },
-        { name: 'Mediation Request Letter', file: 'Mediation_Request_Letter.html' },
-        { name: 'Conflict Resolution Worksheet', file: 'Conflict_Resolution_Worksheet.html' }
-    ];
-
-    let listHtml = allForms.map(form => `
-        <li>
-            <a href="assets/templates/${form.file}" target="_blank" class="flex items-center justify-between p-3 rounded-md hover:bg-gray-700 transition-colors duration-200">
-                <span><i class="far fa-file-alt mr-3 text-gray-400"></i>${form.name}</span>
-                <i class="fas fa-external-link-alt text-sm text-gray-500"></i>
-            </a>
-        </li>
-    `).join('');
-    
-    explorerSection.insertAdjacentHTML('afterbegin', `<h2 class="text-3xl font-bold text-center mb-6">All Forms & Templates</h2><ul class="space-y-2">${listHtml}</ul>`);
-
+    // --- Initial Load ---
+    buildExplorer();
+    showView('selection'); // Start at the selection view
 });
