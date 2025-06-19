@@ -5,288 +5,251 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Games Hub - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body {
-            background-color: #111827;
-            background-image: radial-gradient(circle at top left, rgba(55, 65, 81, 0.4), transparent 50%),
-                              radial-gradient(circle at bottom right, rgba(37, 99, 235, 0.2), transparent 50%);
-            font-family: 'Mali', cursive;
+        /* Base styles from our established template */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .game-title {
-            font-family: 'Fredoka One', cursive;
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
         }
-        .view { display: none; }
-        .view.active { display: block; }
-
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
-        .fade-in { animation: fadeIn 0.6s ease-out forwards; }
-        
-        .selection-card {
-            background: rgba(255, 255, 255, 0.05);
-            border: 2px solid rgba(255, 255, 255, 0.2);
-            backdrop-filter: blur(10px);
-            transition: transform 0.3s ease, background-color 0.3s ease;
+        .card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
         }
-        .selection-card:hover {
-            transform: translateY(-10px);
-            background: rgba(255, 255, 255, 0.1);
-            border-color: #fde047;
+        .card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
         }
-        .wizard-step-card {
-            background: rgba(31, 41, 55, 0.8);
-             border: 1px solid rgba(255, 255, 255, 0.2);
-        }
-        .wizard-btn {
-            background-color: #374151;
-            transition: background-color 0.2s, transform 0.2s;
-        }
-        .wizard-btn:hover {
-            background-color: #4f46e5;
-            transform: scale(1.05);
-        }
-         .btn-primary {
-            background-color: #fde047;
-            color: #111827;
-            font-family: 'Fredoka One', cursive;
-            transition: all 0.2s ease;
-        }
-        .btn-primary:hover {
-            background-color: #facc15;
-            transform: translateY(-2px);
-        }
-        .accordion-header {
-            background-color: rgba(31, 41, 55, 0.7);
-            cursor: pointer;
-            border: 1px solid rgba(255,255,255,0.1);
-        }
-        .accordion-content {
+        .category-content {
             max-height: 0;
             overflow: hidden;
-            transition: max-height 0.5s ease-out, padding 0.5s ease-out;
-             background-color: rgba(17, 24, 39, 0.5);
+            transition: max-height 0.7s ease-in-out;
         }
-        .accordion-item.active .accordion-content {
-            max-height: 1000px;
-            padding: 1rem;
+        .category-card.expanded .category-content {
+            max-height: 1000px; /* Adjust as needed */
         }
-        .accordion-item.active .accordion-icon {
+        .category-card.expanded .fa-chevron-down {
             transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="text-gray-200 min-h-screen">
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <!-- Dynamic Background -->
+    <div class="animated-gradient fixed inset-0 z-0"></div>
     
-    <div class="container mx-auto p-4 md:p-8">
-        <!-- SELECTION VIEW -->
-        <div id="selection-view" class="view active text-center">
-            <h1 class="text-5xl md:text-7xl game-title text-yellow-300 mb-4">Flamea Game Arcade</h1>
-            <p class="text-xl text-gray-300 mb-12">Choose your path to fun and learning!</p>
-            <div class="flex flex-col md:flex-row gap-8 justify-center max-w-4xl mx-auto">
-                <div id="start-wizard-btn" class="selection-card rounded-2xl p-8 flex-1 cursor-pointer">
-                    <div class="text-8xl mb-4">🧙‍♂️</div>
-                    <h2 class="text-4xl game-title text-indigo-400">Wizard Quest</h2>
-                    <p class="text-gray-400 mt-2">Let a wise guide help you find the perfect game.</p>
-                </div>
-                <div id="start-manual-btn" class="selection-card rounded-2xl p-8 flex-1 cursor-pointer">
-                    <div class="text-8xl mb-4">🗺️</div>
-                    <h2 class="text-4xl game-title text-emerald-400">Explore All</h2>
-                    <p class="text-gray-400 mt-2">Browse the full library of games yourself.</p>
-                </div>
-            </div>
+    <div class="relative z-10 flex">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-container" class="w-64 flex-shrink-0">
+            <!-- The sidebar will be loaded here -->
         </div>
 
-        <!-- WIZARD VIEW -->
-        <div id="wizard-view" class="view">
-            <button class="back-btn btn-primary font-bold py-2 px-4 rounded-lg mb-8"><i class="fas fa-arrow-left mr-2"></i>Back to Start</button>
-            <div id="wizard-steps" class="space-y-10">
-                <!-- Step 1: Age -->
-                <div id="wizard-step-age" class="wizard-step text-center fade-in">
-                    <h2 class="text-4xl game-title text-yellow-300 mb-6">Who is playing?</h2>
-                    <div class="flex flex-wrap justify-center gap-4">
-                        <button class="wizard-btn text-2xl p-6 rounded-xl" data-age="4-8">Ages 4-8</button>
-                        <button class="wizard-btn text-2xl p-6 rounded-xl" data-age="9-13">Ages 9-13</button>
-                        <button class="wizard-btn text-2xl p-6 rounded-xl" data-age="14+">Ages 14+</button>
+        <!-- Main Content -->
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <!-- Header Section -->
+                <div id="hub-header" class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Flamea Game Arcade</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Choose your path to fun and learning!</p>
                     </div>
                 </div>
-                <!-- Step 2: Topic -->
-                <div id="wizard-step-topic" class="wizard-step text-center hidden">
-                     <h2 class="text-4xl game-title text-yellow-300 mb-6">What do you want to learn about?</h2>
-                    <div class="flex flex-wrap justify-center gap-4">
-                         <button class="wizard-btn text-2xl p-6 rounded-xl" data-topic="Cultural Games">Culture & Heritage</button>
-                         <button class="wizard-btn text-2xl p-6 rounded-xl" data-topic="Constitutional Law">Constitution & Rights</button>
-                         <button class="wizard-btn text-2xl p-6 rounded-xl" data-topic="Creative & Strategic Thinking">Justice & Law</button>
-                    </div>
-                </div>
-            </div>
-            <div id="wizard-results" class="mt-12 hidden"></div>
-        </div>
-        
-        <!-- MANUAL EXPLORE VIEW -->
-        <div id="games-catalogue-view" class="view">
-            <button class="back-btn btn-primary font-bold py-2 px-4 rounded-lg mb-8"><i class="fas fa-arrow-left mr-2"></i>Back to Start</button>
-             <h1 class="text-5xl font-bold game-title text-white text-center mb-12">All Games</h1>
-            <div id="games-catalogue-content" class="space-y-8 max-w-5xl mx-auto">
-                <!-- Accordion categories of games will be rendered here by JS -->
-            </div>
-        </div>
 
+                <!-- Selection Area (Wizard vs Manual) -->
+                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                    <!-- Wizard Quest Card -->
+                    <div id="start-wizard-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
+                        <div class="bg-purple-500 bg-opacity-20 text-purple-400 p-4 rounded-full mb-5">
+                            <i class="fas fa-hat-wizard text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Wizard Quest</h3>
+                        <p class="text-gray-400">Let a wise guide help you find the perfect game.</p>
+                    </div>
+
+                    <!-- Manual Explorer Card -->
+                    <div id="explore-games-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
+                        <div class="bg-teal-500 bg-opacity-20 text-teal-400 p-4 rounded-full mb-5">
+                            <i class="fas fa-map-signs text-4xl"></i>
+                        </div>
+                        <h3 class="text-2xl font-bold text-white mb-2">Explore All Games</h3>
+                        <p class="text-gray-400">Browse the full library of games yourself.</p>
+                    </div>
+                </div>
+
+                <!-- Wizard Section -->
+                <div id="wizard-section" class="hidden mt-12">
+                    <!-- Wizard steps will be injected here -->
+                </div>
+
+                <!-- Manual Explorer Section -->
+                <div id="explorer-section" class="hidden mt-12">
+                     <button id="explorer-back-btn" class="mb-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500">
+                        <i class="fas fa-arrow-left mr-3"></i>
+                        Back to Selection
+                    </button>
+                    <div id="explorer-grid" class="space-y-6">
+                        <!-- Game Categories will be populated here -->
+                    </div>
+                </div>
+            </div>
+        </main>
     </div>
 
-    <script type="module">
-        document.addEventListener('DOMContentLoaded', () => {
-            // --- GAME DATA ---
-            const gamesList = [
-                { id: "cultural-dress-up", title: "Cultural Dress-Up Adventure", description: "Learn about traditional attire by dressing characters for ceremonies.", href: "games/cultural-dress-up.html", category: "Cultural Games", ageGroup: "4-8", icon: "fa-shirt" },
-                 { id: "cultural-connection", title: "Cultural Connection", description: "Explore the food, customs, and traditions of different South African cultures.", href: "games/cultural-connection.html", category: "Cultural Games", ageGroup: "4-8", icon: "fa-people-group" },
-                { id: "ancestors-quest", title: "Ancestor's Quest", description: "An interactive story about family lineage and the importance of ancestors.", href: "games/ancestors-quest.html", category: "Cultural Games", ageGroup: "9-13", icon: "fa-tree" },
-                { id: "my-family-my-clan", title: "My Family, My Clan", description: "A game about understanding family structures and clan names.", href: "games/my-family-my-clan.html", category: "Cultural Games", ageGroup: "9-13", icon: "fa-users" },
-                { id: "customs-consequences", title: "Customs & Consequences", description: "A narrative game exploring customary law scenarios.", href: "games/customs-consequences.html", category: "Cultural Games", ageGroup: "14+", icon: "fa-landmark" },
-                { id: "constitution-champions", title: "Constitution Champions", description: "An engaging quiz and activity game about the South African Constitution.", href: "games/constitution-champions.html", category: "Constitutional Law", ageGroup: "9-13", icon: "fa-trophy" },
-                { id: "kid-konstitution", title: "Kid Konstitution", description: "Simplified concepts of the constitution for younger children.", href: "games/kid-konstitution.html", category: "Constitutional Law", ageGroup: "4-8", icon: "fa-child" },
-                { id: "rights-racer", title: "Rights Racer", description: "Race against time to collect and identify fundamental human rights.", href: "games/rights-racer.html", category: "Constitutional Law", ageGroup: "9-13", icon: "fa-flag-checkered" },
-                { id: "constitution-quest", title: "Constitution Quest", description: "A text-based adventure to find the lost scrolls of the constitution.", href: "games/constitution-quest.html", category: "Constitutional Law", ageGroup: "14+", icon: "fa-scroll" },
-                { id: "constitution-defender", title: "Constitution Defender", description: "Defend the principles of the constitution from waves of misinformation.", href: "games/constitution-defender.html", category: "Constitutional Law", ageGroup: "14+", icon: "fa-shield-halved" },
-                { id: "justice-builder", title: "Justice Builder", description: "Build a fair and just society by making key legal decisions.", href: "games/justice-builder.html", category: "Creative & Strategic Thinking", ageGroup: "14+", icon: "fa-gavel" },
-                { id: "law-layers-quest", title: "Law Layers Quest", description: "Peel back the layers of a complex legal case to find the truth.", href: "games/law-layers-quest.html", category: "Creative & Strategic Thinking", ageGroup: "14+", icon: "fa-layer-group" },
-                { id: "legal-simulator", title: "Legal Simulator", description: "Simulate legal practice by managing cases and clients.", href: "games/legal-simulator.html", category: "Creative & Strategic Thinking", ageGroup: "14+", icon: "fa-briefcase" },
-                { id: "goliaths-reckoning", title: "Goliath's Reckoning", description: "A strategic game based on legal battles against powerful entities.", href: "games/goliaths-reckoning.html", category: "Creative & Strategic Thinking", ageGroup: "14+", icon: "fa-chess-king" },
-                { id: "mythbuster-game", title: "MythBuster Challenge", description: "Debunk common myths about law and culture.", href: "games/mythbuster-game.html", category: "Creative & Strategic Thinking", ageGroup: "9-13", icon: "fa-search" },
-                { id: "satirical-game", title: "The Gavel of Satire", description: "A humorous look at the legal system through satire.", href: "games/satirical-game.html", category: "Creative & Strategic Thinking", ageGroup: "14+", icon: "fa-masks-theater" }
-            ];
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
 
-            // --- DOM ELEMENTS ---
-            const views = {
-                selection: document.getElementById('selection-view'),
-                wizard: document.getElementById('wizard-view'),
-                catalogue: document.getElementById('games-catalogue-view')
-            };
-            const startWizardBtn = document.getElementById('start-wizard-btn');
-            const startManualBtn = document.getElementById('start-manual-btn');
-            const backBtns = document.querySelectorAll('.back-btn');
-            
-            const wizardSteps = {
-                age: document.getElementById('wizard-step-age'),
-                topic: document.getElementById('wizard-step-topic'),
-            };
-            const wizardResultsContainer = document.getElementById('wizard-results');
-            const gamesCatalogueContent = document.getElementById('games-catalogue-content');
+        // --- DATA DEFINITIONS ---
+        const gamesList = [
+             { id: "cultural-dress-up", title: "Cultural Dress-Up Adventure", description: "Learn about traditional attire by dressing characters for ceremonies.", href: "games/cultural-dress-up.html", category: "Cultural Games", ageGroup: "4-8", icon: "fa-shirt" },
+             { id: "cultural-connection", title: "Cultural Connection", description: "Explore the food, customs, and traditions of different South African cultures.", href: "games/cultural-connection.html", category: "Cultural Games", ageGroup: "4-8", icon: "fa-people-group" },
+             { id: "ancestors-quest", title: "Ancestor's Quest", description: "An interactive story about family lineage and the importance of ancestors.", href: "games/ancestors-quest.html", category: "Cultural Games", ageGroup: "9-13", icon: "fa-tree" },
+             { id: "my-family-my-clan", title: "My Family, My Clan", description: "A game about understanding family structures and clan names.", href: "games/my-family-my-clan.html", category: "Cultural Games", ageGroup: "9-13", icon: "fa-users" },
+             { id: "customs-consequences", title: "Customs & Consequences", description: "A narrative game exploring customary law scenarios.", href: "games/customs-consequences.html", category: "Cultural Games", ageGroup: "14+", icon: "fa-landmark" },
+             { id: "constitution-champions", title: "Constitution Champions", description: "An engaging quiz and activity game about the South African Constitution.", href: "games/constitution-champions.html", category: "Constitutional Law", ageGroup: "9-13", icon: "fa-trophy" },
+             { id: "kid-konstitution", title: "Kid Konstitution", description: "Simplified concepts of the constitution for younger children.", href: "games/kid-konstitution.html", category: "Constitutional Law", ageGroup: "4-8", icon: "fa-child" },
+             { id: "rights-racer", title: "Rights Racer", description: "Race against time to collect and identify fundamental human rights.", href: "games/rights-racer.html", category: "Constitutional Law", ageGroup: "9-13", icon: "fa-flag-checkered" },
+             { id: "constitution-quest", title: "Constitution Quest", description: "A text-based adventure to find the lost scrolls of the constitution.", href: "games/constitution-quest.html", category: "Constitutional Law", ageGroup: "14+", icon: "fa-scroll" },
+             { id: "constitution-defender", title: "Constitution Defender", description: "Defend the principles of the constitution from waves of misinformation.", href: "games/constitution-defender.html", category: "Constitutional Law", ageGroup: "14+", icon: "fa-shield-halved" },
+             { id: "justice-builder", title: "Justice Builder", description: "Build a fair and just society by making key legal decisions.", href: "games/justice-builder.html", category: "Justice & Law", ageGroup: "14+", icon: "fa-gavel" },
+             { id: "law-layers-quest", title: "Law Layers Quest", description: "Peel back the layers of a complex legal case to find the truth.", href: "games/law-layers-quest.html", category: "Justice & Law", ageGroup: "14+", icon: "fa-layer-group" },
+             { id: "legal-simulator", title: "Legal Simulator", description: "Simulate legal practice by managing cases and clients.", href: "games/legal-simulator.html", category: "Justice & Law", ageGroup: "14+", icon: "fa-briefcase" },
+             { id: "goliaths-reckoning", title: "Goliath's Reckoning", description: "A strategic game based on legal battles against powerful entities.", href: "games/goliaths-reckoning.html", category: "Justice & Law", ageGroup: "14+", icon: "fa-chess-king" },
+             { id: "mythbuster-game", title: "MythBuster Challenge", description: "Debunk common myths about law and culture.", href: "games/mythbuster-game.html", category: "Justice & Law", ageGroup: "9-13", icon: "fa-search" },
+             { id: "satirical-game", title: "The Gavel of Satire", description: "A humorous look at the legal system through satire.", href: "games/satirical-game.html", category: "Justice & Law", ageGroup: "14+", icon: "fa-masks-theater" }
+        ];
 
-            let wizardSelections = { age: null, topic: null };
+        const categories = {
+            "Cultural Games": { icon: "fa-people-roof", color: "text-amber-400" },
+            "Constitutional Law": { icon: "fa-scale-balanced", color: "text-sky-400" },
+            "Justice & Law": { icon: "fa-gavel", color: "text-rose-400" },
+        };
 
-            // --- NAVIGATION ---
-            function showView(viewName) {
-                Object.values(views).forEach(v => v.classList.remove('active'));
-                views[viewName].classList.add('active', 'fade-in');
-            }
+        // --- DOM ELEMENTS ---
+        const selectionArea = document.getElementById('selection-area');
+        const wizardBtn = document.getElementById('start-wizard-btn');
+        const explorerBtn = document.getElementById('explore-games-btn');
+        const wizardSection = document.getElementById('wizard-section');
+        const explorerSection = document.getElementById('explorer-section');
+        const hubHeader = document.getElementById('hub-header');
+        const explorerGrid = document.getElementById('explorer-grid');
 
-            startWizardBtn.addEventListener('click', () => showView('wizard'));
-            startManualBtn.addEventListener('click', () => {
-                showView('catalogue');
-                if (gamesCatalogueContent.innerHTML === '') {
-                     buildManualCatalogue();
-                }
-            });
-            backBtns.forEach(btn => {
-                btn.addEventListener('click', () => {
-                    // Reset wizard on back
-                    wizardResultsContainer.classList.add('hidden');
-                    wizardResultsContainer.innerHTML = '';
-                    wizardSteps.topic.classList.add('hidden');
-                    wizardSteps.age.classList.remove('hidden');
-                    showView('selection');
-                });
-            });
+        // --- CORE FUNCTIONS ---
 
-            // --- WIZARD LOGIC ---
-            wizardSteps.age.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    wizardSelections.age = e.currentTarget.dataset.age;
-                    wizardSteps.age.classList.add('hidden');
-                    wizardSteps.topic.classList.remove('hidden');
-                    wizardSteps.topic.classList.add('fade-in');
-                });
-            });
+        function showExplorer() {
+            selectionArea.classList.add('hidden');
+            hubHeader.classList.add('hidden');
+            explorerSection.classList.remove('hidden');
+            renderManualExplorer(true); // Render expanded by default
+        }
 
-            wizardSteps.topic.querySelectorAll('button').forEach(btn => {
-                btn.addEventListener('click', e => {
-                    wizardSelections.topic = e.currentTarget.dataset.topic;
-                    filterAndDisplayGames();
-                });
-            });
+        function showWizard() {
+            selectionArea.classList.add('hidden');
+            hubHeader.classList.add('hidden');
+            wizardSection.classList.remove('hidden');
+            renderWizardStep('start');
+        }
 
-            function filterAndDisplayGames() {
-                const filteredGames = gamesList.filter(game => {
-                    return game.ageGroup === wizardSelections.age && game.category === wizardSelections.topic;
-                });
+        function showSelectionArea() {
+            wizardSection.classList.add('hidden');
+            explorerSection.classList.add('hidden');
+            selectionArea.classList.remove('hidden');
+            hubHeader.classList.remove('hidden');
+        }
+
+        function renderManualExplorer(expandAll = false) {
+            explorerGrid.innerHTML = '';
+            const groupedGames = gamesList.reduce((acc, game) => {
+                if (!acc[game.category]) acc[game.category] = [];
+                acc[game.category].push(game);
+                return acc;
+            }, {});
+
+            for (const [categoryName, games] of Object.entries(groupedGames)) {
+                const categoryData = categories[categoryName] || { icon: 'fa-gamepad', color: 'text-gray-400' };
+                const categoryCard = document.createElement('div');
+                categoryCard.className = `category-card bg-gray-800 bg-opacity-60 backdrop-blur-md border border-gray-700 rounded-xl shadow-lg overflow-hidden ${expandAll ? 'expanded' : ''}`;
                 
-                wizardSteps.topic.classList.add('hidden');
-                wizardResultsContainer.classList.remove('hidden');
-                wizardResultsContainer.classList.add('fade-in');
-
-                let resultsHtml = `<h2 class="text-4xl game-title text-yellow-300 mb-6 text-center">Here are some games for you!</h2>`;
-                if (filteredGames.length > 0) {
-                    resultsHtml += '<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">';
-                    resultsHtml += filteredGames.map(game => createGameCard(game)).join('');
-                    resultsHtml += '</div>';
-                } else {
-                    resultsHtml += `<p class="text-center text-xl text-gray-400">Oops! No games found for that selection. Try another combination or explore all games!</p>`;
-                }
-                wizardResultsContainer.innerHTML = resultsHtml;
-            }
-
-            // --- MANUAL CATALOGUE LOGIC ---
-            function buildManualCatalogue() {
-                const categories = {};
-                gamesList.forEach(game => {
-                    if (!categories[game.category]) {
-                        categories[game.category] = [];
-                    }
-                    categories[game.category].push(game);
-                });
-
-                let catalogueHtml = '';
-                for (const category in categories) {
-                    catalogueHtml += `
-                        <div class="accordion-item rounded-lg overflow-hidden">
-                            <div class="accordion-header flex justify-between items-center p-4">
-                                <h3 class="text-2xl font-bold">${category}</h3>
-                                <i class="fas fa-chevron-down accordion-icon transition-transform"></i>
-                            </div>
-                            <div class="accordion-content">
-                                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                                    ${categories[category].map(game => createGameCard(game)).join('')}
-                                </div>
-                            </div>
+                const itemsHtml = games.map(game => `
+                    <a href="${game.href}" class="flex items-center p-4 bg-gray-900 bg-opacity-50 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group">
+                        <i class="fas ${game.icon} ${categoryData.color} mr-4 fa-lg"></i>
+                        <div class="flex-1">
+                            <h4 class="font-bold text-lg text-gray-200 group-hover:text-white">${game.title}</h4>
+                            <p class="text-sm text-gray-400">${game.description}</p>
+                            <div class="text-xs text-indigo-400 font-bold mt-2">AGE: ${game.ageGroup}</div>
                         </div>
-                    `;
-                }
-                gamesCatalogueContent.innerHTML = catalogueHtml;
-
-                gamesCatalogueContent.querySelectorAll('.accordion-header').forEach(header => {
-                    header.addEventListener('click', () => {
-                        const item = header.parentElement;
-                        item.classList.toggle('active');
-                    });
-                });
-            }
-
-            function createGameCard(game) {
-                return `
-                    <a href="${game.href}" class="game-card block bg-gray-800 rounded-lg p-6 hover:bg-gray-700 hover:scale-105 transition-transform duration-300">
-                        <div class="flex items-center text-3xl text-yellow-400 mb-4">
-                            <i class="fas ${game.icon} mr-4"></i>
-                            <h4 class="font-bold text-xl">${game.title}</h4>
-                        </div>
-                        <p class="text-gray-400">${game.description}</p>
-                        <div class="text-xs text-indigo-400 font-bold mt-4">AGE: ${game.ageGroup}</div>
                     </a>
+                `).join('');
+
+                categoryCard.innerHTML = `
+                    <div class="category-header flex justify-between items-center p-5 cursor-pointer">
+                        <div class="flex items-center">
+                            <i class="fas ${categoryData.icon} ${categoryData.color} fa-2x mr-4"></i>
+                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="category-content px-5 pb-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-700">
+                            ${itemsHtml}
+                        </div>
+                    </div>
                 `;
+                
+                categoryCard.querySelector('.category-header').addEventListener('click', () => {
+                    categoryCard.classList.toggle('expanded');
+                });
+
+                explorerGrid.appendChild(categoryCard);
             }
-        });
+        }
+
+        function renderWizardStep(stepId) {
+            let htmlContent = '';
+            if (stepId === 'start') {
+                htmlContent = `
+                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
+                        <div class="flex justify-between items-center mb-6">
+                             <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700"><i class="fas fa-arrow-left mr-2"></i> Back</button>
+                            <span class="text-gray-400">Step 1 of 2</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center text-white mb-8">Who is playing?</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-age="4-8"><i class="fas fa-child text-blue-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 4-8</h3></div>
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-age="9-13"><i class="fas fa-user-graduate text-green-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 9-13</h3></div>
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-age="14+"><i class="fas fa-user-tie text-purple-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 14+</h3></div>
+                        </div>
+                    </div>`;
+            }
+            wizardSection.innerHTML = htmlContent;
+            attachWizardListeners();
+        }
+        
+        function attachWizardListeners() {
+            const backBtn = document.getElementById('wizard-back-btn');
+            if (backBtn) backBtn.addEventListener('click', showSelectionArea);
+            // Add more listeners for wizard options as logic is built out
+        }
+
+        // --- INITIAL EVENT LISTENERS ---
+        explorerBtn.addEventListener('click', showExplorer);
+        wizardBtn.addEventListener('click', showWizard);
+        
+        const explorerBackBtn = document.getElementById('explorer-back-btn');
+        if(explorerBackBtn) explorerBackBtn.addEventListener('click', showSelectionArea);
+        
+        // --- Load Sidebar ---
+        fetch('sidebar.html')
+            .then(response => response.text())
+            .then(data => {
+                document.getElementById('sidebar-container').innerHTML = data;
+            })
+            .catch(error => console.error('Error loading sidebar:', error));
+    });
     </script>
 </body>
 </html>
