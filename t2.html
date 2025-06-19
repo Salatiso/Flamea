@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQ4B Mockup: Interactive Dossier</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Share Tech Mono', monospace;
+            overflow: hidden;
+            height: 100vh;
+            background-color: #111827; /* bg-gray-900 */
+        }
+        .dossier-container {
+            display: flex;
+            height: 100vh;
+        }
+        .dossier-nav {
+            width: 280px;
+            background-color: #1f2937; /* bg-gray-800 */
+            border-right: 1px solid #374151; /* border-gray-700 */
+            padding: 2rem;
+            flex-shrink: 0;
+        }
+        .nav-button {
+            display: block;
+            width: 100%;
+            text-align: left;
+            padding: 0.75rem 1rem;
+            margin-bottom: 0.5rem;
+            background: transparent;
+            color: #9ca3af; /* text-gray-400 */
+            border: 1px solid transparent;
+            border-radius: 0.375rem;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+        .nav-button:hover {
+            background-color: #374151; /* bg-gray-700 */
+            color: #e5e7eb; /* text-gray-200 */
+        }
+        .nav-button.active {
+            background-color: #16a34a; /* bg-green-600 */
+            color: white;
+            font-weight: bold;
+        }
+        .dossier-content {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .tab-content { display: none; }
+        .tab-content.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        /* Timeline styles for dossier theme */
+        .timeline-infographic {
+            border-left: 2px solid #4ade80;
+            padding-left: 1.5rem;
+        }
+        .timeline-entry {
+            position: relative;
+            margin-bottom: 2rem;
+        }
+        .timeline-entry::before {
+            content: '';
+            position: absolute;
+            left: -33px; /* Adjust to align with the border */
+            top: 5px;
+            width: 12px;
+            height: 12px;
+            border-radius: 50%;
+            background-color: #4ade80;
+        }
+    </style>
+</head>
+<body>
+    <div class="dossier-container">
+        <nav class="dossier-nav">
+            <h2 class="text-xl font-bold text-white mb-6 font-roboto">CASE FILE: TQ4B</h2>
+            <button class="nav-button active" data-tab="home">01: Personal Correspondence</button>
+            <button class="nav-button" data-tab="court-tracker">02: Legal Chronology</button>
+            <button class="nav-button" data-tab="longitudinal-study">03: Generational Timeline</button>
+            <button class="nav-button" data-tab="research">04: Research Data</button>
+            <button class="nav-button" data-tab="login">XX: Access Control</button>
+        </nav>
+        <main class="dossier-content">
+            <div id="home" class="tab-content active">
+                <!-- Content from index.html -->
+                <h2 class="text-3xl font-bold font-roboto mb-4 text-green-400">A Letter to My Son</h2>
+                <p class="text-gray-300">Nyana, this page is my gift to you... I want you to know the truth, to understand the lengths I went to for you, and to make your own decisions with clarity.</p>
+            </div>
+            <div id="court-tracker" class="tab-content">
+                 <h2 class="text-3xl font-bold font-roboto mb-4 text-green-400">Court Case Tracker</h2>
+                 <div class="timeline-infographic">
+                    <!-- JS will populate this -->
+                 </div>
+            </div>
+             <div id="longitudinal-study" class="tab-content">
+                 <h2 class="text-3xl font-bold font-roboto mb-4 text-green-400">Longitudinal Study Timeline</h2>
+                 <div class="timeline-infographic">
+                    <!-- JS will populate this -->
+                 </div>
+            </div>
+             <div id="research" class="tab-content">
+                <h2 class="text-3xl font-bold font-roboto mb-4 text-green-400">Research Repository</h2>
+                <p><strong>Thesis</strong>: Systemic gender bias in South African family courts...</p>
+                 <!-- Links here -->
+            </div>
+             <div id="login" class="tab-content">
+                 <h2 class="text-3xl font-bold font-roboto mb-4 text-green-400">Secure Access</h2>
+                 <!-- Login form here -->
+            </div>
+        </main>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const tabs = document.querySelectorAll('.nav-button');
+            const contents = document.querySelectorAll('.tab-content');
+
+            tabs.forEach(tab => {
+                tab.addEventListener('click', () => {
+                    tabs.forEach(item => item.classList.remove('active'));
+                    tab.classList.add('active');
+                    const target = tab.getAttribute('data-tab');
+                    contents.forEach(content => {
+                        content.classList.remove('active');
+                        if (content.id === target) {
+                            content.classList.add('active');
+                        }
+                    });
+                });
+            });
+
+            // Timelines for dossier
+            const courtTimelineData = [
+                { date: "2017-06-15", label: "Jun 2017", text: "Mpho told Lonwabo she was pregnant; Lonwabo expressed commitment to co-parenting.", link: "research/Correspondence_Sons_Mother_2009_2021.pdf" },
+                { date: "2018-02-28", label: "Feb 2018", text: "Sazi born via C-section, premature at 36–37 weeks.", link: "research/BuggZ_Health_Records_2009_2021.pdf" },
+                 { date: "2019-01-01", label: "Jan 2019", text: "Lonwabo initiated custody case for equal rights.", link: "research/Court_Case_2019_Lonwabo_vs_Sons_Mother.html" },
+            ];
+
+             const studyTimelineData = [
+                { date: "1956-01-01", label: "1956", text: "Lonwabo’s father born in Nqabane, Transkei.", link: "research/Family_Background_Your_Parents.html" },
+                { date: "1993-01-01", label: "1993", text: "Lonwabo’s father died.", link: "research/The_Homeschooling_Father_Full.html" },
+                { date: "2018-02-28", label: "Feb 2018", text: "Sazi born.", link: "research/BuggZ_Health_Records_2009_2021.pdf" },
+            ];
+
+            function setupDossierTimeline(containerId, data) {
+                const container = document.querySelector(`#${containerId} .timeline-infographic`);
+                container.innerHTML = '';
+                data.forEach(item => {
+                    const entry = document.createElement('div');
+                    entry.className = 'timeline-entry';
+                    entry.innerHTML = `
+                        <h4 class="font-bold text-lg text-white">${item.label}</h4>
+                        <p class="text-gray-400">${item.text} <a href="${item.link}" class="text-blue-400 hover:underline">[Source]</a></p>
+                    `;
+                    container.appendChild(entry);
+                });
+            }
+            setupDossierTimeline('court-tracker', courtTimelineData);
+            setupDossierTimeline('longitudinal-study', studyTimelineData);
+        });
+    </script>
+</body>
+</html>

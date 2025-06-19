@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TQ4B Mockup: Split-Screen Storyline</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            overflow: hidden;
+            font-family: 'Open Sans', sans-serif;
+        }
+        .split-screen-container {
+            display: flex;
+            height: 100vh;
+            background-color: #111827;
+            color: #d1d5db;
+        }
+        .timeline-panel {
+            width: 320px;
+            flex-shrink: 0;
+            background-color: #1f2937;
+            padding: 1.5rem;
+            overflow-y: auto;
+            border-right: 1px solid #374151;
+        }
+        .content-panel {
+            flex-grow: 1;
+            padding: 2rem;
+            overflow-y: auto;
+        }
+        .timeline-event {
+            padding: 1rem;
+            margin-bottom: 0.5rem;
+            border-left: 3px solid transparent;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+        .timeline-event:hover {
+            background-color: #374151;
+        }
+        .timeline-event.active {
+            border-left-color: #4ade80;
+            background-color: #374151;
+        }
+        .content-section { display: none; }
+        .content-section.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body>
+    <div class="split-screen-container">
+        <aside class="timeline-panel">
+            <h2 class="text-xl font-bold font-roboto mb-4">Master Storyline</h2>
+            <div id="master-timeline">
+                <!-- JS will populate this -->
+            </div>
+        </aside>
+        <main class="content-panel">
+            <div id="content-display">
+                <!-- JS will update this -->
+            </div>
+        </main>
+    </div>
+    <script>
+        // JS logic for Split Screen
+        document.addEventListener('DOMContentLoaded', function() {
+            const masterTimelineData = [
+                 { id: 'intro', date: 'Welcome', title: 'A Letter to My Son' },
+                 { id: 'event1', date: '1956', title: 'Lonwabo’s father born' },
+                 { id: 'event2', date: 'Jun 2017', title: 'Pregnancy Announcement' },
+                 { id: 'event3', date: 'Feb 2018', title: 'Sazi Born' },
+                 { id: 'event4', date: 'Jan 2019', title: 'Custody Case Initiated' },
+            ];
+
+            const contentData = {
+                'intro': `<h2>A Letter to My Son, Nyana...</h2><p>Nyana, this page is my gift to you... With all my love, Your Father.</p>`,
+                'event1': `<h2>1956: A Father's Beginning</h2><p>Lonwabo’s father was born in Nqabane, Transkei, into a world shaped by deep traditions and the looming shadow of apartheid...</p>`,
+                 'event2': `<h2>June 2017: A New Chapter</h2><p>Mpho told Lonwabo she was pregnant; Lonwabo expressed commitment to co-parenting.</p>`,
+                 'event3': `<h2>February 2018: The Arrival of Sazi</h2><p>Sazi was born via C-section, premature at 36–37 weeks, bringing both joy and new challenges.</p>`,
+                 'event4': `<h2>January 2019: The Legal Battle Begins</h2><p>Lonwabo initiated a custody case to fight for his equal rights as a father.</p>`,
+            };
+
+            const timelineContainer = document.getElementById('master-timeline');
+            const contentDisplay = document.getElementById('content-display');
+
+            masterTimelineData.forEach((event, index) => {
+                const eventEl = document.createElement('div');
+                eventEl.className = 'timeline-event';
+                if(index === 0) eventEl.classList.add('active');
+                eventEl.dataset.target = event.id;
+                eventEl.innerHTML = `<p class="font-bold">${event.date}</p><p class="text-sm text-gray-400">${event.title}</p>`;
+                timelineContainer.appendChild(eventEl);
+            });
+            
+            contentDisplay.innerHTML = contentData['intro'];
+
+            document.querySelectorAll('.timeline-event').forEach(el => {
+                el.addEventListener('click', function() {
+                    document.querySelectorAll('.timeline-event').forEach(e => e.classList.remove('active'));
+                    this.classList.add('active');
+                    const targetId = this.dataset.target;
+                    contentDisplay.innerHTML = contentData[targetId];
+                });
+            });
+        });
+    </script>
+</body>
+</html>
