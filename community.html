@@ -3,239 +3,195 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Community Hub - Flamea</title>
-    <link href="/assets/css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <style>
-        .community-bg {
-            background: linear-gradient(to bottom, #111827, #1a3c34);
-            background-size: cover;
-            background-position: center;
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-        .card:hover {
-            transform: scale(1.02);
-            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
-        }
-        .btn-green:hover {
-            background-color: #38a169;
-        }
-        .social-icon {
-            color: #60a5fa;
-            margin-right: 0.5rem;
-        }
-        .social-icon:hover {
-            color: #3b82f6;
-        }
-    </style>
+    <title>Flamea Community Hub</title>
+    <link rel="stylesheet" href="assets/css/style.min.css">
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
+    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex h-screen">
-        <!-- Standardized Sidebar -->
+<body class="font-sans">
+    <div class="main-container">
         <div id="sidebar-placeholder"></div>
-
-        <!-- Main Content Area -->
-        <main class="main-content flex-1 p-6 community-bg flex flex-col justify-center">
-            <!-- Community Hub Panel -->
-            <div id="community-hub" class="content-panel active">
-                <div class="text-box bg-gray-800 bg-opacity-80 p-6 rounded-lg shadow-md text-center mb-6">
-                    <h2 class="text-5xl font-bold font-roboto mb-4 text-green-400">Community Hub</h2>
-                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Connect, engage, and grow with the Flamea community.</p>
-                </div>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-h-[calc(100vh-200px)]">
-                    <!-- Left Column: Forum Countdown and Poll Results -->
-                    <div class="flex flex-col gap-6">
-                        <div class="card bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-2xl font-bold mb-4 text-green-400">The Flamea Forum is Coming!</h3>
-                            <p class="text-gray-300 mb-4">A safe space for fathers to connect, share, and support each other.</p>
-                            <div class="flex justify-center gap-4 text-center text-gray-200">
-                                <div><span class="text-2xl font-bold">00</span><br>Days</div>
-                                <div><span class="text-2xl font-bold">00</span><br>Hours</div>
-                                <div><span class="text-2xl font-bold">00</span><br>Minutes</div>
-                                <div><span class="text-2xl font-bold">00</span><br>Seconds</div>
+        <main class="main-content p-8">
+            <div class="container mx-auto">
+                <section class="mb-16">
+                    <h1 class="text-5xl font-bold font-roboto text-white text-center">Community Hub</h1>
+                    <p class="text-xl text-gray-400 mt-3 text-center max-w-3xl mx-auto">Connect, engage, and grow with the Flamea community.</p>
+                </section>
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                    <div id="create-post-container" class="hidden">
+                        <h2 class="text-2xl font-bold text-white mb-4">Start a Discussion</h2>
+                        <form id="create-post-form" class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <div class="mb-4">
+                                <label for="post-title" class="block text-sm font-medium text-gray-300 mb-1">Discussion Title</label>
+                                <input type="text" id="post-title" class="form-input w-full" placeholder="What's on your mind?">
                             </div>
-                            <button class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg mt-4 hover:bg-green-700">Join the discussion!</button>
-                        </div>
-                        <div class="card bg-gray-800 p-6 rounded-lg shadow-md flex-grow">
-                            <h3 class="text-2xl font-bold mb-4 text-green-400">Live Poll Results</h3>
-                            <p class="text-gray-300">Visual results will be displayed here.</p>
+                            <div class="mb-4">
+                                <label for="post-content" class="block text-sm font-medium text-gray-300 mb-1">Your Thoughts</label>
+                                <textarea id="post-content" class="form-input w-full min-h-[150px]" placeholder="Share your thoughts..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">Post Discussion</button>
+                        </form>
+                    </div>
+                    <div id="forum-login-prompt">
+                        <h2 class="text-2xl font-bold text-white mb-4">The Flamea Forum is Coming!</h2>
+                        <p class="text-gray-400 mb-4">A safe space for fathers to connect, share, and support each other.</p>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700 text-center">
+                            <p class="text-gray-300 mb-4">Join the discussion!</p>
+                            <a href="login.html" class="btn btn-primary">Log In or Register</a>
                         </div>
                     </div>
-                    <!-- Right Column: Vote on Topics, Get In Touch, Follow Us -->
-                    <div class="flex flex-col gap-6">
-                        <div class="card bg-gray-800 p-6 rounded-lg shadow-md">
-                            <h3 class="text-2xl font-bold mb-4 text-green-400">Vote on Topics</h3>
-                            <p class="text-gray-300 mb-4">Your voice matters. Help us decide what to talk about first.</p>
-                            <p class="text-gray-400">Loading poll...</p>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Live Poll Results</h2>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <p class="text-gray-400">Visual results will be displayed here.</p>
                         </div>
-                        <div class="grid grid-cols-3 gap-4">
-                            <div class="col-span-2 card bg-gray-800 p-6 rounded-lg shadow-md">
-                                <h3 class="text-2xl font-bold mb-4 text-green-400">Get In Touch</h3>
-                                <form id="contact-form" action="https://formspree.io/f/xanjbvge" method="POST">
-                                    <input type="hidden" name="_to" value="admin@flamea.org">
-                                    <select name="category" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                        <option>General Feedback</option>
-                                        <option>Tool/Game Suggestion</option>
-                                        <option>Template Suggestion</option>
-                                        <option>Training Topic Request</option>
-                                        <option>Share My Story</option>
-                                        <option>Collaborate or Donate</option>
-                                        <option>Other...</option>
-                                    </select>
-                                    <input type="text" name="name" placeholder="Name" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <input type="email" name="email" placeholder="Email" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200">
-                                    <textarea name="message" placeholder="Your Message" class="w-full p-2 mb-4 bg-gray-700 rounded text-gray-200" rows="3"></textarea>
-                                    <label class="flex items-center mb-4 text-gray-300">
-                                        <input type="checkbox" name="anonymous" class="mr-2"> Submit Anonymously
-                                    </label>
-                                    <button type="submit" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit</button>
-                                </form>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Vote on Topics</h2>
+                        <div class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <p class="text-gray-400">Your voice matters. Help us decide what to talk about first.</p>
+                            <p class="text-gray-400 mt-4">Loading poll...</p>
+                        </div>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Get In Touch</h2>
+                        <form class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <div class="mb-4">
+                                <label for="contact-reason" class="block text-sm font-medium text-gray-300 mb-1">Reason for Contact</label>
+                                <select id="contact-reason" class="form-select w-full">
+                                    <option>General Feedback</option>
+                                    <option>Tool/Game Suggestion</option>
+                                    <option>Template Suggestion</option>
+                                    <option>Training Topic Request</option>
+                                    <option>Share My Story</option>
+                                    <option>Collaborate or Donate</option>
+                                    <option>Other...</option>
+                                </select>
                             </div>
-                            <div class="col-span-1 card bg-gray-800 p-6 rounded-lg shadow-md">
-                                <h3 class="text-2xl font-bold mb-4 text-green-400">Quick Website Feedback</h3>
-                                <form id="feedback-form" action="https://formspree.io/f/xanjbvge" method="POST">
-                                    <input type="hidden" name="_to" value="admin@flamea.org">
-                                    <input type="hidden" name="_subject" value="Website Feedback">
-                                    <!-- Question 1 -->
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-gray-300 text-sm">How easy was it to find what you were looking for?</label>
-                                        <select name="ease" class="w-full p-2 rounded bg-gray-700 text-gray-200">
-                                            <option>Very Easy</option>
-                                            <option>Easy</option>
-                                            <option>Neutral</option>
-                                            <option>Difficult</option>
-                                            <option>Very Difficult</option>
-                                        </select>
-                                    </div>
-                                    <!-- Question 2 -->
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-gray-300 text-sm">How valuable are the tools and resources to you?</label>
-                                        <select name="value" class="w-full p-2 rounded bg-gray-700 text-gray-200">
-                                            <option>Extremely Valuable</option>
-                                            <option>Valuable</option>
-                                            <option>Somewhat Valuable</option>
-                                            <option>Not Very Valuable</option>
-                                            <option>Not Valuable At All</option>
-                                        </select>
-                                    </div>
-                                    <!-- Question 3 -->
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-gray-300 text-sm">Does the website make you feel empowered?</label>
-                                        <select name="empowerment" class="w-full p-2 rounded bg-gray-700 text-gray-200">
-                                            <option>Strongly Agree</option>
-                                            <option>Agree</option>
-                                            <option>Neutral</option>
-                                            <option>Disagree</option>
-                                            <option>Strongly Disagree</option>
-                                        </select>
-                                    </div>
-                                    <!-- Question 4 -->
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-gray-300 text-sm">How would you rate the visual design and appeal?</label>
-                                        <select name="design" class="w-full p-2 rounded bg-gray-700 text-gray-200">
-                                            <option>Excellent</option>
-                                            <option>Good</option>
-                                            <option>Average</option>
-                                            <option>Poor</option>
-                                            <option>Very Poor</option>
-                                        </select>
-                                    </div>
-                                    <!-- Question 5 -->
-                                    <div class="mb-4">
-                                        <label class="block mb-2 text-gray-300 text-sm">How would you rate the website overall?</label>
-                                        <select name="overall" class="w-full p-2 rounded bg-gray-700 text-gray-200">
-                                            <option>Excellent</option>
-                                            <option>Good</option>
-                                            <option>Average</option>
-                                            <option>Poor</option>
-                                            <option>Very Poor</option>
-                                        </select>
-                                    </div>
-                                    <button type="submit" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg w-full hover:bg-green-700">Submit Feedback</button>
-                                </form>
-                                <hr class="border-gray-700 my-4">
-                                <h3 class="text-2xl font-bold mb-4 text-green-400">Follow Us</h3>
-                                <p><i class="fab fa-x-twitter social-icon"></i><a href="#" class="text-blue-400 hover:underline">@flamea2024</a></p>
-                                <p><i class="fab fa-instagram social-icon"></i><a href="#" class="text-blue-400 hover:underline">@Flamea2024</a></p>
-                                <p><i class="fas fa-envelope social-icon"></i><a href="mailto:admin@flamea.org" class="text-blue-400 hover:underline">admin@flamea.org</a></p>
+                            <div class="mb-4">
+                                <label for="contact-name" class="block text-sm font-medium text-gray-300 mb-1">Name (Optional)</label>
+                                <input type="text" id="contact-name" class="form-input w-full" placeholder="Your name">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-email" class="block text-sm font-medium text-gray-300 mb-1">Email (Optional)</label>
+                                <input type="email" id="contact-email" class="form-input w-full" placeholder="Your email">
+                            </div>
+                            <div class="mb-4">
+                                <label for="contact-message" class="block text-sm font-medium text-gray-300 mb-1">Message</label>
+                                <textarea id="contact-message" class="form-input w-full min-h-[150px]" placeholder="Your message"></textarea>
+                            </div>
+                            <div class="mb-4">
+                                <label class="flex items-center text-gray-300">
+                                    <input type="checkbox" id="anonymous" class="mr-2">
+                                    Submit Anonymously
+                                </label>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full" data-modal-target="confirm-submission-modal">Submit</button>
+                        </form>
+                    </div>
+                    <div>
+                        <h2 class="text-2xl font-bold text-white mb-4">Quick Website Feedback</h2>
+                        <form class="bg-gray-800 p-6 rounded-lg border border-gray-700">
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">How easy was it to find what you were looking for?</label>
+                                <select class="form-select w-full">
+                                    <option>Very Easy</option>
+                                    <option>Easy</option>
+                                    <option>Neutral</option>
+                                    <option>Difficult</option>
+                                    <option>Very Difficult</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">How valuable are the tools and resources to you?</label>
+                                <select class="form-select w-full">
+                                    <option>Extremely Valuable</option>
+                                    <option>Valuable</option>
+                                    <option>Somewhat Valuable</option>
+                                    <option>Not Very Valuable</option>
+                                    <option>Not Valuable At All</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">Does the website make you feel empowered?</label>
+                                <select class="form-select w-full">
+                                    <option>Strongly Agree</option>
+                                    <option>Agree</option>
+                                    <option>Neutral</option>
+                                    <option>Disagree</option>
+                                    <option>Strongly Disagree</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">How would you rate the visual design and appeal?</label>
+                                <select class="form-select w-full">
+                                    <option>Excellent</option>
+                                    <option>Good</option>
+                                    <option>Average</option>
+                                    <option>Poor</option>
+                                    <option>Very Poor</option>
+                                </select>
+                            </div>
+                            <div class="mb-4">
+                                <label class="block text-sm font-medium text-gray-300 mb-1">How would you rate the website overall?</label>
+                                <select class="form-select w-full">
+                                    <option>Excellent</option>
+                                    <option>Good</option>
+                                    <option>Average</option>
+                                    <option>Poor</option>
+                                    <option>Very Poor</option>
+                                </select>
+                            </div>
+                            <button type="submit" class="btn btn-primary w-full">Submit Feedback</button>
+                        </form>
+                        <div class="mt-6 text-center">
+                            <h2 class="text-2xl font-bold text-white mb-4">Follow Us</h2>
+                            <div class="flex justify-center gap-4">
+                                <a href="https://www.youtube.com/@Flamea2024" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white"><i class="fab fa-youtube text-2xl"></i> @flamea2024</a>
+                                <a href="https://x.com/Flamea2024" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white"><i class="fab fa-x-twitter text-2xl"></i> @Flamea2024</a>
+                                <a href="mailto:[email protected]" class="text-gray-400 hover:text-white"><i class="fas fa-envelope text-2xl"></i> [email protected]</a>
                             </div>
                         </div>
                     </div>
-                </div>
+                </section>
+                <section id="posts-list-container" class="mt-12">
+                    <h2 class="text-2xl font-bold text-white mb-4">Recent Discussions</h2>
+                    <p class="text-center text-gray-500 py-8">Loading discussions...</p>
+                </section>
             </div>
         </main>
     </div>
-    <!-- Confirmation Modal -->
-    <div id="confirm-modal" class="fixed inset-0 bg-black bg-opacity-50 hidden flex justify-center items-center">
-        <div class="bg-gray-800 p-6 rounded-lg shadow-md">
-            <h3 class="text-2xl font-bold mb-4 text-green-400">Confirm Submission</h3>
-            <p class="text-gray-300 mb-4">By submitting, you agree to our Privacy Policy and allow Flamea to use your feedback to improve the community.</p>
-            <div class="flex justify-between gap-2">
-                <button id="confirm-send" class="btn-green bg-green-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-green-700">Confirm & Send</button>
-                <button id="cancel-modal" class="bg-red-600 text-white font-bold py-2 px-4 rounded-lg hover:bg-red-700">Cancel</button>
+    <div id="confirm-submission-modal" class="custom-modal">
+        <div class="bg-white p-6 rounded-lg max-w-md w-full">
+            <h2 class="text-2xl font-bold mb-4">Confirm Submission</h2>
+            <p class="text-gray-600 mb-6">By submitting, you agree to our <a href="privacy-policy.html" class="text-blue-600 hover:underline">Privacy Policy</a> and allow Flamea to use your feedback to improve the community.</p>
+            <div class="flex justify-end gap-4">
+                <button class="btn btn-primary" data-modal-close>Confirm & Send</button>
+                <button class="btn btn-secondary" data-modal-close>Cancel</button>
             </div>
         </div>
     </div>
-    <!-- Scripts -->
-    <script type="module" src="/assets/js/main.js"></script>
-    <script type="module" src="/assets/js/auth.js"></script>
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const contactForm = document.getElementById('contact-form');
-            const feedbackForm = document.getElementById('feedback-form');
-            const confirmModal = document.getElementById('confirm-modal');
-            const confirmSendBtn = document.getElementById('confirm-send');
-            const cancelBtn = document.getElementById('cancel-modal');
-
-            let currentForm = null;
-            let formData = {};
-
-            // Handle Contact Form Submission
-            contactForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                currentForm = contactForm;
-                formData = new FormData(contactForm);
-                confirmModal.classList.remove('hidden');
-            });
-
-            // Handle Feedback Form Submission
-            feedbackForm.addEventListener('submit', (e) => {
-                e.preventDefault();
-                currentForm = feedbackForm;
-                formData = new FormData(feedbackForm);
-                confirmModal.classList.remove('hidden');
-            });
-
-            // Confirm Submission
-            confirmSendBtn.addEventListener('click', async () => {
-                try {
-                    const response = await fetch(currentForm.action, {
-                        method: 'POST',
-                        body: formData,
-                        headers: { 'Accept': 'application/json' }
-                    });
-                    if (response.ok) {
-                        alert('Submission sent successfully!');
-                        currentForm.reset();
-                    } else {
-                        throw new Error('Submission failed');
-                    }
-                } catch (error) {
-                    alert('Failed to send submission. Please try again.');
-                }
-                confirmModal.classList.add('hidden');
-            });
-
-            // Cancel Submission
-            cancelBtn.addEventListener('click', () => {
-                confirmModal.classList.add('hidden');
-            });
-        });
+        // Initialize Firebase
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
+        const app = firebase.initializeApp(firebaseConfig);
+        window.flamea = {
+            auth: firebase.auth(),
+            db: firebase.firestore()
+        };
     </script>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/community.js"></script>
 </body>
 </html>
