@@ -1,6 +1,3 @@
-// This script assumes a Firebase configuration is available via main.js or a similar global setup.
-// For now, it will use localStorage and alert for non-logged-in users.
-
 document.addEventListener('DOMContentLoaded', async () => {
     // --- Basic Elements ---
     const bookTitleHeader = document.getElementById('book-title-header');
@@ -42,20 +39,19 @@ document.addEventListener('DOMContentLoaded', async () => {
         'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
         'know-yourself': { title: "Getting to know yourself as a South African, Unravelling Xhosa History", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
         'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika, Yazi inombo yomXhosasi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
-        'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_Ozifundiselayo_Ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' }
-        'safety-first-essentials-for-your-ohs-career-journey': { title: "Safety First: Essentials for Your OHS Career Journey", path: 'assets/books/BK-SF_Career.txt', cover: 'assets/images/SF_Career.jpg' }
+        'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_Ozifundiselayo_Ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' },
+        'safety-first-essentials-for-your-ohs-career-journey': { title: "Safety First: Essentials for Your OHS Career Journey", path: 'assets/books/BK-SF_Career.txt', cover: 'assets/images/SF_Career.jpg' },
         'safety-first-the-essentials-of-ohs-plans': { title: "Safety First: The Essentials of OHS Plans", path: 'assets/books/BK-SF_Plans.txt', cover: 'assets/images/SF_Plans.jpg' }
     };
 
     // --- CORE FUNCTIONS ---
 
-    /**
-     * Initializes the reader by getting book ID from URL and loading data.
-     */
     async function init() {
         const urlParams = new URLSearchParams(window.location.search);
         bookId = urlParams.get('book');
+        console.log('Book ID:', bookId); // Debugging log
         const bookData = bookDatabase[bookId];
+        console.log('Book Data:', bookData); // Debugging log
 
         if (!bookData) {
             displayError('Book not found.');
@@ -75,62 +71,55 @@ document.addEventListener('DOMContentLoaded', async () => {
         // Pre-fetch book content
         try {
             const response = await fetch(bookData.path);
+            console.log('Fetch response:', response); // Debugging log
             if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
             bookText = await response.text();
-            console.log('Book text loaded:', bookText.slice(0, 200)); // Show first 200 chars
+            console.log('Book text loaded:', bookText.substring(0, 100)); // Debugging log
         } catch (error) {
             console.error('Error fetching book content:', error);
             displayError('Could not load book text.');
         }
     }
 
-    /**
-     * Hides cover and shows the paginated text content.
-     */
     function startReading() {
+        console.log('Starting reading with bookText:', bookText.substring(0, 100)); // Debugging log
+        console.log('Book content element:', bookContent); // Debugging log
+        if (!bookText) {
+            displayError('Book text not loaded. Please try again.');
+            return;
+        }
         bookCoverView.style.display = 'none';
         contentContainer.style.display = 'block';
-        // Convert newlines to <br> for HTML display
-        bookContent.innerHTML = bookText.replace(/\n/g, '<br>');
+        bookContent.innerHTML = bookText;
         applySettings();
         calculatePages();
         goToPage(1);
     }
 
-    /**
-     * Calculates total pages based on scroll width and client width.
-     */
     function calculatePages() {
         if (settings.viewMode === 'single') {
             totalPages = 1;
         } else {
-             // Ensure content is visible to measure
             const initialDisplay = contentContainer.style.display;
             contentContainer.style.display = 'block';
-
-            const scrollWidth = bookContent.scrollWidth;
-            const clientWidth = bookContent.clientWidth;
-            totalPages = Math.max(1, Math.round(scrollWidth / clientWidth));
-            
-            contentContainer.style.display = initialDisplay;
+            setTimeout(() => {
+                const scrollWidth = bookContent.scrollWidth;
+                const clientWidth = bookContent.clientWidth;
+                totalPages = Math.max(1, Math.round(scrollWidth / clientWidth));
+                contentContainer.style.display = initialDisplay;
+                updatePagination();
+            }, 50);
         }
-        updatePagination();
     }
-    
-    /**
-     * Navigates to a specific page.
-     */
+
     function goToPage(pageNumber) {
         currentPage = Math.max(1, Math.min(pageNumber, totalPages));
         if (settings.viewMode === 'columns') {
-             bookContent.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
+            bookContent.style.transform = `translateX(-${(currentPage - 1) * 100}%)`;
         }
         updatePagination();
     }
 
-    /**
-     * Updates the progress bar and page indicator text.
-     */
     function updatePagination() {
         pageIndicator.textContent = `Page ${currentPage} of ${totalPages}`;
         const progress = totalPages > 1 ? ((currentPage - 1) / (totalPages - 1)) * 100 : 100;
@@ -139,36 +128,21 @@ document.addEventListener('DOMContentLoaded', async () => {
         nextPageBtn.disabled = currentPage === totalPages;
     }
 
-    /**
-     * Applies all current settings (font, view mode) to the content.
-     */
     function applySettings() {
-        // Font size
         bookContent.style.fontSize = `${settings.fontSize}px`;
-        
-        // Font family
         bookContent.classList.remove('font-lora', 'font-opensans', 'font-robotoslab');
         bookContent.classList.add(settings.fontFamily);
-
-        // View mode
         if (settings.viewMode === 'single') {
             bookContent.classList.add('single-page');
             bookContent.style.transform = 'translateX(0)';
         } else {
             bookContent.classList.remove('single-page');
         }
-        
-        // Theme
         document.documentElement.className = settings.theme;
         themeToggleBtn.innerHTML = settings.theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
-
-        // Recalculate pages as settings change layout
         setTimeout(calculatePages, 50);
     }
-    
-    /**
-     * Displays an error message in the reader.
-     */
+
     function displayError(message) {
         loadingSpinner.style.display = 'none';
         contentContainer.style.display = 'block';
@@ -176,8 +150,7 @@ document.addEventListener('DOMContentLoaded', async () => {
     }
 
     // --- EVENT LISTENERS ---
-    
-    // Navigation
+
     prevPageBtn.addEventListener('click', () => goToPage(currentPage - 1));
     nextPageBtn.addEventListener('click', () => goToPage(currentPage + 1));
     window.addEventListener('resize', () => {
@@ -185,11 +158,10 @@ document.addEventListener('DOMContentLoaded', async () => {
         goToPage(currentPage);
     });
 
-    // Toolbar
     viewSingleBtn.addEventListener('click', () => {
         settings.viewMode = 'single';
         applySettings();
-        goToPage(1); // Reset to first page in single view
+        goToPage(1);
     });
     viewColumnsBtn.addEventListener('click', () => {
         settings.viewMode = 'columns';
@@ -214,14 +186,14 @@ document.addEventListener('DOMContentLoaded', async () => {
         applySettings();
     });
 
-    // Authentication modal
+    // Authentication modal (if present)
     const authModal = document.getElementById('auth-modal');
     if (authModal) {
         document.getElementById('close-auth-modal').addEventListener('click', () => {
             authModal.classList.add('hidden');
         });
     }
-    
+
     // --- Start the application ---
     init();
 });
