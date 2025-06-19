@@ -3,69 +3,68 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - Resource Locator</title>
+    <title>Resource Locator - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container {
-            display: grid;
-            grid-template-columns: 280px 1fr;
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+        /* Base styles from our established template */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
         }
-        .main-content {
-            overflow-y: auto;
-            background-color: #111827;
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+        .form-input {
+            background-color: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <!-- FIX: Added main-container div -->
-    <div class="main-container">
-        <!-- ===== Standardized Sidebar (Loaded via JS) ===== -->
-        <div id="sidebar-placeholder"></div>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <div class="animated-gradient fixed inset-0 z-0"></div>
+    
+    <div class="relative z-10 flex">
+        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
 
-        <!-- Main Content Area -->
-        <!-- FIX: Added main-content class and centering div -->
-        <main class="main-content p-8">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-10">
-                    <h1 class="text-4xl font-bold font-roboto">Resource Locator</h1>
-                    <p class="text-lg text-gray-400 mt-2">Find Family Advocates, courts, father-friendly NGOs, and other essential services.</p>
+        <main class="flex-1">
+            <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+                <div id="hub-header" class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Resource Locator</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Find Family Advocates, courts, and other essential services near you.</p>
+                    </div>
                 </div>
-                
-                <div class="bg-gray-800 rounded-lg shadow-xl p-6">
+
+                <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 shadow-2xl border border-gray-700">
                     <div class="flex flex-col md:flex-row gap-4 mb-6">
-                        <input type="text" id="search-input" placeholder="Search by name, city, or province..." class="w-full flex-grow p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                        <select id="type-filter" class="p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-blue-500 focus:border-blue-500">
-                            <option value="">All Resource Types</option>
-                            <option value="court">Court</option>
-                            <option value="family-advocate">Family Advocate</option>
-                            <option value="ngo-father">Father/Men NGOs</option>
-                            <option value="ngo-family">Family/Child NGOs</option>
-                            <option value="social-work">Social Work</option>
-                            <option value="legal-aid">Legal Aid</option>
+                        <input type="text" id="search-input" placeholder="Search by name, city, or province..." class="form-input w-full flex-grow p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                        <select id="type-filter" class="form-input p-3 rounded-lg focus:ring-blue-500 focus:border-blue-500">
+                            <!-- Options populated by JS -->
                         </select>
                         <button id="search-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Search</button>
                     </div>
                     
                     <div id="list-container" class="max-h-[65vh] overflow-y-auto space-y-4 pr-4">
                         <p id="list-placeholder" class="text-center text-gray-500 p-8">Enter a search term to find resources.</p>
-                        <!-- Results will be injected by locator.js -->
+                        <!-- Results will be injected here -->
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/locator.js"></script>
+    
+    <script src="assets/js/locator.js" type="module"></script>
+    <script>
+        // Sidebar Loader
+        fetch('sidebar.html')
+            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
+            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
+            .catch(error => console.error('Error loading sidebar:', error));
+    </script>
 </body>
 </html>
