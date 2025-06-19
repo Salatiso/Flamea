@@ -1,69 +1,100 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Forms & Documents Hub</title>
-    <!-- Production-ready Tailwind CSS -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
         .card {
             transition: transform 0.3s ease, box-shadow 0.3s ease;
+            will-change: transform;
         }
         .card:hover {
-            transform: translateY(-5px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            transform: translateY(-8px);
+            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
         }
-        .bg-header {
-            background: linear-gradient(135deg, #1a202c 0%, #2d3748 100%);
+        .category-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.7s ease-in-out;
+        }
+        .category-card.expanded .category-content {
+            max-height: 1000px; /* Adjust as needed */
+        }
+        .category-card.expanded .fa-chevron-down {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="bg-gray-100 min-h-screen">
-    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-        <!-- Header with dark background -->
-        <div id="hub-header" class="bg-header text-white rounded-xl p-6 mb-8 shadow-lg">
-            <h1 class="text-4xl font-bold text-center">Forms & Documents Hub</h1>
-            <p class="text-xl text-center mt-4">Answer a few questions or browse directly to find the exact document you need to take action.</p>
-        </div>
+<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
+    <!-- Dynamic Background -->
+    <div class="animated-gradient fixed inset-0 z-0"></div>
+    <div class="relative z-10">
 
-        <!-- Selection Area (Wizard vs Explorer) -->
-        <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <!-- Simple Start Wizard Card -->
-            <div id="start-wizard-btn" class="card bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center cursor-pointer">
-                <div class="bg-blue-100 p-3 rounded-full mb-4">
-                    <i class="fas fa-magic text-blue-500 text-3xl"></i>
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+            <!-- Header Section -->
+            <div id="hub-header" class="text-center mb-12">
+                <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Forms & Documents Hub</h1>
+                    <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Answer a few questions or browse directly to find the exact document you need to take action.</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-2">Simple Start Wizard</h3>
-                <p class="text-gray-600 mb-4">Not sure where to begin? We’ll guide you.</p>
             </div>
 
-            <!-- Manual Explorer Card -->
-            <div id="explore-forms-btn" class="card bg-white rounded-xl shadow-lg p-6 flex flex-col items-center text-center cursor-pointer">
-                <div class="bg-green-100 p-3 rounded-full mb-4">
-                    <i class="fas fa-folder-open text-green-500 text-3xl"></i>
+            <!-- Selection Area (Wizard vs Manual) -->
+            <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
+                <!-- Simple Start Wizard Card -->
+                <div id="start-wizard-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
+                    <div class="bg-blue-500 bg-opacity-20 text-blue-400 p-4 rounded-full mb-5">
+                        <i class="fas fa-magic text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Simple Start Wizard</h3>
+                    <p class="text-gray-400">Not sure where to begin? We’ll guide you to the right form.</p>
                 </div>
-                <h3 class="text-2xl font-bold mb-2">Manual Explorer</h3>
-                <p class="text-gray-600 mb-4">Know what you need? Browse all forms.</p>
+
+                <!-- Manual Explorer Card -->
+                <div id="explore-forms-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
+                    <div class="bg-green-500 bg-opacity-20 text-green-400 p-4 rounded-full mb-5">
+                        <i class="fas fa-folder-open text-4xl"></i>
+                    </div>
+                    <h3 class="text-2xl font-bold text-white mb-2">Manual Explorer</h3>
+                    <p class="text-gray-400">Know what you need? Browse all categories and forms.</p>
+                </div>
             </div>
-        </div>
 
-        <!-- Wizard Section -->
-        <div id="wizard-section" class="hidden">
-            <!-- Wizard steps injected here by JS -->
-        </div>
+            <!-- Wizard Section -->
+            <div id="wizard-section" class="hidden mt-12">
+                <!-- Wizard steps will be injected here -->
+            </div>
 
-        <!-- Manual Explorer Section -->
-        <div id="explorer-section" class="hidden">
-            <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-                <!-- Categories will populate here -->
+            <!-- Manual Explorer Section -->
+            <div id="explorer-section" class="hidden mt-12">
+                 <button id="explorer-back-btn" class="mb-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500">
+                    <i class="fas fa-arrow-left mr-3"></i>
+                    Back to Selection
+                </button>
+                <div id="explorer-grid" class="space-y-6">
+                    <!-- Categories will be populated here -->
+                </div>
             </div>
         </div>
     </div>
 
     <script>
-        // --- Data Definitions ---
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- DATA DEFINITIONS ---
         const resources = {
             'Informal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html' },
             'Formal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Formal.html' },
@@ -90,197 +121,159 @@
         };
 
         const categories = {
-            "Parental Rights": ["Informal Parental Rights Letter", "Formal Parental Rights Letter", "Final Letter on Constitutional Rights"],
-            "Conflict Resolution": ["Mediation Request Letter", "Conflict Resolution Worksheet", "Comprehensive Parenting Plan"],
-            "Court Documents": ["General Affidavit"],
-            "School Letters": ["General Letter to School", "Request for School Transfer"],
-            "Complaints": ["Legal Practice Council Complaint", "Magistrates Commission Complaint", "Public Protector Complaint", "Commission for Gender Equality Complaint", "SA Law Reform Commission Request"],
-            "Agreements": ["Cohabitation Agreement", "Budgeting Tool for Couples", "Child Support Agreement"],
-            "Training": ["The SA Constitution", "The Children's Act", "Co-Parenting 101", "Family Law Overview", "A Father's Shield"]
+            "Parental Rights": { icon: "fa-child-reaching", color: "text-purple-400", items: ["Informal Parental Rights Letter", "Formal Parental Rights Letter", "Final Letter on Constitutional Rights"] },
+            "Conflict Resolution": { icon: "fa-handshake-angle", color: "text-teal-400", items: ["Mediation Request Letter", "Conflict Resolution Worksheet", "Comprehensive Parenting Plan"] },
+            "Court Documents": { icon: "fa-gavel", color: "text-orange-400", items: ["General Affidavit"] },
+            "School Letters": { icon: "fa-school-flag", color: "text-yellow-400", items: ["General Letter to School", "Request for School Transfer"] },
+            "Formal Complaints": { icon: "fa-bullhorn", color: "text-red-400", items: ["Legal Practice Council Complaint", "Magistrates Commission Complaint", "Public Protector Complaint", "Commission for Gender Equality Complaint", "SA Law Reform Commission Request"] },
+            "Agreements": { icon: "fa-file-signature", color: "text-green-400", items: ["Cohabitation Agreement", "Budgeting Tool for Couples", "Child Support Agreement"] },
+            "Essential Training": { icon: "fa-graduation-cap", color: "text-blue-400", items: ["The SA Constitution", "The Children's Act", "Co-Parenting 101", "Family Law Overview", "A Father's Shield"] }
         };
 
-        // --- DOM Elements ---
+        // --- DOM ELEMENTS ---
         const selectionArea = document.getElementById('selection-area');
         const wizardBtn = document.getElementById('start-wizard-btn');
         const explorerBtn = document.getElementById('explore-forms-btn');
         const wizardSection = document.getElementById('wizard-section');
         const explorerSection = document.getElementById('explorer-section');
         const hubHeader = document.getElementById('hub-header');
+        const explorerGrid = document.getElementById('explorer-grid');
 
-        // --- Initialize Manual Explorer ---
-        function renderManualExplorer() {
-            const container = explorerSection.querySelector('.grid');
-            container.innerHTML = '';
-            
-            for (const [categoryName, items] of Object.entries(categories)) {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = 'card bg-white rounded-xl shadow-lg p-6';
-                categoryCard.innerHTML = `
-                    <h3 class="text-xl font-semibold mb-4">${categoryName}</h3>
-                    <div class="space-y-3">
-                        ${items.map(item => `
-                            <a href="${resources[item].type === 'form' ? 'assets/templates/' + resources[item].file : resources[item].url}" 
-                               class="flex items-center p-3 bg-gray-50 rounded-lg hover:bg-gray-100 transition">
-                                <i class="fas ${resources[item].type === 'form' ? 'fa-file-alt text-blue-500' : 'fa-graduation-cap text-yellow-500'} mr-3"></i>
-                                <span>${item}</span>
-                            </a>
-                        `).join('')}
-                    </div>
-                `;
-                container.appendChild(categoryCard);
-            }
-        }
+        // --- CORE FUNCTIONS ---
 
-        // --- Wizard Logic ---
-        wizardBtn.addEventListener('click', () => {
-            selectionArea.classList.add('hidden');
-            hubHeader.classList.add('hidden');
-            wizardSection.classList.remove('hidden');
-            
-            // Render Step 1
-            wizardSection.innerHTML = `
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <div class="flex justify-between items-center mb-6">
-                        <button id="wizard-back" class="text-blue-500 font-semibold flex items-center">
-                            <i class="fas fa-arrow-left mr-2"></i> Back
-                        </button>
-                        <span>Step 1 of 2</span>
-                    </div>
-                    
-                    <h2 class="text-2xl font-bold mb-6">What is the nature of your current challenge?</h2>
-                    
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="wizard-option card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-next="step2a">
-                            <div class="bg-blue-100 p-3 rounded-full mb-4">
-                                <i class="fas fa-users text-blue-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-2">Issues with the other parent</h3>
-                            <p class="text-gray-600">Disputes, communication, or agreements about your child.</p>
-                        </div>
-                        
-                        <div class="wizard-option card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-next="step2b">
-                            <div class="bg-green-100 p-3 rounded-full mb-4">
-                                <i class="fas fa-landmark text-green-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-2">Issues with an institution</h3>
-                            <p class="text-gray-600">Complaints against government, schools, or legal professionals.</p>
-                        </div>
-                        
-                        <div class="wizard-option card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-next="step2c">
-                            <div class="bg-yellow-100 p-3 rounded-full mb-4">
-                                <i class="fas fa-handshake text-yellow-500 text-2xl"></i>
-                            </div>
-                            <h3 class="text-xl font-semibold mb-2">Creating an agreement</h3>
-                            <p class="text-gray-600">For budgets, cohabitation, or child support.</p>
-                        </div>
-                    </div>
-                </div>
-            `;
-            
-            // Attach event listeners to options
-            document.querySelectorAll('.wizard-option').forEach(option => {
-                option.addEventListener('click', (e) => {
-                    const nextStep = e.currentTarget.dataset.next;
-                    renderWizardStep(nextStep);
-                });
-            });
-        });
-
-        function renderWizardStep(stepId) {
-            // Step 2a: Issues with other parent
-            if (stepId === 'step2a') {
-                wizardSection.innerHTML = `
-                    <div class="bg-white rounded-xl shadow-lg p-6">
-                        <div class="flex justify-between items-center mb-6">
-                            <button id="wizard-back" class="text-blue-500 font-semibold flex items-center">
-                                <i class="fas fa-arrow-left mr-2"></i> Back
-                            </button>
-                            <span>Step 2 of 2</span>
-                        </div>
-                        
-                        <h2 class="text-2xl font-bold mb-6">What is your main goal?</h2>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                            <div class="wizard-result card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-result="establish_rights">
-                                <div class="bg-blue-100 p-3 rounded-full mb-4">
-                                    <i class="fas fa-file-signature text-blue-500 text-2xl"></i>
-                                </div>
-                                <h3 class="text-xl font-semibold mb-2">Establish parental rights</h3>
-                            </div>
-                            
-                            <div class="wizard-result card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-result="resolve_conflict">
-                                <div class="bg-green-100 p-3 rounded-full mb-4">
-                                    <i class="fas fa-people-arrows text-green-500 text-2xl"></i>
-                                </div>
-                                <h3 class="text-xl font-semibold mb-2">Resolve a dispute</h3>
-                            </div>
-                            
-                            <div class="wizard-result card bg-gray-50 rounded-lg p-6 flex flex-col items-center text-center cursor-pointer" data-result="court_action">
-                                <div class="bg-yellow-100 p-3 rounded-full mb-4">
-                                    <i class="fas fa-gavel text-yellow-500 text-2xl"></i>
-                                </div>
-                                <h3 class="text-xl font-semibold mb-2">Prepare for court</h3>
-                            </div>
-                        </div>
-                    </div>
-                `;
-            }
-            
-            // ... Additional steps for other paths (step2b, step2c)
-            
-            // Attach back button
-            document.getElementById('wizard-back').addEventListener('click', () => {
-                wizardSection.innerHTML = '';
-                wizardBtn.click();
-            });
-            
-            // Attach result handlers
-            document.querySelectorAll('.wizard-result').forEach(result => {
-                result.addEventListener('click', (e) => {
-                    const resultKey = e.currentTarget.dataset.result;
-                    showResults(resultKey);
-                });
-            });
-        }
-
-        function showResults(resultKey) {
-            // Results display logic
-            wizardSection.innerHTML = `
-                <div class="bg-white rounded-xl shadow-lg p-6">
-                    <h2 class="text-2xl font-bold mb-6">Your Action Plan</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="text-xl font-semibold mb-4">Recommended Forms</h3>
-                            <!-- Results would populate here -->
-                        </div>
-                        <button id="restart-wizard" class="mt-6 bg-blue-500 text-white py-2 px-4 rounded-lg">Start Over</button>
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('restart-wizard').addEventListener('click', () => {
-                wizardSection.classList.add('hidden');
-                selectionArea.classList.remove('hidden');
-                hubHeader.classList.remove('hidden');
-            });
-        }
-
-        // --- Initialize Manual Explorer ---
-        explorerBtn.addEventListener('click', () => {
+        function showExplorer() {
             selectionArea.classList.add('hidden');
             hubHeader.classList.add('hidden');
             explorerSection.classList.remove('hidden');
-            renderManualExplorer();
-        });
+            renderManualExplorer(true); // Render expanded by default
+        }
 
-        // --- Back button for explorer ---
-        document.addEventListener('click', (e) => {
-            if (e.target.id === 'explorer-back') {
-                explorerSection.classList.add('hidden');
-                selectionArea.classList.remove('hidden');
-                hubHeader.classList.remove('hidden');
+        function showWizard() {
+            selectionArea.classList.add('hidden');
+            hubHeader.classList.add('hidden');
+            wizardSection.classList.remove('hidden');
+            renderWizardStep('start');
+        }
+
+        function showSelectionArea() {
+            wizardSection.classList.add('hidden');
+            explorerSection.classList.add('hidden');
+            selectionArea.classList.remove('hidden');
+            hubHeader.classList.remove('hidden');
+        }
+
+        function renderManualExplorer(expandAll = false) {
+            explorerGrid.innerHTML = '';
+            for (const [categoryName, data] of Object.entries(categories)) {
+                const categoryCard = document.createElement('div');
+                categoryCard.className = `category-card bg-gray-800 bg-opacity-60 backdrop-blur-md border border-gray-700 rounded-xl shadow-lg overflow-hidden ${expandAll ? 'expanded' : ''}`;
+                
+                const itemsHtml = data.items.map(item => {
+                    const resource = resources[item];
+                    if (!resource) return '';
+                    const isForm = resource.type === 'form';
+                    const link = isForm ? `assets/templates/${resource.file}` : resource.url;
+                    const icon = isForm ? 'fa-file-alt' : 'fa-graduation-cap';
+                    const iconColor = isForm ? 'text-blue-400' : 'text-yellow-400';
+
+                    return `
+                        <a href="${link}" target="_blank" class="flex items-center p-4 bg-gray-900 bg-opacity-50 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group">
+                            <i class="fas ${icon} ${iconColor} mr-4 fa-lg"></i>
+                            <span class="text-gray-300 group-hover:text-white">${item}</span>
+                        </a>
+                    `;
+                }).join('');
+
+                categoryCard.innerHTML = `
+                    <div class="category-header flex justify-between items-center p-5 cursor-pointer">
+                        <div class="flex items-center">
+                            <i class="fas ${data.icon} ${data.color} fa-2x mr-4"></i>
+                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
+                        </div>
+                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
+                    </div>
+                    <div class="category-content px-5 pb-5">
+                        <div class="space-y-3 pt-4 border-t border-gray-700">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+                
+                // Event listener for expanding/collapsing individual categories
+                categoryCard.querySelector('.category-header').addEventListener('click', () => {
+                    categoryCard.classList.toggle('expanded');
+                });
+
+                explorerGrid.appendChild(categoryCard);
             }
-        });
+        }
+
+        function renderWizardStep(stepId) {
+            // This is a placeholder for your wizard logic.
+            // It's crucial to attach event listeners *after* the HTML is created.
+            let htmlContent = '';
+
+            if (stepId === 'start') {
+                htmlContent = `
+                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
+                        <div class="flex justify-between items-center mb-6">
+                            <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
+                                <i class="fas fa-arrow-left mr-2"></i> Back
+                            </button>
+                            <span class="text-gray-400">Step 1 of 2</span>
+                        </div>
+                        <h2 class="text-3xl font-bold text-center text-white mb-8">What is your current challenge?</h2>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                           <!-- Wizard Options Here -->
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2a">
+                                <i class="fas fa-users text-blue-400 text-4xl mb-4"></i>
+                                <h3 class="text-xl font-semibold text-white">Issues with other parent</h3>
+                           </div>
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2b">
+                                <i class="fas fa-landmark text-green-400 text-4xl mb-4"></i>
+                               <h3 class="text-xl font-semibold text-white">Issues with an institution</h3>
+                           </div>
+                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2c">
+                                <i class="fas fa-handshake text-yellow-400 text-4xl mb-4"></i>
+                               <h3 class="text-xl font-semibold text-white">Creating an agreement</h3>
+                           </div>
+                        </div>
+                    </div>
+                `;
+            }
+            // Add other steps as 'else if' blocks...
+
+            wizardSection.innerHTML = htmlContent;
+            
+            // Re-attach event listeners for the newly created elements
+            attachWizardListeners();
+        }
+        
+        function attachWizardListeners() {
+            const backBtn = document.getElementById('wizard-back-btn');
+            if (backBtn) {
+                backBtn.addEventListener('click', showSelectionArea);
+            }
+
+            document.querySelectorAll('.wizard-option').forEach(option => {
+                option.addEventListener('click', (e) => {
+                    // Placeholder for next step logic
+                    alert(`Navigating to: ${e.currentTarget.dataset.next}`);
+                });
+            });
+        }
+
+
+        // --- INITIAL EVENT LISTENERS ---
+        explorerBtn.addEventListener('click', showExplorer);
+        wizardBtn.addEventListener('click', showWizard);
+        
+        const explorerBackBtn = document.getElementById('explorer-back-btn');
+        if(explorerBackBtn) {
+             explorerBackBtn.addEventListener('click', showSelectionArea);
+        }
+
+    });
     </script>
 </body>
 </html>
