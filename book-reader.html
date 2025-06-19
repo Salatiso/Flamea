@@ -1,78 +1,140 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Library</title>
+    <title>Flamea Book Reader</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/turn.js/4.1.0/turn.min.js"></script>
-    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js" type="module"></script>
-    <script src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js" nomodule></script>
+
+    <style>
+        #book-reader-container {
+            display: flex;
+            height: calc(100vh - 100px);
+        }
+
+        #sidebar {
+            width: 250px;
+            background-color: #1f2937;
+            padding: 1rem;
+            transition: width 0.3s;
+            overflow-y: auto;
+        }
+
+        #sidebar.closed {
+            width: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+
+        #content-sidebar {
+            cursor: pointer;
+        }
+        
+        #reader-main {
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        #flipbook-container {
+            width: 90vw;
+            height: 80vh;
+            max-width: 1200px;
+        }
+
+        #flipbook .page {
+            background-color: #fff;
+            color: #333;
+            font-family: 'Open Sans', sans-serif;
+            padding: 20px;
+            overflow: auto;
+        }
+        
+        #flipbook .page-wrapper {
+            -webkit-perspective: 2000px;
+            -moz-perspective: 2000px;
+            -ms-perspective: 2000px;
+            -o-perspective: 2000px;
+            perspective: 2000px;
+        }
+
+        #flipbook .hard {
+            background: #ccc !important;
+            color: #333;
+            -webkit-box-shadow: inset 0 0 5px #666;
+            -moz-box-shadow: inset 0 0 5px #666;
+            -o-box-shadow: inset 0 0 5px #666;
+            -ms-box-shadow: inset 0 0 5px #666;
+            box-shadow: inset 0 0 5px #666;
+            font-weight: bold;
+        }
+
+        .toolbar {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+        }
+    </style>
 </head>
-<body class="font-sans">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-        <main class="main-content p-8">
-            <div class="container mx-auto">
-                <section class="mb-12">
-                    <h1 class="text-5xl font-bold font-roboto text-white text-center">Library</h1>
-                    <div class="mt-6 flex justify-center">
-                        <select id="book-select" class="form-select w-full max-w-md">
-                            <option value="">Select a Book</option>
-                        </select>
-                    </div>
-                </section>
-                <section id="cover-view" class="text-center">
-                    <h2 id="book-title" class="text-3xl font-bold text-white mb-4">Select a book to start</h2>
-                    <p id="cover-author" class="text-gray-400 mb-6">by Salatiso</p>
-                    <img id="book-cover-img" src="https://placehold.co/300x450/1f2937/FFFFFF?text=Select+a+Book" alt="Book Cover" class="mx-auto mb-6 w-48 md:w-64 shadow-lg">
-                    <button id="start-reading-btn" class="btn btn-primary" disabled>Start Reading</button>
-                </section>
-                <section id="reader-view" class="hidden">
-                    <div id="book-container" class="relative max-w-4xl mx-auto">
-                        <div id="book" class="shadow-2xl">
-                            <!-- Pages will be dynamically inserted here -->
-                        </div>
-                    </div>
-                    <div class="flex justify-between items-center mt-6 max-w-4xl mx-auto">
-                        <button id="prev-btn" class="btn btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Prev</button>
-                        <div class="text-gray-300">
-                            Page <span id="page-num">1</span> of <span id="total-pages">1</span>
-                        </div>
-                        <button id="next-btn" class="btn btn-secondary">Next<i class="fas fa-arrow-right ml-2"></i></button>
-                    </div>
-                    <div class="flex justify-center gap-4 mt-4">
-                        <button id="font-increase" class="btn btn-secondary"><i class="fas fa-plus"></i> Font Size</button>
-                        <button id="font-decrease" class="btn btn-secondary"><i class="fas fa-minus"></i> Font Size</button>
-                        <button id="zoom-in" class="btn btn-secondary"><i class="fas fa-search-plus"></i> Zoom In</button>
-                        <button id="zoom-out" class="btn btn-secondary"><i class="fas fa-search-minus"></i> Zoom Out</button>
-                        <button id="bookmark-btn" class="btn btn-secondary"><i class="fas fa-bookmark"></i> Bookmark</button>
-                    </div>
-                </section>
+
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="book-reader-container">
+        <aside id="sidebar">
+            <h3 class="text-xl font-bold mb-4">iSazisi (Contents)</h3>
+            <ul id="content-list" class="space-y-2"></ul>
+             <h3 class="text-xl font-bold mt-8 mb-4">Bookmarks & Notes</h3>
+            <ul id="bookmarks-list" class="space-y-2"></ul>
+        </aside>
+
+        <main id="reader-main">
+            <div id="flipbook-container">
+                <div id="flipbook">
+                    <!-- Book pages will be injected here -->
+                </div>
+            </div>
+             <div class="toolbar">
+                <button id="toggle-sidebar-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-bars"></i></button>
+                <button id="prev-page-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-chevron-left"></i></button>
+                <span id="page-indicator">Page 1</span>
+                <button id="next-page-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-chevron-right"></i></button>
+                <button id="zoom-in-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-search-plus"></i></button>
+                <button id="zoom-out-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-search-minus"></i></button>
+                <button id="font-inc-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-font"></i>+</button>
+                <button id="font-dec-btn" class="p-2 bg-gray-700 rounded-full"><i class="fas fa-font"></i>-</button>
+                <button id="bookmark-btn" class="p-2 bg-gray-700 rounded-full"><i class="far fa-bookmark"></i></button>
             </div>
         </main>
     </div>
-    <script>
-        // Initialize Firebase
-        const firebaseConfig = {
-            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
-            authDomain: "flamea.firebaseapp.com",
-            projectId: "flamea",
-            storageBucket: "flamea.firebasestorage.app",
-            messagingSenderId: "681868881622",
-            appId: "1:681868881622:web:d20687c688b2d1d943a377",
-            measurementId: "G-MX7X9JQE51"
-        };
-        const app = firebase.initializeApp(firebaseConfig);
-        window.flamea = {
-            auth: firebase.auth(),
-            db: firebase.firestore()
-        };
-    </script>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/book-reader.js"></script>
+
+     <!-- Pop-up for highlighting -->
+    <div id="highlight-popup" class="hidden absolute bg-gray-800 border border-gray-600 p-2 rounded-lg shadow-lg">
+        <button id="add-note-btn" class="text-white hover:text-yellow-400 mr-2"><i class="fas fa-sticky-note"></i> Add Note</button>
+        <button id="share-btn" class="text-white hover:text-blue-400"><i class="fas fa-share-alt"></i> Share</button>
+    </div>
+
+    <!-- Modal for adding notes -->
+    <div id="note-modal" class="hidden fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center">
+        <div class="bg-gray-800 p-6 rounded-lg shadow-lg w-1/3">
+            <h3 class="text-xl font-bold mb-4">Add a Note</h3>
+            <textarea id="note-input" class="w-full h-32 bg-gray-700 text-white p-2 rounded-md"></textarea>
+            <div class="mt-4 flex justify-end gap-2">
+                <button id="save-note-btn" class="bg-blue-600 text-white py-2 px-4 rounded-lg">Save</button>
+                <button id="cancel-note-btn" class="bg-gray-600 text-white py-2 px-4 rounded-lg">Cancel</button>
+            </div>
+        </div>
+    </div>
+    
+    <script type="module" src="assets/js/book-reader.js"></script>
 </body>
 </html>
