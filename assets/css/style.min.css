@@ -9,3 +9,54 @@
     background-color: #4ade80; /* Green for active link */
     color: #111827;
 }
+
+/* Enhanced Book Reading Styles */
+.book-spread {
+    background: linear-gradient(90deg, 
+        transparent 0%, 
+        transparent 48%, 
+        rgba(0,0,0,0.1) 49%, 
+        rgba(0,0,0,0.2) 50%, 
+        rgba(0,0,0,0.1) 51%, 
+        transparent 52%, 
+        transparent 100%
+    );
+}
+
+.book-page {
+    position: relative;
+    background: var(--page-bg, #fefefe);
+    min-height: 100%;
+}
+
+.dark .book-page {
+    --page-bg: #1f2937;
+}
+
+.page-content {
+    line-height: 1.7;
+    text-align: justify;
+    hyphens: auto;
+    word-wrap: break-word;
+}
+
+.page-number {
+    position: absolute;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.85em;
+    opacity: 0.7;
+}
+
+/* Page turning animation enhancement */
+#book-content {
+    transform-origin: center;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .book-page {
+        padding: 1rem 1.5rem;
+    }
+}
