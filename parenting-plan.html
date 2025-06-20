@@ -57,8 +57,13 @@
         .pdf-cover-page .pdf-footer, .pdf-back-cover-page .pdf-footer { color: #9ca3af; }
         .pdf-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.05; z-index: 0; pointer-events: none; }
     </style>
-    <!-- IMPORTANT: Replace with your actual Google Maps API Key -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=places,geometry&callback=planBuilder.initMap" async defer></script>
+    <!-- 
+        FIX: 
+        1. Added your actual Google Maps API key.
+        2. Changed the callback function to be a globally accessible 'initMap'.
+        3. Added 'async' and 'defer' for optimal loading.
+    -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initMap&async&defer"></script>
 </head>
 
 <body class="bg-gray-900 text-gray-200">
