@@ -1,22 +1,81 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customs & Traditions Hub</title>
-    <link rel="stylesheet" href="styles.css">
+    <!-- ... HEAD CONTENT ... -->
+    <style>
+        /* ADDED CONSISTENT STYLING */
+        .feature-card {
+            @apply bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700;
+            transition: all 0.3s ease-in-out;
+        }
+        .feature-card:hover {
+            @apply border-amber-500 transform -translate-y-1;
+        }
+        .wizard-option {
+            @apply bg-gray-800 p-6 rounded-lg border border-gray-700;
+            transition: all 0.3s ease-in-out;
+        }
+        .wizard-option:hover {
+            @apply border-green-500 transform -translate-y-1;
+        }
+    </style>
 </head>
-<body>
-    <div class="main-content">
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <h1 class="text-4xl font-bold mb-6 text-center">Customs & Traditions Hub</h1>
-                <p class="text-xl text-gray-400 mb-12 text-center">Explore the rich tapestry of our shared heritage to foster unity and understanding.</p>
-                <div id="customs-catalogue" class="space-y-6"></div>
+<body class="bg-gray-900 text-gray-300"> <!-- UPDATED TEXT COLOR -->
+    <div class="main-container">
+        <div id="sidebar-placeholder"></div>
+        
+        <main class="main-content p-6 sm:p-8"> <!-- UPDATED PADDING -->
+            <div class="max-w-7xl mx-auto"> <!-- UPDATED MAX-WIDTH -->
+                <!-- UPDATED HEADER -->
+                <header class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                        <h1 class="text-4xl sm:text-5xl font-bold text-white mb-4">Customs & Traditions Hub</h1>
+                        <p class="text-lg text-gray-300">
+                            Explore the rich tapestry of our shared heritage to foster unity and understanding.
+                        </p>
+                    </div>
+                </header>
+
+                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-12">
+                    <!-- UPDATED CARDS -->
+                    <div id="start-wizard-btn" class="feature-card hover:border-green-500">
+                        <i class="fas fa-magic text-4xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">Cultural Explorer Wizard</h3>
+                        <p class="text-gray-400">Answer a few questions to find and compare customs.</p>
+                    </div>
+                    
+                    <div id="explore-customs-btn" class="feature-card hover:border-blue-500">
+                        <i class="fas fa-book-open text-4xl text-blue-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold text-white mb-2">Manual Customs Browser</h3>
+                        <p class="text-gray-400">Browse all customs by category.</p>
+                    </div>
+                </div>
+
+                <!-- UPDATED WIZARD OPTIONS -->
+                <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg shadow-xl">
+                    <div id="step-1" class="wizard-step">
+                        <h3 class="text-2xl font-bold text-white mb-6 text-center">How would you like to explore?</h3>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                            <div class="wizard-option hover:border-green-500" data-next="2A">
+                                <h4 class="text-xl font-bold text-white mb-2">Learn about a specific culture</h4>
+                                <p class="text-gray-400">Dive deep into customs of one tribe</p>
+                            </div>
+                            <div class="wizard-option hover:border-green-500" data-next="2B">
+                                <h4 class="text-xl font-bold text-white mb-2">Compare customs across cultures</h4>
+                                <p class="text-gray-400">See how practices differ worldwide</p>
+                            </div>
+                        </div>
+                    </div>
+                    <!-- ... REST OF WIZARD ... -->
+                </div>
+
+                <!-- UPDATED BACK BUTTON -->
+                <button id="back-to-selection" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+                    <i class="fas fa-arrow-left mr-3"></i>
+                    Back to Selection
+                </button>
             </div>
-        </section>
+        </main>
     </div>
-    <div id="sidebar-placeholder"></div>
-    <script src="main.js"></script>
 </body>
 </html>
