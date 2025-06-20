@@ -6,7 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const wizardBtn = document.getElementById('start-wizard-btn');
     const explorerBtn = document.getElementById('explore-games-btn');
-    const featuredGameCard = document.getElementById('featured-game-card');
+    const featuredToolCard = document.getElementById('featured-tool-card');
     
     const wizardSection = document.getElementById('wizard-section');
     const explorerSection = document.getElementById('explorer-section');
@@ -14,85 +14,116 @@ document.addEventListener('DOMContentLoaded', () => {
     const backToSelectionWizard = document.getElementById('back-to-selection-wizard');
     const backToSelectionExplorer = document.getElementById('back-to-selection-explorer');
     
-    if (!selectionView || !wizardView || !explorerView) {
-        console.error("A required view container is missing from the DOM.");
-        return;
-    };
+    // Exit if this isn't the games hub page
+    if (!selectionView || !wizardView || !explorerView) return;
 
-    // --- Data: Full Games Database & Wizard Questions ---
+    // --- Data: Full & Corrected Games Database ---
     const gamesDatabase = [
-        { id: 'kid_konstitution', title: 'Kid Konstitution', category: 'constitutional', age: '4-8', href: 'games/kid-konstitution.html', icon: 'fa-child' },
-        { id: 'cultural_dress_up', title: 'Cultural Dress-Up Adventure', category: 'cultural', age: '4-8', href: 'games/cultural-dress-up.html', icon: 'fa-tshirt' },
-        { id: 'rights_racer', title: 'Rights Racer', category: 'constitutional', age: '9-13', href: 'games/rights-racer.html', icon: 'fa-flag-checkered' },
-        { id: 'constitution_crusaders', title: 'Constitution Crusaders', category: 'constitutional', age: '9-13', href: 'games/constitution-crusaders.html', icon: 'fa-map-marked-alt' },
-        { id: 'ancestors_quest', title: 'Ancestor\'s Quest', category: 'cultural', age: '14+', href: 'games/ancestors-quest.html', icon: 'fa-map-signs' },
-        { id: 'justice_builder', title: 'Justice Builder', category: 'legal_concepts', age: '14+', href: 'games/justice-builder.html', icon: 'fa-gavel' },
-        { id: 'mythbuster_game', title: 'Myth-Buster', category: 'satirical', age: '14+', href: 'games/mythbuster-game.html', icon: 'fa-ghost' },
+        { id: 'kid_konstitution', title: 'Kid Konstitution', category: 'constitutional', age: '4-8', href: 'games/kid-konstitution.html' },
+        { id: 'cultural_dress_up', title: 'Cultural Dress-Up Adventure', category: 'cultural', age: '4-8', href: 'games/cultural-dress-up.html' },
+        { id: 'rights_racer', title: 'Rights Racer', category: 'constitutional', age: '9-13', href: 'games/rights-racer.html' },
+        { id: 'constitution_crusaders', title: 'Constitution Crusaders', category: 'constitutional', age: '9-13', href: 'games/constitution-crusaders.html' },
+        { id: 'cultural_connection', title: 'Cultural Connection', category: 'cultural', age: '9-13', href: 'games/cultural-connection.html' },
+        { id: 'my_family_my_clan', title: 'My Family, My Clan', category: 'cultural', age: '9-13', href: 'games/my-family-my-clan.html' },
+        { id: 'ancestors_quest', title: 'Ancestor\'s Quest', category: 'cultural', age: '14+', href: 'games/ancestors-quest.html' },
+        { id: 'constitution_champions', title: 'Constitution Champions', category: 'constitutional', age: '14+', href: 'games/constitution-champions.html' },
+        { id: 'justice_builder', title: 'Justice Builder', category: 'legal_concepts', age: '14+', href: 'games/justice-builder.html' },
+        { id: 'mythbuster_game', title: 'Myth-Buster', category: 'satirical', age: '14+', href: 'games/mythbuster-game.html' },
+        { id: 'satirical_game', title: 'The System: A Satirical Game', category: 'satirical', age: '14+', href: 'games/satirical-game.html' },
+        { id: 'goliaths_reckoning', title: "Goliath's Reckoning", category: 'legal_concepts', age: '14+', href: 'games/goliaths-reckoning.html' },
+        { id: 'law_layers_quest', title: 'Law & Layers Quest', category: 'legal_concepts', age: '9-13', href: 'games/law-layers-quest.html' },
+        { id: 'constitution_quest', title: 'Constitution Quest', category: 'constitutional', age: '9-13', href: 'games/constitution-quest.html' },
+        { id: 'constitution_defender', title: 'Constitution Defender', category: 'legal_concepts', age: '9-13', href: 'games/constitution-defender.html' },
+        { id: 'customs_consequences', title: 'Customs & Consequences', category: 'cultural', age: '14+', href: 'games/customs-consequences.html' },
+        { id: 'legal_simulator', title: 'Legal Simulator', category: 'legal_concepts', age: '14+', href: 'games/legal-simulator.html' }
     ];
 
     const gameCategories = {
-        constitutional: { name: 'Constitutional Law', icon: 'fa-scroll' },
-        legal_concepts: { name: 'Legal Concepts', icon: 'fa-gavel' },
-        cultural: { name: 'Cultural Games', icon: 'fa-landmark' },
-        satirical: { name: 'Satirical & Critical Thinking', icon: 'fa-lightbulb' }
+        constitutional: { name: 'Constitutional Law', icon: 'fa-scroll', color: 'text-yellow-400' },
+        legal_concepts: { name: 'Legal Concepts', icon: 'fa-gavel', color: 'text-indigo-400' },
+        cultural: { name: 'Cultural Games', icon: 'fa-drum', color: 'text-green-400' },
+        satirical: { name: 'Critical Thinking', icon: 'fa-lightbulb', color: 'text-pink-400' }
+    };
+    
+    // This is a reference to a tool from another section, as per the blueprint
+    const constitutionalTrainingTool = {
+        id: 'constitutional_training',
+        title: 'Constitutional Training Course',
+        href: 'training/course-constitution.html',
+        isTool: true
     };
     
     const wizardQuestions = {
-      'start': {
-        question: 'Who is playing?',
-        options: [
-          { text: 'Young Child (4-8)', next: 'age_young' },
-          { text: 'Older Child (9-13)', next: 'age_older' },
-          { text: 'Teen / Adult (14+)', next: 'age_teen' }
-        ]
-      },
-      'age_young': {
-        question: 'What do you want to learn about?',
-        options: [
-          { text: 'My Rights & The Law', results: { age: '4-8', category: 'constitutional' } },
-          { text: 'Different Cultures', results: { age: '4-8', category: 'cultural' } }
-        ]
-      },
-      'age_older': {
-        question: 'What kind of challenge are you looking for?',
-        options: [
-          { text: 'A quiz about the constitution.', results: { age: '9-13', category: 'constitutional' } },
-          { text: 'Exploring legal ideas.', results: { age: '9-13', category: 'legal_concepts' } },
-          { text: 'Learning about traditions.', results: { age: '9-13', category: 'cultural' } }
-        ]
-      },
-      'age_teen': {
-        question: 'What sounds most interesting?',
-        options: [
-          { text: 'Advanced legal challenges.', results: { age: '14+', category: 'legal_concepts' } },
-          { text: 'Exploring cultural traditions.', results: { age: '14+', category: 'cultural' } },
-          { text: 'Thinking critically & having a laugh.', results: { age: '14+', category: 'satirical' } }
-        ]
-      }
+        start: {
+            question: "Who is playing?",
+            options: [
+                { text: "Ages 4-8", next: "learn_4-8" },
+                { text: "Ages 9-13", next: "learn_9-13" },
+                { text: "Ages 14+", next: "learn_14+" }
+            ]
+        },
+        'learn_4-8': {
+            question: "What sounds like the most fun?",
+            options: [
+                { text: "Learning about traditions & culture", results: { age: "4-8", category: "cultural" } },
+                { text: "Learning about our country's rules", results: { age: "4-8", category: "constitutional" } },
+            ]
+        },
+        'learn_9-13': {
+            question: "What kind of challenge are you in the mood for?",
+             options: [
+                { text: "Exploring different cultures", results: { age: "9-13", category: "cultural" } },
+                { text: "A quest about South Africa's Constitution", results: { age: "9-13", category: "constitutional" } },
+                { text: "Simulations about law and justice", results: { age: "9-13", category: "legal_concepts" } }
+            ]
+        },
+        'learn_14+': {
+            question: "What's your main goal right now?",
+             options: [
+                { text: "To understand my cultural duties", results: { age: "14+", category: "cultural" } },
+                { text: "To master my Constitutional rights", results: { age: "14+", category: "constitutional" } },
+                { text: "To learn how the legal system *really* works", results: { age: "14+", category: "legal_concepts" } },
+                { text: "To challenge my thinking with satire", results: { age: "14+", category: "satirical" } }
+            ]
+        }
     };
-    
+
     let wizardHistory = [];
 
-    const showView = (viewId) => {
-        [selectionView, wizardView, explorerView].forEach(view => {
-            if (view) view.classList.toggle('active', view.id === viewId);
-        });
+    const showView = (viewName) => {
+        [selectionView, wizardView, explorerView].forEach(v => v.classList.remove('active'));
+        document.getElementById(`${viewName}-view`).classList.add('active');
     };
 
-    const renderFeaturedGame = () => {
-        if (!featuredGameCard) return;
-        const featuredGame = gamesDatabase[Math.floor(Math.random() * gamesDatabase.length)]; // Random featured game
+    const renderFeaturedTool = () => {
+        if (!featuredToolCard) return;
+        const TWO_DAYS_MS = 48 * 60 * 60 * 1000;
+        let featuredGameData = JSON.parse(localStorage.getItem('featuredGameData')) || {};
+        const now = new Date().getTime();
         
-        featuredGameCard.innerHTML = `
-            <i class="fas fa-star text-4xl text-amber-400 mb-4"></i>
-            <h3 class="text-2xl font-bold mb-2">Featured Game</h3>
-            <p class="text-gray-400 flex-grow mb-4">${featuredGame.title}</p>
-            <a href="${featuredGame.href}" class="bg-amber-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-amber-500 transition-colors w-full">Play Now</a>
+        let needsUpdate = !featuredGameData.id || !featuredGameData.timestamp || (now - featuredGameData.timestamp > TWO_DAYS_MS);
+
+        if (needsUpdate) {
+            const allGameIds = gamesDatabase.map(g => g.id);
+            let nextIndex = 0;
+            if(featuredGameData.id) {
+                const currentIndex = allGameIds.indexOf(featuredGameData.id);
+                nextIndex = (currentIndex + 1) % allGameIds.length;
+            }
+            const newFeaturedId = allGameIds[nextIndex];
+            featuredGameData = { id: newFeaturedId, timestamp: now };
+            localStorage.setItem('featuredGameData', JSON.stringify(featuredGameData));
+        }
+
+        const featuredGame = gamesDatabase.find(g => g.id === featuredGameData.id);
+        
+        featuredToolCard.innerHTML = `
+            <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
+            <h4 class="text-2xl font-bold text-white">Featured Game</h4>
+            <p class="text-gray-400 mb-4 font-semibold">${featuredGame.title}</p>
+            <a href="${featuredGame.href}" class="inline-block bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">Play Now</a>
         `;
-        featuredGameCard.addEventListener('click', (e) => {
-            e.preventDefault();
-            window.location.href = featuredGame.href;
-        });
+        featuredToolCard.onclick = () => { window.location.href = featuredGame.href; };
     };
     
     const buildExplorer = () => {
@@ -105,15 +136,15 @@ document.addEventListener('DOMContentLoaded', () => {
                 explorerHtml += `
                 <div class="accordion-item bg-gray-800 rounded-lg">
                     <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
-                        <h3 class="text-xl font-bold text-white"><i class="fas ${category.icon} mr-4 text-teal-400"></i>${category.name}</h3>
-                        <i class="fas fa-chevron-down text-white accordion-icon"></i>
+                        <h3 class="text-xl font-bold text-white"><i class="fas ${category.icon} mr-4 ${category.color}"></i>${category.name}</h3>
+                        <i class="fas fa-chevron-down text-white transition-transform"></i>
                     </button>
                     <div class="accordion-content px-6 pb-6">
                         <ul class="space-y-3 mt-4">
                             ${gamesInCategory.map(game => `
                                 <li>
                                     <a href="${game.href}" class="flex items-center p-3 rounded-md hover:bg-gray-700 transition-colors">
-                                        <i class="fas ${game.icon || 'fa-gamepad'} mr-3 text-gray-400"></i>
+                                        <i class="fas fa-gamepad mr-3 text-gray-400"></i>
                                         <span>${game.title}</span> <span class="ml-auto text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded-full">${game.age}</span>
                                     </a>
                                 </li>
@@ -128,6 +159,8 @@ document.addEventListener('DOMContentLoaded', () => {
         explorerSection.querySelectorAll('.accordion-header').forEach(header => {
             header.addEventListener('click', () => {
                 header.parentElement.classList.toggle('active');
+                 const icon = header.querySelector('.fa-chevron-down');
+                icon.style.transform = header.parentElement.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
             });
         });
     };
@@ -136,10 +169,8 @@ document.addEventListener('DOMContentLoaded', () => {
         const step = wizardQuestions[stepId];
         if (!step) return;
 
-        wizardHistory.push(stepId);
-
         wizardSection.innerHTML = `
-            <div class="wizard-step active text-center">
+            <div class="text-center mb-6">
                 <p class="text-amber-400 font-semibold mb-2">Step ${wizardHistory.length} of 2</p>
                 <h2 class="text-3xl font-bold text-white">${step.question}</h2>
             </div>
@@ -151,21 +182,22 @@ document.addEventListener('DOMContentLoaded', () => {
                 `).join('')}
             </div>
             <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
-                 <button id="wizard-back-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50 transition-colors">Back</button>
+                 <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-600 hover:bg-gray-500">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
             </div>
         `;
         
-        wizardSection.querySelectorAll('.wizard-option').forEach(btn => btn.addEventListener('click', handleWizardOption));
-        const backBtn = wizardSection.querySelector('#wizard-back-btn');
-        if (backBtn) {
-            backBtn.addEventListener('click', goBack);
-            backBtn.disabled = wizardHistory.length <= 1;
-        }
+        document.querySelectorAll('.wizard-option').forEach(btn => btn.addEventListener('click', handleWizardOption));
+        const backBtn = document.getElementById('wizard-back-btn');
+        backBtn.addEventListener('click', goBack);
+        backBtn.disabled = wizardHistory.length <= 1;
     };
     
     const handleWizardOption = (e) => {
         const button = e.currentTarget;
         const nextStepId = button.dataset.next;
+        wizardHistory.push(nextStepId);
         if (nextStepId === 'results') {
             const results = JSON.parse(button.dataset.results);
             renderWizardResults(results);
@@ -175,63 +207,69 @@ document.addEventListener('DOMContentLoaded', () => {
     };
     
     const renderWizardResults = (filters) => {
-        wizardHistory.push('results');
-        const recommendedGames = gamesDatabase.filter(game => game.age === filters.age && game.category === filters.category);
-        
+        let recommendedGames = gamesDatabase.filter(game => game.age === filters.age && game.category === filters.category);
+        if (recommendedGames.length < 2) {
+             const fallbackGames = gamesDatabase.filter(game => game.age === filters.age && game.category !== filters.category);
+             recommendedGames.push(...fallbackGames.slice(0, 2 - recommendedGames.length));
+        }
+        const recommendations = [...new Set(recommendedGames)].slice(0, 2);
+        // Always add the training tool
+        recommendations.push(constitutionalTrainingTool);
+
         wizardSection.innerHTML = `
-            <div class="wizard-step active text-center">
+            <div class="text-center">
                 <h2 class="text-3xl font-bold text-white mb-4">Your Recommendations</h2>
-                <p class="text-gray-400 mb-8">Based on your answers, we suggest these games.</p>
+                <p class="text-gray-400 mb-8">Based on your answers, we suggest these activities.</p>
             </div>
             <div class="space-y-4">
-                ${recommendedGames.length > 0 ? recommendedGames.map(item => `
+                ${recommendations.map(item => {
+                    const icon = item.isTool ? 'fa-book-open' : 'fa-gamepad';
+                    const label = item.isTool ? 'Training' : 'Game';
+                    const color = item.isTool ? 'bg-blue-600' : 'bg-teal-600';
+                    return `
                     <a href="${item.href}" class="block bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-colors">
                         <div class="flex items-center">
                              <div class="mr-4">
-                                <span class="bg-teal-600 px-3 py-1 rounded-full text-xs font-bold">Game</span>
+                                <span class="${color} px-3 py-1 rounded-full text-xs font-bold">${label}</span>
                             </div>
                             <h4 class="font-bold text-white flex-grow">${item.title}</h4>
-                            <i class="fas ${item.icon || 'fa-gamepad'} text-gray-400"></i>
+                            <i class="fas ${icon} text-gray-400"></i>
                         </div>
                     </a>
-                `).join('') : '<p class="text-center text-gray-400">No specific games match. Try exploring manually!</p>'}
+                `}).join('')}
             </div>
              <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
-                 <button id="wizard-back-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500">Back</button>
+                 <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-600 hover:bg-gray-500">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
             </div>
         `;
         document.getElementById('wizard-back-btn').addEventListener('click', goBack);
     };
 
     const goBack = () => {
-        wizardHistory.pop(); // Remove current step
-        if (wizardHistory.length > 0) {
-            const previousStepId = wizardHistory.pop();
-            renderWizardStep(previousStepId);
-        } else {
-            showView('selection-view');
+        if (wizardHistory.length > 1) {
+            wizardHistory.pop();
+            renderWizardStep(wizardHistory[wizardHistory.length - 1]);
         }
     };
     
-    // --- Initial Setup and Event Listeners ---
-    if (wizardBtn) {
-        wizardBtn.addEventListener('click', () => {
-            wizardHistory = [];
-            renderWizardStep('start');
-            showView('wizard-view');
-        });
-    }
+    const startWizard = () => {
+        wizardHistory = ['start'];
+        renderWizardStep('start');
+        showView('wizard');
+    };
 
-    if (explorerBtn) {
-        explorerBtn.addEventListener('click', () => {
-            buildExplorer();
-            showView('explorer-view');
-        });
-    }
+    wizardBtn.addEventListener('click', startWizard);
+    explorerBtn.addEventListener('click', () => {
+        showView('explorer');
+        explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.add('active'));
+    });
     
-    if (backToSelectionWizard) backToSelectionWizard.addEventListener('click', () => showView('selection-view'));
-    if (backToSelectionExplorer) backToSelectionExplorer.addEventListener('click', () => showView('selection-view'));
+    backToSelectionWizard.addEventListener('click', () => showView('selection'));
+    backToSelectionExplorer.addEventListener('click', () => showView('selection'));
 
     buildExplorer();
-    renderFeaturedGame();
+    renderFeaturedTool();
+    showView('selection');
 });
