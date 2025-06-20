@@ -1,279 +1,73 @@
+
 <!DOCTYPE html>
 <html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Forms & Documents Hub</title>
+    <title>Fatherhood Tools - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .animated-gradient {
-            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            will-change: transform;
-        }
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
-        }
-        .category-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.7s ease-in-out;
-        }
-        .category-card.expanded .category-content {
-            max-height: 1000px; /* Adjust as needed */
-        }
-        .category-card.expanded .fa-chevron-down {
-            transform: rotate(180deg);
-        }
-    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.min.css">
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
-    <!-- Dynamic Background -->
-    <div class="animated-gradient fixed inset-0 z-0"></div>
-    <div class="relative z-10">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar will be loaded here by main.js -->
+        <div id="sidebar-placeholder"></div>
 
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-            <!-- Header Section -->
-            <div id="hub-header" class="text-center mb-12">
-                <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Forms & Documents Hub</h1>
-                    <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Answer a few questions or browse directly to find the exact document you need to take action.</p>
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center">
+                    <h2 class="text-5xl font-bold font-roboto mb-4">Your Fatherhood Armoury</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">A comprehensive suite of powerful tools and legal templates designed to empower you at every stage of your journey.</p>
                 </div>
-            </div>
-
-            <!-- Selection Area (Wizard vs Manual) -->
-            <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 max-w-4xl mx-auto">
-                <!-- Simple Start Wizard Card -->
-                <div id="start-wizard-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
-                    <div class="bg-blue-500 bg-opacity-20 text-blue-400 p-4 rounded-full mb-5">
-                        <i class="fas fa-magic text-4xl"></i>
+                
+                <!-- Updated grid to be md:grid-cols-3 to accommodate the new card -->
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                     <!-- Feature Card: Podcast -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
+                        <i class="fas fa-podcast text-4xl text-yellow-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Flamea Podcast</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Listen to discussions and interviews on key topics for modern fathers.</p>
+                        <button data-modal-target="podcast-modal" class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Listen Now</button>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-2">Simple Start Wizard</h3>
-                    <p class="text-gray-400">Not sure where to begin? We’ll guide you to the right form.</p>
-                </div>
 
-                <!-- Manual Explorer Card -->
-                <div id="explore-forms-btn" class="card bg-gray-800 bg-opacity-70 backdrop-blur-md border border-gray-700 rounded-2xl p-8 flex flex-col items-center text-center cursor-pointer shadow-lg">
-                    <div class="bg-green-500 bg-opacity-20 text-green-400 p-4 rounded-full mb-5">
-                        <i class="fas fa-folder-open text-4xl"></i>
+                     <!-- Feature Card: Current Affairs Hub -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300">
+                        <i class="fas fa-newspaper text-4xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Current Affairs Hub</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Explore news, community articles, and find services near you.</p>
+                        <a href="current-affairs.html" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full">Visit Hub</a>
                     </div>
-                    <h3 class="text-2xl font-bold text-white mb-2">Manual Explorer</h3>
-                    <p class="text-gray-400">Know what you need? Browse all categories and forms.</p>
+                    
+                    <!-- New Feature Card: LegalHelp -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-indigo-500 transition-all duration-300">
+                        <i class="fas fa-balance-scale text-4xl text-indigo-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">LegalHelp Hub</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Access a comprehensive, single-view archive of South African legislation.</p>
+                        <a href="legalhelp.html" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors w-full">Explore LegalHelp</a>
+                    </div>
+                </div>
+
+                <!-- The tool catalogue will be dynamically rendered here by main.js -->
+                <div id="tools-catalogue" class="space-y-6">
+                    <!-- Content populated by main.js -->
                 </div>
             </div>
-
-            <!-- Wizard Section -->
-            <div id="wizard-section" class="hidden mt-12">
-                <!-- Wizard steps will be injected here -->
-            </div>
-
-            <!-- Manual Explorer Section -->
-            <div id="explorer-section" class="hidden mt-12">
-                 <button id="explorer-back-btn" class="mb-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-blue-500">
-                    <i class="fas fa-arrow-left mr-3"></i>
-                    Back to Selection
-                </button>
-                <div id="explorer-grid" class="space-y-6">
-                    <!-- Categories will be populated here -->
-                </div>
-            </div>
-        </div>
+        </main>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
+    <!-- Modals -->
+    <div id="chatbot-modal" class="custom-modal"></div>
+    <div id="podcast-modal" class="custom-modal"></div>
 
-        // --- DATA DEFINITIONS ---
-        const resources = {
-            'Informal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Iinformal.html' },
-            'Formal Parental Rights Letter': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_Formal.html' },
-            'Final Letter on Constitutional Rights': { type: 'form', file: 'Affirmation_Parental_Rights_and_Responsibilities_final.html' },
-            'Mediation Request Letter': { type: 'form', file: 'Mediation_Request_Letter.html' },
-            'Conflict Resolution Worksheet': { type: 'form', file: 'Conflict_Resolution_Worksheet.html' },
-            'Comprehensive Parenting Plan': { type: 'form', file: 'Parenting_Plan_Template.html' },
-            'General Affidavit': { type: 'form', file: 'Affidavit_General_Template.html' },
-            'General Letter to School': { type: 'form', file: 'School_Letter_General_Template.html' },
-            'Request for School Transfer': { type: 'form', file: 'School_Letter_Transfer_Template.html' },
-            'Legal Practice Council Complaint': { type: 'form', file: 'Legal_Practice_Council_Complaint.html' },
-            'Magistrates Commission Complaint': { type: 'form', file: 'Magistrates_Commission_Complaint_Template.html' },
-            'Public Protector Complaint': { type: 'form', file: 'Public_Protector_Complaint.html' },
-            'Commission for Gender Equality Complaint': { type: 'form', file: 'Commission_Gender_Equality.html' },
-            'SA Law Reform Commission Request': { type: 'form', file: 'SALRC_Request_Family_Law_Reform.html' },
-            'Cohabitation Agreement': { type: 'form', file: 'Cohabitation_Agreement.html' },
-            'Budgeting Tool for Couples': { type: 'form', file: 'Budget_Couples.html' },
-            'Child Support Agreement': { type: 'form', file: 'Child_Support_Agreement.html' },
-            'The SA Constitution': { type: 'training', url: 'training/course-constitution.html' },
-            "The Children's Act": { type: 'training', url: 'training/course-childrens-act.html' },
-            'Co-Parenting 101': { type: 'training', url: 'training/course-coparenting.html' },
-            'Family Law Overview': { type: 'training', url: 'training/course-family-law.html' },
-            "A Father's Shield": { type: 'training', url: 'training/course-fathers-shield.html' },
-        };
-
-        const categories = {
-            "Parental Rights": { icon: "fa-child-reaching", color: "text-purple-400", items: ["Informal Parental Rights Letter", "Formal Parental Rights Letter", "Final Letter on Constitutional Rights"] },
-            "Conflict Resolution": { icon: "fa-handshake-angle", color: "text-teal-400", items: ["Mediation Request Letter", "Conflict Resolution Worksheet", "Comprehensive Parenting Plan"] },
-            "Court Documents": { icon: "fa-gavel", color: "text-orange-400", items: ["General Affidavit"] },
-            "School Letters": { icon: "fa-school-flag", color: "text-yellow-400", items: ["General Letter to School", "Request for School Transfer"] },
-            "Formal Complaints": { icon: "fa-bullhorn", color: "text-red-400", items: ["Legal Practice Council Complaint", "Magistrates Commission Complaint", "Public Protector Complaint", "Commission for Gender Equality Complaint", "SA Law Reform Commission Request"] },
-            "Agreements": { icon: "fa-file-signature", color: "text-green-400", items: ["Cohabitation Agreement", "Budgeting Tool for Couples", "Child Support Agreement"] },
-            "Essential Training": { icon: "fa-graduation-cap", color: "text-blue-400", items: ["The SA Constitution", "The Children's Act", "Co-Parenting 101", "Family Law Overview", "A Father's Shield"] }
-        };
-
-        // --- DOM ELEMENTS ---
-        const selectionArea = document.getElementById('selection-area');
-        const wizardBtn = document.getElementById('start-wizard-btn');
-        const explorerBtn = document.getElementById('explore-forms-btn');
-        const wizardSection = document.getElementById('wizard-section');
-        const explorerSection = document.getElementById('explorer-section');
-        const hubHeader = document.getElementById('hub-header');
-        const explorerGrid = document.getElementById('explorer-grid');
-
-        // --- CORE FUNCTIONS ---
-
-        function showExplorer() {
-            selectionArea.classList.add('hidden');
-            hubHeader.classList.add('hidden');
-            explorerSection.classList.remove('hidden');
-            renderManualExplorer(true); // Render expanded by default
-        }
-
-        function showWizard() {
-            selectionArea.classList.add('hidden');
-            hubHeader.classList.add('hidden');
-            wizardSection.classList.remove('hidden');
-            renderWizardStep('start');
-        }
-
-        function showSelectionArea() {
-            wizardSection.classList.add('hidden');
-            explorerSection.classList.add('hidden');
-            selectionArea.classList.remove('hidden');
-            hubHeader.classList.remove('hidden');
-        }
-
-        function renderManualExplorer(expandAll = false) {
-            explorerGrid.innerHTML = '';
-            for (const [categoryName, data] of Object.entries(categories)) {
-                const categoryCard = document.createElement('div');
-                categoryCard.className = `category-card bg-gray-800 bg-opacity-60 backdrop-blur-md border border-gray-700 rounded-xl shadow-lg overflow-hidden ${expandAll ? 'expanded' : ''}`;
-                
-                const itemsHtml = data.items.map(item => {
-                    const resource = resources[item];
-                    if (!resource) return '';
-                    const isForm = resource.type === 'form';
-                    const link = isForm ? `assets/templates/${resource.file}` : resource.url;
-                    const icon = isForm ? 'fa-file-alt' : 'fa-graduation-cap';
-                    const iconColor = isForm ? 'text-blue-400' : 'text-yellow-400';
-
-                    return `
-                        <a href="${link}" target="_blank" class="flex items-center p-4 bg-gray-900 bg-opacity-50 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group">
-                            <i class="fas ${icon} ${iconColor} mr-4 fa-lg"></i>
-                            <span class="text-gray-300 group-hover:text-white">${item}</span>
-                        </a>
-                    `;
-                }).join('');
-
-                categoryCard.innerHTML = `
-                    <div class="category-header flex justify-between items-center p-5 cursor-pointer">
-                        <div class="flex items-center">
-                            <i class="fas ${data.icon} ${data.color} fa-2x mr-4"></i>
-                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 transition-transform duration-300"></i>
-                    </div>
-                    <div class="category-content px-5 pb-5">
-                        <div class="space-y-3 pt-4 border-t border-gray-700">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-                `;
-                
-                // Event listener for expanding/collapsing individual categories
-                categoryCard.querySelector('.category-header').addEventListener('click', () => {
-                    categoryCard.classList.toggle('expanded');
-                });
-
-                explorerGrid.appendChild(categoryCard);
-            }
-        }
-
-        function renderWizardStep(stepId) {
-            // This is a placeholder for your wizard logic.
-            // It's crucial to attach event listeners *after* the HTML is created.
-            let htmlContent = '';
-
-            if (stepId === 'start') {
-                htmlContent = `
-                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
-                        <div class="flex justify-between items-center mb-6">
-                            <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700">
-                                <i class="fas fa-arrow-left mr-2"></i> Back
-                            </button>
-                            <span class="text-gray-400">Step 1 of 2</span>
-                        </div>
-                        <h2 class="text-3xl font-bold text-center text-white mb-8">What is your current challenge?</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                           <!-- Wizard Options Here -->
-                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2a">
-                                <i class="fas fa-users text-blue-400 text-4xl mb-4"></i>
-                                <h3 class="text-xl font-semibold text-white">Issues with other parent</h3>
-                           </div>
-                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2b">
-                                <i class="fas fa-landmark text-green-400 text-4xl mb-4"></i>
-                               <h3 class="text-xl font-semibold text-white">Issues with an institution</h3>
-                           </div>
-                           <div class="wizard-option card bg-gray-900/50 p-6 text-center cursor-pointer" data-next="step2c">
-                                <i class="fas fa-handshake text-yellow-400 text-4xl mb-4"></i>
-                               <h3 class="text-xl font-semibold text-white">Creating an agreement</h3>
-                           </div>
-                        </div>
-                    </div>
-                `;
-            }
-            // Add other steps as 'else if' blocks...
-
-            wizardSection.innerHTML = htmlContent;
-            
-            // Re-attach event listeners for the newly created elements
-            attachWizardListeners();
-        }
-        
-        function attachWizardListeners() {
-            const backBtn = document.getElementById('wizard-back-btn');
-            if (backBtn) {
-                backBtn.addEventListener('click', showSelectionArea);
-            }
-
-            document.querySelectorAll('.wizard-option').forEach(option => {
-                option.addEventListener('click', (e) => {
-                    // Placeholder for next step logic
-                    alert(`Navigating to: ${e.currentTarget.dataset.next}`);
-                });
-            });
-        }
-
-
-        // --- INITIAL EVENT LISTENERS ---
-        explorerBtn.addEventListener('click', showExplorer);
-        wizardBtn.addEventListener('click', showWizard);
-        
-        const explorerBackBtn = document.getElementById('explorer-back-btn');
-        if(explorerBackBtn) {
-             explorerBackBtn.addEventListener('click', showSelectionArea);
-        }
-
-    });
-    </script>
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
+    <script type="module" src="assets/js/firebase-config.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/podcast-player.js"></script>      
 </body>
 </html>
