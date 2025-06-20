@@ -1,31 +1,96 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Educational Games</title>
+    <title>Games Hub - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
+    <style>
+        /* Shared styles based on the blueprint */
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 2px solid transparent; }
+        .option-card:hover { transform: translateY(-5px); border-color: #f59e0b; /* amber-500 */ }
+        .view-container { display: none; }
+        .view-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .accordion-item .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .accordion-item.active .accordion-content { max-height: 1000px; /* Adjust as needed */ }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; animation: fadeIn 0.5s; }
+    </style>
 </head>
-<body class="font-sans bg-gray-900 text-white">
-    <div class="main-content">
-        <section class="py-12">
-            <div class="container mx-auto px-4">
-                <h1 class="text-4xl font-bold mb-6 text-center">Educational Games</h1>
-                <p class="text-xl text-gray-400 mb-12 text-center">Learn about culture, law, and rights through play.</p>
-                <div id="selection-view" class="active">
-                    <!-- Selection view content will be inserted here by JS -->
+<body class="bg-gray-900 text-gray-300 font-open-sans">
+    <div class="main-container">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
+
+        <!-- Main Content -->
+        <main class="main-content p-6 sm:p-8">
+            <div class="max-w-7xl mx-auto">
+                <!-- Standard Header Block -->
+                <header id="hub-header" class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">Educational Games</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Learn about culture, law, and rights through play.</p>
+                    </div>
+                </header>
+
+                <!-- 3-Box Selection Area -->
+                <div id="selection-view" class="view-container active">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Automated Wizard Card -->
+                        <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white">Game Finder Wizard</h4>
+                            <p class="text-gray-400">Answer questions to find the perfect game.</p>
+                        </div>
+                        <!-- Manual Selection Card -->
+                        <div id="explore-games-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <i class="fas fa-folder-open text-5xl text-teal-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white">Browse All Games</h4>
+                            <p class="text-gray-400">Explore all of our game categories.</p>
+                        </div>
+                        <!-- Featured Game Card -->
+                        <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <!-- Content will be injected by JS -->
+                        </div>
+                    </div>
                 </div>
-                <div id="wizard-view">
-                    <div id="wizard-section"></div>
+
+                <!-- Wizard View -->
+                <div id="wizard-view" class="view-container">
+                    <div id="wizard-section" class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                        <!-- Wizard content will be injected here by games.js -->
+                    </div>
+                    <button id="back-to-selection-wizard" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+                        <i class="fas fa-arrow-left mr-3"></i>
+                        Back to Selection
+                    </button>
                 </div>
-                <div id="explorer-view">
-                    <div id="explorer-section"></div>
+
+                <!-- Explorer View (Manual Selection) -->
+                <div id="explorer-view" class="view-container">
+                     <div id="explorer-section" class="space-y-6">
+                        <!-- Categories will be rendered here by JS -->
+                    </div>
+                     <button id="back-to-selection-explorer" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+                        <i class="fas fa-arrow-left mr-3"></i>
+                        Back to Selection
+                    </button>
                 </div>
             </div>
-        </section>
+        </main>
     </div>
-    <div id="sidebar-placeholder"></div>
-    <script src="assets/js/main.js"></script>
-    <script src="assets/js/games.js"></script>
+
+    <!-- SCRIPTS -->
+    <script src="assets/js/main.js" type="module"></script>
+    <script src="assets/js/games.js" type="module"></script>
 </body>
 </html>
