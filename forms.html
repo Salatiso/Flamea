@@ -3,57 +3,30 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea - Forms & Documents Hub</title>
+    <title>Forms & Documents Hub - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
         /* Exact layout from training.html */
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        .main-content {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-        .option-card {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-        }
-        #wizard-section, #explorer-section {
-            display: none;
-            animation: fadeIn 0.5s ease-in-out;
-        }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; }
+        .main-view { display: none; }
+        .main-view.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .wizard-option:hover {
-            background-color: #374151;
-            transform: translateY(-2px);
-        }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s ease-in-out;
-        }
-        .accordion-item.active .accordion-content {
-            max-height: 5000px;
-        }
-        .accordion-icon {
-            transition: transform 0.3s ease-out;
-        }
-        .accordion-item.active .accordion-icon {
-            transform: rotate(180deg);
-        }
-        .accordion-header {
-            cursor: pointer;
-        }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out; }
+        .accordion-item.active .accordion-content { max-height: 5000px; }
+        .accordion-header { cursor: pointer; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-icon { transition: transform 0.3s ease-out; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-900 text-gray-200 font-sans">
     <div class="main-container">
         <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
@@ -63,44 +36,44 @@
             <div class="max-w-7xl mx-auto">
                 <div id="hub-header" class="text-center mb-12 bg-black/50 p-6 rounded-lg">
                     <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">Forms & Documents Hub</h1>
-                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Your arsenal for official correspondence and legal action. Find the exact document you need.</p>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Your arsenal for official correspondence and legal action.</p>
                 </div>
 
-                <!-- SELECTION AREA - Styled exactly like training.html -->
+                <!-- SELECTION AREA (3-Box Layout) -->
                 <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1 col-span-1 lg:col-start-2">
+                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Automated Wizard</h4>
-                        <p class="text-gray-400">Answer questions to find the right form.</p>
+                        <p class="text-gray-400">Find the right form for your situation.</p>
                     </div>
                     <div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-folder-open text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Manual Selection</h4>
-                        <p class="text-gray-400">Browse all available document categories.</p>
+                        <p class="text-gray-400">Browse all document categories.</p>
+                    </div>
+                    <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-amber-500 transition-all duration-300 transform hover:-translate-y-1">
+                        <!-- Content will be injected by JS -->
                     </div>
                 </div>
                 
-                <div id="main-content-area" class="hidden">
-                    <!-- Wizard or Explorer will be shown here -->
-                    <div id="wizard-section" class="hidden bg-gray-800/80 p-8 rounded-lg shadow-xl max-w-4xl mx-auto">
-                        <!-- Wizard content is dynamically generated by forms.js -->
-                    </div>
+                <!-- This container holds the wizard or explorer view -->
+                <div id="main-view-container" class="main-view">
+                    <div id="wizard-section"></div>
+                    <button id="back-to-selection" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                        <i class="fas fa-arrow-left mr-3"></i>
+                        Back to Selection
+                    </button>
+                </div>
 
-                    <!-- Explorer Section (Container) -->
-                    <div id="explorer-section" class="hidden space-y-6">
-                        <!-- Explorer content is dynamically generated by forms.js -->
-                    </div>
-
-                    <!-- Common Navigation -->
-                    <div class="max-w-4xl mx-auto mt-8">
-                         <button id="back-to-selection" class="mt-6 text-sm text-red-400 hover:text-white font-semibold">&larr; Back to selection</button>
-                    </div>
+                <!-- This container holds the collapsed accordions, visible on page load -->
+                <div id="explorer-section" class="space-y-6">
+                    <!-- Categories will be rendered here by JS on page load -->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Scripts loaded at the end of body to prevent errors -->
+    <!-- SCRIPTS LOADED AT THE END -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/forms.js"></script>
 </body>

@@ -10,45 +10,20 @@
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
         /* Exact layout from training.html */
-        .main-container {
-            display: flex;
-            min-height: 100vh;
-        }
-        .main-content {
-            flex-grow: 1;
-            overflow-y: auto;
-        }
-        .option-card {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-        }
-        #main-content-area > .hidden {
-            display: none;
-        }
-        #main-content-area > div {
-             animation: fadeIn 0.5s ease-in-out;
-        }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; }
+        .main-view { display: none; }
+        .main-view.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .category-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.7s ease-in-out;
-        }
-        .category-card.expanded .category-content {
-            max-height: 2000px;
-        }
-        .category-header {
-             cursor: pointer;
-        }
-        .category-card.expanded .fa-chevron-down {
-            transform: rotate(180deg);
-        }
-        .fa-chevron-down {
-            transition: transform 0.3s ease-out;
-        }
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out; }
+        .accordion-item.active .accordion-content { max-height: 2000px; /* Ample height for content */ }
+        .accordion-header { cursor: pointer; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        .accordion-icon { transition: transform 0.3s ease-out; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
@@ -66,49 +41,49 @@
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Learn through play. Sharpen your mind with our collection of educational games.</p>
                 </div>
 
-                <!-- SELECTION AREA - Styled exactly like training.html -->
+                <!-- SELECTION AREA (3-Box Layout) -->
                 <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                     <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1 col-span-1 lg:col-start-2">
-                        <i class="fas fa-hat-wizard text-5xl text-teal-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-2">Automated Wizard</h3>
-                        <p class="text-gray-400">Let a guide find the perfect game for you.</p>
+                     <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
+                        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Automated Wizard</h4>
+                        <p class="text-gray-400">Find the perfect game for you.</p>
                     </div>
                     <div id="explore-games-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-folder-open text-5xl text-blue-400 mb-4"></i>
-                        <h3 class="text-2xl font-bold text-white mb-2">Manual Selection</h3>
-                        <p class="text-gray-400">Browse the full library of games yourself.</p>
+                        <h4 class="text-2xl font-bold text-white mb-2">Manual Selection</h4>
+                        <p class="text-gray-400">Browse the full game library.</p>
+                    </div>
+                    <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-amber-500 transition-all duration-300 transform hover:-translate-y-1">
+                        <!-- Content will be injected by JS -->
                     </div>
                 </div>
                 
-                <div id="main-content-area" class="hidden">
-                    <!-- Wizard Section -->
-                    <div id="wizard-section" class="hidden">
-                        <!-- Wizard steps will be injected here by JS -->
-                    </div>
-
-                    <!-- Manual Explorer Section -->
-                    <div id="explorer-section" class="hidden">
-                        <div id="explorer-grid" class="space-y-6">
-                            <!-- Game Categories will be populated here -->
-                        </div>
-                    </div>
-                    
-                    <!-- Common Back Button -->
-                    <button id="back-to-selection" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-offset-gray-900 focus:ring-red-500">
+                <!-- This container holds the wizard or explorer view -->
+                <div id="main-view-container" class="main-view">
+                    <div id="wizard-section"></div>
+                    <button id="back-to-selection" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
                         <i class="fas fa-arrow-left mr-3"></i>
-                        Back to Main Selection
+                        Back to Selection
                     </button>
+                </div>
+
+                <!-- This container holds the collapsed accordions, visible on page load -->
+                <div id="explorer-section" class="space-y-6">
+                    <!-- Categories will be rendered here by JS on page load -->
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Scripts are now at the end of the body in the correct order -->
+    <!-- SCRIPTS LOADED AT THE END -->
     <script src="assets/js/games.js"></script> 
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" id="page-specific-script">
-        // This inline script runs after games.js and main.js
-        // It can safely access `gamesList` (from games.js) and DOM elements.
+        // Page-specific logic runs after all other scripts and DOM are ready.
+        if (typeof gamesList === 'undefined') {
+            console.error("CRITICAL: games.js did not load or define gamesList.");
+            return;
+        }
 
         const categories = {
             "Cultural Games": { icon: "fa-people-roof", color: "text-amber-400" },
@@ -116,100 +91,45 @@
             "Justice & Law": { icon: "fa-gavel", color: "text-rose-400" },
         };
 
-        // --- DOM ELEMENTS ---
-        const selectionArea = document.getElementById('selection-area');
         const hubHeader = document.getElementById('hub-header');
-        const mainContentArea = document.getElementById('main-content-area');
+        const selectionArea = document.getElementById('selection-area');
+        const mainViewContainer = document.getElementById('main-view-container');
+        const wizardSection = document.getElementById('wizard-section');
+        const explorerSection = document.getElementById('explorer-section');
         
         const wizardBtn = document.getElementById('start-wizard-btn');
         const explorerBtn = document.getElementById('explore-games-btn');
-        
-        const wizardSection = document.getElementById('wizard-section');
-        const explorerSection = document.getElementById('explorer-section');
-        const explorerGrid = document.getElementById('explorer-grid');
         const backToSelectionBtn = document.getElementById('back-to-selection');
 
-        // --- CORE FUNCTIONS ---
-        
-        function showExplorer() {
-            selectionArea.style.display = 'none';
+        function showView(view) {
             hubHeader.style.display = 'none';
-            mainContentArea.classList.remove('hidden');
-            explorerSection.classList.remove('hidden');
-            wizardSection.classList.add('hidden');
-            renderManualExplorer(true);
-        }
+            selectionArea.style.display = 'none';
+            explorerSection.style.display = 'none';
+            mainViewContainer.classList.add('active');
 
-        function showWizard() {
-            selectionArea.style.display = 'none';
-            hubHeader.style.display = 'none';
-            mainContentArea.classList.remove('hidden');
-            wizardSection.classList.remove('hidden');
-            explorerSection.classList.add('hidden');
-            renderWizardStep('start');
+            if (view === 'wizard') {
+                wizardSection.innerHTML = ''; // Clear previous wizard content
+                renderWizardStep('start');
+            } else if (view === 'explorer') {
+                // The explorer view is always visible, we just expand the items
+                explorerSection.style.display = 'block';
+                mainViewContainer.classList.remove('active'); // Hide the back button container
+                explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.add('active'));
+            }
         }
 
         function showSelectionArea() {
-            mainContentArea.classList.add('hidden');
-            selectionArea.style.display = 'grid'; // Use grid to restore layout
-            hubHeader.style.display = 'block'; // Use block to restore layout
+            hubHeader.style.display = 'block';
+            selectionArea.style.display = 'grid';
+            mainViewContainer.classList.remove('active');
+            explorerSection.style.display = 'block'; // Ensure accordions are visible
+            // Collapse all accordions when returning to selection
+            explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('active'));
         }
 
-        function renderManualExplorer(expandAll = false) {
-            explorerGrid.innerHTML = '';
-            if (typeof gamesList === 'undefined') {
-                console.error("gamesList is not defined. Make sure games.js is loaded correctly.");
-                return;
-            }
-            const groupedGames = gamesList.reduce((acc, game) => {
-                if (!acc[game.category]) acc[game.category] = [];
-                acc[game.category].push(game);
-                return acc;
-            }, {});
-
-            for (const [categoryName, games] of Object.entries(groupedGames)) {
-                const categoryData = categories[categoryName] || { icon: 'fa-gamepad', color: 'text-gray-400' };
-                const categoryCard = document.createElement('div');
-                categoryCard.className = `category-card bg-gray-800 bg-opacity-80 backdrop-blur-md border border-gray-700 rounded-xl shadow-lg overflow-hidden ${expandAll ? 'expanded' : ''}`;
-                
-                const itemsHtml = games.map(game => `
-                    <a href="${game.href}" class="flex items-center p-4 bg-gray-900 bg-opacity-50 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group">
-                        <i class="fas ${game.icon} ${categoryData.color} mr-4 fa-lg w-8 text-center"></i>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-lg text-gray-200 group-hover:text-white">${game.title}</h4>
-                            <p class="text-sm text-gray-400">${game.description}</p>
-                            <div class="text-xs text-indigo-400 font-bold mt-2">AGE: ${game.ageGroup}</div>
-                        </div>
-                        <i class="fas fa-chevron-right text-gray-500 ml-4 group-hover:text-white transition-colors"></i>
-                    </a>
-                `).join('');
-
-                categoryCard.innerHTML = `
-                    <div class="category-header flex justify-between items-center p-5">
-                        <div class="flex items-center">
-                            <i class="fas ${categoryData.icon} ${categoryData.color} fa-2x mr-4"></i>
-                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
-                        </div>
-                        <i class="fas fa-chevron-down text-gray-400 transition-transform"></i>
-                    </div>
-                    <div class="category-content px-5 pb-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-700">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-                `;
-                
-                categoryCard.querySelector('.category-header').addEventListener('click', () => {
-                    categoryCard.classList.toggle('expanded');
-                });
-
-                explorerGrid.appendChild(categoryCard);
-            }
-        }
-        
         function renderWizardStep(stepId, filter = {}) {
             let htmlContent = '';
-            wizardSection.innerHTML = ''; // Clear previous step
+            wizardSection.innerHTML = ''; 
 
             if (stepId === 'start') {
                 htmlContent = `
@@ -250,10 +170,10 @@
                 });
 
             } else if (stepId === 'results') {
-                 const recommendedGames = gamesList.filter(g => g.ageGroup === filter.ageGroup && g.category === filter.category);
+                 const recommendedGames = gamesList.filter(g => g.ageGroup === filter.ageGroup && g.category === filter.category).slice(0, 3);
                  const resultsHTML = recommendedGames.map(game => `
                     <a href="${game.href}" class="flex items-center p-4 bg-gray-900 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group border border-green-500/50">
-                        <i class="fas ${game.icon} text-green-400 mr-4 fa-lg w-8 text-center"></i>
+                        <i class="fas ${game.icon || 'fa-gamepad'} text-green-400 mr-4 fa-lg w-8 text-center"></i>
                         <div class="flex-1">
                             <h4 class="font-bold text-lg text-white">${game.title}</h4>
                             <p class="text-sm text-gray-400">${game.description}</p>
@@ -263,20 +183,84 @@
                  htmlContent = `
                     <div class="bg-gray-800/80 p-8 rounded-lg shadow-xl text-center">
                          <i class="fas fa-trophy text-5xl text-yellow-400 mb-4"></i>
-                        <h2 class="text-3xl font-bold text-white mb-2">Here are your recommended games!</h2>
-                        <p class="text-gray-400 mb-8">Based on your choices, these games are the best fit for you.</p>
+                        <h2 class="text-3xl font-bold text-white mb-2">Recommended Games</h2>
+                        <p class="text-gray-400 mb-8">Based on your choices, these games are a great place to start.</p>
                         <div class="space-y-4 text-left">
-                            ${resultsHTML}
+                            ${resultsHTML.length > 0 ? resultsHTML : '<p class="text-center text-gray-400">No games found for this selection.</p>'}
                         </div>
                     </div>`;
                 wizardSection.innerHTML = htmlContent;
             }
         }
         
-        // --- INITIAL EVENT LISTENERS ---
-        explorerBtn.addEventListener('click', showExplorer);
-        wizardBtn.addEventListener('click', showWizard);
+        function renderExplorerAccordions() {
+            explorerSection.innerHTML = '';
+            const groupedGames = gamesList.reduce((acc, game) => {
+                acc[game.category] = acc[game.category] || [];
+                acc[game.category].push(game);
+                return acc;
+            }, {});
+
+            for (const [categoryName, games] of Object.entries(groupedGames)) {
+                const categoryData = categories[categoryName] || { icon: 'fa-gamepad', color: 'text-gray-400' };
+                const accordionItem = document.createElement('div');
+                accordionItem.className = 'accordion-item bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700';
+
+                const itemsHtml = games.map(game => `
+                    <a href="${game.href}" class="flex items-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-700 transition group">
+                        <i class="fas ${game.icon || 'fa-gamepad'} ${categoryData.color} mr-4 fa-lg w-8 text-center"></i>
+                        <div class="flex-1">
+                            <h4 class="font-semibold text-gray-100 group-hover:text-white">${game.title}</h4>
+                            <p class="text-sm text-gray-400">${game.description}</p>
+                        </div>
+                        <i class="fas fa-chevron-right text-gray-500 ml-4 group-hover:text-white transition-colors"></i>
+                    </a>
+                `).join('');
+
+                accordionItem.innerHTML = `
+                    <div class="accordion-header flex justify-between items-center p-5">
+                        <div class="flex items-center">
+                            <i class="fas ${categoryData.icon} ${categoryData.color} fa-2x mr-4"></i>
+                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
+                        </div>
+                        <i class="accordion-icon fas fa-chevron-down text-gray-400 transition-transform"></i>
+                    </div>
+                    <div class="accordion-content px-5 pb-5">
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-700">
+                            ${itemsHtml}
+                        </div>
+                    </div>
+                `;
+                
+                accordionItem.querySelector('.accordion-header').addEventListener('click', () => {
+                    accordionItem.classList.toggle('active');
+                });
+                explorerSection.appendChild(accordionItem);
+            }
+        }
+
+        function renderFeaturedTool() {
+            const featuredToolCard = document.getElementById('featured-tool-card');
+            if (!featuredToolCard) return;
+
+            let featuredGame = gamesList[Math.floor(Math.random() * gamesList.length)];
+            
+            featuredToolCard.innerHTML = `
+                <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
+                <h4 class="text-2xl font-bold text-white mb-2">Featured Game</h4>
+                <p class="text-gray-400 mb-4 font-semibold">${featuredGame.title}</p>
+                <a href="${featuredGame.href}" class="inline-block bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">Play Now</a>
+            `;
+            featuredToolCard.onclick = () => { window.location.href = featuredGame.href; };
+        }
+        
+        // --- INITIALIZATION ---
+        wizardBtn.addEventListener('click', () => showView('wizard'));
+        explorerBtn.addEventListener('click', () => showView('explorer'));
         backToSelectionBtn.addEventListener('click', showSelectionArea);
+
+        renderExplorerAccordions(); // Render the accordions on load (in a collapsed state)
+        renderFeaturedTool(); // Render the featured tool on load
     </script>
 </body>
 </html>
