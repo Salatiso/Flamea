@@ -127,7 +127,7 @@ onAuthStateChanged(auth, (user) => {
     document.dispatchEvent(event);
 
     const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    const isAuthPage = ['login.html'].includes(currentPage);
+    const isAuthPage = ['community.html'].includes(currentPage);
 
     if (user && isAuthPage) {
         window.location.replace('dashboard.html');
@@ -145,7 +145,7 @@ export function updateAuthUI(user) {
         `;
     } else {
         authLinksContainer.innerHTML = `
-            <a href="login.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
+            <a href="community.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
         `;
     }
 
