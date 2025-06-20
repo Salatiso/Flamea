@@ -1,0 +1,53 @@
+Technical Blueprint: The Flamea Standard for Document & Tool Generation
+Version: 1.0
+Date: 10 June 2025
+Author: Salatiso Mdeni (Conceptual Architect), Gemini (Technical Partner)
+Applicability: Flamea.org, SafetyHelp.it, Sazi.life, and all future associated platforms.
+1.0. Overview & Guiding Philosophy
+This document outlines the standardized technical and procedural blueprint for all dynamic document generation tools across the associated digital platforms. The core philosophy is to empower users by transforming complex information into simple, actionable, and professional documents. Consistency in user experience, document structure, and process flow is paramount to building a trusted and recognizable brand ecosystem.
+2.0. Standardized Document Architecture
+All dynamically generated documents shall adhere to the following auditable and professional structure:
+2.1. Cover Page: The first page of any generated document.
+Content: Platform Logo (Text-based SVG), Platform Slogan, Document Title, Document Subtitle.
+Metadata (Footer): A unique Document ID (e.g., FLAMEA-PP-[Timestamp]), Version Number, and Generation Date.
+2.2. Main Body (Dynamic Content):
+Comprised of multiple sections, populated by user input.
+Each page must display a Header (Document Title) and a Footer (Platform Copyright, Slogan, and Page Number).
+An unobtrusive, low-opacity watermark of the platform logo shall be centered on each content page.
+2.3. Annexure Section:
+Follows the main body.
+Annexure A (Standard): Titled "Definitions & Key Legal/Regulatory Principles." This section provides context and definitions relevant to the document (e.g., "Best Interests of the Child" for Flamea, "Hazard Identification" for SafetyHelp).
+Additional Annexures: Users must have the ability to upload and attach their own documents (e.g., court orders, existing policies), which will be appended to the final PDF.
+2.4. Back Cover Page: The final page of the document.
+Content: A summary of the platform's mission, its core service pillars, and contact/website information. This serves as a "business card" and reinforces the brand.
+3.0. Standardized User Workflow & Tool Design
+The user's journey from landing on a tool page to downloading a document must be intuitive, supportive, and motivating.
+3.1. The Entry Point: Assessment Wizard
+Purpose: To serve as a gentle introduction and diagnostic tool. It asks high-level questions to understand the user's needs before they are presented with a complex form.
+Output: The wizard provides an initial "Personalised Action Plan" with recommendations. One of these recommendations will be the primary call-to-action, directing the user to the main document builder tool.
+Gamification: Completion of the wizard results in a tangible, immediate reward (e.g., a "SuperDad Foundation" or "Safety Champion" certificate) to build user confidence and encourage progression.
+3.2. The Document Builder: A Step-by-Step Journey
+The core tool for populating the document. It must be broken down into logical, numbered steps that mirror the sections of the final document.
+Data Input:
+Utilize dropdown lists for predefined options (e.g., provinces, relationship types) to ensure data consistency.
+Always provide an "Other (Specify)" option and allow users to dynamically add repeatable items (e.g., more children, more witnesses, more expense line items).
+Aesthetics & Usability:
+Sections within steps should be collapsible (accordion style) to keep the interface clean.
+Live Dashboard: A summary dashboard must be visible at all times, updating in real-time as the user inputs data. This is critical for tools like the financial contribution calculator, showing visual, color-coded feedback.
+Google Maps Integration: Wherever a physical address is required, the tool must offer a "Find My Location" button that uses the browser's geolocation API and integrates with Google Maps to fetch a precise, coordinate-based address. This is foundational for future features (distance calculation, regional stats).
+3.3. The Review & Finalization Stage
+After the final step, the user is taken to a "Review Document" screen. This screen displays the fully populated document exactly as it will be printed (in the parenting-plan-downloadable-html format).
+Seamless Editing: The user must be able to click on any section of the preview document, which will navigate them directly back to the corresponding step in the builder for edits. A "Return to Review" button must always be present.
+User Affirmation & Disclaimer: Before checkout, the user must check a box affirming the information is truthful to the best of their knowledge. A clear disclaimer must state that the platform provides tools, but the user is solely responsible for the final content and its legal application, and they should consult a professional where necessary.
+4.0. The Checkout & Monetization Model
+This process is designed to be a powerful user acquisition and retention funnel.
+4.1. The "Save Progress" Funnel:
+If a non-registered user attempts to navigate away from the builder, a modal will appear, warning them that their progress will be lost.
+This modal's primary call-to-action will be "Register for free to save your progress and continue anytime."
+4.2. The Checkout Process:
+Standard Document (Free): The default checkout option. A voucher/discount is automatically applied to make the R1000 base price free. This generates the fully branded PDF.
+Unbranded Document (Premium): A premium option, available only to registered members, to purchase the document for R1000 without any Flamea/platform branding. This is a key membership benefit.
+4.3. Document Persistence & Access:
+Non-Registered Users: A secure, temporary link to the generated document will be provided, which remains active for 7 days. This encourages them to sign up to save it permanently.
+Registered Users: The document and all its data are saved to their user profile in Firestore. They can access, view, and re-edit their documents indefinitely from their dashboard.
+This blueprint establishes a robust, scalable, and user-first standard that will define the quality and experience of your entire digital ecosystem.
