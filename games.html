@@ -3,87 +3,71 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Games Hub - Flamea</title>
+    <title>Educational Games - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
-    <style>
-        /* Shared styles based on the blueprint */
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; }
-        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 2px solid transparent; }
-        .option-card:hover { transform: translateY(-5px); border-color: #f59e0b; /* amber-500 */ }
-        .view-container { display: none; }
-        .view-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .accordion-item .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
-        .accordion-item.active .accordion-content { max-height: 1000px; /* Adjust as needed */ }
-        .wizard-step { display: none; }
-        .wizard-step.active { display: block; animation: fadeIn 0.5s; }
-    </style>
 </head>
-<body class="bg-gray-900 text-gray-300 font-open-sans">
-    <div class="main-container">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container flex min-h-screen">
         <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content -->
-        <main class="main-content p-6 sm:p-8">
+        <main class="main-content flex-grow p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
-                <!-- Standard Header Block -->
-                <header id="hub-header" class="text-center mb-12">
-                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">Educational Games</h1>
-                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Learn about culture, law, and rights through play.</p>
-                    </div>
-                </header>
-
-                <!-- 3-Box Selection Area -->
-                <div id="selection-view" class="view-container active">
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <!-- Standardized Header -->
+                <div id="hub-header" class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center mb-12">
+                    <h2 class="text-5xl font-bold font-roboto mb-4">Educational Games</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Learn about culture, law, and rights through play.</p>
+                </div>
+                
+                <!-- Main content area that switches between selection and content views -->
+                <div id="content-area">
+                    <!-- Feature Card Selection -->
+                    <div id="selection-view" class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
                         <!-- Automated Wizard Card -->
-                        <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
-                            <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
-                            <h4 class="text-2xl font-bold text-white">Game Finder Wizard</h4>
-                            <p class="text-gray-400">Answer questions to find the perfect game.</p>
+                        <div id="start-wizard-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 cursor-pointer">
+                            <i class="fas fa-magic text-4xl text-blue-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Game Finder Wizard</h3>
+                            <p class="text-gray-400 flex-grow mb-4">Answer questions to find the perfect game for you.</p>
+                            <button class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors w-full">Find a Game</button>
                         </div>
                         <!-- Manual Selection Card -->
-                        <div id="explore-games-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
-                            <i class="fas fa-folder-open text-5xl text-teal-400 mb-4"></i>
-                            <h4 class="text-2xl font-bold text-white">Browse All Games</h4>
-                            <p class="text-gray-400">Explore all of our game categories.</p>
+                        <div id="explore-games-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 cursor-pointer">
+                            <i class="fas fa-folder-open text-4xl text-teal-400 mb-4"></i>
+                            <h3 class="text-2xl font-bold mb-2">Browse All Games</h3>
+                            <p class="text-gray-400 flex-grow mb-4">Explore all of our game categories manually.</p>
+                             <button class="bg-teal-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-teal-500 transition-colors w-full">Browse Games</button>
                         </div>
                         <!-- Featured Game Card -->
-                        <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border-gray-700">
-                            <!-- Content will be injected by JS -->
+                        <div id="featured-tool-card" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-amber-500 transition-all duration-300">
+                            <!-- Content will be injected by games.js -->
                         </div>
                     </div>
-                </div>
 
-                <!-- Wizard View -->
-                <div id="wizard-view" class="view-container">
-                    <div id="wizard-section" class="bg-gray-800 p-8 rounded-xl shadow-lg">
-                        <!-- Wizard content will be injected here by games.js -->
+                    <!-- Wizard View (hidden by default) -->
+                    <div id="wizard-view" class="hidden bg-gray-800 p-8 rounded-lg shadow-xl">
+                        <div id="wizard-section">
+                            <!-- Wizard content will be injected here by games.js -->
+                        </div>
+                        <button id="back-to-selection-wizard" class="mt-8 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Selection
+                        </button>
                     </div>
-                    <button id="back-to-selection-wizard" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
-                        <i class="fas fa-arrow-left mr-3"></i>
-                        Back to Selection
-                    </button>
-                </div>
 
-                <!-- Explorer View (Manual Selection) -->
-                <div id="explorer-view" class="view-container">
-                     <div id="explorer-section" class="space-y-6">
-                        <!-- Categories will be rendered here by JS -->
+                    <!-- Explorer View (Manual Selection, hidden by default) -->
+                    <div id="explorer-view" class="hidden">
+                         <div id="explorer-section" class="space-y-6">
+                            <!-- Categories will be rendered here by games.js -->
+                        </div>
+                         <button id="back-to-selection-explorer" class="mt-8 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">
+                            <i class="fas fa-arrow-left mr-2"></i>
+                            Back to Selection
+                        </button>
                     </div>
-                     <button id="back-to-selection-explorer" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
-                        <i class="fas fa-arrow-left mr-3"></i>
-                        Back to Selection
-                    </button>
                 </div>
             </div>
         </main>
