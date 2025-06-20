@@ -1,58 +1,87 @@
-// assets/js/podcast-player.js
+document.addEventListener('DOMContentLoaded', () => {
+    const playerContainer = document.getElementById('podcast-player-container');
+    if (!playerContainer) return;
 
-/**
- * This script is now designed to be loaded on all pages.
- * It exposes a global function that the main.js modal system can call.
- */
+    const audioPlayer = document.getElementById('audio-player');
+    const episodeTitleEl = document.getElementById('episode-title');
+    const episodeDescriptionEl = document.getElementById('episode-description');
+    const episodesListEl = document.getElementById('episodes-list');
+    const playerCoverArt = document.getElementById('player-cover-art');
+    const loadingEl = document.getElementById('player-loading');
+    const errorEl = document.getElementById('player-error');
 
-// Make the function available globally
-window.loadPodcastEpisodes = async function() {
-    const episodeList = document.getElementById('episode-list');
-    if (!episodeList) return;
+    // FIX: Use a CORS proxy to bypass browser security restrictions on fetching the RSS feed.
+    const CORS_PROXY = 'https://cors-anywhere.herokuapp.com/';
+    const RSS_URL = 'https://anchor.fm/s/10357aacc/podcast/rss';
+    const PROXY_URL = CORS_PROXY + RSS_URL;
 
-    episodeList.innerHTML = '<p class="text-center text-gray-400"><i class="fas fa-spinner fa-spin mr-2"></i>Fetching latest episodes...</p>';
-    
-    if (typeof RSSParser === 'undefined') {
-        console.error("RSS Parser not loaded. Make sure to include the script tag.");
-        episodeList.innerHTML = '<p class="text-center text-red-400">Error: Required library not found.</p>';
-        return;
-    }
-    
-    const parser = new RSSParser();
-    // FIX: Corrected the URL strings by removing the Markdown syntax.
-    const CORS_PROXY = "https://api.allorigins.win/raw?url=";
-    const feedUrl = "https://anchor.fm/s/10357aacc/podcast/rss";
+    async function fetchPodcastFeed() {
+        try {
+            loadingEl.style.display = 'block';
+            errorEl.style.display = 'none';
 
-    try {
-        const feed = await parser.parseURL(CORS_PROXY + encodeURIComponent(feedUrl));
-        episodeList.innerHTML = ''; // Clear loading message
-        
-        if (feed.items.length === 0) {
-            episodeList.innerHTML = '<p class="text-center text-gray-400">No podcast episodes found.</p>';
-            return;
-        }
-
-        feed.items.slice(0, 10).forEach(item => { // Show latest 10 episodes
-            const episodeDiv = document.createElement('div');
-            episodeDiv.className = 'p-4 bg-gray-700 rounded-lg';
+            const response = await fetch(PROXY_URL);
+            if (!response.ok) {
+                throw new Error(`Network response was not ok: ${response.statusText}`);
+            }
+            const str = await response.text();
+            const data = new window.DOMParser().parseFromString(str, "text/xml");
             
-            const pubDate = new Date(item.pubDate).toLocaleDateString('en-ZA', {
-                year: 'numeric', month: 'long', day: 'numeric'
+            const channelTitle = data.querySelector("channel > title")?.textContent || 'Podcast';
+            const channelImage = data.querySelector("channel > image > url")?.textContent;
+            
+            // Set the main cover art from the channel image
+            if (channelImage) playerCoverArt.src = channelImage;
+
+            episodesListEl.innerHTML = ''; // Clear previous list
+            const items = data.querySelectorAll("item");
+
+            items.forEach((item, index) => {
+                const title = item.querySelector("title")?.textContent || 'Untitled Episode';
+                const audioUrl = item.querySelector("enclosure")?.getAttribute("url");
+                const description = item.querySelector("description")?.textContent || 'No description available.';
+                // Use a smaller image from the item if available, otherwise fallback to channel image
+                const itemImage = item.getElementsByTagNameNS('*', 'image')[0]?.getAttribute('href') || channelImage;
+
+                const episodeEl = document.createElement('button');
+                episodeEl.className = 'episode-item flex items-center w-full text-left p-3 rounded-lg hover:bg-gray-700 transition-colors';
+                episodeEl.innerHTML = `
+                    <img src="${itemImage || 'https://placehold.co/60x60/374151/FFFFFF?text=?'}" alt="${title}" class="w-12 h-12 rounded-md mr-4 object-cover flex-shrink-0">
+                    <div class="flex-grow">
+                        <h4 class="font-bold text-white">${title}</h4>
+                    </div>
+                `;
+                episodeEl.addEventListener('click', () => {
+                    playEpisode({ title, description, audioUrl, image: itemImage });
+                });
+                episodesListEl.appendChild(episodeEl);
+
+                // Autoplay the first episode
+                if (index === 0) {
+                    playEpisode({ title, description, audioUrl, image: itemImage });
+                }
             });
 
-            episodeDiv.innerHTML = `
-                <h4 class="font-bold text-lg text-yellow-300">${item.title}</h4>
-                <p class="text-sm text-gray-400 mb-2">${pubDate}</p>
-                <audio controls class="w-full">
-                    <source src="${item.enclosure.url}" type="${item.enclosure.type}">
-                    Your browser does not support the audio element.
-                </audio>
-            `;
-            episodeList.appendChild(episodeDiv);
-        });
-
-    } catch (error) {
-        episodeList.innerHTML = '<p class="text-center text-red-400">Error loading podcast episodes. Please try again later.</p>';
-        console.error('Error fetching RSS feed:', error);
+        } catch (error) {
+            console.error("Failed to fetch or parse RSS feed:", error);
+            errorEl.textContent = "Sorry, could not load podcast feed. Please try again later.";
+            errorEl.style.display = 'block';
+        } finally {
+            loadingEl.style.display = 'none';
+        }
     }
-}
+
+    function playEpisode({ title, description, audioUrl, image }) {
+        episodeTitleEl.textContent = title;
+        // Clean up description HTML
+        const tempDiv = document.createElement('div');
+        tempDiv.innerHTML = description;
+        episodeDescriptionEl.textContent = tempDiv.textContent || 'No description available.';
+        
+        if(image) playerCoverArt.src = image;
+        audioPlayer.src = audioUrl;
+        audioPlayer.play();
+    }
+
+    fetchPodcastFeed();
+});

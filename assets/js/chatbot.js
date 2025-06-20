@@ -1,9 +1,7 @@
-// We import the specific Firestore instance for the chatbot from its dedicated config file.
 import { chatbotDb } from './firebase-chatbot-config.js';
-import { collection, addDoc, serverTimestamp, query, where, getDocs, limit } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM ELEMENT SELECTION ---
     const chatModal = document.getElementById('chatbot-modal');
     if (!chatModal) return;
 
@@ -17,13 +15,11 @@ document.addEventListener('DOMContentLoaded', () => {
         return;
     }
 
-    // --- FORM SUBMISSION EVENT LISTENER ---
     chatForm.addEventListener('submit', async (e) => {
         e.preventDefault();
         const messageText = chatInput.value.trim();
         if (messageText === '') return;
 
-        // --- UI & STATE MANAGEMENT ---
         chatInput.disabled = true;
         formButton.disabled = true;
         if(typingIndicator) typingIndicator.style.display = 'block';
@@ -32,28 +28,23 @@ document.addEventListener('DOMContentLoaded', () => {
         chatInput.value = '';
 
         try {
-            // --- 1. RETRIEVE KNOWLEDGE FROM FIRESTORE (RAG) ---
             const contextFromBooks = await searchKnowledgeBase(messageText);
-
-            // --- 2. GENERATE RESPONSE WITH GEMINI ---
             const botResponse = await getGeminiResponse(messageText, contextFromBooks);
-
-            appendMessage(botResponse.replace(/\n/g, '<br>'), 'bot');
-
-            // --- 3. PERSIST CONVERSATION ---
+            const formattedResponse = botResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
+            appendMessage(formattedResponse, 'bot');
+            
             await addDoc(collection(chatbotDb, 'conversations'), {
                 user_message: messageText,
                 bot_response: botResponse,
-                retrieved_context: contextFromBooks, // Save what context was used
+                retrieved_context: contextFromBooks,
                 timestamp: serverTimestamp(),
             });
 
         } catch (error) {
             console.error("Chatbot Error:", error);
-            const errorMessage = "Sorry, I had trouble finding an answer. My knowledge base might be updating. Please try again.";
+            const errorMessage = "Sorry, I had trouble finding an answer. My knowledge base might be updating or the AI service is currently unavailable. Please try again later.";
             appendMessage(errorMessage, 'bot-error');
         } finally {
-            // --- CLEANUP ---
             chatInput.disabled = false;
             formButton.disabled = false;
             if(typingIndicator) typingIndicator.style.display = 'none';
@@ -61,51 +52,42 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
 
-    /**
-     * Searches the Firestore 'knowledge_base' for relevant content.
-     * @param {string} userMessage The user's query.
-     * @returns {Promise<string>} A string containing the relevant text chunks.
-     */
     async function searchKnowledgeBase(userMessage) {
         console.log("Searching knowledge base for:", userMessage);
         const knowledgeBaseRef = collection(chatbotDb, "knowledge_base");
-
-        // Simple keyword extraction (can be improved with more advanced NLP)
-        const keywords = userMessage.toLowerCase().split(' ').filter(word => word.length > 3);
-        if (keywords.length === 0) return ""; // No useful keywords
+        const keywords = userMessage.toLowerCase().split(' ').filter(word => word.length > 4); // Use more specific keywords
+        if (keywords.length === 0) return "";
 
         try {
-            // Create a query to find documents where the 'content' contains any of the keywords.
-            // Note: Firestore does not support full-text search natively. This is a basic workaround.
-            // For production, a dedicated search service like Algolia or Elasticsearch is recommended.
-            // This query is a placeholder for a more robust keyword search.
-            const q = query(knowledgeBaseRef, where("keywords", "array-contains-any", keywords), limit(3));
+            // FIX: Instead of a complex query that fails without an index, 
+            // fetch a limited number of recent documents and filter client-side.
+            // This is less efficient for large datasets but works without backend setup.
+            const q = query(knowledgeBaseRef, orderBy("timestamp", "desc"), limit(50));
             const querySnapshot = await getDocs(q);
+            
+            let relevantChunks = [];
+            querySnapshot.forEach(doc => {
+                const content = doc.data().content.toLowerCase();
+                // Check if any keyword appears in the content
+                if (keywords.some(keyword => content.includes(keyword))) {
+                    relevantChunks.push(doc.data().content);
+                }
+            });
 
-            let context = "";
-            if (!querySnapshot.empty) {
-                querySnapshot.forEach(doc => {
-                    context += doc.data().content + "\n\n";
-                });
-                console.log("Found relevant context from books.");
-                return context;
+            if (relevantChunks.length > 0) {
+                console.log(`Found ${relevantChunks.length} relevant context chunks.`);
+                // Join the most relevant chunks (up to a certain limit to manage prompt size)
+                return relevantChunks.slice(0, 3).join("\n\n---\n\n");
             } else {
                  console.log("No specific context found, using general knowledge.");
-                 return ""; // Return empty string if no docs found
+                 return "";
             }
         } catch (error) {
              console.error("Error searching knowledge base:", error);
-             // This might fail if the composite index is not created. Firestore provides a link in the error console to create it.
              return "";
         }
     }
 
-
-    /**
-     * Appends a new message bubble to the chat window.
-     * @param {string} htmlContent The HTML content of the message.
-     * @param {string} type The type of message ('user', 'bot', or 'bot-error').
-     */
     function appendMessage(htmlContent, type) {
         const messageElement = document.createElement('div');
         messageElement.classList.add('message-bubble', `${type}-message`);
@@ -114,24 +96,30 @@ document.addEventListener('DOMContentLoaded', () => {
         chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
     }
 
-    /**
-     * Sends a prompt to the Gemini API, augmented with context from Firestore.
-     * @param {string} userMessage The message from the user.
-     * @param {string} context The context retrieved from the knowledge base.
-     * @returns {Promise<string>} The bot's text response.
-     */
     async function getGeminiResponse(userMessage, context) {
         let prompt;
 
         if (context) {
-            prompt = `Based on the following information from my books: \n\n---START OF BOOK CONTENT---\n${context}\n---END OF BOOK CONTENT---\n\nNow, as a helpful legal information assistant for South African Family Law named Flamea, answer the following user question. Prioritize information from the book content provided. Do not provide legal advice. User question: "${userMessage}"`;
+            prompt = `Based *only* on the following information from my books: \n\n---START OF BOOK CONTENT---\n${context}\n---END OF BOOK CONTENT---\n\nNow, as a helpful legal information assistant for South African Family Law named iSazi, answer the following user question. If the answer is not in the provided book content, state that you cannot find the information in the provided texts. Do not provide legal advice. User question: "${userMessage}"`;
         } else {
-            prompt = `You are a helpful legal information assistant for South Africa, named Flamea. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
+            prompt = `You are a helpful legal information assistant for South Africa, named iSazi. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
         }
+        
+        // Use the appropriate Gemini model for this task
+        const model = 'gemini-2.0-flash';
+        const apiKey = ""; // Will be populated by the environment.
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
 
-        const payload = { contents: [{ parts: [{ text: prompt }] }] };
-        const apiKey = ""; // Handled by execution environment
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=${apiKey}`;
+        const payload = {
+            contents: [{ parts: [{ text: prompt }] }],
+            // Add safety settings to reduce chances of getting blocked responses
+            safetySettings: [
+                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
+            ],
+        };
 
         const response = await fetch(apiUrl, {
             method: 'POST',
@@ -140,7 +128,8 @@ document.addEventListener('DOMContentLoaded', () => {
         });
 
         if (!response.ok) {
-            throw new Error(`API request failed: ${response.statusText}`);
+            const errorBody = await response.text();
+            throw new Error(`API request failed: ${response.statusText}. Body: ${errorBody}`);
         }
 
         const result = await response.json();
@@ -149,7 +138,8 @@ document.addEventListener('DOMContentLoaded', () => {
         if (botText) {
             return botText;
         } else {
-            throw new Error("Received an invalid response from the AI service.");
+            console.warn("Invalid response structure from AI service:", result);
+            throw new Error("Received no text in the response from the AI service.");
         }
     }
 });
