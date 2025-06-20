@@ -1,185 +1,279 @@
-// assets/js/games.js
+document.addEventListener('DOMContentLoaded', () => {
+    // --- DOM Element References ---
+    const selectionView = document.getElementById('selection-view');
+    const wizardView = document.getElementById('wizard-view');
+    const explorerView = document.getElementById('explorer-view');
 
-// --- Game Data: Avatars and Scenarios ---
-const avatarData = {
-    'inkwenkwe': { name: 'Inkwenkwe', gender: 'male', svg: '<svg width="150" height="300" viewBox="0 0 100 200"><rect x="25" y="50" width="50" height="100" fill="#a0522d" rx="10"/><circle cx="50" cy="25" r="20" fill="#654321"/></svg>' },
-    'intombazana': { name: 'Intombazana', gender: 'female', svg: '<svg width="150" height="300" viewBox="0 0 100 200"><rect x="25" y="50" width="50" height="100" fill="#d2b48c" rx="10"/><circle cx="50" cy="25" r="20" fill="#8b4513"/></svg>' }
-};
-
-const scenarios = [
-    {
-        avatar: 'inkwenkwe',
-        ceremony: 'Ulwaluko Graduation (Amakrwala)',
-        culture: 'Xhosa',
-        requiredItems: ['white_blanket', 'beaded_headband', 'staff'],
-        clothingItems: [
-            { id: 'white_blanket', name: 'White Blanket', svg: '<path d="M10 60 H 90 V 140 H 10 Z" fill="white" stroke="black" stroke-width="1"/>' },
-            { id: 'beaded_headband', name: 'Beaded Headband', svg: '<rect x="30" y="5" width="40" height="10" fill="blue" stroke="white" stroke-width="1"/>' },
-            { id: 'staff', name: 'Ceremonial Staff', svg: '<line x1="5" y1="10" x2="5" y2="150" stroke="brown" stroke-width="4"/>' },
-            { id: 'headdress', name: 'Feathered Headdress', svg: '<path d="M50 0 L40 20 L60 20 Z" fill="orange"/>' } // Decoy
-        ]
-    },
-    {
-        avatar: 'intombazana',
-        ceremony: 'Zulu Reed Dance (Umhlanga)',
-        culture: 'Zulu',
-        requiredItems: ['beaded_skirt', 'anklets', 'reed'],
-        clothingItems: [
-            { id: 'beaded_skirt', name: 'Beaded Skirt', svg: '<path d="M20 100 Q 50 120 80 100 V 130 H 20 Z" fill="red"/>' },
-            { id: 'anklets', name: 'Anklets', svg: '<circle cx="30" cy="150" r="5" fill="green"/><circle cx="70" cy="150" r="5" fill="green"/>' },
-            { id: 'reed', name: 'Ceremonial Reed', svg: '<line x1="95" y1="10" x2="95" y2="160" stroke="tan" stroke-width="3"/>' },
-            { id: 'modern_dress', name: 'Modern Dress', svg: '<rect x="25" y="60" width="50" height="80" fill="pink"/>' } // Decoy
-        ]
-    }
-];
-
-// --- Game State ---
-let currentScenarioIndex = -1;
-let selectedAvatar = null;
-let dressedItems = [];
-
-// --- DOM Elements ---
-const gameContainer = document.getElementById('game-container');
-const avatarPlaceholder = document.getElementById('avatar-placeholder');
-const selectionGrid = document.getElementById('selection-grid');
-const scenarioText = document.getElementById('scenario-text');
-const selectionTitle = document.getElementById('selection-title');
-const nextBtn = document.getElementById('next-btn');
-
-// --- Game Logic ---
-function initGame() {
-    displayAvatarSelection();
-    setupEventListeners();
-}
-
-function displayAvatarSelection() {
-    selectionTitle.textContent = 'Select Your Character';
-    selectionGrid.innerHTML = Object.keys(avatarData).map(key => `
-        <div class="avatar-selection-card bg-gray-700 p-4 rounded-lg text-center cursor-pointer" data-avatar-id="${key}">
-            ${avatarData[key].svg}
-            <p class="mt-2 font-semibold">${avatarData[key].name}</p>
-        </div>
-    `).join('');
+    const wizardBtn = document.getElementById('start-wizard-btn');
+    const explorerBtn = document.getElementById('explore-games-btn');
+    const featuredToolCard = document.getElementById('featured-tool-card');
     
-    document.querySelectorAll('.avatar-selection-card').forEach(card => {
-        card.addEventListener('click', () => {
-            selectedAvatar = card.dataset.avatarId;
-            startNextScenario();
-        });
-    });
-}
+    const wizardSection = document.getElementById('wizard-section');
+    const explorerSection = document.getElementById('explorer-section');
 
-function startNextScenario() {
-    currentScenarioIndex++;
-    if (currentScenarioIndex >= scenarios.length) {
-        scenarioText.textContent = 'Congratulations! You have completed all the challenges!';
-        avatarPlaceholder.innerHTML = '<p class="text-2xl text-green-400">You are a cultural expert!</p>';
-        selectionGrid.innerHTML = '';
-        nextBtn.classList.add('hidden');
-        return;
-    }
+    const backToSelectionWizard = document.getElementById('back-to-selection-wizard');
+    const backToSelectionExplorer = document.getElementById('back-to-selection-explorer');
     
-    const scenario = scenarios[currentScenarioIndex];
-    selectedAvatar = scenario.avatar;
-    dressedItems = [];
+    // Exit if the main containers aren't on this page
+    if (!selectionView || !wizardView || !explorerView) return;
 
-    scenarioText.textContent = `Prepare ${avatarData[selectedAvatar].name} for the ${scenario.ceremony} (${scenario.culture}).`;
-    selectionTitle.textContent = 'Select Clothing & Items';
+    // --- Data: Games and Wizard Questions ---
+    const gamesDatabase = [
+        { id: 'ancestors_quest', title: 'Ancestor\'s Quest', category: 'cultural', age: '14+', href: 'games/ancestors-quest.html' },
+        { id: 'constitution_champions', title: 'Constitution Champions', category: 'constitutional', age: '14+', href: 'games/constitution-champions.html' },
+        { id: 'constitution_crusaders', title: 'Constitution Crusaders', category: 'constitutional', age: '9-13', href: 'games/constitution-crusaders.html' },
+        { id: 'kid_konstitution', title: 'Kid Konstitution', category: 'constitutional', age: '4-8', href: 'games/kid-konstitution.html' },
+        { id: 'cultural_connection', title: 'Cultural Connection', category: 'cultural', age: '9-13', href: 'games/cultural-connection.html' },
+        { id: 'cultural_dress_up', title: 'Cultural Dress-Up', category: 'cultural', age: '4-8', href: 'games/cultural-dress-up.html' },
+        { id: 'justice_builder', title: 'Justice Builder', category: 'legal_concepts', age: '14+', href: 'games/justice-builder.html' },
+        { id: 'rights_racer', title: 'Rights Racer', category: 'legal_concepts', age: '9-13', href: 'games/rights-racer.html' },
+        { id: 'mythbuster_game', title: 'Myth-Buster', category: 'satirical', age: '14+', href: 'games/mythbuster-game.html' }
+    ];
 
-    avatarPlaceholder.innerHTML = avatarData[selectedAvatar].svg;
-    setupDropZones();
+    const gameCategories = {
+        cultural: { name: 'Cultural Games', icon: 'fa-landmark' },
+        constitutional: { name: 'Constitutional Law', icon: 'fa-scroll' },
+        legal_concepts: { name: 'Legal Concepts', icon: 'fa-gavel' },
+        satirical: { name: 'Satirical & Critical Thinking', icon: 'fa-lightbulb' }
+    };
 
-    displayClothingItems(scenario.clothingItems);
-    nextBtn.classList.add('hidden');
-}
-
-function setupDropZones() {
-    const avatarSVG = avatarPlaceholder.querySelector('svg');
-    const dropZone = document.createElement('div');
-    dropZone.className = 'drop-zone absolute inset-0';
-    avatarPlaceholder.appendChild(dropZone);
-
-    dropZone.addEventListener('dragover', e => {
-        e.preventDefault();
-        dropZone.classList.add('hover');
-    });
-    dropZone.addEventListener('dragleave', () => dropZone.classList.remove('hover'));
-    dropZone.addEventListener('drop', handleDrop);
-}
-
-function displayClothingItems(items) {
-    selectionGrid.innerHTML = items.map(item => `
-        <div class="clothing-item p-2 bg-gray-700 rounded-lg flex justify-center items-center" draggable="true" data-item-id="${item.id}">
-            <svg width="80" height="80" viewBox="0 0 100 160">${item.svg}</svg>
-        </div>
-    `).join('');
-
-    document.querySelectorAll('.clothing-item').forEach(item => {
-        item.addEventListener('dragstart', handleDragStart);
-    });
-}
-
-function handleDragStart(e) {
-    e.dataTransfer.setData('text/plain', e.target.closest('.clothing-item').dataset.itemId);
-}
-
-function handleDrop(e) {
-    e.preventDefault();
-    const itemId = e.dataTransfer.getData('text/plain');
-    const scenario = scenarios[currentScenarioIndex];
+    // This is a reference to a tool from another section, as per the blueprint
+    const constitutionalTrainingTool = {
+        id: 'constitutional_training',
+        title: 'Constitutional Training Course',
+        href: 'training/course-constitution.html',
+        isTool: true
+    };
     
-    if (scenario.requiredItems.includes(itemId) && !dressedItems.includes(itemId)) {
-        dressedItems.push(itemId);
-        
-        // Visually add item to avatar
-        const itemData = scenario.clothingItems.find(i => i.id === itemId);
-        const avatarSVG = avatarPlaceholder.querySelector('svg');
-        const g = document.createElementNS('http://www.w3.org/2000/svg', 'g');
-        g.innerHTML = itemData.svg;
-        avatarSVG.appendChild(g);
-
-        document.querySelector(`[data-item-id="${itemId}"]`).style.opacity = '0.3';
-        showFeedback('Correct!', 'green');
-
-        if (dressedItems.length === scenario.requiredItems.length) {
-            showFeedback('Outfit Complete!', 'blue');
-            nextBtn.classList.remove('hidden');
+    const wizardQuestions = {
+        start: {
+            question: "Who is playing?",
+            options: [
+                { text: "Ages 4-8", next: "learn_4-8" },
+                { text: "Ages 9-13", next: "learn_9-13" },
+                { text: "Ages 14+", next: "learn_14+" }
+            ]
+        },
+        'learn_4-8': {
+            question: "What do you want to learn about?",
+            options: [
+                { text: "Cultural Games", results: { age: "4-8", category: "cultural" } },
+                { text: "The Constitution", results: { age: "4-8", category: "constitutional" } },
+            ]
+        },
+        'learn_9-13': {
+            question: "What do you want to learn about?",
+             options: [
+                { text: "Cultural Games", results: { age: "9-13", category: "cultural" } },
+                { text: "The Constitution", results: { age: "9-13", category: "constitutional" } },
+                { text: "Legal Concepts", results: { age: "9-13", category: "legal_concepts" } }
+            ]
+        },
+        'learn_14+': {
+            question: "What do you want to learn about?",
+             options: [
+                { text: "Cultural Games", results: { age: "14+", category: "cultural" } },
+                { text: "The Constitution", results: { age: "14+", category: "constitutional" } },
+                { text: "Legal Concepts", results: { age: "14+", category: "legal_concepts" } },
+                { text: "Satirical Games", results: { age: "14+", category: "satirical" } }
+            ]
         }
-    } else {
-        showFeedback('Try again!', 'red');
-    }
-    e.target.classList.remove('hover');
-}
+    };
 
-function showFeedback(message, color) {
-    const feedbackEl = document.createElement('div');
-    feedbackEl.className = `feedback-message bg-${color}-500 text-white`;
-    feedbackEl.textContent = message;
-    gameContainer.appendChild(feedbackEl);
-    setTimeout(() => feedbackEl.remove(), 3000);
-}
+    // --- State Management ---
+    let wizardHistory = [];
 
-// --- Event Listeners for Modals and Navigation ---
-function setupEventListeners() {
-    const quitBtn = document.getElementById('quit-btn');
-    const confirmQuitBtn = document.getElementById('confirm-quit-btn');
-    const cancelQuitBtn = document.getElementById('cancel-quit-btn');
-    const instructionsBtn = document.getElementById('instructions-btn');
-    const closeInstructionsBtn = document.getElementById('close-instructions-btn');
-    const quitModal = document.getElementById('quit-modal');
-    const instructionsModal = document.getElementById('instructions-modal');
+    // --- View Toggling ---
+    const showView = (viewName) => {
+        [selectionView, wizardView, explorerView].forEach(v => v.classList.remove('active'));
+        document.getElementById(`${viewName}-view`).classList.add('active');
+    };
+
+    // --- Featured Tool Logic ---
+    const renderFeaturedTool = () => {
+        if (!featuredToolCard) return;
+
+        const TWO_DAYS_MS = 48 * 60 * 60 * 1000;
+        let featuredGameData = JSON.parse(localStorage.getItem('featuredGameData')) || {};
+        const now = new Date().getTime();
+        
+        let needsUpdate = !featuredGameData.id || !featuredGameData.timestamp || (now - featuredGameData.timestamp > TWO_DAYS_MS);
+
+        if (needsUpdate) {
+            const allGameIds = gamesDatabase.map(g => g.id);
+            let nextIndex = 0;
+            if(featuredGameData.id) {
+                const currentIndex = allGameIds.indexOf(featuredGameData.id);
+                nextIndex = (currentIndex + 1) % allGameIds.length;
+            }
+            const newFeaturedId = allGameIds[nextIndex];
+            featuredGameData = { id: newFeaturedId, timestamp: now };
+            localStorage.setItem('featuredGameData', JSON.stringify(featuredGameData));
+        }
+
+        const featuredGame = gamesDatabase.find(g => g.id === featuredGameData.id);
+        
+        featuredToolCard.innerHTML = `
+            <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
+            <h4 class="text-2xl font-bold text-white">Featured Game</h4>
+            <p class="text-gray-400 mb-4 font-semibold">${featuredGame.title}</p>
+            <a href="${featuredGame.href}" class="inline-block bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">Play Now</a>
+        `;
+        featuredToolCard.onclick = () => { window.location.href = featuredGame.href; };
+    };
     
-    quitBtn.addEventListener('click', () => quitModal.classList.add('show'));
-    cancelQuitBtn.addEventListener('click', () => quitModal.classList.remove('show'));
-    confirmQuitBtn.addEventListener('click', () => window.location.href = '../games.html');
+    // --- Explorer (Manual Selection) Logic ---
+    const buildExplorer = () => {
+        let explorerHtml = '';
+        for (const categoryId in gameCategories) {
+            const category = gameCategories[categoryId];
+            const gamesInCategory = gamesDatabase.filter(game => game.category === categoryId);
 
-    instructionsBtn.addEventListener('click', () => instructionsModal.classList.add('show'));
-    closeInstructionsBtn.addEventListener('click', () => instructionsModal.classList.remove('show'));
+            if (gamesInCategory.length > 0) {
+                explorerHtml += `
+                <div class="accordion-item bg-gray-800 rounded-lg">
+                    <button class="accordion-header w-full text-left p-6 flex justify-between items-center">
+                        <h3 class="text-xl font-bold text-white"><i class="fas ${category.icon} mr-4 text-teal-400"></i>${category.name}</h3>
+                        <i class="fas fa-chevron-down text-white transition-transform"></i>
+                    </button>
+                    <div class="accordion-content px-6 pb-6">
+                        <ul class="space-y-3 mt-4">
+                            ${gamesInCategory.map(game => `
+                                <li>
+                                    <a href="${game.href}" class="flex items-center p-3 rounded-md hover:bg-gray-700 transition-colors">
+                                        <i class="fas fa-gamepad mr-3 text-gray-400"></i>
+                                        <span>${game.title}</span> <span class="ml-auto text-xs text-gray-500 bg-gray-900 px-2 py-1 rounded-full">${game.age}</span>
+                                    </a>
+                                </li>
+                            `).join('')}
+                        </ul>
+                    </div>
+                </div>`;
+            }
+        }
+        explorerSection.innerHTML = explorerHtml;
 
-    nextBtn.addEventListener('click', startNextScenario);
-}
+        explorerSection.querySelectorAll('.accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+                header.parentElement.classList.toggle('active');
+                 const icon = header.querySelector('.fa-chevron-down');
+                icon.style.transform = header.parentElement.classList.contains('active') ? 'rotate(180deg)' : 'rotate(0deg)';
+            });
+        });
+    };
 
-// --- Initialize Game ---
-if(document.getElementById('game-container')) {
-    initGame();
-}
+    // --- Wizard Logic ---
+    const renderWizardStep = (stepId) => {
+        const step = wizardQuestions[stepId];
+        if (!step) return;
+
+        wizardSection.innerHTML = `
+            <div class="text-center mb-6">
+                <p class="text-amber-400 font-semibold mb-2">Step ${wizardHistory.length} of 2</p>
+                <h2 class="text-3xl font-bold text-white">${step.question}</h2>
+            </div>
+            <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 mt-8">
+                ${step.options.map(option => `
+                    <button class="wizard-option text-left bg-gray-700 hover:bg-gray-600 p-6 rounded-lg transition-colors" data-next="${option.next || 'results'}" data-results='${JSON.stringify(option.results || {})}'>
+                        <span class="font-bold text-lg text-white">${option.text}</span>
+                    </button>
+                `).join('')}
+            </div>
+            <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
+                 <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-600 hover:bg-gray-500">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
+            </div>
+        `;
+        
+        document.querySelectorAll('.wizard-option').forEach(btn => btn.addEventListener('click', handleWizardOption));
+        const backBtn = document.getElementById('wizard-back-btn');
+        backBtn.addEventListener('click', goBack);
+        backBtn.disabled = wizardHistory.length <= 1;
+    };
+    
+    const handleWizardOption = (e) => {
+        const button = e.currentTarget;
+        const nextStepId = button.dataset.next;
+        
+        wizardHistory.push(nextStepId);
+
+        if (nextStepId === 'results') {
+            const results = JSON.parse(button.dataset.results);
+            renderWizardResults(results);
+        } else {
+            renderWizardStep(nextStepId);
+        }
+    };
+    
+    const renderWizardResults = (filters) => {
+        let recommendedGames = gamesDatabase.filter(game => game.age === filters.age && game.category === filters.category);
+        
+        // Ensure at least two games are recommended if possible
+        if (recommendedGames.length < 2) {
+             const fallbackGames = gamesDatabase.filter(game => game.age === filters.age && game.category !== filters.category);
+             recommendedGames.push(...fallbackGames.slice(0, 2 - recommendedGames.length));
+        }
+
+        // Add the constitutional training tool as a default recommendation
+        const recommendations = [...recommendedGames.slice(0, 2), constitutionalTrainingTool];
+
+        wizardSection.innerHTML = `
+            <div class="text-center">
+                <h2 class="text-3xl font-bold text-white mb-4">Your Recommendations</h2>
+                <p class="text-gray-400 mb-8">Based on your answers, we suggest these activities.</p>
+            </div>
+            <div class="space-y-4">
+                ${recommendations.map(item => {
+                    const icon = item.isTool ? 'fa-book-open' : 'fa-gamepad';
+                    const label = item.isTool ? 'Training' : 'Game';
+                    const color = item.isTool ? 'bg-blue-600' : 'bg-teal-600';
+                    return `
+                    <a href="${item.href}" class="block bg-gray-700 p-4 rounded-lg hover:bg-gray-600 transition-colors">
+                        <div class="flex items-center">
+                             <div class="mr-4">
+                                <span class="${color} px-3 py-1 rounded-full text-xs font-bold">${label}</span>
+                            </div>
+                            <h4 class="font-bold text-white flex-grow">${item.title}</h4>
+                            <i class="fas ${icon} text-gray-400"></i>
+                        </div>
+                    </a>
+                `}).join('')}
+            </div>
+             <div class="mt-8 pt-6 border-t border-gray-700 flex justify-start">
+                 <button id="wizard-back-btn" class="inline-flex items-center px-4 py-2 text-sm font-medium rounded-md text-gray-300 bg-gray-600 hover:bg-gray-500">
+                    <i class="fas fa-arrow-left mr-2"></i>Back
+                </button>
+            </div>
+        `;
+        document.getElementById('wizard-back-btn').addEventListener('click', goBack);
+    };
+
+    const goBack = () => {
+        if (wizardHistory.length > 1) {
+            wizardHistory.pop();
+            renderWizardStep(wizardHistory[wizardHistory.length - 1]);
+        }
+    };
+    
+    const startWizard = () => {
+        wizardHistory = ['start'];
+        renderWizardStep('start');
+        showView('wizard');
+    };
+
+    // --- Initial Setup ---
+    wizardBtn.addEventListener('click', startWizard);
+    explorerBtn.addEventListener('click', () => {
+        showView('explorer');
+        // Bonus: expand all accordions on manual selection click as per blueprint
+        explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.add('active'));
+    });
+    
+    backToSelectionWizard.addEventListener('click', () => showView('selection'));
+    backToSelectionExplorer.addEventListener('click', () => showView('selection'));
+
+    buildExplorer();
+    renderFeaturedTool();
+    showView('selection'); // Default view
+});
