@@ -9,63 +9,7 @@
     <style>
         
         /* Main page layout */
-        .page-container {
-            display: grid;
-            grid-template-columns: 280px 1fr; /* Sidebar and main area */
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
-        }
-        .main-content-area {
-             display: grid;
-             grid-template-columns: 1fr 300px; /* Main content and vertical timeline */
-             overflow: hidden;
-             height: 100vh;
-        }
-        .main-scroll-content {
-            overflow-y: auto;
-            padding: 2rem 1.5rem;
-             background-color: rgba(17, 24, 39, 0.8); /* Semi-transparent dark background */
-            backdrop-filter: blur(5px);
-        }
-
-        /* Main Timeline styles */
-        .timeline-item {
-            opacity: 0;
-            transform: translateY(50px);
-            transition: opacity 0.6s ease-out, transform 0.6s ease-out;
-        }
-        .timeline-item.is-visible {
-            opacity: 1;
-            transform: translateY(0);
-        }
-        .timeline-line::before {
-            content: '';
-            position: absolute;
-            top: 0; left: 1.5rem;
-            transform: translateX(-50%);
-            height: 100%; width: 4px;
-            background-color: #4B5563; /* gray-600 */
-        }
-        .timeline-icon { z-index: 10; }
-        .accordion-content {
-            max-height: 0;
-            overflow: hidden;
-            transition: max-height 0.5s cubic-bezier(0.4, 0, 0.2, 1), padding 0.5s ease;
-            padding: 0 1rem;
-        }
-        .accordion-content.open {
-            max-height: 1000px;
-            padding: 1rem;
-        }
-         .accordion-toggle .fa-chevron-down {
-            transition: transform 0.3s;
-         }
-        .accordion-toggle.open .fa-chevron-down {
-            transform: rotate(180deg);
-        }
-
-        /* Vertical Timeline Styles */
+ /* Vertical Timeline Styles */
         .vertical-timeline-container {
             height: 100vh;
             background-color: rgba(17, 24, 39, 0.9);
