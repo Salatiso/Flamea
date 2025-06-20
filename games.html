@@ -9,258 +9,88 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        /* Exact layout from training.html */
+        /* Shared styles based on the blueprint */
         .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; }
-        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; }
-        .main-view { display: none; }
-        .main-view.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 2px solid transparent; }
+        .option-card:hover { transform: translateY(-5px); border-color: #f59e0b; /* amber-500 */ }
+        .view-container { display: none; }
+        .view-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(15px); }
+            from { opacity: 0; transform: translateY(10px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.7s ease-in-out; }
-        .accordion-item.active .accordion-content { max-height: 2000px; /* Ample height for content */ }
-        .accordion-header { cursor: pointer; }
-        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
-        .accordion-icon { transition: transform 0.3s ease-out; }
+        .accordion-item .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-out; }
+        .accordion-item.active .accordion-content { max-height: 1000px; /* Adjust as needed */ }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; animation: fadeIn 0.5s; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans">
-    
+<body class="bg-gray-900 text-gray-300 font-open-sans">
     <div class="main-container">
         <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
+        <main class="main-content p-6 sm:p-8">
             <div class="max-w-7xl mx-auto">
-                <!-- Header Section -->
-                <div id="hub-header" class="text-center mb-12 bg-black/50 p-6 rounded-lg">
-                    <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">Flamea Game Arcade</h1>
-                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Learn through play. Sharpen your mind with our collection of educational games.</p>
+                <!-- Standard Header Block -->
+                <header id="hub-header" class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">Educational Games</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Learn about culture, law, and rights through play.</p>
+                    </div>
+                </header>
+
+                <!-- 3-Box Selection Area -->
+                <div id="selection-view" class="view-container active">
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                        <!-- Automated Wizard Card -->
+                        <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white">Game Finder Wizard</h4>
+                            <p class="text-gray-400">Answer questions to find the perfect game.</p>
+                        </div>
+                        <!-- Manual Selection Card -->
+                        <div id="explore-games-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <i class="fas fa-folder-open text-5xl text-teal-400 mb-4"></i>
+                            <h4 class="text-2xl font-bold text-white">Browse All Games</h4>
+                            <p class="text-gray-400">Explore all of our game categories.</p>
+                        </div>
+                        <!-- Featured Game Card -->
+                        <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border-gray-700">
+                            <!-- Content will be injected by JS -->
+                        </div>
+                    </div>
                 </div>
 
-                <!-- SELECTION AREA (3-Box Layout) -->
-                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                     <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
-                        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Automated Wizard</h4>
-                        <p class="text-gray-400">Find the perfect game for you.</p>
+                <!-- Wizard View -->
+                <div id="wizard-view" class="view-container">
+                    <div id="wizard-section" class="bg-gray-800 p-8 rounded-xl shadow-lg">
+                        <!-- Wizard content will be injected here by games.js -->
                     </div>
-                    <div id="explore-games-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
-                        <i class="fas fa-folder-open text-5xl text-blue-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Manual Selection</h4>
-                        <p class="text-gray-400">Browse the full game library.</p>
-                    </div>
-                    <div id="featured-tool-card" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-amber-500 transition-all duration-300 transform hover:-translate-y-1">
-                        <!-- Content will be injected by JS -->
-                    </div>
-                </div>
-                
-                <!-- This container holds the wizard or explorer view -->
-                <div id="main-view-container" class="main-view">
-                    <div id="wizard-section"></div>
-                    <button id="back-to-selection" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-red-600 hover:bg-red-700">
+                    <button id="back-to-selection-wizard" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
                         <i class="fas fa-arrow-left mr-3"></i>
                         Back to Selection
                     </button>
                 </div>
 
-                <!-- This container holds the collapsed accordions, visible on page load -->
-                <div id="explorer-section" class="space-y-6">
-                    <!-- Categories will be rendered here by JS on page load -->
+                <!-- Explorer View (Manual Selection) -->
+                <div id="explorer-view" class="view-container">
+                     <div id="explorer-section" class="space-y-6">
+                        <!-- Categories will be rendered here by JS -->
+                    </div>
+                     <button id="back-to-selection-explorer" class="mt-8 inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-amber-600 hover:bg-amber-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-amber-500">
+                        <i class="fas fa-arrow-left mr-3"></i>
+                        Back to Selection
+                    </button>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- SCRIPTS LOADED AT THE END -->
-    <script src="assets/js/games.js"></script> 
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" id="page-specific-script">
-        // Page-specific logic runs after all other scripts and DOM are ready.
-        if (typeof gamesList === 'undefined') {
-            console.error("CRITICAL: games.js did not load or define gamesList.");
-            return;
-        }
-
-        const categories = {
-            "Cultural Games": { icon: "fa-people-roof", color: "text-amber-400" },
-            "Constitutional Law": { icon: "fa-scale-balanced", color: "text-sky-400" },
-            "Justice & Law": { icon: "fa-gavel", color: "text-rose-400" },
-        };
-
-        const hubHeader = document.getElementById('hub-header');
-        const selectionArea = document.getElementById('selection-area');
-        const mainViewContainer = document.getElementById('main-view-container');
-        const wizardSection = document.getElementById('wizard-section');
-        const explorerSection = document.getElementById('explorer-section');
-        
-        const wizardBtn = document.getElementById('start-wizard-btn');
-        const explorerBtn = document.getElementById('explore-games-btn');
-        const backToSelectionBtn = document.getElementById('back-to-selection');
-
-        function showView(view) {
-            hubHeader.style.display = 'none';
-            selectionArea.style.display = 'none';
-            explorerSection.style.display = 'none';
-            mainViewContainer.classList.add('active');
-
-            if (view === 'wizard') {
-                wizardSection.innerHTML = ''; // Clear previous wizard content
-                renderWizardStep('start');
-            } else if (view === 'explorer') {
-                // The explorer view is always visible, we just expand the items
-                explorerSection.style.display = 'block';
-                mainViewContainer.classList.remove('active'); // Hide the back button container
-                explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.add('active'));
-            }
-        }
-
-        function showSelectionArea() {
-            hubHeader.style.display = 'block';
-            selectionArea.style.display = 'grid';
-            mainViewContainer.classList.remove('active');
-            explorerSection.style.display = 'block'; // Ensure accordions are visible
-            // Collapse all accordions when returning to selection
-            explorerSection.querySelectorAll('.accordion-item').forEach(item => item.classList.remove('active'));
-        }
-
-        function renderWizardStep(stepId, filter = {}) {
-            let htmlContent = '';
-            wizardSection.innerHTML = ''; 
-
-            if (stepId === 'start') {
-                htmlContent = `
-                    <div class="bg-gray-800/80 p-8 rounded-lg shadow-xl">
-                        <h2 class="text-3xl font-bold text-center text-white mb-8">Who is playing?</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                           <div class="option-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500" data-age="4-8"><i class="fas fa-child text-blue-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 4-8</h3></div>
-                           <div class="option-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500" data-age="9-13"><i class="fas fa-user-graduate text-green-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 9-13</h3></div>
-                           <div class="option-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-purple-500" data-age="14+"><i class="fas fa-user-tie text-purple-400 text-4xl mb-4"></i><h3 class="text-xl font-semibold text-white">Ages 14+</h3></div>
-                        </div>
-                    </div>`;
-                wizardSection.innerHTML = htmlContent;
-                wizardSection.querySelectorAll('[data-age]').forEach(el => {
-                    el.addEventListener('click', () => renderWizardStep('theme', { ageGroup: el.dataset.age }));
-                });
-            } else if (stepId === 'theme') {
-                const availableCategories = [...new Set(gamesList.filter(g => g.ageGroup === filter.ageGroup).map(g => g.category))];
-                const categoryButtons = availableCategories.map(cat => {
-                    const catData = categories[cat] || {icon: 'fa-gamepad', color: 'text-gray-400'};
-                    return `<div class="option-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-yellow-500" data-category="${cat}">
-                                <i class="fas ${catData.icon} ${catData.color} text-4xl mb-4"></i>
-                                <h3 class="text-xl font-semibold text-white">${cat}</h3>
-                            </div>`;
-                }).join('');
-                 htmlContent = `
-                    <div class="bg-gray-800/80 p-8 rounded-lg shadow-xl">
-                        <h2 class="text-3xl font-bold text-center text-white mb-8">What do you want to learn about?</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 text-center">
-                            ${categoryButtons}
-                        </div>
-                    </div>`;
-                wizardSection.innerHTML = htmlContent;
-                wizardSection.querySelectorAll('[data-category]').forEach(el => {
-                    el.addEventListener('click', () => {
-                        filter.category = el.dataset.category;
-                        renderWizardStep('results', filter);
-                    });
-                });
-
-            } else if (stepId === 'results') {
-                 const recommendedGames = gamesList.filter(g => g.ageGroup === filter.ageGroup && g.category === filter.category).slice(0, 3);
-                 const resultsHTML = recommendedGames.map(game => `
-                    <a href="${game.href}" class="flex items-center p-4 bg-gray-900 rounded-lg hover:bg-gray-700 transition duration-300 ease-in-out group border border-green-500/50">
-                        <i class="fas ${game.icon || 'fa-gamepad'} text-green-400 mr-4 fa-lg w-8 text-center"></i>
-                        <div class="flex-1">
-                            <h4 class="font-bold text-lg text-white">${game.title}</h4>
-                            <p class="text-sm text-gray-400">${game.description}</p>
-                        </div>
-                         <i class="fas fa-chevron-right text-gray-500 ml-4 group-hover:text-white transition-colors"></i>
-                    </a>`).join('');
-                 htmlContent = `
-                    <div class="bg-gray-800/80 p-8 rounded-lg shadow-xl text-center">
-                         <i class="fas fa-trophy text-5xl text-yellow-400 mb-4"></i>
-                        <h2 class="text-3xl font-bold text-white mb-2">Recommended Games</h2>
-                        <p class="text-gray-400 mb-8">Based on your choices, these games are a great place to start.</p>
-                        <div class="space-y-4 text-left">
-                            ${resultsHTML.length > 0 ? resultsHTML : '<p class="text-center text-gray-400">No games found for this selection.</p>'}
-                        </div>
-                    </div>`;
-                wizardSection.innerHTML = htmlContent;
-            }
-        }
-        
-        function renderExplorerAccordions() {
-            explorerSection.innerHTML = '';
-            const groupedGames = gamesList.reduce((acc, game) => {
-                acc[game.category] = acc[game.category] || [];
-                acc[game.category].push(game);
-                return acc;
-            }, {});
-
-            for (const [categoryName, games] of Object.entries(groupedGames)) {
-                const categoryData = categories[categoryName] || { icon: 'fa-gamepad', color: 'text-gray-400' };
-                const accordionItem = document.createElement('div');
-                accordionItem.className = 'accordion-item bg-gray-800/50 rounded-lg overflow-hidden border border-gray-700';
-
-                const itemsHtml = games.map(game => `
-                    <a href="${game.href}" class="flex items-center p-4 bg-gray-900/50 rounded-lg hover:bg-gray-700 transition group">
-                        <i class="fas ${game.icon || 'fa-gamepad'} ${categoryData.color} mr-4 fa-lg w-8 text-center"></i>
-                        <div class="flex-1">
-                            <h4 class="font-semibold text-gray-100 group-hover:text-white">${game.title}</h4>
-                            <p class="text-sm text-gray-400">${game.description}</p>
-                        </div>
-                        <i class="fas fa-chevron-right text-gray-500 ml-4 group-hover:text-white transition-colors"></i>
-                    </a>
-                `).join('');
-
-                accordionItem.innerHTML = `
-                    <div class="accordion-header flex justify-between items-center p-5">
-                        <div class="flex items-center">
-                            <i class="fas ${categoryData.icon} ${categoryData.color} fa-2x mr-4"></i>
-                            <h3 class="text-2xl font-bold text-white">${categoryName}</h3>
-                        </div>
-                        <i class="accordion-icon fas fa-chevron-down text-gray-400 transition-transform"></i>
-                    </div>
-                    <div class="accordion-content px-5 pb-5">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 pt-4 border-t border-gray-700">
-                            ${itemsHtml}
-                        </div>
-                    </div>
-                `;
-                
-                accordionItem.querySelector('.accordion-header').addEventListener('click', () => {
-                    accordionItem.classList.toggle('active');
-                });
-                explorerSection.appendChild(accordionItem);
-            }
-        }
-
-        function renderFeaturedTool() {
-            const featuredToolCard = document.getElementById('featured-tool-card');
-            if (!featuredToolCard) return;
-
-            let featuredGame = gamesList[Math.floor(Math.random() * gamesList.length)];
-            
-            featuredToolCard.innerHTML = `
-                <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
-                <h4 class="text-2xl font-bold text-white mb-2">Featured Game</h4>
-                <p class="text-gray-400 mb-4 font-semibold">${featuredGame.title}</p>
-                <a href="${featuredGame.href}" class="inline-block bg-amber-500 text-white font-bold py-2 px-4 rounded-lg hover:bg-amber-600 transition-colors">Play Now</a>
-            `;
-            featuredToolCard.onclick = () => { window.location.href = featuredGame.href; };
-        }
-        
-        // --- INITIALIZATION ---
-        wizardBtn.addEventListener('click', () => showView('wizard'));
-        explorerBtn.addEventListener('click', () => showView('explorer'));
-        backToSelectionBtn.addEventListener('click', showSelectionArea);
-
-        renderExplorerAccordions(); // Render the accordions on load (in a collapsed state)
-        renderFeaturedTool(); // Render the featured tool on load
-    </script>
+    <!-- SCRIPTS -->
+    <script src="assets/js/main.js" type="module"></script>
+    <script src="assets/js/games.js" type="module"></script>
 </body>
 </html>
