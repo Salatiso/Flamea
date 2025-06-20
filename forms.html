@@ -9,43 +9,30 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        /* Layout fix: ensure flex container wraps sidebar and main content */
+        /* Exact layout from training.html */
         .main-container {
             display: flex;
             min-height: 100vh;
         }
-        /* Layout fix: ensure main content grows and scrolls independently */
         .main-content {
             flex-grow: 1;
             overflow-y: auto;
         }
-        .wizard-step, #explorer-section {
-            display: none;
+        .option-card {
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
         }
-        .wizard-step.active, #explorer-section.active {
-            display: block;
+        #wizard-section, #explorer-section {
+            display: none;
             animation: fadeIn 0.5s ease-in-out;
         }
         @keyframes fadeIn {
             from { opacity: 0; transform: translateY(15px); }
             to { opacity: 1; transform: translateY(0); }
         }
-        .option-card, .wizard-option {
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-        }
-        
         .wizard-option:hover {
-            background-color: #374151; /* gray-700 */
+            background-color: #374151;
             transform: translateY(-2px);
-        }
-
-        .accordion-header {
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        .accordion-header:hover {
-            background-color: #374151; /* gray-700 */
         }
         .accordion-content {
             max-height: 0;
@@ -53,34 +40,40 @@
             transition: max-height 0.5s ease-in-out;
         }
         .accordion-item.active .accordion-content {
-            max-height: 5000px; /* Large value for dynamic content */
+            max-height: 5000px;
         }
         .accordion-icon {
-            transition: transform 0.3s;
+            transition: transform 0.3s ease-out;
         }
         .accordion-item.active .accordion-icon {
             transform: rotate(180deg);
+        }
+        .accordion-header {
+            cursor: pointer;
         }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
+        <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
         
+        <!-- Main Content -->
         <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
+            <div class="max-w-7xl mx-auto">
                 <div id="hub-header" class="text-center mb-12 bg-black/50 p-6 rounded-lg">
-                    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3 font-roboto-slab">Forms & Documents Hub</h1>
-                    <p class="text-lg text-gray-300">Your arsenal for official correspondence and legal action. Find the exact document you need.</p>
+                    <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">Forms & Documents Hub</h1>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Your arsenal for official correspondence and legal action. Find the exact document you need.</p>
                 </div>
 
-                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
-                     <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
+                <!-- SELECTION AREA - Styled exactly like training.html -->
+                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
+                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1 col-span-1 lg:col-start-2">
                         <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Automated Wizard</h4>
                         <p class="text-gray-400">Answer questions to find the right form.</p>
                     </div>
-                     <div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
                         <i class="fas fa-folder-open text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Manual Selection</h4>
                         <p class="text-gray-400">Browse all available document categories.</p>
@@ -89,91 +82,25 @@
                 
                 <div id="main-content-area" class="hidden">
                     <!-- Wizard or Explorer will be shown here -->
-                    <div id="wizard-section" class="hidden bg-gray-800/80 p-8 rounded-lg shadow-xl">
-                        <div id="progress-container" class="mb-8">
-                            <div class="flex justify-between items-center mb-2">
-                                <span id="step-counter" class="text-sm font-semibold text-gray-400">Step 1 of 2</span>
-                            </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                <div id="progress-bar" class="bg-green-500 h-2.5 rounded-full" style="width: 0%; transition: width 0.4s ease;"></div>
-                            </div>
-                        </div>
-
-                        <!-- Step 1: Nature of Challenge -->
-                        <div id="step-1" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">What is the nature of your current challenge?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-next="2A">
-                                    <h4 class="font-bold">Issues with the other parent</h4>
-                                    <p class="text-sm text-gray-400">Disputes, communication, or establishing formal agreements related to your child.</p>
-                                </div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-next="2B">
-                                    <h4 class="font-bold">Issues with an official institution</h4>
-                                    <p class="text-sm text-gray-400">Lodging a complaint against a government body, school, or legal professional.</p>
-                                </div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-next="2C">
-                                    <h4 class="font-bold">Creating a personal or financial agreement</h4>
-                                    <p class="text-sm text-gray-400">For budgets, cohabitation, or child support plans.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Step 2A: Issues with Parent -->
-                        <div id="step-2A" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">What is your main goal regarding the other parent?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="establish_rights"><h4 class="font-bold">I need to formally establish my parental rights.</h4></div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="resolve_conflict"><h4 class="font-bold">We are in conflict and need to resolve a dispute.</h4></div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="court_action"><h4 class="font-bold">I need to prepare for or initiate court action.</h4></div>
-                            </div>
-                        </div>
-                        
-                        <!-- Step 2B: Issues with Institution -->
-                        <div id="step-2B" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">Which institution do you need to address?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="school">A school.</div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="legal_body">A legal or judicial body (lawyer, magistrate).</div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="gov_body">A government department or public official.</div>
-                            </div>
-                        </div>
-
-                         <!-- Step 2C: Personal/Financial Agreements -->
-                        <div id="step-2C" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">What type of agreement do you need to create?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="cohabitation">An agreement about living together.</div>
-                                <div class="wizard-option p-4 rounded-lg border border-gray-600" data-answer="child_support">An agreement about financial support for a child.</div>
-                            </div>
-                        </div>
-
-                        <!-- Results Step -->
-                        <div id="step-results" class="wizard-step">
-                             <div class="text-center mb-6">
-                                <i class="fas fa-check-circle text-5xl text-green-400 mb-4"></i>
-                                <h2 class="text-3xl font-bold font-roboto-slab text-white">Your Action Plan</h2>
-                                <p class="text-gray-400">Based on your answers, here are your recommended resources.</p>
-                            </div>
-                            <div id="recommendation-container" class="space-y-6"></div>
-                        </div>
+                    <div id="wizard-section" class="hidden bg-gray-800/80 p-8 rounded-lg shadow-xl max-w-4xl mx-auto">
+                        <!-- Wizard content is dynamically generated by forms.js -->
                     </div>
 
                     <!-- Explorer Section (Container) -->
-                    <div id="explorer-section" class="hidden space-y-4">
-                        <div id="explorer-content"></div>
+                    <div id="explorer-section" class="hidden space-y-6">
+                        <!-- Explorer content is dynamically generated by forms.js -->
                     </div>
 
-                    <!-- Common Navigation for Wizard/Explorer -->
-                    <div class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
-                        <button id="back-btn" class="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-500 disabled:opacity-50 transition-opacity" disabled>Back</button>
-                        <button id="back-to-selection" class="text-sm text-red-400 hover:text-red-300 font-semibold">« Back to Main Selection</button>
+                    <!-- Common Navigation -->
+                    <div class="max-w-4xl mx-auto mt-8">
+                         <button id="back-to-selection" class="mt-6 text-sm text-red-400 hover:text-white font-semibold">&larr; Back to selection</button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Scripts -->
+    <!-- Scripts loaded at the end of body to prevent errors -->
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/forms.js"></script>
 </body>

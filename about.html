@@ -9,24 +9,24 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link href="assets/css/style.min.css" rel="stylesheet">
     <style>
-        /* Main page layout */
-        .page-container {
-            display: flex; /* Changed to flex for sidebar compatibility */
-            height: 100vh;
-            width: 100vw;
-            overflow: hidden;
+        /* Replicating the main layout from training.html */
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
         }
         .content-wrapper {
-            flex-grow: 1; /* Allow content to take remaining space */
-            display: grid;
-             grid-template-columns: 1fr 300px; /* Main content and vertical timeline */
+             display: grid;
+             grid-template-columns: 1fr 320px; /* Main content and vertical timeline */
              overflow: hidden;
              height: 100vh;
         }
         .main-scroll-content {
             overflow-y: auto;
             padding: 2rem 1.5rem;
-             /* Removed background color here to let the body's background show through */
         }
 
         /* Main Timeline styles */
@@ -70,108 +70,106 @@
             height: 100vh;
             background-color: rgba(17, 24, 39, 0.9);
             padding: 2rem 1rem;
-            overflow: hidden;
+            overflow-y: auto; /* Allow scrolling if content overflows */
             border-left: 1px solid #374151;
         }
-        .timeline-wrapper { position: relative; height: 100%; }
-        .timeline-track { position: absolute; left: 20px; top: 0; height: 100%; width: 4px; background-image: linear-gradient(to bottom, #4f46e5, #10b981, #ef4444, #f59e0b); }
-        .timeline-scroller { animation: scroll-vertical 80s linear infinite; }
-        .timeline-scroller:hover { animation-play-state: paused; }
-        .timeline-point { position: relative; margin-bottom: 120px; padding-left: 50px; cursor: pointer; }
+        .timeline-wrapper { position: relative; }
+        .timeline-track { position: absolute; left: 20px; top: 0; bottom: 0; width: 4px; background-image: linear-gradient(to bottom, #4f46e5, #10b981, #ef4444, #f59e0b); }
+        .timeline-point { position: relative; margin-bottom: 50px; padding-left: 50px; cursor: pointer; }
         .timeline-dot { position: absolute; left: 22px; top: 5px; transform: translateX(-50%); width: 16px; height: 16px; background-color: #374151; border: 3px solid #6366f1; border-radius: 50%; z-index: 10; }
         .timeline-point:hover .timeline-dot { transform: translateX(-50%) scale(1.3); background-color: #818cf8; }
         .timeline-content .date { font-family: 'Roboto Slab', serif; font-weight: 700; color: #a5b4fc; }
-        @keyframes scroll-vertical { 0% { transform: translateY(0); } 100% { transform: translateY(-100%); } }
 
         /* Modal Styles */
-        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.8); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; }
+        .modal-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background-color: rgba(0, 0, 0, 0.85); display: flex; justify-content: center; align-items: center; z-index: 1000; opacity: 0; visibility: hidden; transition: opacity 0.3s, visibility 0.3s; backdrop-filter: blur(5px); }
         .modal-overlay.visible { opacity: 1; visibility: visible; }
-        .modal-content { background-color: #1f2937; color: #e5e7eb; padding: 2rem; border-radius: 8px; width: 90%; max-width: 700px; max-height: 80vh; overflow-y: auto; position: relative; transform: scale(0.9); transition: transform 0.3s; }
+        .modal-content { background-color: #1f2937; color: #e5e7eb; padding: 2rem; border-radius: 8px; width: 90%; max-width: 700px; max-height: 80vh; overflow-y: auto; position: relative; transform: scale(0.9); transition: transform 0.3s; border: 1px solid #374151;}
         .modal-overlay.visible .modal-content { transform: scale(1); }
         .modal-close { position: absolute; top: 1rem; right: 1rem; font-size: 1.5rem; cursor: pointer; color: #9ca3af; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans">
 
-    <div class="page-container relative z-10">
-        <!-- Sidebar -->
-        <div id="sidebar-container"></div>
+    <div class="main-container">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
 
-        <!-- Main Area (Content + Vertical Timeline) -->
-        <div class="content-wrapper">
-            <!-- Scrollable Main Content -->
-            <main class="main-scroll-content">
-                <div class="max-w-3xl mx-auto">
-                    <div class="text-center mb-12 bg-black/50 p-6 rounded-lg">
-                        <h1 class="text-4xl font-bold font-roboto-slab text-white">The Story of FLAMEA</h1>
-                    </div>
-                    
-                    <div class="relative timeline-line pl-12">
-                        <!-- Mission -->
-                        <div class="timeline-item mb-12">
-                            <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
-                            <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                                <h3 class="text-2xl font-bold text-blue-400">Our Mission</h3>
-                                <p class="text-gray-300 mt-2">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality before the law, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
-                            </div>
-                        </div>
-
-                        <!-- Vision -->
-                        <div class="timeline-item mb-12">
-                             <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
-                             <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                                 <h3 class="text-2xl font-bold text-green-400">Our Vision</h3>
-                                 <p class="text-gray-300 mt-2">We envision a South African legal system where family courts prioritize the well-being of children above all, and a society where every child can thrive in the care and support of their entire family network, free from gender discrimination.</p>
-                             </div>
+        <!-- Main Content Area -->
+        <main class="main-content">
+             <div class="content-wrapper">
+                <!-- Scrollable Main Content -->
+                <div class="main-scroll-content">
+                    <div class="max-w-4xl mx-auto">
+                        <div class="text-center mb-12 bg-black/50 p-6 rounded-lg">
+                            <h1 class="text-5xl font-bold font-roboto-slab text-white">The Story of FLAMEA</h1>
                         </div>
                         
-                        <!-- Values -->
-                        <div class="timeline-item mb-12">
-                             <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
-                             <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                                 <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Core Values: The Builder's Ethos</h3>
-                                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow hover:bg-gray-600">
-                                     <span class="font-semibold text-gray-200">The values that guide Flamea are the same that guide all platforms in this ecosystem. They are a commitment to practical, structured, and impactful action.</span>
-                                     <i class="fas fa-chevron-down transform text-gray-400"></i>
-                                 </button>
-                                 <div class="accordion-content">
-                                    <!-- Accordion Content -->
-                                    <div class="space-y-4 pt-4 border-t border-gray-600 mt-4">
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-sitemap text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Structure:</strong> We build organised, logical, and robust systems.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-cubes text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Assemble:</strong> We bring together disparate parts—data, ideas, people—to create a cohesive whole.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-landmark text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Legacy:</strong> We build upon the legacy of our predecessors, understanding that all progress stands on the shoulders of giants.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-drafting-compass text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Architect:</strong> We design with vision and purpose, planning for the present and the future.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-tools text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Tool-Up:</strong> We empower our users by giving them the right tools and the knowledge to use them effectively.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-lightbulb text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Innovate:</strong> We constantly seek better, more efficient ways to solve problems.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-seedling text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Sustain:</strong> We build things that are meant to last and have a long-term positive impact.</div></div>
-                                        <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-eye text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Observe:</strong> We pay close attention to the world around us to identify needs and find solutions.</div></div>
-                                    </div>
-                                 </div>
-                             </div>
-                        </div>
+                        <div class="relative timeline-line pl-12">
+                            <!-- Mission -->
+                            <div class="timeline-item mb-12">
+                                <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-blue-500 rounded-full flex items-center justify-center"><i class="fas fa-fire"></i></div>
+                                <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                                    <h3 class="text-2xl font-bold text-blue-400">Our Mission</h3>
+                                    <p class="text-gray-300 mt-2">To empower fathers by dismantling systemic discrimination in family law, advocating for true equality before the law, and ensuring every child’s right to a meaningful relationship with their father is protected.</p>
+                                </div>
+                            </div>
 
-                        <!-- Call to Action -->
-                         <div class="timeline-item">
-                            <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
-                            <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
-                                <h3 class="text-2xl font-bold text-red-400">Your Stand</h3>
-                                <p class="text-gray-300 mt-2">This is your platform. This is your movement. We are not asking for permission—we are taking our rightful place. Join us and lead the change.</p>
+                            <!-- Vision -->
+                            <div class="timeline-item mb-12">
+                                 <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-eye"></i></div>
+                                 <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                                     <h3 class="text-2xl font-bold text-green-400">Our Vision</h3>
+                                     <p class="text-gray-300 mt-2">We envision a South African legal system where family courts prioritize the well-being of children above all, and a society where every child can thrive in the care and support of their entire family network, free from gender discrimination.</p>
+                                 </div>
+                            </div>
+                            
+                            <!-- Values -->
+                            <div class="timeline-item mb-12">
+                                 <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-indigo-500 rounded-full flex items-center justify-center"><i class="fas fa-gem"></i></div>
+                                 <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                                     <h3 class="text-2xl font-bold text-indigo-400 mb-4">Our Core Values: The Builder's Ethos</h3>
+                                     <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-700 rounded-lg shadow hover:bg-gray-600">
+                                         <span class="font-semibold text-gray-200">The values that guide Flamea are the same that guide all platforms in this ecosystem. They are a commitment to practical, structured, and impactful action.</span>
+                                         <i class="fas fa-chevron-down transform text-gray-400"></i>
+                                     </button>
+                                     <div class="accordion-content">
+                                        <div class="space-y-4 pt-4 border-t border-gray-600 mt-4">
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-sitemap text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Structure:</strong> We build organised, logical, and robust systems.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-cubes text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Assemble:</strong> We bring together disparate parts—data, ideas, people—to create a cohesive whole.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-landmark text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Legacy:</strong> We build upon the legacy of our predecessors, understanding that all progress stands on the shoulders of giants.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-drafting-compass text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Architect:</strong> We design with vision and purpose, planning for the present and the future.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-tools text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Tool-Up:</strong> We empower our users by giving them the right tools and the knowledge to use them effectively.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-lightbulb text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Innovate:</strong> We constantly seek better, more efficient ways to solve problems.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-seedling text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Sustain:</strong> We build things that are meant to last and have a long-term positive impact.</div></div>
+                                            <div class="flex items-start"><div class="w-8 text-center mr-4"><i class="fas fa-eye text-2xl text-indigo-300"></i></div><div class="flex-1"><strong class="text-white">Observe:</strong> We pay close attention to the world around us to identify needs and find solutions.</div></div>
+                                        </div>
+                                     </div>
+                                 </div>
+                            </div>
+
+                            <!-- Call to Action -->
+                             <div class="timeline-item">
+                                <div class="timeline-icon absolute -left-1.5 mt-1.5 h-8 w-8 bg-red-500 rounded-full flex items-center justify-center"><i class="fas fa-fist-raised"></i></div>
+                                <div class="bg-gray-800 bg-opacity-75 rounded-lg p-6">
+                                    <h3 class="text-2xl font-bold text-red-400">Your Stand</h3>
+                                    <p class="text-gray-300 mt-2">This is your platform. This is your movement. We are not asking for permission—we are taking our rightful place. Join us and lead the change.</p>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
-            </main>
 
-            <!-- Vertical Timeline Column -->
-            <div class="vertical-timeline-container">
-                <div class="timeline-wrapper">
-                    <div class="timeline-track"></div>
-                    <div class="timeline-scroller" id="timeline-scroller">
-                        <!-- Vertical timeline points will be injected here by JS -->
+                <!-- Vertical Timeline Column -->
+                <div class="vertical-timeline-container">
+                    <div class="timeline-wrapper">
+                        <div class="timeline-track"></div>
+                        <div id="timeline-scroller">
+                            <!-- Vertical timeline points will be injected here by JS -->
+                        </div>
                     </div>
                 </div>
             </div>
-        </div>
+        </main>
     </div>
     
     <!-- Modal for Timeline Details -->
@@ -186,99 +184,82 @@
             </div>
         </div>
     </div>
-
-    <!-- The external data file is now loaded first -->
+    
     <script src="assets/js/human-history.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
     <script type="module">
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Sidebar Loader ---
-        fetch('sidebar.html')
-            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
-            .then(data => { 
-                document.getElementById('sidebar-container').innerHTML = data;
-                // Re-initialize main.js logic if it was in the sidebar
-                const script = document.createElement('script');
-                script.type = 'module';
-                script.src = 'assets/js/main.js';
-                document.body.appendChild(script);
-            })
-            .catch(error => console.error('Error loading sidebar:', error));
-
-        // --- Main Content Timeline Animations ---
-        const timelineItems = document.querySelectorAll('.main-scroll-content .timeline-item');
-        const observer = new IntersectionObserver((entries) => {
-            entries.forEach(entry => {
-                if (entry.isIntersecting) {
-                    entry.target.classList.add('is-visible');
-                }
-            });
-        }, { threshold: 0.1 });
-        timelineItems.forEach(item => observer.observe(item));
-
-        // --- Main Content Accordion (Values Section) ---
-        const accordionToggle = document.querySelector('.accordion-toggle');
-        if (accordionToggle) {
-            accordionToggle.addEventListener('click', () => {
-                const content = accordionToggle.nextElementSibling;
-                accordionToggle.classList.toggle('open');
-                content.classList.toggle('open');
-            });
-        }
-        
-        // --- VERTICAL TIMELINE & MODAL LOGIC (FUNCTIONAL) ---
-        // This section no longer needs the data array hardcoded.
-        // It now assumes 'verticalTimelineData' is available from 'human-history.js'
-        
-        const timelineScroller = document.getElementById('timeline-scroller');
-        const modal = document.getElementById('timeline-modal');
-        const modalTitle = document.getElementById('modal-title');
-        const modalDetails = document.getElementById('modal-details');
-        const modalPrimarySource = document.getElementById('modal-primary-source');
-        const modalSecondarySource = document.getElementById('modal-secondary-source');
-        const closeModalBtn = document.querySelector('.modal-close');
-
-        function createVerticalTimeline() {
-            if (!timelineScroller || typeof verticalTimelineData === 'undefined') {
-                console.error("Timeline scroller or data not found.");
-                return;
-            };
-            verticalTimelineData.forEach(item => {
-                const point = document.createElement('div');
-                point.className = 'timeline-point';
-                point.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><div class="date">${item.date}</div><div class="event">${item.event}</div></div>`;
-                
-                point.addEventListener('click', () => {
-                    modalTitle.textContent = `${item.date}: ${item.event}`;
-                    modalDetails.innerHTML = `<p>${item.details}</p>`;
-                    
-                    modalPrimarySource.innerHTML = item.primarySource.startsWith('http') 
-                        ? `<a href="${item.primarySource}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">${item.primarySource.split('/')[2]}...</a>`
-                        : item.primarySource;
-
-                    modalSecondarySource.innerHTML = item.secondarySource.startsWith('http')
-                        ? `<a href="${item.secondarySource}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">${item.secondarySource}</a>`
-                        : item.secondarySource;
-
-                    modal.classList.add('visible');
+        // Page-specific script
+        document.addEventListener('DOMContentLoaded', () => {
+            // --- Main Content Timeline Animations ---
+            const timelineItems = document.querySelectorAll('.main-scroll-content .timeline-item');
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('is-visible');
+                    }
                 });
-                timelineScroller.appendChild(point);
-            });
-            // Clone for seamless loop
-            timelineScroller.innerHTML += timelineScroller.innerHTML;
-        }
+            }, { threshold: 0.1 });
+            timelineItems.forEach(item => observer.observe(item));
 
-        // Modal close functionality
-        if (modal) {
-             closeModalBtn.addEventListener('click', () => modal.classList.remove('visible'));
-             modal.addEventListener('click', (e) => {
-                 if (e.target === modal) {
-                     modal.classList.remove('visible');
-                 }
-             });
-        }
-       
-        createVerticalTimeline();
-    });
+            // --- Main Content Accordion (Values Section) ---
+            const accordionToggle = document.querySelector('.accordion-toggle');
+            if (accordionToggle) {
+                accordionToggle.addEventListener('click', () => {
+                    const content = accordionToggle.nextElementSibling;
+                    accordionToggle.classList.toggle('open');
+                    content.classList.toggle('open');
+                });
+            }
+            
+            // --- VERTICAL TIMELINE & MODAL LOGIC ---
+            const timelineScroller = document.getElementById('timeline-scroller');
+            const modal = document.getElementById('timeline-modal');
+            const modalTitle = document.getElementById('modal-title');
+            const modalDetails = document.getElementById('modal-details');
+            const modalPrimarySource = document.getElementById('modal-primary-source');
+            const modalSecondarySource = document.getElementById('modal-secondary-source');
+            const closeModalBtn = document.querySelector('.modal-close');
+
+            function createVerticalTimeline() {
+                if (!timelineScroller || typeof verticalTimelineData === 'undefined') {
+                    console.error("Timeline scroller or verticalTimelineData not found.");
+                    return;
+                };
+                verticalTimelineData.forEach(item => {
+                    const point = document.createElement('div');
+                    point.className = 'timeline-point';
+                    point.innerHTML = `<div class="timeline-dot"></div><div class="timeline-content"><div class="date">${item.date}</div><div class="event">${item.event}</div></div>`;
+                    
+                    point.addEventListener('click', () => {
+                        modalTitle.textContent = `${item.date}: ${item.event}`;
+                        modalDetails.innerHTML = `<p>${item.details}</p>`;
+                        
+                        modalPrimarySource.innerHTML = item.primarySource.startsWith('http') 
+                            ? `<a href="${item.primarySource}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">${item.primarySource.split('/')[2]}...</a>`
+                            : item.primarySource;
+
+                        modalSecondarySource.innerHTML = item.secondarySource.startsWith('http')
+                            ? `<a href="${item.secondarySource}" target="_blank" rel="noopener noreferrer" class="text-teal-400 hover:underline">${item.secondarySource}</a>`
+                            : item.secondarySource;
+
+                        modal.classList.add('visible');
+                    });
+                    timelineScroller.appendChild(point);
+                });
+            }
+
+            // Modal close functionality
+            if (modal) {
+                 closeModalBtn.addEventListener('click', () => modal.classList.remove('visible'));
+                 modal.addEventListener('click', (e) => {
+                     if (e.target === modal) {
+                         modal.classList.remove('visible');
+                     }
+                 });
+            }
+           
+            createVerticalTimeline();
+        });
     </script>
 </body>
 </html>
