@@ -15,7 +15,6 @@
 document.addEventListener('DOMContentLoaded', () => {
 
     // --- 1. CORE INITIALIZATION ---
-    // This section loads the sidebar and then triggers all other JS features.
     const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
 
     if (sidebarPlaceholder) {
@@ -33,13 +32,11 @@ document.addEventListener('DOMContentLoaded', () => {
                 sidebarPlaceholder.innerHTML = '<p class="text-red-400 p-4">Error: Could not load navigation.</p>';
             });
     } else {
-        // If there's no sidebar (e.g., on the login page), still initialize other features
         initializeSiteFeatures();
     }
 
-    // Central function to run all initializations
     function initializeSiteFeatures() {
-        setDynamicBackground(); // Sets the background based on time
+        setDynamicBackground();
         initializeModals();
         initializeAccordionsAndSubmenus();
         setActiveSidebarLink();
@@ -50,10 +47,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 2. DYNAMIC BACKGROUND LOGIC ---
-    /**
-     * Checks the current time and applies a corresponding theme class to the main content area.
-     * The theme reflects the journey of a Xhosa man, from boyhood to elderhood.
-     */
     function setDynamicBackground() {
         const mainContent = document.querySelector('.main-content');
         if (!mainContent) return;
@@ -62,29 +55,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const hour = now.getHours();
         let themeClass = '';
 
-        // Determine theme based on the specified time slots
-        if (hour >= 4 && hour < 10) { // 4:00 AM - 9:59 AM (Morning)
-            themeClass = 'bg-theme-accountability'; // Accountability & new beginnings
-        } else if (hour >= 10 && hour < 13) { // 10:00 AM - 12:59 PM (Mid-day)
-            themeClass = 'bg-theme-technology'; // Harnessing modern tools
-        } else if (hour >= 13 && hour < 16) { // 1:00 PM - 3:59 PM (Afternoon)
-            themeClass = 'bg-theme-coming-home'; // The journey back to roots
-        } else if (hour >= 16 && hour < 18) { // 4:00 PM - 5:59 PM (Late Afternoon)
-            themeClass = 'bg-theme-responsibility'; // Uthwalo, taking on responsibility
-        } else if (hour >= 18 && hour < 23) { // 6:00 PM - 10:59 PM (Evening)
-            themeClass = 'bg-theme-mountains'; // Wisdom of the elders, looking over the land
-        } else { // 11:00 PM - 3:59 AM (Night)
-            themeClass = 'bg-theme-boyhood'; // Dreams and potential of youth
+        if (hour >= 4 && hour < 10) {
+            themeClass = 'bg-theme-accountability';
+        } else if (hour >= 10 && hour < 13) {
+            themeClass = 'bg-theme-technology';
+        } else if (hour >= 13 && hour < 16) {
+            themeClass = 'bg-theme-coming-home';
+        } else if (hour >= 16 && hour < 18) {
+            themeClass = 'bg-theme-responsibility';
+        } else if (hour >= 18 && hour < 23) {
+            themeClass = 'bg-theme-mountains';
+        } else {
+            themeClass = 'bg-theme-boyhood';
         }
 
         mainContent.classList.add(themeClass);
     }
 
     // --- 3. INTERACTIVE COMPONENT HANDLERS ---
-    /**
-     * Finds the current page's link in the sidebar and applies the 'active' class.
-     * Also expands the parent submenu if the active link is inside one.
-     */
     function setActiveSidebarLink() {
         const currentPage = window.location.pathname.split("/").pop() || "index.html";
         const navLinks = document.querySelectorAll('#sidebar-placeholder a');
@@ -105,10 +93,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Adds delegated click listeners for all accordions (main content) and submenus (sidebar).
-     * This single listener handles all toggle events efficiently.
-     */
     function initializeAccordionsAndSubmenus() {
         document.body.addEventListener('click', function(event) {
             const toggleButton = event.target.closest('.accordion-toggle, .submenu-toggle');
@@ -131,9 +115,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Manages opening and closing of all modals site-wide using data attributes.
-     */
     function initializeModals() {
         document.body.addEventListener('click', function(event) {
             const openTrigger = event.target.closest('[data-modal-target]');
@@ -237,10 +218,10 @@ document.addEventListener('DOMContentLoaded', () => {
         color: "blue-500",
         icon: "fas fa-tools",
         tools: [{
-            name: "Needs Assessment",
+            name: "Training Needs Assessment",
             icon: "fas fa-clipboard-check",
             description: "Start here to get a personalized action plan.",
-            url: "assessment.html"
+            url: "training-assessment.html"
         }, {
             name: "Parenting Plan Builder",
             icon: "fas fa-file-signature",
@@ -255,7 +236,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Resource Locator",
             icon: "fas fa-map-marked-alt",
             description: "Find Family Advocates, courts, and father-friendly NGOs.",
-            url: "resources.html"
+            url: "locator.html"
         }]
     }, {
         title: "🗂️ Knowledge & Reference",
@@ -272,10 +253,10 @@ document.addEventListener('DOMContentLoaded', () => {
             description: "Explore a database of cultural practices.",
             url: "customs.html"
         }, {
-            name: "LegalHelp Hub",
+            name: "LegalHelp Initiative",
             icon: "fas fa-hands-helping",
-            description: "A comprehensive legal library. Coming Soon!",
-            url: "legalhelp-coming-soon.html"
+            description: "A community-driven project to demystify SA law.",
+            url: "legalhelp.html"
         }]
     }, {
         title: "📚 Media & Publications",
@@ -285,7 +266,7 @@ document.addEventListener('DOMContentLoaded', () => {
             name: "Read Our Books",
             icon: "fas fa-book-open",
             description: "Access exclusive books on fatherhood and the law.",
-            url: "book-reader.html"
+            url: "publications.html"
         }, {
             name: "Flamea Podcast",
             icon: "fas fa-podcast",
@@ -482,9 +463,6 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     }];
 
-    /**
-     * Renders the training courses catalogue into the element with id 'course-catalogue'.
-     */
     function renderTrainingCatalogue() {
         const container = document.getElementById('course-catalogue');
         if (!container) return;
@@ -517,9 +495,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Renders the tools catalogue into the element with id 'tools-catalogue'.
-     */
     function renderToolsCatalogue() {
         const container = document.getElementById('tools-catalogue');
         if (!container) return;
@@ -553,9 +528,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Renders the games catalogue into the element with id 'games-catalogue'.
-     */
     function renderGamesCatalogue() {
         const container = document.getElementById('games-catalogue');
         if (!container) return;
@@ -594,9 +566,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Searches the customs database based on query, life stage, and culture.
-     */
     function searchCustoms(query, stage, culture) {
         const lowerCaseQuery = query.toLowerCase();
         return customsDatabase.filter(custom => {
@@ -610,9 +579,6 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 
-    /**
-     * Displays the search results for customs in the results container.
-     */
     function displayCustomsResults(results) {
         const container = document.getElementById('customs-results-container');
         if (!container) return;
@@ -656,9 +622,6 @@ document.addEventListener('DOMContentLoaded', () => {
         container.appendChild(resultsGrid);
     }
 
-    /**
-     * Renders the entire customs page with search, filters, and initial results.
-     */
     function renderCustomsPage() {
         const container = document.getElementById('customs-catalogue');
         if (!container) return;
@@ -715,12 +678,4 @@ document.addEventListener('DOMContentLoaded', () => {
         }
         displayCustomsResults(customsDatabase);
     }
-});
-document.addEventListener('DOMContentLoaded', () => {
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    document.querySelectorAll('.sidebar-link, .sidebar-link-main').forEach(link => {
-        if (link.getAttribute('href') === currentPage) {
-            link.classList.add('active');
-        }
-    });
 });
