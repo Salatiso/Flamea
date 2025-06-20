@@ -3,158 +3,82 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>LegalHelp Hub - A Flamea Ecosystem Project</title>
+    <title>LegalHelp Initiative - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        .page-container {
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 2rem;
-            position: relative;
+        .info-card {
+            background: rgba(31, 41, 55, 0.7); /* bg-gray-800 with opacity */
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
         }
-        .font-roboto-slab { font-family: 'Roboto Slab', serif; }
-        .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
-
-        .flip-card-container {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-            gap: 2rem;
-            width: 100%;
-            max-w-7xl;
+        .info-card:hover {
+            transform: translateY(-5px) scale(1.02);
+            border-color: #f59e0b; /* amber-500 */
+            box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3);
         }
-        .flip-card {
-            background-color: transparent;
-            width: 100%;
-            height: 250px;
-            perspective: 1000px;
-        }
-        .flip-card-inner {
-            position: relative;
-            width: 100%;
-            height: 100%;
-            text-align: center;
-            transition: transform 0.8s;
-            transform-style: preserve-3d;
-        }
-        .flip-card:hover .flip-card-inner {
-            transform: rotateY(180deg);
-        }
-        .flip-card-front, .flip-card-back {
-            position: absolute;
-            width: 100%;
-            height: 100%;
-            -webkit-backface-visibility: hidden;
-            backface-visibility: hidden;
-            border-radius: 0.75rem;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 1.5rem;
-            border: 1px solid #4a5563; /* border-gray-600 */
-        }
-        .flip-card-front {
-            background-color: rgba(31, 41, 55, 0.8); /* bg-gray-800 with opacity */
-            backdrop-filter: blur(5px);
-        }
-        .flip-card-back {
-            background-color: #4f46e5; /* indigo-600 */
-            color: white;
-            transform: rotateY(180deg);
-        }
-        .flip-card h3 {
-            font-family: 'Roboto Slab', serif;
-            font-size: 1.75rem;
+        .countdown-banner {
+            background: linear-gradient(90deg, rgba(20,83,45,0.8), rgba(22,101,52,0.6));
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-900 text-gray-300 font-open-sans">
     <div class="main-container">
-        <!-- Sidebar placeholder -->
+        <!-- Sidebar will be loaded here by main.js -->
         <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content Area -->
-        <main class="main-content bg-theme-mountains">
-            <div class="page-container">
-                <div class="relative z-10 text-center w-full max-w-7xl mx-auto">
-                    <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-4 text-shadow text-white">LegalHelp Hub</h1>
-                    <p class="text-2xl text-indigo-200 mb-12 text-shadow">Knowledge of the law should not be a privilege; it is a fundamental tool for survival and progress.</p>
-                    
-                    <div class="flip-card-container">
-                        <!-- Card 1: Flamea Integration -->
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <i class="fas fa-fire text-5xl text-orange-400 mb-3"></i>
-                                    <h3 class="text-white">Empower Flamea</h3>
-                                </div>
-                                <div class="flip-card-back">
-                                    <h4>Flamea's Legal Engine</h4>
-                                    <p class="mt-2">Tools for fathers' rights are linked directly to the Children's Act and relevant case law, providing instant, verifiable context for your fight.</p>
-                                </div>
-                            </div>
-                        </div>
+        <main class="main-content p-6 sm:p-8">
+            <div class="max-w-5xl mx-auto">
+                <!-- Header -->
+                <header class="text-center mb-10">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">The LegalHelp Initiative</h1>
+                    <p class="text-lg md:text-xl text-gray-400 mt-3 max-w-3xl mx-auto">Demystifying South African law for every citizen. A community-built resource for all.</p>
+                </header>
 
-                        <!-- Card 2: Centralized Knowledge -->
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <i class="fas fa-database text-5xl text-cyan-400 mb-3"></i>
-                                    <h3 class="text-white">One Source of Truth</h3>
-                                </div>
-                                <div class="flip-card-back">
-                                    <h4>Centralized & Searchable</h4>
-                                    <p class="mt-2">A comprehensive digital library of all South African law—Constitution, statutes, regulations, and case law—in one accessible place.</p>
-                                </div>
-                            </div>
-                        </div>
-
-                        <!-- Card 3: Community Driven -->
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <i class="fas fa-users text-5xl text-green-400 mb-3"></i>
-                                    <h3 class="text-white">Community Driven</h3>
-                                </div>
-                                <div class="flip-card-back">
-                                    <h4>The Community Watch</h4>
-                                    <p class="mt-2">Legislation changes weekly. We empower a community of lawyers, students, and citizens to keep the database current and accurate for everyone.</p>
-                                </div>
-                            </div>
-                        </div>
-                        
-                        <!-- Card 4: Ecosystem Integration -->
-                        <div class="flip-card">
-                            <div class="flip-card-inner">
-                                <div class="flip-card-front">
-                                    <i class="fas fa-project-diagram text-5xl text-purple-400 mb-3"></i>
-                                    <h3 class="text-white">Ecosystem Power</h3>
-                                </div>
-                                <div class="flip-card-back">
-                                    <h4>The Foundation</h4>
-                                    <p class="mt-2">LegalHelp is the engine for all Salatiso platforms, including SafetyFirst.help and Sazi.life, ensuring all guidance is legally sound.</p>
-                                </div>
-                            </div>
-                        </div>
-
+                <!-- NEW: Countdown Timer Banner -->
+                 <div id="countdown-banner" class="countdown-banner p-4 rounded-xl text-white text-center mb-12 shadow-lg">
+                    <p class="font-semibold text-lg">This crucial project is under construction and launches:</p>
+                    <div id="countdown" class="flex justify-center items-center gap-4 md:gap-6 my-2">
+                        <div><span id="days" class="text-2xl md:text-3xl font-bold">00</span><p class="text-xs">Days</p></div>
+                        <div class="text-2xl md:text-3xl font-bold">:</div>
+                        <div><span id="hours" class="text-2xl md:text-3xl font-bold">00</span><p class="text-xs">Hours</p></div>
+                        <div class="text-2xl md:text-3xl font-bold">:</div>
+                        <div><span id="minutes" class="text-2xl md:text-3xl font-bold">00</span><p class="text-xs">Minutes</p></div>
+                        <div class="text-2xl md:text-3xl font-bold">:</div>
+                        <div><span id="seconds" class="text-2xl md:text-3xl font-bold">00</span><p class="text-xs">Seconds</p></div>
                     </div>
-                    <div class="mt-12">
-                         <a href="community.html" class="bg-indigo-600 hover:bg-indigo-500 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform hover:scale-105 inline-block shadow-lg">
-                            Join the Community Watch <i class="fas fa-arrow-right ml-2"></i>
-                        </a>
-                    </div>
+                    <a href="community.html#contact-form" class="text-sm hover:underline">Want to contribute your knowledge? Get in touch! <i class="fas fa-arrow-right ml-1"></i></a>
                 </div>
+
+                <!-- Content Grid -->
+                <section class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                     <div class="info-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-user-friends mr-3 text-blue-400"></i>For the People, By the People</h3>
+                        <p>This initiative aims to provide a directory of legal practitioners, but more importantly, to share community experiences and reviews to ensure everyone finds fair and equitable representation.</p>
+                    </div>
+                    <div class="info-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-life-ring mr-3 text-teal-400"></i>Free Legal Help Directory</h3>
+                        <p>A community-curated list of organizations offering free or low-cost legal assistance. We will share details on how to apply and focus on services that actively support ordinary citizens, especially fathers.</p>
+                    </div>
+                     <div class="info-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-university mr-3 text-purple-400"></i>The Court System Explained</h3>
+                        <p>We will demystify the South African court system. This module will explain the different courts, what each one does, and how an ordinary person can navigate them, including guidance on filing documents and representing oneself.</p>
+                    </div>
+                     <div class="info-card p-6 rounded-lg">
+                        <h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-book-reader mr-3 text-indigo-400"></i>Know Your Rights Library</h3>
+                        <p>An interactive, searchable library breaking down key legislation like The Children's Act and the Constitution into plain, understandable language. Every section will be paired with actionable advice and necessary forms, contributed by the community.</p>
+                    </div>
+                </section>
             </div>
         </main>
     </div>
 
-      <script type="module" src="assets/js/main.js"></script>
-      <script type="module" src="assets/js/auth.js"></script>
+    <!-- Universal scripts for background and sidebar -->
+    <script src="assets/js/main.js" type="module"></script>
+    <!-- Page-specific script for the countdown -->
+    <script src="assets/js/legalhelp-countdown.js" type="module"></script>
 </body>
 </html>
