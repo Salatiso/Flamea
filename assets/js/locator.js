@@ -1,169 +1,308 @@
 import { masterDB } from './master-locator-db.js';
 
-document.addEventListener('DOMContentLoaded', function () {
-    // This page uses the masterDB as its single source of truth.
-    const resources = masterDB;
-
-    // --- DOM ELEMENT SELECTION ---
-    const searchBtn = document.getElementById('search-btn');
-    const geolocateBtn = document.getElementById('geolocate-btn');
-    const addressInput = document.getElementById('address-input');
-    const serviceFilter = document.getElementById('service-type-filter');
-    const resultsSection = document.getElementById('results-section');
-    const manualDirectory = document.getElementById('manual-directory');
-    const statusDiv = document.getElementById('locator-status');
-    let autocomplete;
-
-    // --- INITIALIZATION ---
-    
-    // Called by Google Maps script when it's ready.
-    window.initMap = function() {
-        if (typeof google !== 'undefined' && google.maps && google.maps.places) {
-            autocomplete = new google.maps.places.Autocomplete(addressInput);
-            autocomplete.setFields(['geometry']);
-        } else {
-            console.error("Google Maps API script did not load correctly.");
-            statusDiv.textContent = "Error: Map services unavailable.";
-        }
+// This function must be in the global scope for the Google Maps script callback
+function initLocator() {
+    console.log("Google Maps API script loaded. Initializing Locator...");
+    if (window.locatorApp) {
+        window.locatorApp.initMap();
+    } else {
+        // Retry after a short delay if the app object isn't ready
+        setTimeout(initLocator, 100);
     }
+}
+window.initLocator = initLocator;
 
-    /**
-     * Dynamically populates the service filter dropdown from the master database.
-     */
-    function populateFilters() {
-        // Get all unique sub-categories from the database
-        const subCategories = [...new Set(resources.map(item => item.sub_category))].sort();
+document.addEventListener('DOMContentLoaded', () => {
+    const locatorApp = {
+        map: null,
+        markers: [],
+        userLocation: null,
+        infoWindow: null,
         
-        serviceFilter.innerHTML = '<option value="all">All Services</option>'; // Start with the 'All' option
+        elements: {
+            selectionView: document.getElementById('selection-view'),
+            wizardView: document.getElementById('wizard-view'),
+            explorerView: document.getElementById('explorer-view'),
+            startWizardBtn: document.getElementById('start-wizard-btn'),
+            exploreResourcesBtn: document.getElementById('explore-resources-btn'),
+            featuredCard: document.getElementById('featured-resource-card'),
+            wizardSection: document.getElementById('wizard-section'),
+            backToSelectionWizard: document.getElementById('back-to-selection-wizard'),
+            backToSelectionExplorer: document.getElementById('back-to-selection-explorer'),
+            categoryFilter: document.getElementById('category-filter'),
+            provinceFilter: document.getElementById('province-filter'),
+            cityFilter: document.getElementById('city-filter'),
+            addressInput: document.getElementById('address-input'),
+            geolocateBtn: document.getElementById('geolocate-btn'),
+            statusEl: document.getElementById('locator-status'),
+            mapEl: document.getElementById('map'),
+            resultsList: document.getElementById('results-list'),
+        },
         
-        subCategories.forEach(subCategory => {
-            if (subCategory) { // Ensure it's not null or undefined
-                const option = document.createElement('option');
-                option.value = subCategory;
-                option.textContent = subCategory;
-                serviceFilter.appendChild(option);
-            }
-        });
-    }
+        init() {
+            if (!document.getElementById('selection-view')) return; // Not on locator page
+            console.log("DOM ready. Initializing locator app.");
+            this.attachEventListeners();
+            this.populateFilters();
+            this.renderFeaturedResource();
+        },
 
-    /**
-     * Renders the full, categorized directory list.
-     */
-    function populateManualDirectory() {
-        const categories = [...new Set(resources.map(item => item.category))].sort();
-        let html = '';
-
-        categories.forEach(category => {
-            const categoryResources = resources.filter(r => r.category === category);
-            if (categoryResources.length > 0) {
-                html += `
-                    <details class="bg-gray-800 bg-opacity-75 rounded-lg mb-4">
-                        <summary class="p-4 text-xl font-bold flex justify-between items-center cursor-pointer">
-                            <span><i class="fas fa-folder w-8 mr-3 text-blue-400"></i>${category}</span>
-                            <i class="fas fa-chevron-right icon transition-transform"></i>
-                        </summary>
-                        <div class="p-4 border-t border-gray-700 space-y-4">
-                `;
-                categoryResources.forEach(r => {
-                    html += `
-                        <div class="pl-4 border-l-2 border-gray-600">
-                           <h5 class="font-semibold text-lg text-white">${r.name}</h5>
-                           <p class="text-sm text-gray-400">${r.address}</p>
-                            ${r.phone ? `<p class="text-sm mt-1"><i class="fas fa-phone mr-2"></i>${r.phone}</p>` : ''}
-                            ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-sm mt-1 inline-block"><i class="fas fa-globe mr-2"></i>Visit Website</a>` : ''}
-                        </div>
-                    `;
-                });
-                html += `</div></details>`;
-            }
-        });
-        manualDirectory.innerHTML += html;
-    }
-
-    // --- GEOLOCATION & SEARCH LOGIC ---
-
-    function handleSearch() {
-        if (!autocomplete) {
-            statusDiv.textContent = "Map services are still loading. Please try again.";
-            return;
-        }
-        const place = autocomplete.getPlace();
-        if (place && place.geometry) {
-            findClosest(place.geometry.location.lat(), place.geometry.location.lng());
-        } else if (addressInput.value) {
-            const geocoder = new google.maps.Geocoder();
-            geocoder.geocode({ 'address': addressInput.value, componentRestrictions: { country: 'ZA' } }, (results, status) => {
-                if (status === 'OK' && results[0]) {
-                    findClosest(results[0].geometry.location.lat(), results[0].geometry.location.lng());
-                } else {
-                    statusDiv.textContent = "Could not find that address. Please be more specific.";
-                }
+        attachEventListeners() {
+            this.elements.startWizardBtn.addEventListener('click', () => {
+                this.showView('wizard-view');
+                this.startWizard();
             });
-        } else {
-             statusDiv.textContent = "Please enter an address.";
-        }
-    }
+            this.elements.exploreResourcesBtn.addEventListener('click', () => {
+                this.showView('explorer-view');
+                this.filterAndDisplayResults();
+            });
+            this.elements.backToSelectionWizard.addEventListener('click', () => this.showView('selection-view'));
+            this.elements.backToSelectionExplorer.addEventListener('click', () => this.showView('selection-view'));
+            
+            this.elements.categoryFilter.addEventListener('change', () => this.filterAndDisplayResults());
+            this.elements.provinceFilter.addEventListener('change', () => {
+                this.populateCityFilter(this.elements.provinceFilter.value);
+                this.filterAndDisplayResults();
+            });
+            this.elements.cityFilter.addEventListener('change', () => this.filterAndDisplayResults());
+            this.elements.geolocateBtn.addEventListener('click', () => this.geolocateUser());
+        },
 
-    function handleGeolocate() {
-        if (navigator.geolocation) {
-            statusDiv.textContent = "Fetching your location...";
-            navigator.geolocation.getCurrentPosition(position => {
-                findClosest(position.coords.latitude, position.coords.longitude);
-            }, () => {
-                statusDiv.textContent = "Unable to retrieve location. Please check browser permissions.";
-            }, { timeout: 10000 });
-        } else {
-            statusDiv.textContent = "Geolocation is not supported by your browser.";
-        }
-    }
+        showView(viewId) {
+            Object.values(this.elements)
+                  .filter(el => el && el.classList.contains('view-container'))
+                  .forEach(el => el.classList.remove('active'));
+            document.getElementById(viewId).classList.add('active');
+        },
 
-    function findClosest(lat, lng) {
-        statusDiv.textContent = "Calculating distances...";
-        const userLocation = new google.maps.LatLng(lat, lng);
-        const selectedSubCategory = serviceFilter.value;
+        initMap() {
+             try {
+                const mapOptions = { center: { lat: -28.7, lng: 24.7 }, zoom: 5, mapId: 'FLAMEA_DARK_MAP' };
+                this.map = new google.maps.Map(this.elements.mapEl, mapOptions);
+                this.infoWindow = new google.maps.InfoWindow({
+                    content: '',
+                    disableAutoPan: true,
+                });
 
-        const filteredResources = resources.filter(r => {
-            return (selectedSubCategory === 'all' || r.sub_category === selectedSubCategory) && r.lat && r.lng;
-        });
+                const autocomplete = new google.maps.places.Autocomplete(this.elements.addressInput, { componentRestrictions: { country: "za" }, fields: ["geometry"] });
+                autocomplete.addListener("place_changed", () => {
+                    const place = autocomplete.getPlace();
+                    if (place.geometry) {
+                        this.userLocation = place.geometry.location;
+                        this.filterAndDisplayResults();
+                    }
+                });
+            } catch (error) {
+                console.error("Error initializing Google Map:", error);
+                this.elements.mapEl.innerHTML = `<div class="p-4 text-center text-red-400">Could not load map. Please check your API key and internet connection.</div>`;
+            }
+        },
+
+        populateFilters() {
+            const categories = [...new Set(masterDB.map(item => item.category))].sort();
+            const provinces = [...new Set(masterDB.map(item => item.province))].sort();
+            this.populateSelect(this.elements.categoryFilter, categories, "All Categories");
+            this.populateSelect(this.elements.provinceFilter, provinces, "All Provinces");
+            this.populateCityFilter();
+        },
+
+        populateSelect(selectElement, items, defaultOptionText) {
+            selectElement.innerHTML = `<option value="all">${defaultOptionText}</option>`;
+            items.forEach(item => {
+                const option = document.createElement('option');
+                option.value = item;
+                option.textContent = item;
+                selectElement.appendChild(option);
+            });
+        },
+
+        populateCityFilter(selectedProvince = 'all') {
+            const cities = (selectedProvince === 'all')
+                ? [...new Set(masterDB.map(item => item.city_town))].sort()
+                : [...new Set(masterDB.filter(item => item.province === selectedProvince).map(item => item.city_town))].sort();
+            this.populateSelect(this.elements.cityFilter, cities, "All Cities/Towns");
+        },
+
+        geolocateUser() {
+            this.setStatus('Finding your location...');
+            if (navigator.geolocation) {
+                navigator.geolocation.getCurrentPosition(position => {
+                    this.userLocation = new google.maps.LatLng(position.coords.latitude, position.coords.longitude);
+                    this.elements.addressInput.value = "Your Current Location";
+                    this.filterAndDisplayResults();
+                }, () => this.setStatus('Geolocation failed. Please enable location services or enter an address.'), {timeout:10000});
+            } else {
+                this.setStatus('Geolocation is not supported by your browser.');
+            }
+        },
+
+        filterAndDisplayResults() {
+            let filtered = [...masterDB];
+            const category = this.elements.categoryFilter.value;
+            const province = this.elements.provinceFilter.value;
+            const city = this.elements.cityFilter.value;
+
+            if (category !== 'all') filtered = filtered.filter(item => item.category === category);
+            if (province !== 'all') filtered = filtered.filter(item => item.province === province);
+            if (city !== 'all') filtered = filtered.filter(item => item.city_town === city);
+            
+            if (this.userLocation) {
+                filtered.forEach(item => {
+                    const itemLoc = new google.maps.LatLng(item.lat, item.lng);
+                    item.distance = google.maps.geometry.spherical.computeDistanceBetween(this.userLocation, itemLoc) / 1000;
+                });
+                filtered.sort((a, b) => a.distance - b.distance);
+                this.setStatus(`Showing ${filtered.length} results, sorted by distance.`);
+            } else {
+                this.setStatus(`Showing ${filtered.length} results.`);
+            }
+            this.renderResults(filtered);
+        },
+
+        renderResults(results) {
+            this.clearMarkers();
+            this.elements.resultsList.innerHTML = '';
+            
+            if (results.length === 0) {
+                this.elements.resultsList.innerHTML = '<div class="text-center text-gray-400 p-8"><i class="fas fa-exclamation-circle text-4xl mb-4"></i><p>No results found for your criteria.</p></div>';
+                return;
+            }
+
+            const bounds = new google.maps.LatLngBounds();
+            if(this.userLocation) {
+                 bounds.extend(this.userLocation);
+                 new google.maps.Marker({ position: this.userLocation, map: this.map, icon: { path: google.maps.SymbolPath.CIRCLE, scale: 8, fillColor: '#3b82f6', fillOpacity: 1, strokeColor: 'white', strokeWeight: 2 }});
+            }
+
+            results.slice(0, 100).forEach((item, index) => { // Limit to 100 for performance
+                const card = document.createElement('div');
+                card.className = 'resource-card p-4 bg-gray-800 rounded-lg border-l-4 border-teal-500 cursor-pointer';
+                card.innerHTML = this.getResultCardHTML(item);
+                this.elements.resultsList.appendChild(card);
+                
+                const position = new google.maps.LatLng(item.lat, item.lng);
+                const marker = new google.maps.Marker({
+                    position, map: this.map, title: item.name,
+                    label: { text: (index + 1).toString(), color: 'white', fontWeight: 'bold' }
+                });
+
+                bounds.extend(position);
+                this.markers.push(marker);
+
+                const infoContent = this.getInfoContentHTML(item);
+                
+                marker.addListener('click', () => {
+                    this.infoWindow.setContent(infoContent);
+                    this.infoWindow.open(this.map, marker);
+                });
+                card.addEventListener('click', () => {
+                    this.map.panTo(position);
+                    this.map.setZoom(14);
+                    this.infoWindow.setContent(infoContent);
+                    this.infoWindow.open(this.map, marker);
+                });
+            });
+            
+            if (results.length > 0) {
+                 this.map.fitBounds(bounds);
+                 if (this.map.getZoom() > 15) this.map.setZoom(15);
+            }
+        },
+
+        getResultCardHTML(item) {
+             return `<h4 class="font-bold text-white">${item.name}</h4>
+                    <p class="text-sm text-gray-400">${item.sub_category} | ${item.city_town}, ${item.province}</p>
+                    <p class="text-sm mt-2">${item.address}</p>
+                    <div class="mt-2 text-sm space-x-4">
+                        ${item.phone ? `<a href="tel:${item.phone}" class="text-blue-400 hover:underline"><i class="fas fa-phone mr-1"></i> Call</a>` : ''}
+                        ${item.website ? `<a href="${item.website}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline"><i class="fas fa-globe mr-1"></i> Website</a>` : ''}
+                    </div>
+                    ${item.distance ? `<p class="text-xs text-green-400 font-semibold mt-2">${item.distance.toFixed(1)} km away</p>` : ''}`;
+        },
         
-        if (filteredResources.length === 0) {
-            resultsSection.innerHTML = `<p class="text-center text-lg text-yellow-400 py-4">No physical services found for the selected category.</p>`;
-            statusDiv.textContent = "";
-            return;
-        }
+        getInfoContentHTML(item) {
+            return `<div class="text-black p-2"><h3 class="font-bold">${item.name}</h3><p>${item.address}</p>${item.phone ? `<p>${item.phone}</p>` : ''}</div>`;
+        },
 
-        const resourcesWithDistances = filteredResources.map(r => {
-            const resourceLocation = new google.maps.LatLng(r.lat, r.lng);
-            const distance = google.maps.geometry.spherical.computeDistanceBetween(userLocation, resourceLocation);
-            return { ...r, distance: distance };
-        });
+        clearMarkers() {
+            this.markers.forEach(marker => marker.setMap(null));
+            this.markers = [];
+        },
 
-        resourcesWithDistances.sort((a, b) => a.distance - b.distance);
-        displayResults(resourcesWithDistances);
-        statusDiv.textContent = "Showing closest results.";
-    }
+        setStatus(message) {
+            this.elements.statusEl.textContent = message;
+        },
 
-    function displayResults(sortedResources) {
-        resultsSection.innerHTML = '<h3 class="text-2xl font-bold text-teal-400 mb-4">Services Near You (Closest First)</h3>';
-        sortedResources.forEach(r => {
-            const card = document.createElement('div');
-            card.className = `resource-card bg-gray-800 p-4 rounded-lg shadow-md border-l-4 border-teal-500`;
-            const distanceKm = (r.distance / 1000).toFixed(1);
-            card.innerHTML = `
-                <h4 class="font-bold text-lg text-white">${r.name}</h4>
-                <p class="text-gray-400 text-sm">${r.address}</p>
-                <p class="text-gray-300 font-semibold mt-2">${distanceKm} km away</p>
-                ${r.phone ? `<p class="text-sm mt-1"><i class="fas fa-phone mr-2"></i>${r.phone}</p>` : ''}
-                ${r.website ? `<a href="${r.website}" target="_blank" rel="noopener noreferrer" class="text-blue-400 hover:underline text-sm mt-1 inline-block"><i class="fas fa-globe mr-2"></i>Visit Website</a>` : ''}
+        renderFeaturedResource() {
+            const featuredPool = masterDB.filter(r => ['Government & Admin', 'Justice & Legal', 'NGO - Family', 'NGO - Father Support'].includes(r.category));
+            const dayOfYear = Math.floor((Date.now() - new Date(new Date().getFullYear(), 0, 0)) / 86400000);
+            const featuredItem = featuredPool[dayOfYear % featuredPool.length];
+            
+            if(this.elements.featuredCard && featuredItem) {
+                this.elements.featuredCard.innerHTML = `
+                    <i class="fas fa-star text-4xl text-yellow-400 mb-4"></i>
+                    <h3 class="text-2xl font-bold mb-2">Featured Resource</h3>
+                    <p class="font-semibold text-white mb-2">${featuredItem.name}</p>
+                    <p class="text-gray-400 flex-grow mb-4 text-sm">${featuredItem.sub_category} in ${featuredItem.city_town}</p>
+                    <a href="#" id="featured-link" class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full mt-auto">View Details</a>
+                `;
+                document.getElementById('featured-link').addEventListener('click', (e) => {
+                    e.preventDefault();
+                    this.showView('explorer-view');
+                    this.renderResults([featuredItem]);
+                });
+            }
+        },
+
+        startWizard() {
+            const step1 = {
+                id: 'category',
+                question: 'What kind of help do you need?',
+                options: [...new Set(masterDB.map(item => item.category))].sort()
+            };
+            this.renderWizardStep(step1);
+        },
+
+        renderWizardStep(step) {
+            let optionsHtml = step.options.map(opt => 
+                `<button class="wizard-option w-full text-left p-4 bg-gray-700 border-2 border-gray-600 rounded-lg hover:bg-gray-600" data-value="${opt}">${opt}</button>`
+            ).join('');
+
+            this.elements.wizardSection.innerHTML = `
+                <div class="wizard-step active text-center">
+                    <h3 class="text-2xl font-bold text-white mb-6">${step.question}</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">${optionsHtml}</div>
+                </div>
             `;
-            resultsSection.appendChild(card);
-        });
-    }
+
+            this.elements.wizardSection.querySelectorAll('.wizard-option').forEach(btn => {
+                btn.addEventListener('click', e => this.handleWizardSelection(step.id, e.currentTarget.dataset.value));
+            });
+        },
+
+        handleWizardSelection(stepId, value) {
+            if (stepId === 'category') {
+                const provinces = [...new Set(masterDB.filter(i => i.category === value).map(i => i.province))].sort();
+                const nextStep = {
+                    id: 'province',
+                    question: `In which province are you looking for "${value}" services?`,
+                    options: provinces,
+                    category: value
+                };
+                this.renderWizardStep(nextStep);
+            } else if (stepId === 'province') {
+                const category = document.querySelector('.wizard-option').closest('.wizard-step').dataset.category;
+                this.showView('explorer-view');
+                this.elements.categoryFilter.value = category;
+                this.elements.provinceFilter.value = value;
+                this.populateCityFilter(value);
+                this.filterAndDisplayResults();
+            }
+        }
+    };
     
-    // --- KICK-OFF ---
-    if (searchBtn) searchBtn.addEventListener('click', handleSearch);
-    if (geolocateBtn) geolocateBtn.addEventListener('click', handleGeolocate);
-    
-    populateFilters();
-    populateManualDirectory();
+    // Make the app object globally accessible for the map callback
+    window.locatorApp = locatorApp;
+    // Initialize the app
+    locatorApp.init();
 });
