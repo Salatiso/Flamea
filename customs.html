@@ -30,7 +30,7 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container flex min-h-screen">
-        <!-- Sidebar will be loaded here by main.js -->
+        <!-- Sidebar will be loaded here -->
         <div id="sidebar-placeholder"></div>
 
         <main class="main-content flex-grow p-8 md:p-12">
@@ -41,28 +41,23 @@
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Explore the rich tapestry of our shared heritage to foster unity and understanding.</p>
                 </div>
 
-                <!-- Main content area now uses view containers for JS targeting -->
-                
                 <!-- Selection View -->
                 <div id="selection-view" class="view-container active">
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
                         <div id="start-wizard-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300 cursor-pointer">
                             <i class="fas fa-magic text-4xl text-green-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Cultural Explorer Wizard</h3>
-                            <p class="text-gray-400 flex-grow mb-4">Answer questions to find and compare customs.</p>
-                            <span class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full">Start Wizard</span>
+                            <h3 class="text-2xl font-bold mb-2">Cultural Explorer</h3>
+                            <p class="text-gray-400 flex-grow mb-4">Answer questions to find customs.</p>
+                            <span class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full mt-auto">Start Wizard</span>
                         </div>
                         <div id="explore-customs-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 cursor-pointer">
                             <i class="fas fa-book-open text-4xl text-blue-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Manual Customs Browser</h3>
+                            <h3 class="text-2xl font-bold mb-2">Manual Browser</h3>
                             <p class="text-gray-400 flex-grow mb-4">Browse all customs by category.</p>
-                            <span class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors w-full">Browse Manually</span>
+                            <span class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors w-full mt-auto">Browse Manually</span>
                         </div>
-                        <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
-                            <i class="fas fa-star text-4xl text-yellow-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Featured Custom</h3>
-                            <p class="text-gray-400 flex-grow mb-4">Learn about the significance of 'Ukuhlolwa' in Zulu culture.</p>
-                            <span class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Learn More</span>
+                        <div id="featured-custom-card" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300 cursor-pointer">
+                             <!-- Featured content will be injected by customs.js -->
                         </div>
                     </div>
                 </div>
@@ -70,39 +65,11 @@
                 <!-- Wizard View (hidden by default) -->
                 <div id="wizard-view" class="view-container">
                     <div id="wizard-section" class="bg-gray-800 p-8 rounded-lg shadow-xl">
-                        <div id="step-1" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">How would you like to explore?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border-2 border-gray-700 hover:border-green-500 transition-colors cursor-pointer" data-next="2A">
-                                    <h4 class="font-bold">Learn about a specific South African culture.</h4>
-                                    <p class="text-sm text-gray-400">Dive deep into the customs of one tribe.</p>
-                                </div>
-                                <div class="wizard-option p-4 rounded-lg border-2 border-gray-700 hover:border-green-500 transition-colors cursor-pointer" data-next="2B">
-                                    <h4 class="font-bold">Compare a specific custom across cultures.</h4>
-                                    <p class="text-sm text-gray-400">See how practices differ and overlap.</p>
-                                </div>
-                            </div>
-                        </div>
-                        <div id="step-2A" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">Which culture are you interested in?</h3>
-                            <div id="culture-selection-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <!-- Culture buttons will be injected here -->
-                            </div>
-                        </div>
-                         <div id="step-2B" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">Which custom would you like to compare?</h3>
-                            <div id="custom-selection-container" class="space-y-4">
-                                <!-- Custom category buttons will be injected here -->
-                            </div>
-                        </div>
-                        <div id="step-results" class="wizard-step">
-                             <div id="results-content" class="space-y-6"></div>
-                        </div>
-                         <div id="wizard-nav" class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <button id="back-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50 transition-colors">Back</button>
-                            <button id="home-btn-wizard" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">Back to Hub</button>
-                        </div>
+                        <!-- Wizard steps will be injected here -->
                     </div>
+                    <button id="back-to-selection-wizard" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Hub Selection
+                    </button>
                 </div>
 
                 <!-- Explorer View (hidden by default) -->
@@ -110,11 +77,14 @@
                     <div id="explorer-section" class="space-y-4">
                         <!-- Manual browser accordion will be injected here -->
                     </div>
-                    <button id="home-btn-explorer" class="mt-6 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">Back to Hub</button>
+                     <button id="back-to-selection-explorer" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold">
+                        <i class="fas fa-arrow-left mr-2"></i> Back to Hub Selection
+                    </button>
                 </div>
             </div>
         </main>
     </div>
+
 
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/customs.js"></script>
