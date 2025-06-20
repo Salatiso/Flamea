@@ -15,8 +15,6 @@
 
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; }
         .wizard-step { display: none; animation: fadeIn 0.5s ease-in-out; }
         .wizard-step.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
@@ -44,17 +42,17 @@
         .fc .fc-day-today { background-color: rgba(34, 197, 94, 0.2) !important; }
         .fc-event-main { color: white !important; }
 
-        /* PDF Styles */
-        .pdf-page { display: none; } /* Hide for screen */
-        @media print {
-            .pdf-page { display: block !important; }
+        /* PDF Styles - hidden on screen */
+        @media screen {
+            .pdf-page { display: none; }
         }
     </style>
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initMap" async defer></script>
+    <!-- FIX: Correct API loading practice -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initMap&loading=async&defer"></script>
 </head>
 
 <body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
+    <div class="main-container flex min-h-screen">
         <div id="sidebar-placeholder"></div>
 
         <main class="main-content p-4 sm:p-8 md:p-12">
@@ -78,14 +76,12 @@
                         <!-- Step 1: Parties & Plan Purpose -->
                         <div id="step-1" class="wizard-step">
                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 1: The Parties & Plan Purpose</h2>
-                             <div class="grid md:grid-cols-2 gap-6 mb-8">
-                                <div>
-                                    <label for="plan-purpose" class="form-label">Purpose of this Plan</label>
-                                    <select id="plan-purpose" class="form-select">
-                                        <option value="existing">For my existing child/children</option>
-                                        <option value="planning">Planning for a future child</option>
-                                    </select>
-                                </div>
+                            <div class="mb-8">
+                                <label for="plan-purpose" class="form-label">Purpose of this Plan</label>
+                                <select id="plan-purpose" class="form-select max-w-md">
+                                    <option value="existing">For my existing child/children</option>
+                                    <option value="planning">Planning for a future child</option>
+                                </select>
                             </div>
                             <div class="grid md:grid-cols-2 gap-8">
                                 <div class="space-y-4 p-4 border border-gray-700 rounded-lg">
@@ -112,14 +108,16 @@
                         <div id="step-2" class="wizard-step">
                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 2: Residence & Custody</h2>
                              <div class="space-y-6">
-                                 <div>
-                                     <label for="custody-status" class="form-label">What is the current custody status?</label>
-                                     <select id="custody-status" class="form-select"><option>We have a mutual agreement</option><option>There is a court order in place</option><option>This is currently in dispute</option></select>
-                                 </div>
-                                 <div>
-                                     <label for="custody-details" class="form-label">Provide more details (e.g., case number, specifics of agreement/dispute)</label>
-                                     <textarea id="custody-details" rows="3" class="form-input" placeholder="Enter details here..."></textarea>
-                                 </div>
+                                <div class="grid md:grid-cols-2 gap-6">
+                                     <div>
+                                         <label for="custody-status" class="form-label">What is the current custody status?</label>
+                                         <select id="custody-status" class="form-select"><option>We have a mutual agreement</option><option>There is a court order in place</option><option>This is currently in dispute</option></select>
+                                     </div>
+                                     <div>
+                                         <label for="custody-details" class="form-label">Details (e.g., Case Number)</label>
+                                         <input id="custody-details" type="text" class="form-input" placeholder="Optional details..."/>
+                                     </div>
+                                </div>
                                  <div id="child-residence-container" class="space-y-8"></div>
                              </div>
                         </div>
@@ -139,7 +137,7 @@
                                     <div><label for="event-end-date" class="form-label">End Date</label><input type="date" id="event-end-date" class="form-input"></div>
                                     <div><label for="event-owner" class="form-label">Time Spent With</label><select id="event-owner" class="form-select"></select></div>
                                     <button type="button" id="add-event-btn" class="w-full bg-green-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-green-700">Add to Calendar</button>
-                                    <button type="button" id="export-schedule-btn" class="w-full bg-blue-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-blue-700 mt-2">Export to iCal (.ics)</button>
+                                     <button type="button" id="export-schedule-btn" class="w-full bg-blue-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-blue-700 mt-2">Export to iCal (.ics)</button>
                                 </div>
                             </div>
                         </div>
