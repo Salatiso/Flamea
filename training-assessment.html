@@ -5,77 +5,76 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Find Your Learning Path - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        /* Base styles from our established template */
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
+        .wizard-step { display: none; }
+        .wizard-step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
         }
-        .animated-gradient {
-            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
+        .option-label {
+            transition: background-color 0.3s, border-color 0.3s;
+            cursor: pointer;
         }
-        .option-label { transition: background-color 0.3s, border-color 0.3s; cursor: pointer; }
-        .option-label:hover { background-color: rgba(255, 255, 255, 0.1); border-color: #3b82f6; }
-        input[type="checkbox"]:checked + .option-label { background-color: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
+        .option-label:hover {
+            background-color: rgba(255, 255, 255, 0.05);
+            border-color: #f59e0b; /* amber-500 */
+        }
+        input[type="radio"]:checked + .option-label {
+            background-color: rgba(59, 130, 246, 0.2);
+            border-color: #3b82f6; /* blue-500 */
+        }
+        .recommendation-card {
+             transition: all 0.3s ease-in-out;
+        }
+        .recommendation-card:hover {
+            transform: scale(1.03);
+            box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -4px rgba(0,0,0,0.3);
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
-    <div class="animated-gradient fixed inset-0 z-0"></div>
-    
-    <div class="relative z-10 flex">
-        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
+<body class="bg-gray-900 text-gray-300 font-open-sans">
+    <div class="main-container">
+        <!-- Sidebar will be loaded here by main.js -->
+        <div id="sidebar-placeholder"></div>
 
-        <main class="flex-1">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        <main class="main-content p-6 sm:p-8">
+            <div class="max-w-4xl mx-auto">
+                <header id="hub-header" class="text-center mb-12">
+                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
+                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">Find Your Path</h1>
+                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">This quick assessment will recommend a personalized package of resources.</p>
+                    </div>
+                </header>
+
+                <!-- Container for the dynamic assessment wizard -->
+                <div id="assessment-container" class="bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg">
+                    <!-- Assessment Steps will be dynamically injected here by training-assessment.js -->
+                </div>
                 
-                <div id="assessment-form-container">
-                    <div class="text-center mb-12">
-                        <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Find Your Learning Path</h1>
-                            <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Answer a few questions to get a personalized course plan.</p>
-                        </div>
-                    </div>
-
-                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
-                        <form id="assessment-form">
-                            <div class="text-center mb-10">
-                                <i class="fas fa-question-circle text-5xl text-teal-400"></i>
-                                <h2 class="text-3xl font-bold text-white mt-4">What stage are you at in your fatherhood journey?</h2>
-                                <p class="mt-2 text-lg text-gray-300">Select all that apply to see your recommended courses.</p>
-                            </div>
-                            
-                            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-10">
-                                <input type="checkbox" id="expecting" name="interest" value="foundations" class="hidden option-checkbox">
-                                <label for="expecting" class="option-label block p-6 bg-gray-700 rounded-lg border-2 border-gray-600 h-full">
-                                    <h3 class="font-bold text-xl text-white">Expecting or New Father</h3>
-                                    <p class="text-gray-400 mt-2">Preparing for a newborn or navigating the first year.</p>
-                                </label>
-                                <!-- ... other options ... -->
-                            </div>
-
-                            <button type="submit" class="w-full bg-teal-600 hover:bg-teal-500 text-white font-bold py-4 px-8 rounded-lg text-lg transition-colors">Show My Path</button>
-                        </form>
-                    </div>
-                </div>
-
+                <!-- Container for the results, hidden by default -->
                 <div id="results-container" class="hidden">
-                    <!-- Results populated by JS -->
+                     <h2 class="text-3xl font-bold text-white text-center mb-8">Your Personalized Resource Package</h2>
+                     <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                         <!-- Recommended items will be injected here by training-assessment.js -->
+                     </div>
+                     <div class="text-center mt-12">
+                        <button id="restart-assessment-btn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg">
+                            <i class="fas fa-redo-alt mr-2"></i>Start Over
+                        </button>
+                    </div>
                 </div>
+
             </div>
         </main>
     </div>
 
+    <!-- Universal scripts for background and sidebar -->
+    <script src="assets/js/main.js" type="module"></script>
+    <!-- Page-specific script -->
     <script src="assets/js/training-assessment.js" type="module"></script>
-    <script>
-        // Sidebar Loader
-        fetch('sidebar.html')
-            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
-            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
-            .catch(error => console.error('Error loading sidebar:', error));
-    </script>
 </body>
 </html>
