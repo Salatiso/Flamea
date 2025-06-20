@@ -1,5 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-    // --- DOM Elements ---
     const assessmentContainer = document.getElementById('assessment-container');
     const resultsContainer = document.getElementById('results-container');
     const resultsGrid = document.getElementById('results-grid');
@@ -7,41 +6,7 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (!assessmentContainer) return;
 
-    // --- Data Definitions: Questions & Resources ---
-
-    const questions = [
-        {
-            id: 'q1',
-            question: "What is your most immediate priority or challenge right now?",
-            options: [
-                { text: "Understanding my legal rights and responsibilities as a father.", scores: { legal: 2 } },
-                { text: "Improving my day-to-day relationship and communication with my co-parent.", scores: { parenting: 2 } },
-                { text: "Preparing for the arrival of a new baby or caring for an infant.", scores: { foundational: 2 } },
-                { text: "Connecting with my heritage and understanding my cultural duties as a man.", scores: { cultural: 2 } }
-            ]
-        },
-        {
-            id: 'q2',
-            question: "How would you describe your current co-parenting situation?",
-            options: [
-                { text: "High-conflict; we are struggling to agree on anything.", scores: { legal: 1, parenting: 1 } },
-                { text: "We have a basic agreement, but need to formalize it.", scores: { parenting: 1, legal: 1 } },
-                { text: "We are expecting, and want to start on the right foot.", scores: { foundational: 2 } },
-                { text: "Generally okay, but I want to ensure our cultural values are respected.", scores: { cultural: 1 } }
-            ]
-        },
-        {
-            id: 'q3',
-            question: "Which area of personal growth are you most interested in?",
-            options: [
-                { text: "Becoming a powerful advocate for myself and my children.", scores: { legal: 2 } },
-                { text: "Building a resilient and well-structured family environment.", scores: { parenting: 1, cultural: 1 } },
-                { text: "Learning the practical, hands-on skills of daily fatherhood.", scores: { foundational: 1, parenting: 1 } },
-                { text: "Homeschooling or taking a more direct role in my children's education.", scores: { foundational: 2 } }
-            ]
-        }
-    ];
-
+    // --- Resource Database ---
     const resources = {
         training: [
             { id: 't1', title: 'The SA Constitution', description: 'The supreme law. Understand your foundational rights.', category: 'legal', icon: 'fa-landmark', url: 'training/course-constitution.html' },
@@ -49,12 +14,15 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 't3', title: 'Co-Parenting 101', description: 'Master communication and conflict resolution.', category: 'parenting', icon: 'fa-hands-helping', url: 'training/course-coparenting.html' },
             { id: 't4', title: 'Newborn & Daily Care', description: 'Gain confidence in essential daily tasks for infants.', category: 'foundational', icon: 'fa-baby-carriage', url: 'training/course-newborn-daily-care.html'},
             { id: 't5', title: 'The Unbroken Chain', description: 'Successor vs. Heir in Xhosa Tradition. Understand your profound duty.', category: 'cultural', icon: 'fa-link', url: 'training/course-unbroken-chain.html'},
+            { id: 't6', title: 'Homeschooling Curriculum Builder', description: 'A guide for fathers taking the lead in education.', category: 'foundational', icon: 'fa-pencil-ruler', url: 'training/course-build-curriculum.html' },
         ],
         tools: [
             { id: 'f1', title: 'General Affidavit', description: 'A sworn statement for official use.', category: 'legal', icon: 'fa-gavel', url: 'assets/templates/Affidavit_General_Template.html' },
             { id: 'f2', title: 'Parenting Plan Builder', description: 'Create a comprehensive, court-ready parenting plan.', category: 'parenting', icon: 'fa-file-signature', url: 'plan-builder.html' },
             { id: 'f3', title: 'Budget for Couples', description: 'Plan your family finances together.', category: 'foundational', icon: 'fa-coins', url: 'assets/templates/Budget_Couples.html'},
             { id: 'f4', title: 'Formal Rights Affirmation', description: 'Formally assert your parental rights and responsibilities.', category: 'legal', icon: 'fa-scroll', url: 'assets/templates/Affirmation_Parental_Rights_and_Responsibilities_Formal.html'},
+            { id: 'f5', title: 'Conflict Resolution Worksheet', description: 'Structure discussions to find common ground.', category: 'parenting', icon: 'fa-handshake-angle', url: 'assets/templates/Conflict_Resolution_Worksheet.html'},
+
         ],
         games: [
             { id: 'g1', title: 'Constitution Champions', description: 'Test your knowledge of the supreme law.', category: 'legal', icon: 'fa-shield-halved', url: 'games/constitution-champions.html' },
@@ -63,19 +31,88 @@ document.addEventListener('DOMContentLoaded', () => {
             { id: 'g4', title: 'Kid Konstitution', description: 'An introduction to rights for young children.', category: 'foundational', icon: 'fa-gamepad', url: 'games/kid-konstitution.html' }
         ]
     };
-    
+
+    // --- Assessment Questions with Branching Logic ---
+    const questions = {
+        start: {
+            id: 'q1',
+            question: "What is your most immediate priority or challenge right now?",
+            options: [
+                { text: "Understanding my legal rights and responsibilities.", scores: { legal: 2 }, next: 'legal_q2' },
+                { text: "Improving my co-parenting relationship.", scores: { parenting: 2 }, next: 'parenting_q2' },
+                { text: "Preparing for a new baby or caring for an infant.", scores: { foundational: 2 }, next: 'foundational_q2' },
+                { text: "Connecting with my heritage and cultural duties.", scores: { cultural: 2 }, next: 'cultural_q2' }
+            ]
+        },
+        legal_q2: {
+            id: 'q2a',
+            question: "Which legal area concerns you the most?",
+            options: [
+                { text: "High-conflict situations and disputes.", scores: { legal: 1, parenting: 1 }, next: 'final_q' },
+                { text: "Formalizing a parenting plan or agreement.", scores: { legal: 1, parenting: 1 }, next: 'final_q' },
+                { text: "Responding to unfair accusations.", scores: { legal: 2 }, next: 'final_q' },
+                { text: "Understanding basic court processes.", scores: { legal: 1 }, next: 'final_q' }
+            ]
+        },
+        parenting_q2: {
+            id: 'q2b',
+            question: "What aspect of co-parenting do you want to improve?",
+            options: [
+                { text: "Day-to-day communication and scheduling.", scores: { parenting: 2 }, next: 'final_q' },
+                { text: "Long-term planning for education and health.", scores: { parenting: 1, foundational: 1 }, next: 'final_q' },
+                { text: "Managing conflict with a difficult co-parent.", scores: { parenting: 1, legal: 1 }, next: 'final_q' },
+                { text: "Setting family rules and structure.", scores: { parenting: 1 }, next: 'final_q' }
+            ]
+        },
+        foundational_q2: {
+            id: 'q2c',
+            question: "What are you preparing for?",
+            options: [
+                { text: "The birth and first few weeks.", scores: { foundational: 2 }, next: 'final_q' },
+                { text: "Establishing routines for a baby (0-1 year).", scores: { foundational: 2 }, next: 'final_q' },
+                { text: "Taking a bigger role in our child's early learning.", scores: { foundational: 1, parenting: 1 }, next: 'final_q' },
+                { text: "Managing finances as a new family.", scores: { foundational: 1 }, next: 'final_q' }
+            ]
+        },
+        cultural_q2: {
+             id: 'q2d',
+            question: "What aspect of your heritage is most important to you right now?",
+            options: [
+                { text: "Understanding my role and responsibilities as a Xhosa man.", scores: { cultural: 2 }, next: 'final_q' },
+                { text: "Passing down traditions and family history.", scores: { cultural: 2 }, next: 'final_q' },
+                { text: "Navigating conflicts between modern life and tradition.", scores: { cultural: 1, parenting: 1 }, next: 'final_q' },
+                { text: "Understanding the role of the extended family.", scores: { cultural: 1 }, next: 'final_q' }
+            ]
+        },
+        final_q: {
+            id: 'q3',
+            question: "Beyond your immediate challenge, what is your long-term goal?",
+            options: [
+                { text: "To be a strong protector and advocate for my family.", scores: { legal: 2 } },
+                { text: "To build a peaceful and cooperative family dynamic.", scores: { parenting: 2 } },
+                { text: "To leave a legacy of cultural knowledge and values.", scores: { cultural: 2 } },
+                { text: "To provide a secure and stable foundation for my children's future.", scores: { foundational: 2 } }
+            ]
+        }
+    };
+
     // --- State ---
-    let currentStepIndex = 0;
-    const userScores = { legal: 0, parenting: 0, cultural: 0, foundational: 0 };
+    let currentStepKey = 'start';
+    let userScores = { legal: 0, parenting: 0, cultural: 0, foundational: 0 };
+    let stepCount = 1;
 
     // --- Functions ---
-    const renderStep = (stepIndex) => {
-        const step = questions[stepIndex];
+    const renderStep = (stepKey) => {
+        const step = questions[stepKey];
+        if (!step) {
+            console.error("Invalid step key:", stepKey);
+            return;
+        }
         
         let optionsHtml = step.options.map((option, index) => `
             <div>
-                <input type="radio" id="q${stepIndex}o${index}" name="q${stepIndex}" value="${index}" class="hidden">
-                <label for="q${stepIndex}o${index}" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600">
+                <input type="radio" id="${step.id}_o${index}" name="${step.id}" value="${index}" class="hidden">
+                <label for="${step.id}_o${index}" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600">
                     <h3 class="font-bold text-lg text-white">${option.text}</h3>
                 </label>
             </div>
@@ -84,7 +121,7 @@ document.addEventListener('DOMContentLoaded', () => {
         assessmentContainer.innerHTML = `
             <div class="wizard-step active">
                 <div class="text-center mb-6">
-                    <p class="text-sm font-semibold text-teal-400">Step ${stepIndex + 1} of ${questions.length}</p>
+                    <p class="text-sm font-semibold text-teal-400">Step ${stepCount} of 3</p>
                     <h2 class="text-2xl font-bold text-white mt-2">${step.question}</h2>
                 </div>
                 <div class="space-y-4 mb-8">${optionsHtml}</div>
@@ -105,19 +142,25 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const handleNextStep = () => {
-        const selectedRadio = assessmentContainer.querySelector(`input[name="q${currentStepIndex}"]:checked`);
+        const currentStep = questions[currentStepKey];
+        const selectedRadio = assessmentContainer.querySelector(`input[name="${currentStep.id}"]:checked`);
         if (!selectedRadio) return;
 
         const answerIndex = parseInt(selectedRadio.value);
-        const scores = questions[currentStepIndex].options[answerIndex].scores;
+        const selectedOption = currentStep.options[answerIndex];
 
-        for (const category in scores) {
-            userScores[category] += scores[category];
+        // Tally scores
+        for (const category in selectedOption.scores) {
+            userScores[category] += selectedOption.scores[category];
         }
 
-        currentStepIndex++;
-        if (currentStepIndex < questions.length) {
-            renderStep(currentStepIndex);
+        // Determine next step
+        const nextStepKey = selectedOption.next;
+        stepCount++;
+        
+        if (nextStepKey) {
+            currentStepKey = nextStepKey;
+            renderStep(currentStepKey);
         } else {
             showResults();
         }
@@ -134,20 +177,26 @@ document.addEventListener('DOMContentLoaded', () => {
 
         const finalRecs = new Set();
         
-        // Add mandatory Constitution training
+        // Function to add a resource if not already present
+        const addResource = (type, category) => {
+            const resource = resources[type].find(r => r.category === category && !finalRecs.has(r));
+            if(resource) finalRecs.add(resource);
+        };
+        
+        // 1. Add mandatory Constitution training
         finalRecs.add(resources.training.find(t => t.id === 't1'));
         
-        // Add primary category resources
-        finalRecs.add(resources.training.find(t => t.category === primaryCat && t.id !== 't1'));
-        finalRecs.add(resources.tools.find(t => t.category === primaryCat));
-        finalRecs.add(resources.games.find(g => g.category === primaryCat));
+        // 2. Add primary category resources
+        addResource('training', primaryCat);
+        addResource('tools', primaryCat);
+        addResource('games', primaryCat);
         
-        // Add secondary category resources, avoiding duplicates
-        finalRecs.add(resources.training.find(t => t.category === secondaryCat && t.id !== 't1'));
-        finalRecs.add(resources.tools.find(t => t.category === secondaryCat));
-        finalRecs.add(resources.games.find(g => g.category === secondaryCat));
+        // 3. Add secondary category resources
+        addResource('training', secondaryCat);
+        addResource('tools', secondaryCat);
+        addResource('games', secondaryCat);
 
-        // Fill any gaps with default items if categories didn't yield enough unique results
+        // 4. Fill any gaps with default items if categories didn't yield enough unique results
         const allResources = [...resources.training, ...resources.tools, ...resources.games];
         let i = 0;
         while(finalRecs.size < 6 && i < allResources.length) {
@@ -160,8 +209,11 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const createResourceCard = (resource) => {
         if (!resource) return ''; // Failsafe for missing recommendations
-        const type = resources.training.some(r => r.id === resource.id) ? 'Training' :
-                     resources.tools.some(r => r.id === resource.id) ? 'Tool' : 'Game';
+        
+        let type;
+        if (resources.training.some(r => r.id === resource.id)) type = 'Training';
+        else if (resources.tools.some(r => r.id === resource.id)) type = 'Tool';
+        else type = 'Game';
         
         const colorClass = type === 'Training' ? 'bg-blue-500' :
                            type === 'Tool' ? 'bg-amber-500' : 'bg-teal-500';
@@ -183,14 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
     };
 
     const startOver = () => {
-        currentStepIndex = 0;
+        currentStepKey = 'start';
+        stepCount = 1;
         for (const key in userScores) { userScores[key] = 0; }
         resultsContainer.classList.add('hidden');
         assessmentContainer.classList.remove('hidden');
-        renderStep(0);
+        renderStep('start');
     };
 
     // --- Initial Kick-off ---
     restartBtn.addEventListener('click', startOver);
-    renderStep(0);
+    renderStep('start');
 });
