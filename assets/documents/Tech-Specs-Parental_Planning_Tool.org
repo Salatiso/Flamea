@@ -1,0 +1,91 @@
+1. Executive Summary
+This document outlines the technical specifications for Version 3 of the Co-Parenting Compass, a comprehensive parenting plan builder. The primary objective of this revision is to enhance user experience, fix critical errors, and expand the tool's functionality to provide a more holistic and legally robust output. Key changes include a revised step-by-step flow, the introduction of a time-based allocation dashboard, a complete overhaul of the contributions section to focus on responsibility rather than income, and improved personalization and PDF generation.
+
+2. System Architecture & File Structure
+Primary Files: The tool will be powered by two core files:
+
+parenting-plan.html: The main HTML document containing the user interface for the multi-step wizard.
+
+plan-builder.js: A single, modular JavaScript file containing all logic for state management, DOM manipulation, calculations, event handling, and PDF generation.
+
+Dependencies: The tool relies on the following external libraries, which will be loaded via CDN for simplicity:
+
+Tailwind CSS (Styling)
+
+Font Awesome (Icons)
+
+FullCalendar.js (For the interactive schedule)
+
+Google Maps API (For address and location services)
+
+html2pdf.js (For generating the final document)
+
+3. Detailed Step-by-Step Functionality
+Step 1: The Parties & Plan Purpose
+Objective: To establish the context of the plan and identify all individuals involved in a personal and legally relevant manner.
+
+Features:
+
+Plan Purpose: A dropdown menu to select whether the plan is for an "existing" or "future" child. This will make subsequent fields optional as needed.
+
+Parent/Guardian Roles: Each parent/guardian will have a selectable "Role" (e.g., Father, Mother, Other) and an optional "Referred to as" field for nicknames, which will be used to personalize subsequent steps.
+
+Identity Numbers: Optional ID number fields will be included for both parents to ensure the final document is court-ready.
+
+Dynamic Child Entries: The user can add multiple children, each with fields for their full name and a "Referred to as" nickname.
+
+Step 2: Residence & Custody
+Objective: To clearly define the legal custody status and the primary residence of each child.
+
+Features:
+
+Custody Status: A mandatory dropdown menu to define the legal context of custody ("Mutual Agreement," "Court Order," "In Dispute"), with a free-text area for details like case numbers.
+
+Per-Child Residence: A dedicated section will be dynamically generated for each child, allowing their primary residence to be set independently.
+
+Guardian Address Module: If a child's residence is with an "Other Guardian," a sub-module will appear with fields for the guardian's name, relationship, and address, featuring both manual entry and Google Maps Autocomplete.
+
+Step 3: Contact & Time Allocation
+Objective: To provide a clear, visual, and exportable schedule of the child's time with each parent, emphasizing balance.
+
+Features:
+
+Time Allocation Dashboard: A real-time dashboard will display the percentage of time the child spends with each parent over a year, defaulting to a 50/50 split.
+
+Deviation Warning System: The dashboard's visual style (e.g., color) will change to provide a gentle "amber alert" if the time allocation deviates by more than 10% from the 50/50 baseline, encouraging parents to maintain a balanced schedule.
+
+Interactive Calendar: A full-featured calendar will allow users to add and manage recurring visitation schedules and one-time events.
+
+Export Functionality: An "Export to .ics" button will generate a standard calendar file that can be imported into Google Calendar, Outlook, and other calendar applications.
+
+Step 4: Contributions & Responsibilities
+Objective: To create a holistic and objective record of both financial and non-financial contributions, shifting the focus from "who earns more" to "who does what."
+
+Features:
+
+Categorized Contributions: This section will be organized into expandable categories (e.g., "Financial," "Educational," "Health & Wellness"). Each category will be pre-populated with five common, editable items.
+
+Detailed Item Inputs: For each contribution item, the user will input:
+
+Budgeted Amount (R) (for financial items)
+
+Parent A's % Share (Parent B's will auto-calculate)
+
+Actual Amount Spent (R)
+
+Who Paid/Performed (Dropdown menu)
+
+Time Spent (Hours/Month) (for non-financial tasks)
+
+Category Sub-Dashboards: Each category will feature its own mini-dashboard, providing an at-a-glance summary of the contribution split for that specific area of responsibility.
+
+Step 5: Review & Generate PDF
+Objective: To provide a final, comprehensive review of all entered data and generate a professional, branded, and legally formatted document.
+
+Features:
+
+Comprehensive Review Pane: The review pane will now correctly display a summary of all data entered in the previous steps.
+
+Error-Free PDF Generation: The generatePdf function will be rewritten to correctly gather data from the updated, complex state object.
+
+Branded Document Output: The generated PDF will include the standard Flamea cover page and back-cover/annexure page, ensuring consistent and professional branding on all official documents.
