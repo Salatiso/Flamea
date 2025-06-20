@@ -1,244 +1,203 @@
 <!DOCTYPE html>
 <html lang="en" class="dark">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan Builder - Flamea</title>
+    <title>Co-Parenting Compass: Plan Builder - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <style>
-        /* Base styles from our established template */
-        @keyframes gradient-animation {
-            0% { background-position: 0% 50%; }
-            50% { background-position: 100% 50%; }
-            100% { background-position: 0% 50%; }
-        }
-        .animated-gradient {
-            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-        }
-        .card {
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-            will-change: transform;
-        }
-        .card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 20px 30px -10px rgba(0, 0, 0, 0.2);
-        }
-        .wizard-step { display: none; }
-        .wizard-step.active { display: block; }
-        .progress-bar-fill {
-            transition: width 0.5s ease-in-out;
-        }
-        .form-input {
-            background-color: rgba(255, 255, 255, 0.05);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            color: white;
-        }
-        .form-input:focus {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-color: #3b82f6;
-            outline: none;
-        }
-        label {
-            color: #d1d5db;
-        }
-    </style>
-</head>
-<body class="bg-gray-900 text-gray-200 font-sans min-h-screen">
-    <div class="animated-gradient fixed inset-0 z-0"></div>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <div class="relative z-10 flex">
-        <div id="sidebar-container" class="w-64 flex-shrink-0"></div>
+    <!-- External Libraries -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
 
-        <main class="flex-1">
-            <div class="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
-                <div id="hub-header" class="text-center mb-12">
-                     <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">Parenting Plan Builder</h1>
-                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Create a comprehensive, court-ready parenting plan step-by-step.</p>
-                    </div>
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; }
+        .step-content { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .step-content.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .form-label { @apply block text-sm font-semibold text-gray-300 mb-2; }
+        .form-input { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white placeholder-gray-500; }
+        
+        .step-indicator { @apply flex items-center justify-center w-12 h-12 rounded-full text-lg font-bold transition-colors duration-300 border-4; }
+        .step-indicator.active { @apply bg-green-600 text-white border-green-600; }
+        .step-indicator.complete { @apply bg-gray-800 border-green-600 text-green-400; }
+        .step-indicator.pending { @apply bg-gray-800 border-gray-600 text-gray-500; }
+
+        .contribution-bar-bg { @apply w-full bg-gray-700 rounded-full h-3; }
+        .contribution-bar { @apply h-3 rounded-full transition-all duration-500 text-center text-white text-xs font-bold; }
+        
+        /* FullCalendar Dark Theme Adjustments */
+        :root { --fc-border-color: #374151; --fc-daygrid-day-bg-color: transparent; --fc-list-even-row-bg-color: rgba(255,255,255,0.05); }
+        .fc .fc-toolbar-title { font-size: 1.5em; color: white; }
+        .fc .fc-button-primary { background-color: #16a34a; border-color: #16a34a; }
+        .fc .fc-button-primary:hover { background-color: #15803d; border-color: #15803d; }
+        .fc .fc-daygrid-day-number { color: #9ca3af; }
+        .fc .fc-day-today { background-color: rgba(34, 197, 94, 0.2) !important; }
+        .fc-event-main { color: white !important; }
+
+        /* PDF Styles */
+        .pdf-page { width: 210mm; min-height: 297mm; height: auto; page-break-after: always; position: relative; box-shadow: 0 0 10px rgba(0,0,0,0.1); margin: 2rem auto; overflow: hidden; display: flex; flex-direction: column; background: white; color: black; }
+        .pdf-header, .pdf-footer { padding: 1cm; position: absolute; left: 0; right: 0; font-size: 10pt; color: #4a5568; }
+        .pdf-header { top: 0; text-align: right; }
+        .pdf-footer { bottom: 0; display: flex; justify-content: space-between; }
+        .pdf-content { padding: 2.5cm 2cm; flex-grow: 1; font-family: 'Times New Roman', Times, serif; }
+        .pdf-content h1, .pdf-content h2, .pdf-content h3 { font-family: 'Roboto Slab', serif; color: #1a202c;}
+        .pdf-content h1 {font-size: 24pt; text-align: center; margin-bottom: 2rem; text-transform: uppercase; }
+        .pdf-content h2 { font-size: 16pt; border-bottom: 2px solid #333; padding-bottom: 0.5rem; margin-top: 2rem; margin-bottom: 1rem;}
+        .pdf-content h3 { font-size: 13pt; margin-top: 1.5rem; margin-bottom: 0.5rem;}
+        .pdf-content p, .pdf-content li { font-size: 11pt; line-height: 1.6; color: #2d3748; margin-bottom: 1rem; }
+        .pdf-cover-page, .pdf-back-cover-page { background-color: #111827; color: white; }
+        .pdf-cover-page .pdf-content, .pdf-back-cover-page .pdf-content { display: flex; flex-direction: column; justify-content: center; align-items: center; text-align: center; }
+        .pdf-cover-page .pdf-footer, .pdf-back-cover-page .pdf-footer { color: #9ca3af; }
+        .pdf-watermark { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%) rotate(-45deg); opacity: 0.05; z-index: 0; pointer-events: none; }
+    </style>
+    <!-- IMPORTANT: Replace with your actual Google Maps API Key -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY_HERE&libraries=places,geometry&callback=planBuilder.initMap" async defer></script>
+</head>
+
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
+
+        <!-- Main Content -->
+        <main class="main-content p-4 sm:p-8 md:p-12">
+            <div class="max-w-6xl mx-auto">
+                <header class="text-center mb-12">
+                    <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">The Co-Parenting Compass</h1>
+                    <p class="text-lg md:text-xl text-gray-400 mt-3">A Step-by-Step Builder for a Fair and Comprehensive Plan</p>
+                </header>
+
+                <!-- Step Indicators -->
+                <div class="flex items-center justify-center mb-12 space-x-2 md:space-x-4">
+                    <div id="step-indicator-1" class="step-indicator">1</div>
+                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-2" class="step-indicator">2</div>
+                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-3" class="step-indicator">3</div>
+                     <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-4" class="step-indicator">4</div>
+                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-5" class="step-indicator">5</div>
                 </div>
 
-                <!-- Wizard Section -->
-                <div id="wizard-section">
-                    <div class="bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-8 shadow-2xl border border-gray-700">
-                        <!-- Progress Bar -->
-                        <div class="mb-8">
-                            <div class="flex justify-between mb-2">
-                                <span id="progress-text" class="text-base font-medium text-blue-400">Getting Started</span>
-                                <span id="progress-percent" class="text-sm font-medium text-blue-400">0%</span>
+                <div class="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl min-h-[50vh]">
+                    <form id="plan-builder-form">
+                        <!-- Step 1: Parties -->
+                        <div id="step-1" class="step-content">
+                            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 1: The Parties Involved</h2>
+                            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <h3 class="font-semibold text-xl mb-4 text-white">Parent A</h3>
+                                    <label for="parentA-name" class="form-label">Full Legal Name</label>
+                                    <input type="text" id="parentA-name" class="form-input" placeholder="e.g., John Thabo Doe">
+                                </div>
+                                <div>
+                                    <h3 class="font-semibold text-xl mb-4 text-white">Parent B</h3>
+                                    <label for="parentB-name" class="form-label">Full Legal Name</label>
+                                    <input type="text" id="parentB-name" class="form-input" placeholder="e.g., Jane Nomsa Smith">
+                                </div>
                             </div>
-                            <div class="w-full bg-gray-700 rounded-full h-2.5">
-                                <div id="progress-bar-fill" class="bg-blue-600 h-2.5 rounded-full" style="width: 0%"></div>
+                            <h3 class="font-semibold text-xl mb-4 text-white">The Child / Children</h3>
+                            <div id="children-container" class="space-y-6">
+                                <!-- Child entry will be added here -->
                             </div>
+                            <button type="button" id="add-child-btn" class="mt-6 text-green-400 hover:text-green-300 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Another Child</button>
                         </div>
 
-                        <form id="parenting-plan-form">
-                            <!-- Step 1: Parent A -->
-                            <div id="step-1" class="wizard-step active">
-                                <h3 class="text-2xl font-bold text-white mb-6">Parent A Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                    <div><label for="parentA-name">Full Name</label><input type="text" id="parentA-name" class="form-input w-full rounded-md mt-1"></div>
-                                    <div><label for="parentA-id">ID Number</label><input type="text" id="parentA-id" class="form-input w-full rounded-md mt-1"></div>
-                                    <div><label for="parentA-address">Residential Address</label><input type="text" id="parentA-address" class="form-input w-full rounded-md mt-1"></div>
-                                    <div><label for="parentA-phone">Phone Number</label><input type="tel" id="parentA-phone" class="form-input w-full rounded-md mt-1"></div>
+                        <!-- Step 2: Residence & Logistics -->
+                        <div id="step-2" class="step-content">
+                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 2: Residence & Logistics</h2>
+                             <div class="grid md:grid-cols-2 gap-8 mb-6">
+                                 <div>
+                                     <label for="parentA-address" class="form-label">Parent A's Address</label>
+                                     <div class="relative"><input type="text" id="parentA-address" class="form-input" placeholder="Start typing address..."><button type="button" class="locate-me-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white" data-parent="A"><i class="fas fa-location-crosshairs"></i></button></div>
+                                 </div>
+                                 <div>
+                                     <label for="parentB-address" class="form-label">Parent B's Address</label>
+                                     <div class="relative"><input type="text" id="parentB-address" class="form-input" placeholder="Start typing address..."><button type="button" class="locate-me-btn absolute right-3 top-1/2 -translate-y-1/2 text-gray-400 hover:text-white" data-parent="B"><i class="fas fa-location-crosshairs"></i></button></div>
+                                 </div>
+                             </div>
+                             <div id="map" class="h-80 w-full bg-gray-700 rounded-lg my-6 border-2 border-gray-600"></div>
+                             <div id="distance-summary" class="p-4 bg-gray-900 rounded-lg text-center hidden"><p class="text-white font-semibold">Calculating distance...</p></div>
+                        </div>
+
+                        <!-- Step 3: Financial Contributions -->
+                        <div id="step-3" class="step-content">
+                            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 3: Financial Contributions</h2>
+                            <div class="grid md:grid-cols-2 gap-8 mb-8">
+                                <div>
+                                    <label for="parentA-income" class="form-label">Parent A's Monthly Income (ZAR)</label>
+                                    <input type="number" id="parentA-income" class="form-input" placeholder="e.g., 25000" min="0">
+                                </div>
+                                <div>
+                                    <label for="parentB-income" class="form-label">Parent B's Monthly Income (ZAR)</label>
+                                    <input type="number" id="parentB-income" class="form-input" placeholder="e.g., 30000" min="0">
                                 </div>
                             </div>
-                            <!-- Step 2: Parent B -->
-                            <div id="step-2" class="wizard-step">
-                                <h3 class="text-2xl font-bold text-white mb-6">Parent B Details</h3>
-                                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                                     <div><label for="parentB-name">Full Name</label><input type="text" id="parentB-name" class="form-input w-full rounded-md mt-1"></div>
-                                     <div><label for="parentB-id">ID Number</label><input type="text" id="parentB-id" class="form-input w-full rounded-md mt-1"></div>
-                                     <div><label for="parentB-address">Residential Address</label><input type="text" id="parentB-address" class="form-input w-full rounded-md mt-1"></div>
-                                     <div><label for="parentB-phone">Phone Number</label><input type="tel" id="parentB-phone" class="form-input w-full rounded-md mt-1"></div>
-                                </div>
+                            <div id="financial-dashboard" class="bg-gray-900 p-6 rounded-lg mb-8">
+                                <!-- Dashboard will be rendered here -->
                             </div>
-                            <!-- Step 3: Child Details -->
-                             <div id="step-3" class="wizard-step">
-                                <h3 class="text-2xl font-bold text-white mb-6">Child Details</h3>
-                                <div id="children-container" class="space-y-4">
-                                    <div class="child-entry grid grid-cols-1 md:grid-cols-3 gap-6">
-                                        <div><label>Full Name</label><input type="text" name="child-name" class="form-input w-full rounded-md mt-1"></div>
-                                        <div><label>Date of Birth</label><input type="date" name="child-dob" class="form-input w-full rounded-md mt-1"></div>
-                                        <div><label>ID Number</label><input type="text" name="child-id" class="form-input w-full rounded-md mt-1"></div>
+                            <div id="expenses-container" class="space-y-4">
+                                <!-- Expenses will be rendered here -->
+                            </div>
+                            <button type="button" id="add-expense-btn" class="mt-6 text-green-400 hover:text-green-300 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Custom Expense</button>
+                        </div>
+
+                        <!-- Step 4: Schedule -->
+                        <div id="step-4" class="step-content">
+                            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 4: Contact Schedule</h2>
+                            <div class="grid lg:grid-cols-3 gap-8">
+                                <div class="lg:col-span-2">
+                                    <div id="calendar" class="bg-gray-900 p-4 rounded-lg"></div>
+                                </div>
+                                <div class="bg-gray-900 p-4 rounded-lg">
+                                    <h3 class="text-xl font-bold mb-4">Add Event</h3>
+                                    <div class="space-y-4">
+                                        <div><label for="event-title" class="form-label">Event Description</label><input type="text" id="event-title" class="form-input" placeholder="e.g., School Holidays"></div>
+                                        <div><label for="event-start-date" class="form-label">Start Date</label><input type="date" id="event-start-date" class="form-input"></div>
+                                        <div><label for="event-end-date" class="form-label">End Date (Optional)</label><input type="date" id="event-end-date" class="form-input"></div>
+                                        <div><label for="event-owner" class="form-label">Assigned To</label><select id="event-owner" class="form-input"><option value="parentA">Parent A</option><option value="parentB">Parent B</option><option value="shared">Shared</option></select></div>
+                                        <button type="button" id="add-event-btn" class="w-full bg-green-600 py-3 px-6 rounded-lg hover:bg-green-700 font-bold text-white transition-colors">Add Event to Calendar</button>
                                     </div>
                                 </div>
-                                <button type="button" id="add-child-btn" class="mt-4 text-blue-400 hover:text-blue-300"><i class="fas fa-plus-circle mr-2"></i>Add Another Child</button>
                             </div>
-                            <!-- Step 4: Communication -->
-                             <div id="step-4" class="wizard-step">
-                                <h3 class="text-2xl font-bold text-white mb-6">Communication Plan</h3>
-                                <div>
-                                    <label for="communication-plan">Describe how the parents will communicate about the child(ren).</label>
-                                    <textarea id="communication-plan" rows="6" class="form-input w-full rounded-md mt-1" placeholder="e.g., Via a dedicated co-parenting app, weekly phone calls, monthly meetings..."></textarea>
-                                </div>
-                            </div>
-                            <!-- Add more steps as needed -->
-                             <div id="step-5" class="wizard-step">
-                                <h3 class="text-2xl font-bold text-white mb-6">Review & Generate</h3>
-                                <p class="text-gray-300">You have completed all the steps. Please review your information before generating the final document. The next page will allow you to preview and download your parenting plan.</p>
-                            </div>
-                        </form>
-
-                        <!-- Navigation -->
-                        <div class="mt-8 pt-6 border-t border-gray-700 flex justify-between items-center">
-                            <button id="prev-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-gray-600 hover:bg-gray-700 disabled:opacity-50" disabled>
-                                <i class="fas fa-arrow-left mr-2"></i> Previous
-                            </button>
-                            <button id="next-btn" class="inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-blue-600 hover:bg-blue-700">
-                                Next <i class="fas fa-arrow-right ml-2"></i>
-                            </button>
-                            <button id="generate-btn" class="hidden inline-flex items-center px-6 py-3 border border-transparent text-base font-medium rounded-md shadow-sm text-white bg-green-600 hover:bg-green-700">
-                                <i class="fas fa-file-invoice mr-2"></i> Generate Plan
-                            </button>
                         </div>
+
+                        <!-- Step 5: Review & Finalize -->
+                        <div id="step-5" class="step-content">
+                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 5: Review & Finalize</h2>
+                             <div id="review-pane" class="space-y-6 bg-gray-900 p-6 rounded-lg">
+                                 <!-- Review content will be generated here -->
+                             </div>
+                             <div class="mt-8 p-4 border-2 border-dashed border-yellow-500 rounded-lg bg-yellow-500 bg-opacity-10">
+                                 <h3 class="font-bold text-yellow-400">Disclaimer</h3>
+                                 <p class="text-yellow-200 text-sm mt-2">This tool provides legal information and self-help services at your direction. We are not a law firm. This is not a substitute for the advice of an attorney.</p>
+                                 <div class="mt-4"><label class="flex items-center"><input type="checkbox" id="disclaimer-checkbox" class="h-5 w-5 rounded bg-gray-700 border-gray-600 text-green-600 focus:ring-green-500"><span class="ml-3 text-white">I understand and accept the disclaimer.</span></label></div>
+                             </div>
+                        </div>
+                    </form>
+                     <!-- Navigation -->
+                     <div class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center">
+                        <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white transition-opacity opacity-50" disabled>Previous</button>
+                        <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-700 font-semibold text-white">Next Step</button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- Sidebar Loader ---
-        fetch('sidebar.html')
-            .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
-            .then(data => { document.getElementById('sidebar-container').innerHTML = data; })
-            .catch(error => console.error('Error loading sidebar:', error));
-
-        // --- Wizard Logic ---
-        const steps = Array.from(document.querySelectorAll('.wizard-step'));
-        const nextBtn = document.getElementById('next-btn');
-        const prevBtn = document.getElementById('prev-btn');
-        const generateBtn = document.getElementById('generate-btn');
-        const progressFill = document.getElementById('progress-bar-fill');
-        const progressText = document.getElementById('progress-text');
-        const progressPercent = document.getElementById('progress-percent');
-        const addChildBtn = document.getElementById('add-child-btn');
-
-        let currentStep = 0;
-
-        const stepTitles = [
-            "Step 1: Parent A Details", "Step 2: Parent B Details", "Step 3: Child Details",
-            "Step 4: Communication", "Step 5: Review & Generate"
-        ];
-
-        function updateWizardState() {
-            steps.forEach((step, index) => {
-                step.classList.toggle('active', index === currentStep);
-            });
-            
-            const progress = (currentStep / (steps.length - 1)) * 100;
-            progressFill.style.width = `${progress}%`;
-            progressText.textContent = stepTitles[currentStep];
-            progressPercent.textContent = `${Math.round(progress)}%`;
-
-            prevBtn.disabled = currentStep === 0;
-            nextBtn.classList.toggle('hidden', currentStep === steps.length - 1);
-            generateBtn.classList.toggle('hidden', currentStep !== steps.length - 1);
-        }
-
-        nextBtn.addEventListener('click', () => {
-            if (currentStep < steps.length - 1) {
-                currentStep++;
-                updateWizardState();
-            }
-        });
-
-        prevBtn.addEventListener('click', () => {
-            if (currentStep > 0) {
-                currentStep--;
-                updateWizardState();
-            }
-        });
-
-        addChildBtn.addEventListener('click', () => {
-            const container = document.getElementById('children-container');
-            const newChildEntry = document.createElement('div');
-            newChildEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-6';
-            newChildEntry.innerHTML = `
-                <div><label>Full Name</label><input type="text" name="child-name" class="form-input w-full rounded-md mt-1"></div>
-                <div><label>Date of Birth</label><input type="date" name="child-dob" class="form-input w-full rounded-md mt-1"></div>
-                <div><label>ID Number</label><input type="text" name="child-id" class="form-input w-full rounded-md mt-1"></div>
-            `;
-            container.appendChild(newChildEntry);
-        });
-        
-        generateBtn.addEventListener('click', () => {
-            const formData = {
-                parentA: {
-                    name: document.getElementById('parentA-name').value,
-                    id: document.getElementById('parentA-id').value,
-                    address: document.getElementById('parentA-address').value,
-                    phone: document.getElementById('parentA-phone').value,
-                },
-                parentB: {
-                    name: document.getElementById('parentB-name').value,
-                    id: document.getElementById('parentB-id').value,
-                    address: document.getElementById('parentB-address').value,
-                    phone: document.getElementById('parentB-phone').value,
-                },
-                children: [],
-                communication: document.getElementById('communication-plan').value,
-            };
-            
-            document.querySelectorAll('.child-entry').forEach(entry => {
-                formData.children.push({
-                    name: entry.querySelector('[name="child-name"]').value,
-                    dob: entry.querySelector('[name="child-dob"]').value,
-                    id: entry.querySelector('[name="child-id"]').value,
-                });
-            });
-
-            const queryString = encodeURIComponent(JSON.stringify(formData));
-            window.location.href = `plan-builder.html?data=${queryString}`;
-        });
-
-        updateWizardState();
-    });
-    </script>
+    <!-- Hidden container for PDF generation -->
+    <div id="pdf-output" class="hidden"></div>
+    
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/plan-builder.js"></script>
 </body>
+
 </html>
