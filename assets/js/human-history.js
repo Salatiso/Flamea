@@ -1,4 +1,4 @@
-[
+const verticalTimelineData = [
     {
         "date": "c. 200,000 BC",
         "event": "Emergence of Homo sapiens & Early Religion",
@@ -349,13 +349,13 @@
         "primarySource": "The Quest for Buggz, Salatiso",
         "secondarySource": "Goliath's Reckoning, Salatiso"
     },
-        {
+    {
         "date": "2023",
         "event": "The Homeschooling Father is Published",
         "details": "A culmination of Salatiso's experiences and insights, this book serves as a guide for fathers and families navigating the complexities of providing quality education for their families.",
         "primarySource": "The Homeschooling Father, Salatiso",
         "secondarySource": "The Quest for Buggz, Salatiso"
-    }
+    },
     {
         "date": "2024",
         "event": "Goliath's Reckoning lays the Foundation for Flamea and Flamea.Org is born",
