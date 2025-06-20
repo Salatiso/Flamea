@@ -3,140 +3,159 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Community Hub</title>
-    <!-- Using Tailwind CSS for consistency -->
+    <title>Community Hub - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- Font Awesome for icons -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <!-- Google Fonts -->
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <!-- Custom Styles -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        /* Ensures the main content area tries to fill the screen height */
-        .main-container {
-            display: flex;
-            height: 100vh;
+        body {
+            font-family: 'Inter', sans-serif;
         }
         .main-content {
-            flex-grow: 1;
-            overflow-y: auto;
+             background-color: #0f172a; /* A darker slate background */
+        }
+        /* Custom scrollbar for the message box */
+        #contact-message::-webkit-scrollbar {
+            width: 8px;
+        }
+        #contact-message::-webkit-scrollbar-track {
+            background: #1e293b; /* slate-800 */
+        }
+        #contact-message::-webkit-scrollbar-thumb {
+            background-color: #475569; /* slate-600 */
+            border-radius: 4px;
+        }
+        /* Modal Styles */
+        .custom-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            overflow: auto;
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
+            align-items: center;
+            justify-content: center;
+        }
+        .custom-modal.active {
             display: flex;
-            flex-direction: column;
         }
-        .text-box {
-            background-color: #1f2937; /* bg-gray-800 */
-            padding: 1.5rem; /* p-6 */
-            border-radius: 0.5rem; /* rounded-lg */
-            box-shadow: 0 4px 6px -1px rgba(0,0,0,.1), 0 2px 4px -2px rgba(0,0,0,.1);
-            text-align: center;
-            margin-bottom: 2rem;
-        }
-        .content-box {
-             background-color: #1f2937; /* bg-gray-800 */
-             padding: 1.5rem; /* p-6 */
-             border-radius: 0.5rem; /* rounded-lg */
-             border: 1px solid #374151; /* border-gray-700 */
-        }
-        /* Custom scrollbar for the posts list to maintain page layout */
-        #posts-list-container {
-            flex-grow: 1;
-            overflow-y: auto;
-            max-height: 40vh; /* Adjust as needed */
+        .chart-container {
+            position: relative;
+            height: 250px; /* Or any other fixed height */
+            width: 100%;
         }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans">
+<body class="bg-slate-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar placeholder -->
         <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content Area -->
-        <main class="main-content p-4 md:p-8">
-            <div class="container mx-auto flex flex-col h-full">
-                <!-- Introductory Section -->
-                <div class="text-box">
-                    <h1 class="text-4xl md:text-5xl font-bold font-roboto text-white">Community Hub</h1>
-                    <p class="text-lg md:text-xl text-gray-400 mt-3 max-w-3xl mx-auto">Connect, engage, and grow with the Flamea community.</p>
+        <main class="main-content p-6">
+            <div class="max-w-7xl mx-auto h-full flex flex-col">
+                <div class="mb-6 text-center">
+                    <h1 class="text-3xl font-bold text-white font-roboto-slab">Community Hub</h1>
+                    <p class="text-gray-400 mt-1">Connect, engage, and grow with the Flamea community.</p>
                 </div>
 
-                <!-- Main Grid Layout -->
-                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-6">
-                    
-                    <!-- Column 1: Forum & Discussions -->
-                    <div class="lg:col-span-2 space-y-6">
-                        <!-- Create Post / Login Prompt -->
-                        <div class="content-box">
-                             <div id="create-post-container" class="hidden">
-                                <h2 class="text-2xl font-bold text-white mb-4">Start a Discussion</h2>
-                                <form id="create-post-form">
-                                    <div class="mb-4">
-                                        <label for="post-title" class="block text-sm font-medium text-gray-300 mb-1">Discussion Title</label>
-                                        <input type="text" id="post-title" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" placeholder="What's on your mind?">
-                                    </div>
-                                    <div class="mb-4">
-                                        <label for="post-content" class="block text-sm font-medium text-gray-300 mb-1">Your Thoughts</label>
-                                        <textarea id="post-content" class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white min-h-[100px] placeholder-gray-400 focus:ring-blue-500 focus:border-blue-500" placeholder="Share your thoughts..."></textarea>
-                                    </div>
-                                    <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors">Post Discussion</button>
-                                </form>
+                <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 flex-grow">
+                    <!-- Left Column -->
+                    <div class="lg:col-span-1 flex flex-col gap-6">
+                        <!-- Countdown Timer -->
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg text-center flex flex-col justify-center flex-grow">
+                            <i class="fas fa-hourglass-half text-4xl text-green-400 mx-auto mb-3"></i>
+                            <h2 class="text-2xl font-bold text-green-400">The Flamea Forum is Coming!</h2>
+                            <p class="text-gray-400 mt-1 text-sm">A safe space for fathers to connect, share, and support each other.</p>
+                            <div id="countdown" class="flex justify-center gap-4 mt-4 text-white">
+                                <div><span id="days" class="text-3xl font-bold">00</span><p class="text-xs">Days</p></div>
+                                <div><span id="hours" class="text-3xl font-bold">00</span><p class="text-xs">Hours</p></div>
+                                <div><span id="minutes" class="text-3xl font-bold">00</span><p class="text-xs">Minutes</p></div>
+                                <div><span id="seconds" class="text-3xl font-bold">00</span><p class="text-xs">Seconds</p></div>
                             </div>
-                            <div id="forum-login-prompt">
-                                <h2 class="text-2xl font-bold text-white mb-2">The Flamea Forum</h2>
-                                <p class="text-gray-400 mb-4">A safe space for fathers to connect, share, and support each other.</p>
-                                <a href="login.html" class="inline-block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register to Participate</a>
-                            </div>
+                            <div id="countdown-message" class="mt-3 text-yellow-400 font-semibold hidden">Join the discussion!</div>
                         </div>
-
-                        <!-- Recent Discussions -->
-                        <div class="content-box flex flex-col h-full">
-                            <h2 class="text-2xl font-bold text-white mb-4">Recent Discussions</h2>
-                            <div id="posts-list-container" class="space-y-4 pr-2">
-                                <p class="text-center text-gray-500 py-8">Loading discussions...</p>
-                                <!-- Posts will be dynamically inserted here -->
-                            </div>
+                        <!-- Overall Poll Results Chart -->
+                        <div class="bg-gray-800 p-4 rounded-xl shadow-lg flex-grow flex flex-col">
+                             <h3 class="text-lg font-bold mb-2 text-center text-gray-300">Top 2 Community Topics</h3>
+                            <div class="chart-container"><canvas id="overall-poll-chart"></canvas></div>
                         </div>
                     </div>
 
-                    <!-- Column 2: Polls & Feedback -->
-                    <div class="space-y-6">
-                        <!-- Polls -->
-                        <div class="content-box">
-                            <h2 class="text-2xl font-bold text-white mb-4">Live Poll</h2>
-                            <!-- Poll content will be loaded here -->
-                            <p class="text-gray-400">Your voice matters. Help us decide what to talk about first.</p>
-                             <div id="poll-container" class="mt-4">
-                                <!-- Poll loaded by JS -->
-                                <p class="text-gray-400 mt-4">Loading poll...</p>
-                            </div>
-                        </div>
-
-                        <!-- Quick Feedback -->
-                        <div class="content-box">
-                            <h2 class="text-2xl font-bold text-white mb-4">Quick Feedback</h2>
-                            <form id="feedback-form">
-                                <div class="mb-3">
-                                    <label class="block text-sm font-medium text-gray-300 mb-1">How valuable are the resources?</label>
-                                    <select class="w-full bg-gray-700 border border-gray-600 rounded-md p-2 text-white">
-                                        <option>Extremely Valuable</option>
-                                        <option>Valuable</option>
-                                        <option>Somewhat Valuable</option>
-                                        <option>Not Very Valuable</option>
-                                    </select>
+                    <!-- Right Column -->
+                    <div class="lg:col-span-2 flex flex-col gap-6">
+                        <!-- Weekly Polling Section -->
+                        <div class="bg-gray-800 p-6 rounded-xl shadow-lg">
+                            <h3 class="text-xl font-bold mb-1 flex items-center"><i class="fas fa-poll w-6 mr-2 text-blue-400"></i>This Week's Poll</h3>
+                            <p id="poll-question-title" class="text-gray-400 mb-4 text-sm">What are your thoughts on this topic?</p>
+                            <div class="relative">
+                                <select id="poll-options-dropdown" class="w-full p-3 bg-gray-700 rounded-lg border border-gray-600 text-sm appearance-none">
+                                    <option value="">Select your answer...</option>
+                                </select>
+                                <div class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-400">
+                                    <svg class="fill-current h-4 w-4" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"><path d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z"/></svg>
                                 </div>
-                                <button type="submit" class="w-full bg-purple-600 hover:bg-purple-700 text-white font-bold py-2 px-4 rounded-lg transition-colors mt-4">Submit Feedback</button>
-                            </form>
+                            </div>
+                            <button id="submit-vote-btn" class="w-full bg-blue-600 text-white font-bold py-2 rounded-lg hover:bg-blue-500 transition-transform transform hover:scale-105 mt-4" disabled>Select an option to vote</button>
+                            <p id="poll-status" class="text-center text-xs mt-2 h-4 text-green-400"></p>
+                             <div class="chart-container mt-4"><canvas id="weekly-poll-chart"></canvas></div>
                         </div>
-                         <!-- Socials -->
-                        <div class="content-box text-center">
-                             <h2 class="text-2xl font-bold text-white mb-4">Follow Us</h2>
-                             <div class="flex justify-center gap-6">
-                                 <a href="https://www.youtube.com/@Flamea2024" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-youtube text-3xl"></i></a>
-                                 <a href="https://x.com/Flamea2024" target="_blank" rel="noopener noreferrer" class="text-gray-400 hover:text-white transition-colors"><i class="fab fa-x-twitter text-3xl"></i></a>
-                                 <a href="mailto:admin@flamea.org" class="text-gray-400 hover:text-white transition-colors"><i class="fas fa-envelope text-3xl"></i></a>
-                             </div>
+                        
+                        <!-- Contact & Socials Wrapper -->
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 flex-grow">
+                            <!-- Contact Form -->
+                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col md:col-span-2">
+                                <h3 class="text-xl font-bold mb-4 flex items-center"><i class="fas fa-paper-plane w-6 mr-2 text-purple-400"></i>Get In Touch</h3>
+                                <form id="contact-form" novalidate class="flex flex-col flex-grow">
+                                    <div class="mb-3">
+                                        <select id="contact-category" name="category" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm">
+                                            <option>General Feedback</option>
+                                            <option>Tool Suggestion</option>
+                                            <option>Training Topic Request</option>
+                                            <option>Share My Story</option>
+                                            <option>Collaborate or Donate</option>
+                                            <option value="other">Other...</option>
+                                        </select>
+                                    </div>
+                                    <div id="other-category-wrapper" class="hidden mb-3">
+                                        <input type="text" id="other-category-input" name="other_category" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm" placeholder="Please specify">
+                                    </div>
+                                    <div class="mb-3 flex-grow flex flex-col">
+                                        <textarea id="contact-message" name="message" rows="4" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm flex-grow" placeholder="Your message..." required></textarea>
+                                    </div>
+                                     <div id="personal-info-fields" class="mb-3 space-y-2">
+                                        <input type="text" id="contact-name" name="name" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm" placeholder="Your Name (Required)" required>
+                                        <input type="email" id="contact-email" name="email" class="w-full p-2 bg-gray-700 rounded-lg border border-gray-600 text-sm" placeholder="Your Email (Required)" required>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label class="flex items-center cursor-pointer"><input type="checkbox" id="anonymous-checkbox" class="h-4 w-4 bg-gray-600 border-gray-500 rounded text-blue-500"><span class="ml-2 text-sm text-gray-400">Submit Anonymously</span></label>
+                                    </div>
+                                    <button type="submit" class="w-full bg-green-600 text-white font-bold py-2 rounded-lg hover:bg-green-500 transition-transform transform hover:scale-105">Submit</button>
+                                    <p id="form-status" class="text-center text-xs mt-2 h-4"></p>
+                                </form>
+                            </div>
+                             <!-- Social Media Links -->
+                            <div class="bg-gray-800 p-6 rounded-xl shadow-lg flex flex-col justify-center items-center text-center md:col-span-1">
+                                <h3 class="text-xl font-bold mb-6">Follow Us</h3>
+                                <div class="space-y-6">
+                                    <a href="https://twitter.com/flamea2024" target="_blank" class="flex flex-col items-center text-gray-400 hover:text-sky-400 transition-all duration-300 transform hover:scale-110">
+                                        <i class="fab fa-twitter fa-3x"></i>
+                                        <span class="text-sm mt-2">@flamea2024</span>
+                                    </a>
+                                    <a href="https://youtube.com/@Flamea2024" target="_blank" class="flex flex-col items-center text-gray-400 hover:text-red-500 transition-all duration-300 transform hover:scale-110">
+                                        <i class="fab fa-youtube fa-3x"></i>
+                                        <span class="text-sm mt-2">@Flamea2024</span>
+                                    </a>
+                                     <a href="mailto:admin@flamea.org" class="flex flex-col items-center text-gray-400 hover:text-teal-400 transition-all duration-300 transform hover:scale-110">
+                                        <i class="fas fa-envelope fa-3x"></i>
+                                        <span class="text-sm mt-2">admin@flamea.org</span>
+                                    </a>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -144,15 +163,25 @@
         </main>
     </div>
 
-    <!-- Modals -->
-    <div id="confirm-submission-modal" class="custom-modal">
-        <!-- Modal content here -->
+    <!-- Confirmation Modal -->
+    <div id="confirmation-modal" class="custom-modal">
+        <div class="custom-modal-content bg-gray-800 rounded-lg shadow-2xl w-11/12 max-w-lg p-6 text-center border border-gray-700">
+             <h3 class="text-2xl font-bold mb-4 text-white">Confirm Submission</h3>
+             <div class="text-left text-sm text-gray-300 space-y-3 mb-6">
+                 <p><i class="fas fa-shield-alt text-green-400 mr-2"></i><span class="font-bold">Personal Information:</span> By submitting with your details, you agree to our Privacy Policy and allow Flamea to contact you.</p>
+                 <p><i class="fas fa-lightbulb text-yellow-400 mr-2"></i><span class="font-bold">Contributor Agreement:</span> By sharing your story or suggestion, you agree that your contribution becomes part of the Flamea project, to be used to support the community.</p>
+             </div>
+             <div class="flex flex-col sm:flex-row justify-center gap-4">
+                 <button id="confirm-send-btn" class="w-full sm:w-auto bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors">Confirm & Send</button>
+                 <button id="confirm-anonymous-btn" class="w-full sm:w-auto bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors">Submit Anonymously</button>
+                 <button id="cancel-btn" class="w-full sm:w-auto bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 transition-colors">Cancel</button>
+             </div>
+        </div>
     </div>
-
-    <!-- Firebase and Scripts -->
-    <script type="module" src="assets/js/firebase-config.js"></script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/community.js"></script>
+    
+    <!-- Scripts -->
+    <!-- Note: Add your Firebase config script here for a live environment -->
+    <script src="assets/js/main.js" type="module"></script>
+    <script src="assets/js/community-hub.js" type="module"></script>
 </body>
 </html>
