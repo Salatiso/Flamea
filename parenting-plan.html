@@ -15,12 +15,16 @@
 
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .step-content { display: none; animation: fadeIn 0.5s ease-in-out; }
-        .step-content.active { display: block; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; }
+        .wizard-step { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .wizard-step.active { display: block; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
 
         .form-label { @apply block text-sm font-semibold text-gray-300 mb-2; }
         .form-input, .form-select { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white placeholder-gray-500; }
+        /* FIX: Date input text color */
+        input[type="date"] { color: black; }
         
         .step-indicator { @apply flex items-center justify-center w-12 h-12 rounded-full text-lg font-bold transition-colors duration-300 border-4; }
         .step-indicator.active { @apply bg-green-600 text-white border-green-600; }
@@ -43,7 +47,7 @@
 </head>
 
 <body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex min-h-screen">
+    <div class="main-container">
         <div id="sidebar-placeholder"></div>
 
         <main class="main-content p-4 sm:p-8 md:p-12">
@@ -53,57 +57,43 @@
                     <p class="text-lg md:text-xl text-gray-400 mt-3">A Step-by-Step Builder for a Fair and Comprehensive Plan</p>
                 </header>
 
-                <!-- Step Indicators -->
                 <div class="flex items-center justify-center mb-12 space-x-2 md:space-x-4">
-                    <div id="step-indicator-1" class="step-indicator">1</div>
-                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-2" class="step-indicator">2</div>
-                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-3" class="step-indicator">3</div>
-                     <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-4" class="step-indicator">4</div>
-                    <div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-1" class="step-indicator">1</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-2" class="step-indicator">2</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-3" class="step-indicator">3</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
+                    <div id="step-indicator-4" class="step-indicator">4</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
                     <div id="step-indicator-5" class="step-indicator">5</div>
                 </div>
 
                 <div class="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl min-h-[50vh]">
                     <form id="plan-builder-form" class="space-y-8">
+                        
                         <!-- Step 1: Parties & Plan Purpose -->
                         <div id="step-1" class="step-content">
                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 1: The Parties & Plan Purpose</h2>
-                            <div>
-                                <label for="plan-purpose" class="form-label">What is the purpose of this plan?</label>
-                                <select id="plan-purpose" class="form-select">
-                                    <option value="existing">Creating a plan for my existing child/children</option>
-                                    <option value="planning">Planning for a future child</option>
-                                </select>
-                            </div>
-                            <div class="grid md:grid-cols-2 gap-8 mt-6">
+                             <div class="grid md:grid-cols-2 gap-6 mb-8">
                                 <div>
-                                    <h3 class="font-semibold text-xl mb-4 text-white">Parent A</h3>
-                                    <div class="space-y-4">
-                                        <div>
-                                            <label for="parentA-name" class="form-label">Full Legal Name</label>
-                                            <input type="text" id="parentA-name" class="form-input" placeholder="e.g., John Thabo Doe">
-                                        </div>
-                                        <div>
-                                            <label for="parentA-id" class="form-label">Identity Number (Optional)</label>
-                                            <input type="text" id="parentA-id" class="form-input" placeholder="For court-ready documents">
-                                        </div>
-                                    </div>
+                                    <label for="plan-purpose" class="form-label">Purpose of this Plan</label>
+                                    <select id="plan-purpose" class="form-select">
+                                        <option value="existing">For my existing child/children</option>
+                                        <option value="planning">Planning for a future child</option>
+                                    </select>
                                 </div>
-                                <div>
-                                    <h3 class="font-semibold text-xl mb-4 text-white">Parent B</h3>
-                                     <div class="space-y-4">
-                                        <div>
-                                            <label for="parentB-name" class="form-label">Full Legal Name</label>
-                                            <input type="text" id="parentB-name" class="form-input" placeholder="e.g., Jane Nomsa Smith">
-                                        </div>
-                                        <div>
-                                            <label for="parentB-id" class="form-label">Identity Number (Optional)</label>
-                                            <input type="text" id="parentB-id" class="form-input" placeholder="For court-ready documents">
-                                        </div>
-                                    </div>
+                            </div>
+                            <div class="grid md:grid-cols-2 gap-8">
+                                <div class="space-y-4 p-4 border border-gray-700 rounded-lg">
+                                    <h3 class="font-semibold text-xl text-white">Parent 1</h3>
+                                    <div><label for="parentA-role" class="form-label">Role</label><select id="parentA-role" class="form-select"><option>Father</option><option>Mother</option><option>Other</option></select></div>
+                                    <div><label for="parentA-name" class="form-label">Full Legal Name</label><input type="text" id="parentA-name" class="form-input" placeholder="e.g., John Thabo Doe"></div>
+                                    <div><label for="parentA-nickname" class="form-label">Referred to as (Optional)</label><input type="text" id="parentA-nickname" class="form-input" placeholder="e.g., Dad, Papa"></div>
+                                    <div><label for="parentA-id" class="form-label">Identity Number (Optional)</label><input type="text" id="parentA-id" class="form-input" placeholder="For court-ready documents"></div>
+                                </div>
+                                <div class="space-y-4 p-4 border border-gray-700 rounded-lg">
+                                    <h3 class="font-semibold text-xl text-white">Parent 2</h3>
+                                    <div><label for="parentB-role" class="form-label">Role</label><select id="parentB-role" class="form-select"><option>Mother</option><option>Father</option><option>Other</option></select></div>
+                                    <div><label for="parentB-name" class="form-label">Full Legal Name</label><input type="text" id="parentB-name" class="form-input" placeholder="e.g., Jane Nomsa Smith"></div>
+                                    <div><label for="parentB-nickname" class="form-label">Referred to as (Optional)</label><input type="text" id="parentB-nickname" class="form-input" placeholder="e.g., Mama, Mom"></div>
+                                    <div><label for="parentB-id" class="form-label">Identity Number (Optional)</label><input type="text" id="parentB-id" class="form-input" placeholder="For court-ready documents"></div>
                                 </div>
                             </div>
                             <h3 class="font-semibold text-xl mb-4 mt-8 text-white">The Child / Children</h3>
@@ -117,42 +107,32 @@
                              <div class="space-y-6">
                                  <div>
                                      <label for="custody-status" class="form-label">What is the current custody status?</label>
-                                     <select id="custody-status" class="form-select">
-                                         <option>We have a mutual agreement</option>
-                                         <option>There is a court order in place</option>
-                                         <option>This is currently in dispute</option>
-                                     </select>
+                                     <select id="custody-status" class="form-select"><option>We have a mutual agreement</option><option>There is a court order in place</option><option>This is currently in dispute</option></select>
                                  </div>
                                  <div>
                                      <label for="custody-details" class="form-label">Provide more details (e.g., case number, specifics of agreement/dispute)</label>
-                                     <textarea id="custody-details" rows="3" class="form-input"></textarea>
+                                     <textarea id="custody-details" rows="3" class="form-input" placeholder="Enter details here..."></textarea>
                                  </div>
-                                 <div id="child-residence-container" class="space-y-6">
-                                     <!-- Child residence sections will be injected here -->
-                                 </div>
+                                 <div id="child-residence-container" class="space-y-8"></div>
                              </div>
                         </div>
 
                         <!-- Step 3: Contact & Time Allocation -->
                         <div id="step-3" class="step-content">
                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 3: Contact Schedule & Time Allocation</h2>
-                            <div id="time-dashboard" class="bg-gray-900 p-6 rounded-lg mb-8">
-                                <!-- Time dashboard will be rendered here -->
-                            </div>
+                            <div id="time-dashboard" class="bg-gray-900 p-6 rounded-lg mb-8"></div>
                             <div class="grid lg:grid-cols-3 gap-8">
                                 <div class="lg:col-span-2">
                                     <div id="calendar" class="bg-gray-900 p-4 rounded-lg"></div>
                                 </div>
-                                <div class="bg-gray-900 p-4 rounded-lg">
-                                    <h3 class="text-xl font-bold mb-4">Add Schedule Event</h3>
-                                    <div class="space-y-4">
-                                        <div><label for="event-title" class="form-label">Event Description</label><input type="text" id="event-title" class="form-input" placeholder="e.g., School Holidays"></div>
-                                        <div><label for="event-start-date" class="form-label">Start Date</label><input type="date" id="event-start-date" class="form-input"></div>
-                                        <div><label for="event-end-date" class="form-label">End Date</label><input type="date" id="event-end-date" class="form-input"></div>
-                                        <div><label for="event-owner" class="form-label">Time Spent With</label><select id="event-owner" class="form-select"><option value="parentA">Parent A</option><option value="parentB">Parent B</option></select></div>
-                                        <button type="button" id="add-event-btn" class="w-full bg-green-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-green-700">Add to Calendar</button>
-                                         <button type="button" id="export-schedule-btn" class="w-full bg-blue-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-blue-700 mt-2">Export to iCal (.ics)</button>
-                                    </div>
+                                <div class="bg-gray-900 p-4 rounded-lg space-y-4">
+                                    <h3 class="text-xl font-bold">Add Schedule Event</h3>
+                                    <div><label for="event-title" class="form-label">Event Description</label><input type="text" id="event-title" class="form-input" placeholder="e.g., School Holidays"></div>
+                                    <div><label for="event-start-date" class="form-label">Start Date</label><input type="date" id="event-start-date" class="form-input"></div>
+                                    <div><label for="event-end-date" class="form-label">End Date</label><input type="date" id="event-end-date" class="form-input"></div>
+                                    <div><label for="event-owner" class="form-label">Time Spent With</label><select id="event-owner" class="form-select"></select></div>
+                                    <button type="button" id="add-event-btn" class="w-full bg-green-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-green-700">Add to Calendar</button>
+                                    <button type="button" id="export-schedule-btn" class="w-full bg-blue-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-blue-700 mt-2">Export to iCal (.ics)</button>
                                 </div>
                             </div>
                         </div>
@@ -160,9 +140,7 @@
                         <!-- Step 4: Contributions & Responsibilities -->
                         <div id="step-4" class="step-content">
                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 4: Contributions & Responsibilities</h2>
-                             <div id="contributions-container" class="space-y-8">
-                                 <!-- Contribution categories will be rendered here -->
-                             </div>
+                             <div id="contributions-container" class="space-y-8"></div>
                         </div>
 
                         <!-- Step 5: Review & Finalize -->
@@ -176,7 +154,6 @@
                              </div>
                         </div>
                     </form>
-                     <!-- Navigation -->
                      <div class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center">
                         <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white transition-opacity">Previous</button>
                         <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-700 font-semibold text-white">Next Step</button>
@@ -186,7 +163,6 @@
         </main>
     </div>
 
-    <!-- Hidden container for PDF generation -->
     <div id="pdf-output" class="hidden"></div>
     
     <script type="module" src="assets/js/main.js"></script>
