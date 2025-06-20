@@ -3,90 +3,126 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Customs & Traditions Hub - Flamea</title>
+    <title>Flamea - Customs & Traditions Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.min.css">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .main-container {
+            display: flex;
+            min-height: 100vh;
+        }
+        .main-content {
+            flex-grow: 1;
+            background-color: #111827; /* Fallback */
+        }
+        .wizard-step, .explorer-section {
+            display: none;
+        }
+        .wizard-step.active, .explorer-section.active {
+            display: block;
+            animation: fadeIn 0.5s ease-in-out;
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(15px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        .option-card, .wizard-option {
+            transition: all 0.2s ease-in-out;
+            border: 2px solid #374151;
+        }
+        .option-card:hover, .wizard-option:hover {
+            border-color: #10B981;
+            transform: translateY(-4px);
+            cursor: pointer;
+        }
+        .accordion-header {
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .accordion-header:hover {
+            background-color: #374151;
+        }
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-in-out;
+        }
+        .accordion-item.active .accordion-content {
+            max-height: 5000px; /* Large value for dynamic content */
+        }
+        .accordion-icon {
+            transition: transform 0.3s;
+        }
+        .accordion-item.active .accordion-icon {
+            transform: rotate(90deg);
+        }
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex min-h-screen">
-        <!-- Sidebar will be loaded here by main.js -->
+    <div class="main-container">
         <div id="sidebar-placeholder"></div>
-
-        <main class="main-content flex-grow p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <!-- Standardized Header -->
-                <div class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center mb-12">
-                    <h2 class="text-5xl font-bold font-roboto mb-4">Customs & Traditions Hub</h2>
-                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Explore the rich tapestry of our shared heritage to foster unity and understanding.</p>
+        
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-5xl mx-auto">
+                <div id="hub-header" class="text-center mb-12">
+                    <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3">Customs & Traditions Hub</h1>
+                    <p class="text-lg text-gray-400">Explore the rich tapestry of our shared heritage to foster unity and understanding.</p>
                 </div>
 
-                <!-- Main content area that switches between selection and content views -->
-                <div id="content-area">
-                    <!-- Feature Card Selection -->
-                    <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-12">
-                        <div id="start-wizard-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300 cursor-pointer">
-                            <i class="fas fa-magic text-4xl text-green-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Cultural Explorer Wizard</h3>
-                            <p class="text-gray-400 flex-grow mb-4">Answer a few questions to find and compare customs.</p>
-                            <button class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full">Start Wizard</button>
-                        </div>
-                        <div id="explore-customs-btn" class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 cursor-pointer">
-                            <i class="fas fa-book-open text-4xl text-blue-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Manual Customs Browser</h3>
-                            <p class="text-gray-400 flex-grow mb-4">Browse all customs by category.</p>
-                            <button class="bg-blue-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-blue-500 transition-colors w-full">Browse Manually</button>
-                        </div>
-                         <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
-                            <i class="fas fa-star text-4xl text-yellow-400 mb-4"></i>
-                            <h3 class="text-2xl font-bold mb-2">Featured Custom</h3>
-                            <p class="text-gray-400 flex-grow mb-4">Learn about the significance of 'Ukuhlolwa' in Zulu culture.</p>
-                            <button class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Learn More</button>
-                        </div>
+                <div id="selection-area" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                    <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center">
+                        <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Cultural Explorer Wizard</h4>
+                        <p class="text-gray-400">Answer a few questions to find and compare customs.</p>
                     </div>
+                    <div id="explore-customs-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center">
+                        <i class="fas fa-book-open text-5xl text-blue-400 mb-4"></i>
+                        <h4 class="text-2xl font-bold text-white mb-2">Manual Customs Browser</h4>
+                        <p class="text-gray-400">Browse all customs by category.</p>
+                    </div>
+                </div>
 
-                    <!-- Wizard Section (hidden by default) -->
-                    <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg shadow-xl">
-                        <div id="step-1" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">How would you like to explore?</h3>
-                            <div class="space-y-4">
-                                <div class="wizard-option p-4 rounded-lg border-2 border-gray-700 hover:border-green-500 transition-colors cursor-pointer" data-next="2A">
-                                    <h4 class="font-bold">Learn about a specific South African culture.</h4>
-                                    <p class="text-sm text-gray-400">Dive deep into the customs of one tribe.</p>
-                                </div>
-                                <div class="wizard-option p-4 rounded-lg border-2 border-gray-700 hover:border-green-500 transition-colors cursor-pointer" data-next="2B">
-                                    <h4 class="font-bold">Compare a specific custom across cultures.</h4>
-                                    <p class="text-sm text-gray-400">See how practices differ and overlap.</p>
-                                </div>
+                <!-- Wizard Section -->
+                <div id="wizard-section" class="hidden bg-gray-800 p-8 rounded-lg shadow-xl">
+                    <div id="step-1" class="wizard-step">
+                        <h3 class="text-2xl font-bold text-white mb-6 text-center">How would you like to explore?</h3>
+                        <div class="space-y-4">
+                            <div class="wizard-option p-4 rounded-lg" data-next="2A">
+                                <h4 class="font-bold">Learn about a specific South African culture.</h4>
+                                <p class="text-sm text-gray-400">Dive deep into the customs of one tribe.</p>
                             </div>
-                        </div>
-                        <div id="step-2A" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">Which culture are you interested in?</h3>
-                            <div id="culture-selection-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
-                                <!-- Culture buttons will be injected here by customs.js -->
+                            <div class="wizard-option p-4 rounded-lg" data-next="2B">
+                                <h4 class="font-bold">Compare a specific custom across cultures.</h4>
+                                <p class="text-sm text-gray-400">See how practices differ and overlap worldwide.</p>
                             </div>
-                        </div>
-                         <div id="step-2B" class="wizard-step">
-                            <h3 class="text-2xl font-bold text-white mb-6 text-center">Which custom would you like to compare?</h3>
-                            <div id="custom-selection-container" class="space-y-4">
-                                <!-- Custom category buttons will be injected here by customs.js -->
-                            </div>
-                        </div>
-                        <div id="step-results" class="wizard-step">
-                             <div id="results-content" class="space-y-6"></div>
-                        </div>
-                         <div id="wizard-nav" class="mt-8 pt-4 border-t border-gray-700 flex justify-between items-center">
-                            <button id="back-btn" class="bg-gray-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-gray-500 disabled:opacity-50 transition-colors">Back</button>
-                            <button id="home-btn" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">Back to Hub</button>
                         </div>
                     </div>
+                    <div id="step-2A" class="wizard-step">
+                        <h3 class="text-2xl font-bold text-white mb-6 text-center">Which culture are you interested in?</h3>
+                        <div id="culture-selection-container" class="grid grid-cols-2 md:grid-cols-3 gap-4">
+                            <!-- Culture buttons will be injected here -->
+                        </div>
+                    </div>
+                     <div id="step-2B" class="wizard-step">
+                        <h3 class="text-2xl font-bold text-white mb-6 text-center">Which custom would you like to compare?</h3>
+                        <div id="custom-selection-container" class="space-y-4">
+                            <!-- Custom category buttons will be injected here -->
+                        </div>
+                    </div>
+                    <div id="step-results" class="wizard-step">
+                         <div id="results-content" class="space-y-6"></div>
+                    </div>
+                     <div id="wizard-nav" class="mt-8 pt-4 border-t border-gray-700">
+                        <button id="back-btn" class="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-500 disabled:opacity-50 transition-opacity" disabled>Back</button>
+                    </div>
+                </div>
 
-                    <!-- Explorer Section (hidden by default) -->
-                    <div id="explorer-section" class="hidden space-y-4">
-                        <!-- Manual browser accordion will be injected here -->
-                        <button id="home-btn-explorer" class="mt-6 bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">Back to Hub</button>
-                    </div>
+                <!-- Explorer Section -->
+                <div id="explorer-section" class="hidden space-y-4">
+                    <!-- Manual browser accordion will be injected here -->
+                    <button id="back-to-selection" class="mt-6 text-sm text-gray-400 hover:text-white">&larr; Back to selection</button>
                 </div>
             </div>
         </main>
