@@ -44,23 +44,23 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const resources = {
         training: [
-            { id: 't1', title: 'The SA Constitution', category: 'legal', icon: 'fa-landmark', url: 'training/course-constitution.html' },
-            { id: 't2', title: "The Children's Act", category: 'legal', icon: 'fa-child', url: 'training/course-childrens-act.html' },
-            { id: 't3', title: 'Co-Parenting 101', category: 'parenting', icon: 'fa-hands-helping', url: 'training/course-coparenting.html' },
-            { id: 't4', title: 'Newborn & Daily Care', category: 'foundational', icon: 'fa-baby-carriage', url: 'training/course-newborn-daily-care.html'},
-            { id: 't5', title: 'The Unbroken Chain', category: 'cultural', icon: 'fa-link', url: 'training/course-unbroken-chain.html'},
+            { id: 't1', title: 'The SA Constitution', description: 'The supreme law. Understand your foundational rights.', category: 'legal', icon: 'fa-landmark', url: 'training/course-constitution.html' },
+            { id: 't2', title: "The Children's Act", description: 'A deep dive into parental rights and responsibilities.', category: 'legal', icon: 'fa-child', url: 'training/course-childrens-act.html' },
+            { id: 't3', title: 'Co-Parenting 101', description: 'Master communication and conflict resolution.', category: 'parenting', icon: 'fa-hands-helping', url: 'training/course-coparenting.html' },
+            { id: 't4', title: 'Newborn & Daily Care', description: 'Gain confidence in essential daily tasks for infants.', category: 'foundational', icon: 'fa-baby-carriage', url: 'training/course-newborn-daily-care.html'},
+            { id: 't5', title: 'The Unbroken Chain', description: 'Successor vs. Heir in Xhosa Tradition. Understand your profound duty.', category: 'cultural', icon: 'fa-link', url: 'training/course-unbroken-chain.html'},
         ],
         tools: [
-            { id: 'f1', title: 'General Affidavit', category: 'legal', icon: 'fa-gavel', url: 'assets/templates/Affidavit_General_Template.html' },
-            { id: 'f2', title: 'Parenting Plan Builder', category: 'parenting', icon: 'fa-file-signature', url: 'plan-builder.html' },
-            { id: 'f3', title: 'Budget for Couples', category: 'foundational', icon: 'fa-coins', url: 'assets/templates/Budget_Couples.html'},
-            { id: 'f4', title: 'Formal Rights Affirmation', category: 'legal', icon: 'fa-scroll', url: 'assets/templates/Affirmation_Parental_Rights_and_Responsibilities_Formal.html'},
+            { id: 'f1', title: 'General Affidavit', description: 'A sworn statement for official use.', category: 'legal', icon: 'fa-gavel', url: 'assets/templates/Affidavit_General_Template.html' },
+            { id: 'f2', title: 'Parenting Plan Builder', description: 'Create a comprehensive, court-ready parenting plan.', category: 'parenting', icon: 'fa-file-signature', url: 'plan-builder.html' },
+            { id: 'f3', title: 'Budget for Couples', description: 'Plan your family finances together.', category: 'foundational', icon: 'fa-coins', url: 'assets/templates/Budget_Couples.html'},
+            { id: 'f4', title: 'Formal Rights Affirmation', description: 'Formally assert your parental rights and responsibilities.', category: 'legal', icon: 'fa-scroll', url: 'assets/templates/Affirmation_Parental_Rights_and_Responsibilities_Formal.html'},
         ],
         games: [
-            { id: 'g1', title: 'Constitution Champions', category: 'legal', icon: 'fa-shield-halved', url: 'games/constitution-champions.html' },
-            { id: 'g2', title: 'Justice Builder', category: 'parenting', icon: 'fa-cubes', url: 'games/justice-builder.html' },
-            { id: 'g3', title: 'My Family, My Clan', category: 'cultural', icon: 'fa-users', url: 'games/my-family-my-clan.html' },
-            { id: 'g4', title: 'Kid Konstitution', category: 'foundational', icon: 'fa-gamepad', url: 'games/kid-konstitution.html' }
+            { id: 'g1', title: 'Constitution Champions', description: 'Test your knowledge of the supreme law.', category: 'legal', icon: 'fa-shield-halved', url: 'games/constitution-champions.html' },
+            { id: 'g2', title: 'Justice Builder', description: 'Learn about legal concepts through play.', category: 'parenting', icon: 'fa-cubes', url: 'games/justice-builder.html' },
+            { id: 'g3', title: 'My Family, My Clan', description: 'Explore family structures and cultural roles.', category: 'cultural', icon: 'fa-users', url: 'games/my-family-my-clan.html' },
+            { id: 'g4', title: 'Kid Konstitution', description: 'An introduction to rights for young children.', category: 'foundational', icon: 'fa-gamepad', url: 'games/kid-konstitution.html' }
         ]
     };
     
@@ -71,7 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- Functions ---
     const renderStep = (stepIndex) => {
         const step = questions[stepIndex];
-        const progress = ((stepIndex + 1) / questions.length) * 100;
         
         let optionsHtml = step.options.map((option, index) => `
             <div>
@@ -89,7 +88,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <h2 class="text-2xl font-bold text-white mt-2">${step.question}</h2>
                 </div>
                 <div class="space-y-4 mb-8">${optionsHtml}</div>
-                <button id="next-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors" disabled>Next Question <i class="fas fa-arrow-right ml-2"></i></button>
+                <button id="next-btn" class="w-full bg-blue-600 text-white font-bold py-3 px-6 rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>Next <i class="fas fa-arrow-right ml-2"></i></button>
             </div>
         `;
         
@@ -97,7 +96,7 @@ document.addEventListener('DOMContentLoaded', () => {
         assessmentContainer.querySelectorAll('input[type="radio"]').forEach(radio => {
             radio.addEventListener('change', () => {
                 nextBtn.disabled = false;
-                nextBtn.classList.remove('bg-blue-600');
+                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-blue-600');
                 nextBtn.classList.add('bg-green-600', 'hover:bg-green-500');
             });
         });
@@ -128,50 +127,55 @@ document.addEventListener('DOMContentLoaded', () => {
         assessmentContainer.classList.add('hidden');
         resultsContainer.classList.remove('hidden');
         
-        // Sort categories by score, descending
         const sortedCategories = Object.entries(userScores).sort(([, a], [, b]) => b - a);
         
         const primaryCat = sortedCategories[0][0];
         const secondaryCat = sortedCategories[1][0];
 
-        // Build recommendations
-        const recommendations = [];
+        const finalRecs = new Set();
         
-        // 1. Training (Constitution is always first)
-        recommendations.push(resources.training.find(t => t.id === 't1'));
-        recommendations.push(resources.training.find(t => t.category === primaryCat && t.id !== 't1') || resources.training.find(t => t.category === secondaryCat && t.id !== 't1'));
+        // Add mandatory Constitution training
+        finalRecs.add(resources.training.find(t => t.id === 't1'));
+        
+        // Add primary category resources
+        finalRecs.add(resources.training.find(t => t.category === primaryCat && t.id !== 't1'));
+        finalRecs.add(resources.tools.find(t => t.category === primaryCat));
+        finalRecs.add(resources.games.find(g => g.category === primaryCat));
+        
+        // Add secondary category resources, avoiding duplicates
+        finalRecs.add(resources.training.find(t => t.category === secondaryCat && t.id !== 't1'));
+        finalRecs.add(resources.tools.find(t => t.category === secondaryCat));
+        finalRecs.add(resources.games.find(g => g.category === secondaryCat));
 
-        // 2. Tools
-        recommendations.push(resources.tools.find(t => t.category === primaryCat) || resources.tools[0]);
-        recommendations.push(resources.tools.find(t => t.category === secondaryCat) || resources.tools[1]);
+        // Fill any gaps with default items if categories didn't yield enough unique results
+        const allResources = [...resources.training, ...resources.tools, ...resources.games];
+        let i = 0;
+        while(finalRecs.size < 6 && i < allResources.length) {
+            finalRecs.add(allResources[i]);
+            i++;
+        }
         
-        // 3. Games
-        recommendations.push(resources.games.find(g => g.category === primaryCat) || resources.games[0]);
-        recommendations.push(resources.games.find(g => g.category === secondaryCat) || resources.games[1]);
-        
-        // Remove duplicates and ensure we have 6 items
-        const finalRecs = [...new Set(recommendations)].slice(0, 6);
-        
-        resultsGrid.innerHTML = finalRecs.map(rec => createResourceCard(rec)).join('');
+        resultsGrid.innerHTML = Array.from(finalRecs).slice(0, 6).map(rec => createResourceCard(rec)).join('');
     };
 
     const createResourceCard = (resource) => {
-        const type = resources.training.includes(resource) ? 'Training' :
-                     resources.tools.includes(resource) ? 'Tool' : 'Game';
+        if (!resource) return ''; // Failsafe for missing recommendations
+        const type = resources.training.some(r => r.id === resource.id) ? 'Training' :
+                     resources.tools.some(r => r.id === resource.id) ? 'Tool' : 'Game';
         
         const colorClass = type === 'Training' ? 'bg-blue-500' :
                            type === 'Tool' ? 'bg-amber-500' : 'bg-teal-500';
 
         return `
-            <a href="${resource.url}" class="recommendation-card block bg-gray-700/50 p-6 rounded-lg border border-gray-600 hover:border-blue-500">
-                <div class="flex items-center mb-3">
+            <a href="${resource.url}" class="recommendation-card block bg-gray-700/50 p-6 rounded-lg border border-gray-600 hover:border-blue-500 h-full flex flex-col">
+                <div class="flex-shrink-0 mb-3">
                     <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white ${colorClass}">${type}</span>
                 </div>
-                <div class="flex items-start">
-                    <i class="fas ${resource.icon} text-3xl text-gray-400 mr-4 mt-1"></i>
-                    <div>
+                <div class="flex items-start flex-grow">
+                    <i class="fas ${resource.icon} text-3xl text-gray-400 mr-4 w-8 text-center"></i>
+                    <div class="flex flex-col">
                         <h4 class="text-xl font-bold text-white">${resource.title}</h4>
-                        <p class="text-gray-400 text-sm mt-1">${resource.description || ''}</p>
+                        <p class="text-gray-400 text-sm mt-1 flex-grow">${resource.description || ''}</p>
                     </div>
                 </div>
             </a>
