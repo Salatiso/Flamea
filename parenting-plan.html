@@ -19,12 +19,13 @@
         .main-content { flex-grow: 1; }
         .wizard-step { display: none; animation: fadeIn 0.5s ease-in-out; }
         .wizard-step.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
 
         .form-label { @apply block text-sm font-semibold text-gray-300 mb-2; }
         .form-input, .form-select { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white placeholder-gray-500; }
-        /* FIX: Date input text color */
-        input[type="date"] { color: black; }
+        
+        /* FIX: Ensure date input text is visible in dark mode */
+        input[type="date"] { color-scheme: dark; }
         
         .step-indicator { @apply flex items-center justify-center w-12 h-12 rounded-full text-lg font-bold transition-colors duration-300 border-4; }
         .step-indicator.active { @apply bg-green-600 text-white border-green-600; }
@@ -32,7 +33,7 @@
         .step-indicator.pending { @apply bg-gray-800 border-gray-600 text-gray-500; }
 
         .contribution-bar-bg { @apply w-full bg-gray-600 rounded-full h-4 overflow-hidden; }
-        .contribution-bar { @apply h-4 rounded-full transition-all duration-500 flex items-center justify-center text-white text-xs font-bold; }
+        .contribution-bar { @apply h-4 transition-all duration-500 flex items-center justify-center text-white text-xs font-bold; }
         
         /* FullCalendar Dark Theme Adjustments */
         :root { --fc-border-color: #374151; --fc-daygrid-day-bg-color: transparent; --fc-list-even-row-bg-color: rgba(255,255,255,0.05); }
@@ -42,6 +43,12 @@
         .fc .fc-daygrid-day-number { color: #9ca3af; }
         .fc .fc-day-today { background-color: rgba(34, 197, 94, 0.2) !important; }
         .fc-event-main { color: white !important; }
+
+        /* PDF Styles */
+        .pdf-page { display: none; } /* Hide for screen */
+        @media print {
+            .pdf-page { display: block !important; }
+        }
     </style>
     <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initMap" async defer></script>
 </head>
@@ -66,10 +73,10 @@
                 </div>
 
                 <div class="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl min-h-[50vh]">
-                    <form id="plan-builder-form" class="space-y-8">
+                    <form id="plan-builder-form">
                         
                         <!-- Step 1: Parties & Plan Purpose -->
-                        <div id="step-1" class="step-content">
+                        <div id="step-1" class="wizard-step">
                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 1: The Parties & Plan Purpose</h2>
                              <div class="grid md:grid-cols-2 gap-6 mb-8">
                                 <div>
@@ -102,7 +109,7 @@
                         </div>
                         
                         <!-- Step 2: Residence & Custody -->
-                        <div id="step-2" class="step-content">
+                        <div id="step-2" class="wizard-step">
                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 2: Residence & Custody</h2>
                              <div class="space-y-6">
                                  <div>
@@ -118,7 +125,7 @@
                         </div>
 
                         <!-- Step 3: Contact & Time Allocation -->
-                        <div id="step-3" class="step-content">
+                        <div id="step-3" class="wizard-step">
                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 3: Contact Schedule & Time Allocation</h2>
                             <div id="time-dashboard" class="bg-gray-900 p-6 rounded-lg mb-8"></div>
                             <div class="grid lg:grid-cols-3 gap-8">
@@ -138,13 +145,13 @@
                         </div>
 
                         <!-- Step 4: Contributions & Responsibilities -->
-                        <div id="step-4" class="step-content">
+                        <div id="step-4" class="wizard-step">
                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 4: Contributions & Responsibilities</h2>
                              <div id="contributions-container" class="space-y-8"></div>
                         </div>
 
                         <!-- Step 5: Review & Finalize -->
-                        <div id="step-5" class="step-content">
+                        <div id="step-5" class="wizard-step">
                              <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 5: Review & Finalize</h2>
                              <div id="review-pane" class="space-y-6 bg-gray-900 p-6 rounded-lg"></div>
                              <div class="mt-8 p-4 border-2 border-dashed border-yellow-500 rounded-lg bg-yellow-500 bg-opacity-10">
