@@ -3,112 +3,67 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Book Reader</title>
+    <title>Fatherhood Tools - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
-    <style>
-        body { overflow: hidden; }
-        .reader-container {
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            height: 100vh;
-            background-color: #1a202c;
-        }
-        #reader-main {
-            overflow: hidden;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-        #book-content {
-            column-width: 350px;
-            column-gap: 40px;
-            column-rule: 1px solid #4a5568;
-            height: 100%;
-            padding: 2rem;
-            text-align: justify;
-            transition: all 0.3s ease;
-        }
-        #book-content p { margin-bottom: 1em; }
-        #book-content.single-page {
-            column-width: auto;
-            max-width: 800px;
-        }
-        .font-lora { font-family: 'Lora', serif; }
-        .font-opensans { font-family: 'Open Sans', sans-serif; }
-        .font-robotoslab { font-family: 'Roboto Slab', serif; }
-        ::selection { background: #fde047; color: #1a202c; }
-    </style>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.min.css">
 </head>
-<body class="bg-gray-800 text-gray-300">
-    <div class="reader-container">
-        <!-- HEADER / TOOLBAR -->
-        <header class="bg-gray-900/80 backdrop-blur-sm p-3 flex justify-between items-center shadow-lg border-b border-gray-700 z-20">
-            <a href="publications.html" class="text-gray-300 hover:text-white transition-colors"><i class="fas fa-arrow-left mr-2"></i>Back to Library</a>
-            <h1 id="book-title-header" class="text-lg font-bold text-white">Loading...</h1>
-            <div class="flex items-center gap-3">
-                <!-- View Modes -->
-                <button id="view-single-btn" title="Single Page View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-file-alt"></i></button>
-                <button id="view-columns-btn" title="Book View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-book-open"></i></button>
-                <div class="border-l border-gray-600 h-6"></div>
-                <!-- Font Controls -->
-                <button id="font-dec-btn" title="Decrease Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>-</button>
-                <button id="font-inc-btn" title="Increase Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>+</button>
-                <select id="font-select" class="bg-gray-700 border-gray-600 rounded p-1 text-sm">
-                    <option value="font-lora">Lora (Serif)</option>
-                    <option value="font-opensans">Open Sans</option>
-                    <option value="font-robotoslab">Roboto Slab</option>
-                </select>
-                <!-- Theme -->
-                <button id="theme-toggle-btn" title="Toggle Light/Dark Mode" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-moon"></i></button>
-            </div>
-        </header>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar will be loaded here by main.js -->
+        <div id="sidebar-placeholder"></div>
 
-        <!-- MAIN READER AREA -->
-        <main id="reader-main">
-            <div id="loading-spinner" class="text-center">
-                <i class="fas fa-spinner fa-spin text-5xl text-yellow-400"></i>
-                <p class="mt-4 text-lg">Loading your book...</p>
-            </div>
-            <div id="book-cover-view" class="hidden">
-                 <img id="book-cover-img" src="" alt="Book Cover" class="max-h-[80vh] rounded-lg shadow-2xl">
-            </div>
-            <div id="book-content-container" class="hidden h-full w-full overflow-y-auto">
-                <div id="book-content" class="font-lora text-lg leading-relaxed">
-                    <!-- Book text will be injected here -->
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-7xl mx-auto">
+                <div class="text-box bg-gray-800 p-6 rounded-lg shadow-md text-center mb-12">
+                    <h2 class="text-5xl font-bold font-roboto mb-4">Your Fatherhood Armoury</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">A comprehensive suite of powerful tools and legal templates designed to empower you at every stage of your journey.</p>
+                </div>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-12">
+                     <!-- Feature Card: Podcast -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-yellow-500 transition-all duration-300">
+                        <i class="fas fa-podcast text-4xl text-yellow-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Flamea Podcast</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Listen to discussions and interviews on key topics for modern fathers.</p>
+                        <button data-modal-target="podcast-modal" class="bg-yellow-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-yellow-500 transition-colors w-full">Listen Now</button>
+                    </div>
+
+                     <!-- Feature Card: Current Affairs Hub -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 transition-all duration-300">
+                        <i class="fas fa-newspaper text-4xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Current Affairs Hub</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Explore news, community articles, and find services near you.</p>
+                        <a href="current-affairs.html" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-500 transition-colors w-full">Visit Hub</a>
+                    </div>
+                    
+                    <!-- Feature Card: LegalHelp -->
+                    <div class="feature-card bg-gray-800 p-6 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-indigo-500 transition-all duration-300">
+                        <i class="fas fa-balance-scale text-4xl text-indigo-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">LegalHelp Initiative</h3>
+                        <p class="text-gray-400 flex-grow mb-4">A community-driven project to demystify South African law for everyone.</p>
+                        <a href="legalhelp.html" class="bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors w-full">Learn More</a>
+                    </div>
+                </div>
+
+                <!-- The tool catalogue will be dynamically rendered here by main.js -->
+                <div id="tools-catalogue" class="space-y-6">
+                    <!-- Content populated by main.js -->
                 </div>
             </div>
         </main>
-        
-        <!-- FOOTER / PROGRESS BAR -->
-        <footer class="bg-gray-900 p-2 text-center text-sm z-10 border-t border-gray-700">
-             <div class="flex items-center justify-between max-w-4xl mx-auto">
-                 <button id="prev-page-btn" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-chevron-left"></i></button>
-                 <div class="flex-grow mx-4">
-                     <span id="page-indicator">Page 1 of 1</span>
-                     <div class="w-full bg-gray-700 rounded-full h-2 mt-1">
-                         <div id="progress-bar" class="bg-yellow-400 h-2 rounded-full" style="width: 0%;"></div>
-                     </div>
-                 </div>
-                 <button id="next-page-btn" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-chevron-right"></i></button>
-             </div>
-        </footer>
-    </div>
-    
-    <!-- Modals and Popups -->
-    <div id="auth-modal" class="hidden fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50">
-        <div class="bg-gray-800 p-8 rounded-lg text-center max-w-md w-full border border-yellow-500 shadow-xl">
-            <h2 class="text-2xl font-bold text-yellow-400 mb-4">Save Your Progress</h2>
-            <p class="text-gray-300 mb-6">To save your notes, highlights, and bookmarks permanently, please register for a free account or log in.</p>
-            <div class="flex justify-center gap-4">
-                <a href="login.html" class="py-2 px-6 rounded-lg bg-green-600 text-white hover:bg-green-700">Login / Register</a>
-                <button id="close-auth-modal" class="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-500">Continue without saving</button>
-            </div>
-        </div>
     </div>
 
+    <!-- Modals -->
+    <div id="chatbot-modal" class="custom-modal"></div>
+    <div id="podcast-modal" class="custom-modal"></div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
+    <script src="assets/js/main.js" type="module"></script>
+    <script src="assets/js/podcast-player.js" type="module"></script>      
 </body>
-<script type="module" src="assets/js/book-reader.js"></script>
 </html>
