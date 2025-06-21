@@ -3,138 +3,306 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Publications</title>
+    <title>FLAMEA - Publications</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.css" />
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #111827; /* Dark background for a premium feel */
-            color: #f3f4f6;
+            font-family: 'Open Sans', sans-serif;
+            background-color: #0d1117; /* Dark background to match index */
+            color: #c9d1d9;
         }
 
-        /* Carousel styles inspired by salatiso.com */
-        .book-carousel {
-            width: 100%;
-            overflow: hidden;
-            padding: 60px 0;
-            white-space: nowrap;
-            position: relative;
+        .main-container {
+            display: flex;
+            min-height: 100vh;
         }
 
-        .book-carousel:before,
-        .book-carousel:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            width: 250px;
-            height: 100%;
-            z-index: 2;
+        .main-content {
+            flex-grow: 1;
+            overflow-y: auto;
         }
 
-        .book-carousel:before {
-            left: 0;
-            background: linear-gradient(to left, rgba(17, 24, 39, 0), #111827);
+        .text-box {
+            background-color: rgba(22, 27, 34, 0.8);
+            backdrop-filter: blur(10px);
+            border: 1px solid #30363d;
         }
 
-        .book-carousel:after {
-            right: 0;
-            background: linear-gradient(to right, rgba(17, 24, 39, 0), #111827);
+        .swiper-slide {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding-top: 2rem;
+            padding-bottom: 4rem; /* Space for reflection */
         }
 
-        .book-track {
-            display: inline-block;
-            animation: scroll 60s linear infinite;
-        }
-        
-        .book-track:hover {
-            animation-play-state: paused;
-        }
-
-        .book-item {
-            display: inline-block;
-            width: 200px; /* Width of the book cover */
-            height: 300px; /* Height of the book cover */
-            margin: 0 40px;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
-        }
-
-        .book-item:hover {
-            transform: scale(1.05) translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .book-item img {
-            width: 100%;
-            height: 100%;
+        .book-cover {
+            width: 80%;
+            max-width: 250px;
+            height: auto;
             object-fit: cover;
             border-radius: 8px;
-            border: 2px solid #374151;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+            transition: transform 0.4s ease, box-shadow 0.4s ease;
+        }
+        
+        .swiper-slide-active .book-cover {
+            transform: scale(1.1);
+            box-shadow: 0 15px 40px rgba(88, 166, 255, 0.3);
         }
 
-        @keyframes scroll {
-            0% {
-                transform: translateX(0);
-            }
-            100% {
-                transform: translateX(-50%);
-            }
+        .swiper-button-next, .swiper-button-prev {
+            color: #58a6ff; /* A nice blue from the theme */
+        }
+        
+        .swiper-pagination-bullet-active {
+            background: #58a6ff;
+        }
+
+        #book-info {
+            transition: opacity 0.3s ease-in-out;
+        }
+
+        /* Expander for licensing info */
+        .expander-title {
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .expander-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease-out;
+        }
+        .expander-icon {
+            transition: transform 0.3s ease;
+        }
+        .expanded .expander-icon {
+            transform: rotate(180deg);
         }
     </style>
 </head>
-<body class="flex">
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
 
-    <div id="sidebar-container"></div>
-
-    <div class="flex-1 flex flex-col items-center justify-center min-h-screen p-4 md:p-8">
-        <div class="text-center mb-12">
-            <h1 class="text-4xl md:text-5xl font-bold text-white">Our Publications</h1>
-            <p class="text-lg text-gray-400 mt-2">Explore our collection of literature. Click a book to start reading.</p>
-        </div>
-
-        <div class="book-carousel">
-            <div id="book-track" class="book-track">
-                <!-- Books will be dynamically inserted here by JavaScript -->
-            </div>
-        </div>
-    </div>
-
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            // Load sidebar
-            fetch('sidebar.html')
-                .then(response => response.text())
-                .then(data => {
-                    document.getElementById('sidebar-container').innerHTML = data;
-                });
-
-            const books = [
-                { id: 'BK-Goliaths_Reckoning.txt', title: 'Goliath\'s Reckoning' },
-                { id: 'BK-HomeSchooling_Father.txt', title: 'The Home Schooling Father' },
-                { id: 'BK-Know_Yourself.txt', title: 'Know Yourself' },
-                { id: 'BK-Beyond_Redress.txt', title: 'Beyond Redress' },
-                { id: 'BK-Goliaths_Stand.txt', title: 'Goliath\'s Stand' },
-                { id: 'BK-SF_Career.txt', title: 'Single Father: Career' },
-                { id: 'BK-SF_Plans.txt', title: 'Single Father: Plans' },
-                { id: 'BK-Zazi_Mzantsi_Afrika.txt', title: 'Zazi Mzantsi Afrika' },
-                { id: 'BK-Utata_ozifundiselayo_ekhayeni.txt', title: 'Utata Ozifundiselayo Ekhayeni' }
-            ];
-
-            const track = document.getElementById('book-track');
-            
-            // Duplicate books for seamless loop
-            const allBooks = [...books, ...books];
-
-            allBooks.forEach(book => {
-                const bookElement = document.createElement('a');
-                bookElement.href = `book-reader.html?book=${book.id}`;
-                bookElement.className = 'book-item';
+        <!-- Main Content -->
+        <main class="main-content p-6 md:p-12">
+            <div class="max-w-7xl mx-auto flex flex-col min-h-[90vh]">
+                <div class="text-center mb-8">
+                    <h1 class="text-5xl md:text-6xl font-bold font-roboto-slab text-white mb-4">Our Publications</h1>
+                    <p class="text-lg text-gray-400">Essential reading for the modern father. Arm yourself with knowledge.</p>
+                </div>
                 
-                // Using placehold.co for dynamic, good-looking placeholders
-                const coverImageUrl = `https://placehold.co/400x600/1e293b/ffffff?text=${encodeURIComponent(book.title)}&font=lora`;
+                <!-- Flex container for carousel and details -->
+                <div class="flex-grow flex flex-col justify-center">
+                    <!-- Book Carousel -->
+                    <div class="swiper my-8">
+                        <div class="swiper-wrapper">
+                            <!-- Published Books -->
+                            <div class="swiper-slide" data-book-id="goliaths-reckoning">
+                                <a href="book-reader.html?book=BK-Goliaths_Reckoning.txt"><img src="assets/images/goliath.jpg" alt="Goliath's Reckoning Cover" class="book-cover"></a>
+                            </div>
+                            <div class="swiper-slide" data-book-id="homeschooling-father">
+                                <a href="book-reader.html?book=BK-HomeSchooling_Father.txt"><img src="assets/images/homeschooling_father.jpg" alt="The Homeschooling Father Cover" class="book-cover"></a>
+                            </div>
+                             <div class="swiper-slide" data-book-id="beyond-redress">
+                                <a href="book-reader.html?book=BK-Beyond_Redress.txt"><img src="assets/images/redress.jpg" alt="Beyond Redress Cover" class="book-cover"></a>
+                            </div>
+                            <div class="swiper-slide" data-book-id="know-yourself">
+                                <a href="book-reader.html?book=BK-Know_Yourself.txt"><img src="assets/images/know_yourself.jpg" alt="Know Yourself Cover" class="book-cover"></a>
+                            </div>
+                            <div class="swiper-slide" data-book-id="utata-ozifundiselayo-ekhayeni">
+                                <a href="book-reader.html?book=BK-Utata_ozifundiselayo_ekhayeni.txt"><img src="assets/images/utata_ozifundiselayo.jpg" alt="Utata Ozifundiselayo Ekhayeni Cover" class="book-cover"></a>
+                            </div>
+                             <div class="swiper-slide" data-book-id="zazi-mzantsi-afrika">
+                                <a href="book-reader.html?book=BK-Zazi_Mzantsi_Afrika.txt"><img src="assets/images/zazi_mzantsi_afrika.png" alt="Zazi Mzantsi Afrika Cover" class="book-cover"></a>
+                            </div>
+                            <div class="swiper-slide" data-book-id="sf-career">
+                                <a href="book-reader.html?book=BK-SF_Career.txt"><img src="assets/images/SF_Career.jpg" alt="Safety First: Career Cover" class="book-cover"></a>
+                            </div>
+                            <div class="swiper-slide" data-book-id="sf-plans">
+                                <a href="book-reader.html?book=BK-SF_Plans.txt"><img src="assets/images/SF_Plans.jpg" alt="Safety First: Plans Cover" class="book-cover"></a>
+                            </div>
+                            <!-- Upcoming Books -->
+                             <div class="swiper-slide" data-book-id="goliaths-stand">
+                                 <div class="w-full h-full flex justify-center items-center"><i class="fas fa-fist-raised text-8xl text-red-500"></i></div>
+                            </div>
+                            <div class="swiper-slide" data-book-id="unfair-discrimination">
+                                 <div class="w-full h-full flex justify-center items-center"><i class="fas fa-balance-scale-left text-8xl text-purple-400"></i></div>
+                            </div>
+                        </div>
+                        <!-- Navigation Buttons -->
+                        <div class="swiper-button-prev"></div>
+                        <div class="swiper-button-next"></div>
+                         <div class="swiper-pagination"></div>
+                    </div>
+                    
+                    <!-- Book Title & Description Section -->
+                    <div id="book-info" class="text-center max-w-3xl mx-auto min-h-[150px] p-4">
+                        <h2 id="book-title" class="text-3xl font-bold font-roboto-slab text-yellow-300 mb-2"></h2>
+                        <p id="book-description" class="text-gray-400 leading-relaxed"></p>
+                    </div>
+                </div>
 
-                bookElement.innerHTML = `<img src="${coverImageUrl}" alt="Cover of ${book.title}">`;
-                track.appendChild(bookElement);
+                <!-- Collapsible Info Section -->
+                <div class="mt-auto pt-8">
+                     <div class="text-box rounded-lg p-6 max-w-4xl mx-auto">
+                        <div id="expander-1" class="expander">
+                            <div class="expander-title">
+                                <h3 class="text-2xl font-bold text-white">Access the Works & Licensing</h3>
+                                <i class="fas fa-chevron-down expander-icon"></i>
+                            </div>
+                            <div class="expander-content pt-4">
+                                <p class="text-center text-gray-400 mb-6">My books are available across multiple platforms to ensure you can engage with these vital ideas in the format that suits you best.</p>
+                                <div class="grid md:grid-cols-2 gap-8">
+                                    <div class="bg-gray-900 p-6 rounded-lg border border-gray-700">
+                                        <h4 class="font-bold text-xl mb-3 text-blue-400 flex items-center"><i class="fas fa-book-open mr-3"></i>Where to Find Them</h4>
+                                        <p class="mb-4">For e-books and professionally produced audiobooks, visit the Salatiso author page on Google Play.</p>
+                                        <a href="https://play.google.com/store/search?q=salatiso&c=books" target="_blank" class="text-green-400 hover:text-green-300 transition-colors"><i class="fab fa-google-play mr-2"></i>Google Play Store</a>
+                                        <p class="mt-4 mb-4">For free audiobook versions, please visit and subscribe to my YouTube channel.</p>
+                                        <a href="https://www.youtube.com/@Salatiso" target="_blank" class="text-red-500 hover:text-red-400 transition-colors"><i class="fab fa-youtube mr-2"></i>Salatiso on YouTube</a>
+                                    </div>
+                                    <div class="bg-gray-900 p-6 rounded-lg border border-gray-700">
+                                        <h4 class="font-bold text-xl mb-3 text-blue-400 flex items-center"><i class="fas fa-file-contract mr-3"></i>Educational Licensing</h4>
+                                        <p>We believe in the power of education. If you wish to use these works for educational purposes, we offer a licensing program that grants free use of at least one title. You can apply to license additional titles every 12 months.</p>
+                                        <p class="mt-4">For all licensing inquiries, please contact me directly at: <a href="mailto:salatiso@salatiso.com" class="text-green-400 hover:text-green-300">salatiso@salatiso.com</a></p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    
+    <footer class="text-center p-4 bg-gray-900 text-gray-400 border-t border-gray-700">
+        <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/swiper@11/swiper-bundle.min.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            document.getElementById('currentYear').textContent = new Date().getFullYear();
+
+            const bookData = {
+                 'goliaths-reckoning': { 
+                    title: "Goliath's Reckoning", 
+                    description: "A raw, first-hand account of a father's battle against a biased Children's Court. This book exposes the systemic discrimination that marginalizes men and undermines their crucial role in the family, serving as a tactical guide for fathers fighting to reclaim their rights.",
+                    id: 'BK-Goliaths_Reckoning.txt'
+                 },
+                 'homeschooling-father': { 
+                    title: "The Homeschooling Father", 
+                    description: "A father’s guide to taking control of his children's education, rejecting a failing formal school system and embracing homeschooling as an act of empowerment and preserving family values.",
+                    id: 'BK-HomeSchooling_Father.txt'
+                 },
+                 'beyond-redress': {
+                    title: "Beyond Redress",
+                    description: "A critical look at how South Africa's redress policies have failed its children, arguing that true progress lies in prioritizing the 'best interests of the child' to achieve genuine equality before the law.",
+                    id: 'BK-Beyond_Redress.txt'
+                 },
+                 'know-yourself': {
+                     title: "Getting to Know Yourself",
+                     description: "An exploration of Xhosa history and heritage as a source of strength and identity for the South African man. Understand your roots, the journey of your ancestors, and the traditions that forge resilient men.",
+                     id: 'BK-Know_Yourself.txt'
+                 },
+                 'utata-ozifundiselayo-ekhayeni': {
+                     title: 'Utata Ozifundiselayo Ekhayeni',
+                     description: 'Le ncwadi yinguqulelo yesiXhosa eshwankathelweyo "The Homeschooling Father" yenzelwe abafundi abathetha ulwimi lwenkobe.',
+                     id: 'BK-Utata_ozifundiselayo_ekhayeni.txt'
+                 },
+                 'zazi-mzantsi-afrika': {
+                     title: 'Zazi Mzantsi Afrika',
+                     description: 'Inguqulelo yesiXhosa ethi "Getting to Know Yourself", le ncwadi ingena nzulu kwimbali yamaXhosa njengesiseko sokuzazi.',
+                     id: 'BK-Zazi_Mzantsi_Afrika.txt'
+                 },
+                 'sf-career': {
+                     title: 'Safety First: OHS Career',
+                     description: "A man's career is a cornerstone of his ability to provide. This guide maps out a path in Occupational Health & Safety, a field built on the virtues of protection, responsibility, and security.",
+                     id: 'BK-SF_Career.txt'
+                 },
+                  'sf-plans': {
+                     title: 'Safety First: OHS Plans',
+                     description: "Leadership is about foresight. This book provides the essential framework for creating OHS plans—a critical skill for any man in a leadership position.",
+                     id: 'BK-SF_Plans.txt'
+                 },
+                'goliaths-stand': {
+                    title: "Goliath's Stand",
+                    description: "The fight for family equality continues. This upcoming book chronicles the next stage of the legal war against the systemic marginalization of fathers, taking the battle to the Equality Court.",
+                    id: '#' // No link for upcoming books
+                },
+                'unfair-discrimination': {
+                    title: "The Unfairness of Fair Discrimination",
+                    description: "This upcoming book dismantles the notion of collective guilt and argues that any system judging men by their skin color instead of their character is a betrayal of true justice.",
+                    id: '#' // No link for upcoming books
+                }
+            };
+
+            const titleEl = document.getElementById('book-title');
+            const descriptionEl = document.getElementById('book-description');
+
+            const swiper = new Swiper('.swiper', {
+                effect: 'coverflow',
+                grabCursor: true,
+                centeredSlides: true,
+                slidesPerView: 'auto',
+                loop: true,
+                coverflowEffect: {
+                    rotate: 50,
+                    stretch: 0,
+                    depth: 100,
+                    modifier: 1,
+                    slideShadows: true,
+                },
+                pagination: {
+                    el: '.swiper-pagination',
+                },
+                navigation: {
+                    nextEl: '.swiper-button-next',
+                    prevEl: '.swiper-button-prev',
+                },
+                on: {
+                    slideChange: function () {
+                        const activeSlide = this.slides[this.realIndex];
+                        const bookId = activeSlide.dataset.bookId;
+                        titleEl.style.opacity = 0;
+                        descriptionEl.style.opacity = 0;
+                        
+                        setTimeout(() => {
+                            if (bookData[bookId]) {
+                                titleEl.textContent = bookData[bookId].title;
+                                descriptionEl.textContent = bookData[bookId].description;
+                                titleEl.style.opacity = 1;
+                                descriptionEl.style.opacity = 1;
+                            }
+                        }, 300);
+                    }
+                }
+            });
+
+            // Set initial info
+            const initialBookId = swiper.slides[swiper.realIndex].dataset.bookId;
+             if (bookData[initialBookId]) {
+                titleEl.textContent = bookData[initialBookId].title;
+                descriptionEl.textContent = bookData[initialBookId].description;
+            }
+
+            // Expander logic
+            document.getElementById('expander-1').addEventListener('click', function() {
+                this.classList.toggle('expanded');
+                const content = this.querySelector('.expander-content');
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
+                } else {
+                    content.style.maxHeight = content.scrollHeight + "px";
+                }
             });
         });
     </script>
