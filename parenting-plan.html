@@ -1,177 +1,324 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
-
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Co-Parenting Compass: Plan Builder - Flamea</title>
+    <title>Parenting Plan Builder</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- External Libraries -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .wizard-step { display: none; animation: fadeIn 0.5s ease-in-out; }
-        .wizard-step.active { display: block; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-
-        .form-label { @apply block text-sm font-semibold text-gray-300 mb-2; }
-        .form-input, .form-select { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white placeholder-gray-500; }
-        
-        /* FIX: Ensure date input text is visible in dark mode */
-        input[type="date"] { color-scheme: dark; }
-        
-        .step-indicator { @apply flex items-center justify-center w-12 h-12 rounded-full text-lg font-bold transition-colors duration-300 border-4; }
-        .step-indicator.active { @apply bg-green-600 text-white border-green-600; }
-        .step-indicator.complete { @apply bg-gray-800 border-green-600 text-green-400; }
-        .step-indicator.pending { @apply bg-gray-800 border-gray-600 text-gray-500; }
-
-        .contribution-bar-bg { @apply w-full bg-gray-600 rounded-full h-4 overflow-hidden; }
-        .contribution-bar { @apply h-4 transition-all duration-500 flex items-center justify-center text-white text-xs font-bold; }
-        
-        /* FullCalendar Dark Theme Adjustments */
-        :root { --fc-border-color: #374151; --fc-daygrid-day-bg-color: transparent; --fc-list-even-row-bg-color: rgba(255,255,255,0.05); }
-        .fc .fc-toolbar-title { font-size: 1.5em; color: white; }
-        .fc .fc-button-primary { background-color: #16a34a; border-color: #16a34a; }
-        .fc .fc-button-primary:hover { background-color: #15803d; border-color: #15803d; }
-        .fc .fc-daygrid-day-number { color: #9ca3af; }
-        .fc .fc-day-today { background-color: rgba(34, 197, 94, 0.2) !important; }
-        .fc-event-main { color: white !important; }
-
-        /* PDF Styles - hidden on screen */
-        @media screen {
-            .pdf-page { display: none; }
+        body { font-family: 'Inter', sans-serif; }
+        .form-section {
+            @apply mb-8 p-6 bg-white rounded-xl shadow-md border border-gray-200;
+        }
+        .form-section h2 {
+            @apply text-2xl font-bold text-gray-800 border-b-2 border-blue-500 pb-3 mb-6;
+        }
+        .form-group {
+            @apply mb-4;
+        }
+        .form-group label {
+            @apply block text-sm font-medium text-gray-700 mb-1;
+        }
+        .form-group input, .form-group textarea, .form-group select {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500;
+        }
+        .add-btn {
+             @apply mt-2 px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 transition;
+        }
+        .remove-btn {
+            @apply ml-4 px-3 py-1 bg-red-500 text-white text-xs rounded-full hover:bg-red-600 transition;
+        }
+        @media print {
+            body * {
+                visibility: hidden;
+            }
+            #printable-plan, #printable-plan * {
+                visibility: visible;
+            }
+            #printable-plan {
+                position: absolute;
+                left: 0;
+                top: 0;
+                width: 100%;
+            }
+            .no-print {
+                display: none;
+            }
         }
     </style>
-    <!-- FIX: Correct API loading practice -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initMap&loading=async&defer"></script>
 </head>
+<body class="bg-gray-50">
 
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex min-h-screen">
-        <div id="sidebar-placeholder"></div>
+    <div class="container mx-auto p-4 md:p-8">
+        <div id="status-bar" class="no-print mb-4 p-3 rounded-lg text-center text-white transition-all duration-300"></div>
+        
+        <form id="parenting-plan-form" class="max-w-4xl mx-auto">
+            <header class="text-center mb-8 no-print">
+                <h1 class="text-4xl font-extrabold text-gray-800">Parenting Plan Builder</h1>
+                <p class="text-gray-600 mt-2">Create a comprehensive and structured parenting plan. Your progress is saved automatically.</p>
+            </header>
 
-        <main class="main-content p-4 sm:p-8 md:p-12">
-            <div class="max-w-6xl mx-auto">
-                <header class="text-center mb-12">
-                    <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">The Co-Parenting Compass</h1>
-                    <p class="text-lg md:text-xl text-gray-400 mt-3">A Step-by-Step Builder for a Fair and Comprehensive Plan</p>
-                </header>
-
-                <div class="flex items-center justify-center mb-12 space-x-2 md:space-x-4">
-                    <div id="step-indicator-1" class="step-indicator">1</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-2" class="step-indicator">2</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-3" class="step-indicator">3</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-4" class="step-indicator">4</div><div class="flex-grow h-1 bg-gray-700 rounded-full"></div>
-                    <div id="step-indicator-5" class="step-indicator">5</div>
+            <!-- Children Details -->
+            <section class="form-section">
+                <h2>Children's Details</h2>
+                <div id="children-container" class="space-y-4">
+                    <!-- Child fields will be added here -->
                 </div>
+                <button type="button" id="add-child-btn" class="add-btn">Add Child</button>
+            </section>
 
-                <div class="bg-gray-800 p-6 sm:p-8 rounded-2xl shadow-2xl min-h-[50vh]">
-                    <form id="plan-builder-form">
-                        
-                        <!-- Step 1: Parties & Plan Purpose -->
-                        <div id="step-1" class="wizard-step">
-                            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 1: The Parties & Plan Purpose</h2>
-                            <div class="mb-8">
-                                <label for="plan-purpose" class="form-label">Purpose of this Plan</label>
-                                <select id="plan-purpose" class="form-select max-w-md">
-                                    <option value="existing">For my existing child/children</option>
-                                    <option value="planning">Planning for a future child</option>
-                                </select>
-                            </div>
-                            <div class="grid md:grid-cols-2 gap-8">
-                                <div class="space-y-4 p-4 border border-gray-700 rounded-lg">
-                                    <h3 class="font-semibold text-xl text-white">Parent 1</h3>
-                                    <div><label for="parentA-role" class="form-label">Role</label><select id="parentA-role" class="form-select"><option>Father</option><option>Mother</option><option>Other</option></select></div>
-                                    <div><label for="parentA-name" class="form-label">Full Legal Name</label><input type="text" id="parentA-name" class="form-input" placeholder="e.g., John Thabo Doe"></div>
-                                    <div><label for="parentA-nickname" class="form-label">Referred to as (Optional)</label><input type="text" id="parentA-nickname" class="form-input" placeholder="e.g., Dad, Papa"></div>
-                                    <div><label for="parentA-id" class="form-label">Identity Number (Optional)</label><input type="text" id="parentA-id" class="form-input" placeholder="For court-ready documents"></div>
-                                </div>
-                                <div class="space-y-4 p-4 border border-gray-700 rounded-lg">
-                                    <h3 class="font-semibold text-xl text-white">Parent 2</h3>
-                                    <div><label for="parentB-role" class="form-label">Role</label><select id="parentB-role" class="form-select"><option>Mother</option><option>Father</option><option>Other</option></select></div>
-                                    <div><label for="parentB-name" class="form-label">Full Legal Name</label><input type="text" id="parentB-name" class="form-input" placeholder="e.g., Jane Nomsa Smith"></div>
-                                    <div><label for="parentB-nickname" class="form-label">Referred to as (Optional)</label><input type="text" id="parentB-nickname" class="form-input" placeholder="e.g., Mama, Mom"></div>
-                                    <div><label for="parentB-id" class="form-label">Identity Number (Optional)</label><input type="text" id="parentB-id" class="form-input" placeholder="For court-ready documents"></div>
-                                </div>
-                            </div>
-                            <h3 class="font-semibold text-xl mb-4 mt-8 text-white">The Child / Children</h3>
-                            <div id="children-container" class="space-y-6"></div>
-                            <button type="button" id="add-child-btn" class="mt-6 text-green-400 hover:text-green-300 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Child</button>
-                        </div>
-                        
-                        <!-- Step 2: Residence & Custody -->
-                        <div id="step-2" class="wizard-step">
-                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 2: Residence & Custody</h2>
-                             <div class="space-y-6">
-                                <div class="grid md:grid-cols-2 gap-6">
-                                     <div>
-                                         <label for="custody-status" class="form-label">What is the current custody status?</label>
-                                         <select id="custody-status" class="form-select"><option>We have a mutual agreement</option><option>There is a court order in place</option><option>This is currently in dispute</option></select>
-                                     </div>
-                                     <div>
-                                         <label for="custody-details" class="form-label">Details (e.g., Case Number)</label>
-                                         <input id="custody-details" type="text" class="form-input" placeholder="Optional details..."/>
-                                     </div>
-                                </div>
-                                 <div id="child-residence-container" class="space-y-8"></div>
-                             </div>
-                        </div>
+            <!-- Communication -->
+            <section class="form-section">
+                <h2>Communication Plan</h2>
+                <div class="form-group">
+                    <label for="communication-method">Primary method of communication between parents</label>
+                    <input type="text" id="communication-method" data-path="communication.method" placeholder="e.g., dedicated parenting app, email">
+                </div>
+                 <div class="form-group">
+                    <label for="communication-frequency">Frequency of updates about children</label>
+                    <input type="text" id="communication-frequency" data-path="communication.frequency" placeholder="e.g., daily check-ins, weekly summary">
+                </div>
+            </section>
+            
+            <!-- Other Sections can be added similarly -->
+            <!-- Example: Decision Making -->
+            <section class="form-section">
+                <h2>Decision Making</h2>
+                <div class="form-group">
+                    <label for="decision-education">Major decisions regarding education</label>
+                    <textarea id="decision-education" data-path="decisionMaking.education" rows="3" placeholder="e.g., Both parents must agree on school choice..."></textarea>
+                </div>
+                 <div class="form-group">
+                    <label for="decision-health">Major decisions regarding healthcare</label>
+                    <textarea id="decision-health" data-path="decisionMaking.health" rows="3" placeholder="e.g., Joint decisions on non-emergency medical procedures..."></textarea>
+                </div>
+            </section>
+            
+            <div class="mt-8 flex justify-end space-x-4 no-print">
+                <button type="button" id="generate-plan-btn" class="px-6 py-3 bg-blue-600 text-white font-bold rounded-md hover:bg-blue-700 transition">Generate & Print Plan</button>
+            </div>
+        </form>
+    </div>
+    
+    <!-- This div is for the printable output -->
+    <div id="printable-plan" class="hidden"></div>
 
-                        <!-- Step 3: Contact & Time Allocation -->
-                        <div id="step-3" class="wizard-step">
-                            <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 3: Contact Schedule & Time Allocation</h2>
-                            <div id="time-dashboard" class="bg-gray-900 p-6 rounded-lg mb-8"></div>
-                            <div class="grid lg:grid-cols-3 gap-8">
-                                <div class="lg:col-span-2">
-                                    <div id="calendar" class="bg-gray-900 p-4 rounded-lg"></div>
-                                </div>
-                                <div class="bg-gray-900 p-4 rounded-lg space-y-4">
-                                    <h3 class="text-xl font-bold">Add Schedule Event</h3>
-                                    <div><label for="event-title" class="form-label">Event Description</label><input type="text" id="event-title" class="form-input" placeholder="e.g., School Holidays"></div>
-                                    <div><label for="event-start-date" class="form-label">Start Date</label><input type="date" id="event-start-date" class="form-input"></div>
-                                    <div><label for="event-end-date" class="form-label">End Date</label><input type="date" id="event-end-date" class="form-input"></div>
-                                    <div><label for="event-owner" class="form-label">Time Spent With</label><select id="event-owner" class="form-select"></select></div>
-                                    <button type="button" id="add-event-btn" class="w-full bg-green-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-green-700">Add to Calendar</button>
-                                     <button type="button" id="export-schedule-btn" class="w-full bg-blue-600 py-3 rounded-lg font-bold text-white transition-colors hover:bg-blue-700 mt-2">Export to iCal (.ics)</button>
-                                </div>
-                            </div>
-                        </div>
 
-                        <!-- Step 4: Contributions & Responsibilities -->
-                        <div id="step-4" class="wizard-step">
-                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 4: Contributions & Responsibilities</h2>
-                             <div id="contributions-container" class="space-y-8"></div>
-                        </div>
+    <!-- Firebase -->
+    <script type="module">
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-                        <!-- Step 5: Review & Finalize -->
-                        <div id="step-5" class="wizard-step">
-                             <h2 class="text-2xl sm:text-3xl font-bold mb-6 text-green-400">Step 5: Review & Finalize</h2>
-                             <div id="review-pane" class="space-y-6 bg-gray-900 p-6 rounded-lg"></div>
-                             <div class="mt-8 p-4 border-2 border-dashed border-yellow-500 rounded-lg bg-yellow-500 bg-opacity-10">
-                                 <h3 class="font-bold text-yellow-400">Disclaimer</h3>
-                                 <p class="text-yellow-200 text-sm mt-2">This tool provides legal information and self-help services at your direction. We are not a law firm. This is not a substitute for the advice of an attorney.</p>
-                                 <div class="mt-4"><label class="flex items-center"><input type="checkbox" id="disclaimer-checkbox" class="h-5 w-5 rounded bg-gray-700 border-gray-600 text-green-600 focus:ring-green-500"><span class="ml-3 text-white">I understand and accept the disclaimer.</span></label></div>
-                             </div>
-                        </div>
-                    </form>
-                     <div class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center">
-                        <button type="button" id="prev-step-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white transition-opacity">Previous</button>
-                        <button type="button" id="next-step-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-700 font-semibold text-white">Next Step</button>
+        // --- CONFIGURATION ---
+        const firebaseConfig = {
+            // IMPORTANT: Replace with your actual Firebase config
+            apiKey: "YOUR_API_KEY",
+            authDomain: "YOUR_AUTH_DOMAIN",
+            projectId: "YOUR_PROJECT_ID",
+            storageBucket: "YOUR_STORAGE_BUCKET",
+            messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+            appId: "YOUR_APP_ID"
+        };
+
+        // --- DOM ELEMENTS ---
+        const form = document.getElementById('parenting-plan-form');
+        const childrenContainer = document.getElementById('children-container');
+        const addChildBtn = document.getElementById('add-child-btn');
+        const generatePlanBtn = document.getElementById('generate-plan-btn');
+        const printablePlanContainer = document.getElementById('printable-plan');
+        const statusBar = document.getElementById('status-bar');
+
+        let db, auth;
+        let userId;
+        let planDocRef;
+        let unsubscribe; // To detach the onSnapshot listener
+
+        // --- INITIALIZATION ---
+        try {
+            const app = initializeApp(firebaseConfig);
+            auth = getAuth(app);
+            db = getFirestore(app);
+            console.log("Firebase initialized successfully.");
+            setupAuth();
+        } catch (error) {
+            console.error("Firebase initialization failed:", error);
+            updateStatus("Error: Could not connect to the database.", "bg-red-600");
+        }
+        
+        // --- AUTHENTICATION ---
+        function setupAuth() {
+            onAuthStateChanged(auth, user => {
+                if (user) {
+                    userId = user.uid;
+                    console.log("User authenticated with ID:", userId);
+                    planDocRef = doc(db, "parenting_plans", userId);
+                    listenForPlanUpdates();
+                } else {
+                    console.log("No user signed in, signing in anonymously.");
+                    signInAnonymously(auth).catch(err => {
+                        console.error("Anonymous sign-in failed:", err);
+                         updateStatus("Error: Authentication failed.", "bg-red-600");
+                    });
+                }
+            });
+        }
+        
+        // --- REALTIME DATA SYNC ---
+        function listenForPlanUpdates() {
+            if (unsubscribe) unsubscribe(); // Detach any previous listener
+            
+            updateStatus("Connecting to your saved plan...", "bg-yellow-500");
+
+            unsubscribe = onSnapshot(planDocRef, (docSnap) => {
+                if (docSnap.exists()) {
+                    console.log("Plan data received:", docSnap.data());
+                    populateForm(docSnap.data());
+                    updateStatus("Your plan is loaded and up to date.", "bg-green-600");
+                } else {
+                    console.log("No existing plan found. Creating a new one.");
+                    addChild(); // Start with one child section for new plans
+                    updateStatus("Ready to start your new plan.", "bg-blue-600");
+                }
+            }, (error) => {
+                console.error("Error listening to plan updates:", error);
+                updateStatus("Error: Could not sync your plan.", "bg-red-600");
+            });
+        }
+        
+        // --- FORM LOGIC ---
+        function addChild(childData = { fullName: '', dob: '' }) {
+            const childId = `child-${Date.now()}`;
+            const childDiv = document.createElement('div');
+            childDiv.className = 'p-4 border border-gray-200 rounded-lg relative';
+            childDiv.id = childId;
+            childDiv.innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="form-group">
+                        <label for="child-name-${childId}">Child's Full Name</label>
+                        <input type="text" id="child-name-${childId}" value="${childData.fullName}" data-path="children.${childId}.fullName" placeholder="Full Name">
+                    </div>
+                    <div class="form-group">
+                        <label for="child-dob-${childId}">Date of Birth</label>
+                        <input type="date" id="child-dob-${childId}" value="${childData.dob}" data-path="children.${childId}.dob">
                     </div>
                 </div>
-            </div>
-        </main>
-    </div>
+                <button type="button" class="remove-btn absolute top-2 right-2">Remove</button>
+            `;
+            childrenContainer.appendChild(childDiv);
+            
+            childDiv.querySelector('.remove-btn').addEventListener('click', () => {
+                childDiv.remove();
+                saveForm();
+            });
+        }
+        
+        function getFormData() {
+            const data = {};
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                const path = input.dataset.path;
+                if (path) {
+                    // Basic dot notation to object conversion
+                    const keys = path.split('.');
+                    let current = data;
+                    keys.forEach((key, index) => {
+                        if (index === keys.length - 1) {
+                            current[key] = input.value;
+                        } else {
+                            current[key] = current[key] || {};
+                            current = current[key];
+                        }
+                    });
+                }
+            });
+            return data;
+        }
+        
+        async function saveForm() {
+            if (!userId || !planDocRef) {
+                updateStatus("Cannot save: Not connected.", "bg-red-600");
+                return;
+            }
+            const data = getFormData();
+            console.log("Saving data:", data);
+            try {
+                await setDoc(planDocRef, data, { merge: true });
+                 updateStatus("Progress saved!", "bg-green-600");
+            } catch (error) {
+                console.error("Error saving form:", error);
+                updateStatus("Save failed. Please check your connection.", "bg-red-600");
+            }
+        }
+        
+        function populateForm(data) {
+            // Clear existing dynamic fields like children
+            childrenContainer.innerHTML = '';
+            
+            if (data.children) {
+                Object.values(data.children).forEach(child => addChild(child));
+            } else {
+                addChild(); // Add one if none exist
+            }
 
-    <div id="pdf-output" class="hidden"></div>
-    
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/plan-builder.js"></script>
+            // Populate all other fields
+            const inputs = form.querySelectorAll('input, textarea, select');
+            inputs.forEach(input => {
+                const path = input.dataset.path;
+                if (path) {
+                    const keys = path.split('.');
+                    let value = data;
+                    try {
+                       keys.forEach(key => value = value[key]);
+                       if (value !== undefined && value !== null) {
+                           input.value = value;
+                       }
+                    } catch(e) { /* Path doesn't exist, do nothing */ }
+                }
+            });
+        }
+        
+        function generatePrintablePlan() {
+            const data = getFormData();
+            let html = `<div class="p-8 font-serif">`;
+            html += `<h1 class="text-3xl font-bold text-center mb-8 border-b pb-4">Parenting Plan</h1>`;
+            
+            // Children
+            html += `<h2 class="text-xl font-semibold mt-6 mb-3 border-b pb-2">Children Covered by This Agreement</h2>`;
+            if (data.children) {
+                html += '<ul>';
+                Object.values(data.children).forEach(c => {
+                    html += `<li class="mb-2"><strong>${c.fullName || 'N/A'}</strong>, born on ${c.dob || 'N/A'}.</li>`;
+                });
+                html += '</ul>';
+            }
+            
+            // Communication
+             html += `<h2 class="text-xl font-semibold mt-6 mb-3 border-b pb-2">Communication</h2>`;
+             html += `<p><strong>Primary method:</strong> ${data.communication?.method || 'Not specified'}</p>`;
+             html += `<p><strong>Frequency of updates:</strong> ${data.communication?.frequency || 'Not specified'}</p>`;
+
+            // Decision Making
+            html += `<h2 class="text-xl font-semibold mt-6 mb-3 border-b pb-2">Decision Making</h2>`;
+            html += `<p><strong>Education:</strong> ${data.decisionMaking?.education || 'Not specified'}</p>`;
+            html += `<p><strong>Healthcare:</strong> ${data.decisionMaking?.health || 'Not specified'}</p>`;
+
+            html += `</div>`;
+            printablePlanContainer.innerHTML = html;
+            window.print();
+        }
+
+        function updateStatus(message, bgColor) {
+            statusBar.textContent = message;
+            statusBar.className = `no-print mb-4 p-3 rounded-lg text-center text-white transition-all duration-300 ${bgColor}`;
+        }
+        
+        // --- EVENT LISTENERS ---
+        addChildBtn.addEventListener('click', () => addChild());
+        form.addEventListener('input', saveForm); // Autosave on any input
+        generatePlanBtn.addEventListener('click', generatePrintablePlan);
+        
+    </script>
 </body>
-
 </html>

@@ -1,45 +1,196 @@
-<!--
-  Flamea.org - iSazi AI Chatbot Modal
-  - This file contains the HTML structure for the chatbot interface.
-  - It's designed to be loaded into a modal window.
-  - The 'custom-modal' and 'custom-modal-content' classes are controlled by assets/js/main.js and assets/css/style.css.
-  - The actual chat functionality is powered by assets/js/chatbot.js.
--->
-<div id="chatbot-modal" class="custom-modal">
-    <div class="custom-modal-content bg-gray-900 text-white rounded-lg shadow-2xl max-w-md w-full max-h-[80vh] flex flex-col">
-        <!-- Modal Header -->
-        <div class="flex justify-between items-center p-4 border-b border-gray-700">
-            <h3 class="text-xl font-bold text-purple-400"><i class="fas fa-robot mr-3"></i>iSazi AI Assistant</h3>
-            <button data-modal-close class="text-gray-400 hover:text-white text-2xl font-bold">&times;</button>
-        </div>
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea AI Assistant</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+        #chat-window {
+            height: calc(100vh - 220px);
+        }
+    </style>
+</head>
+<body class="bg-gray-100">
 
-        <!-- Chat Messages Area -->
-        <div id="chat-messages" class="flex-grow p-6 space-y-4 overflow-y-auto">
-            <!-- Initial message from the bot -->
-            <div class="message-bubble bot-message">
-                Hello! I am iSazi, your legal information assistant for South African Family Law. How can I help you today? Please note, I provide information, not legal advice.
+    <div class="flex flex-col h-screen max-w-3xl mx-auto bg-white shadow-lg">
+        <!-- Header -->
+        <header class="bg-gray-800 text-white p-4 flex items-center shadow-md">
+            <img src="https://flamea.org/assets/images/logo-flamea-flame-only.png" alt="Flamea Logo" class="h-10 w-10 mr-4">
+            <div>
+                <h1 class="text-xl font-bold">iSazisi: The Fatherhood Guide</h1>
+                <p class="text-sm text-gray-300">Your guide towards stronger fatherhood. For informational purposes only.</p>
             </div>
-        </div>
+        </header>
 
-        <!-- "Bot is typing" indicator -->
-        <div id="typing-indicator" class="px-6 pb-2 text-sm text-gray-400" style="display: none;">
-            <i class="fas fa-spinner fa-spin"></i> iSazi is thinking...
-        </div>
+        <!-- Chat Window -->
+        <main id="chat-window" class="flex-1 p-6 overflow-y-auto">
+            <div id="message-container" class="space-y-4">
+                <!-- Initial Welcome Message -->
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold">AI</div>
+                    <div class="bg-gray-200 p-3 rounded-lg rounded-tl-none">
+                        <p class="text-sm">Molo! I am iSazisi: The Fatherhood Guide. How can I help you today? Please note, I provide information, not legal advice.</p>
+                    </div>
+                </div>
+                <!-- Messages will be appended here -->
+            </div>
+        </main>
 
-        <!-- Chat Input Form -->
-        <div class="p-4 border-t border-gray-700">
-            <form id="chat-form" class="flex gap-2">
-                <input type="text" id="chat-input" placeholder="Ask about family law..." class="w-full flex-grow p-3 bg-gray-800 border border-gray-600 rounded-lg focus:ring-purple-500 focus:border-purple-500" autocomplete="off" required>
-                <button type="submit" class="bg-purple-600 text-white font-bold py-3 px-5 rounded-lg hover:bg-purple-700 transition-colors disabled:bg-gray-500">
-                    <i class="fas fa-paper-plane"></i>
+        <!-- Input Area -->
+        <footer class="p-4 bg-gray-50 border-t border-gray-200">
+            <div id="error-message" class="hidden text-red-600 text-sm mb-2 text-center"></div>
+            <form id="chat-form" class="flex items-center space-x-3">
+                <input type="text" id="user-input" placeholder="Type your message..." autocomplete="off" class="flex-1 w-full px-4 py-2 border border-gray-300 rounded-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition">
+                <button type="submit" id="send-button" class="bg-blue-600 text-white rounded-full p-3 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 transition disabled:bg-gray-400">
+                    <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" />
+                    </svg>
                 </button>
             </form>
-        </div>
+        </footer>
     </div>
-</div>
 
-<!-- Scripts for Chatbot Functionality -->
-<!-- Note: These should ideally be loaded only when the modal is first opened, but for simplicity, we can include them here or in the main page footer. -->
-<script type="module" src="assets/js/firebase-config.js"></script>
-<script type="module" src="assets/js/firebase-chatbot-config.js"></script>
-<script type="module" src="assets/js/chatbot.js"></script>
+    <script>
+    // --- DOM ELEMENT REFERENCES ---
+    const chatForm = document.getElementById('chat-form');
+    const userInput = document.getElementById('user-input');
+    const sendButton = document.getElementById('send-button');
+    const messageContainer = document.getElementById('message-container');
+    const chatWindow = document.getElementById('chat-window');
+    const errorMessage = document.getElementById('error-message');
+
+    // --- STATE ---
+    let chatHistory = [];
+    let isLoading = false;
+
+    // --- FUNCTIONS ---
+
+    /**
+     * Appends a message to the chat window.
+     * @param {string} sender - 'user' or 'ai'
+     * @param {string} text - The message content.
+     */
+    function appendMessage(sender, text) {
+        const messageDiv = document.createElement('div');
+        const isUser = sender === 'user';
+
+        let content;
+        if (isUser) {
+            content = `
+                <div class="flex items-start justify-end space-x-3">
+                    <div class="bg-blue-600 text-white p-3 rounded-lg rounded-br-none">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-blue-500 flex items-center justify-center text-white font-bold">You</div>
+                </div>`;
+        } else {
+            content = `
+                <div class="flex items-start space-x-3">
+                    <div class="flex-shrink-0 h-8 w-8 rounded-full bg-gray-600 flex items-center justify-center text-white font-bold">AI</div>
+                    <div class="bg-gray-200 p-3 rounded-lg rounded-tl-none">
+                        <p class="text-sm">${text}</p>
+                    </div>
+                </div>`;
+        }
+
+        messageDiv.innerHTML = content;
+        messageContainer.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Auto-scroll to the bottom
+    }
+
+    /**
+     * Shows a temporary error message to the user.
+     * @param {string} message - The error message to display.
+     */
+    function showError(message) {
+        errorMessage.textContent = message;
+        errorMessage.classList.remove('hidden');
+        setTimeout(() => {
+            errorMessage.classList.add('hidden');
+        }, 3000);
+    }
+
+    /**
+     * Toggles the loading state of the UI.
+     * @param {boolean} loading - Whether the app is currently loading a response.
+     */
+    function setLoading(loading) {
+        isLoading = loading;
+        userInput.disabled = loading;
+        sendButton.disabled = loading;
+        if (loading) {
+            sendButton.innerHTML = `<svg class="animate-spin h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"><circle class="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" stroke-width="4"></circle><path class="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path></svg>`;
+        } else {
+            sendButton.innerHTML = `<svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7" /></svg>`;
+        }
+    }
+
+    /**
+     * Sends a prompt to the Gemini API and gets a response.
+     * @param {string} prompt - The user's message.
+     */
+    async function getAIResponse(prompt) {
+        setLoading(true);
+        
+        // Add user message to history for context
+        chatHistory.push({ role: "user", parts: [{ text: `CONTEXT: This is a conversation with a user on the Flamea website, an organization that advocates for fathers' rights in South Africa. The user is asking for information, not legal advice. Keep answers helpful, informative, and focused on South African family law where applicable. QUESTION: ${prompt}` }] });
+
+        const payload = { contents: chatHistory };
+        // The API key is left blank and will be handled by the execution environment.
+        const apiKey = ""; 
+        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+        try {
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
+            });
+
+            if (!response.ok) {
+                throw new Error(`API request failed with status ${response.status}`);
+            }
+
+            const result = await response.json();
+
+            if (result.candidates && result.candidates.length > 0) {
+                const aiText = result.candidates[0].content.parts[0].text;
+                appendMessage('ai', aiText);
+                // Add AI response to history
+                chatHistory.push({ role: "model", parts: [{ text: aiText }] });
+            } else {
+                throw new Error("Invalid response structure from API.");
+            }
+
+        } catch (error) {
+            console.error("Error calling Gemini API:", error);
+            showError("Sorry, I'm having trouble connecting. Please try again in a moment.");
+            // Remove the last user message from history if the API call failed
+            chatHistory.pop();
+        } finally {
+            setLoading(false);
+        }
+    }
+
+    // --- EVENT LISTENERS ---
+    chatForm.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const userMessage = userInput.value.trim();
+        if (userMessage && !isLoading) {
+            appendMessage('user', userMessage);
+
+            // Get AI response
+            getAIResponse(userMessage);
+
+            userInput.value = '';
+        }
+    });
+
+    </script>
+</body>
+</html>

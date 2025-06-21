@@ -1,1 +1,48 @@
-Flamea.org - Technical SpecificationsDocument Version: 2.0Date: 2025-06-09Project Lead: Salatiso (salatiso.com)AI Development Partner: Gemini1. Core ArchitectureProject Type: Static Website with Dynamic Functionality.Hosting: Deployed on Namecheap (Stellar Plus). The site consists of static HTML, CSS, and JavaScript files.Core Principle: The site is built "frontend-first." All user-facing rendering and logic happens in the user's browser (client-side). This makes the site fast, responsive, and easy to deploy.2. Frontend TechnologiesStructure (HTML5): All pages are built using semantic HTML5 for accessibility and search engine optimization.Styling (Tailwind CSS): The primary styling framework is Tailwind CSS, loaded via a CDN link in the <head> of each HTML file. This provides a utility-first approach for rapid and consistent design. A supplementary style.css file is used for more complex custom styles.Client-Side Logic (JavaScript - ES6 Modules): All interactivity is powered by modern JavaScript (ECMAScript 6). Scripts are loaded as type="module" to allow for a clean, organized, and import/export-based architecture.3. Backend & Database (BaaS)Provider: Google Firebase.Authentication: Firebase Authentication is used to manage all user accounts (Email/Password and Google Sign-In). This provides a secure and scalable solution for user management.Database: Cloud Firestore (a NoSQL database) is used as the primary database. All user-generated data (profiles, activities, to-dos, skills, saved documents) is stored securely in Firestore, with data structured under each user's unique UID.File Storage: Firebase Storage is used for securely uploading and storing user documents (e.g., in the Document Cabinet).4. External APIs & LibrariesAI Chatbot: Powered by the Google Gemini API (gemini-2.0-flash) for real-time generative AI responses.Visual Charts: The Chart.js library is used for creating the visual dashboards (e.g., Profile Completeness).Icons: Font Awesome is used for the icon library across the site.Fonts: Google Fonts is used to load the 'Roboto' and 'Open Sans' font families.5. Version Control & DeploymentVersion Control: Git, managed via GitHub Desktop.Deployment Workflow: Local development in VS Code -> Commit changes using GitHub Desktop -> Manually upload updated files to Namecheap hosting via cPanel or FTP.End of Document
+# Technical Specification: Flamea Web Platform
+**Version:** 2.0
+**Date:** 2025-06-21
+**Author:** Gemini (AI Project Assistant)
+**Status:** Final
+
+---
+
+### 1. Introduction
+This document outlines the technical specifications for the Flamea web platform. The platform is designed to be a comprehensive resource hub, providing tools, information, and community support for fathers navigating the South African family law system. This version (2.0) represents a significant overhaul, including bug fixes, feature enhancements, and the integration of new services.
+
+### 2. Core Technologies
+The platform is built on a foundation of modern, robust web technologies to ensure performance, scalability, and maintainability.
+
+* **Frontend Framework:** Static HTML5. No complex JavaScript frameworks like React or Angular are used for the core structure, ensuring fast load times and simplicity.
+* **Styling:** **Tailwind CSS v3**. A utility-first CSS framework is used for all styling. This allows for rapid development of responsive, modern user interfaces directly within the HTML. A custom `tailwind.config.js` is used for theme consistency (colors, fonts).
+* **Client-Side Scripting:** **Vanilla JavaScript (ES6+)**. All interactive functionality is powered by standard JavaScript to keep the platform lightweight and dependency-free.
+* **Backend & Database:** **Google Firebase**.
+    * **Firestore:** Used as the primary NoSQL database for dynamic application data, including user profiles, parenting plan drafts, chatbot history, and community posts.
+    * **Firebase Authentication:** Manages user sign-in and identity.
+* **API Integrations:**
+    * **Google Gemini API:** Powers the interactive chatbot, providing AI-driven responses to user queries.
+
+### 3. File & Directory Structure
+The project is organized into a logical structure to separate concerns.
+
+/Flamea-Working-File/||-- *.html                     # Main pages of the site (index, about, tools, etc.)||-- /assets/|   |-- /books/                # Contains .txt files for the book reader|   |-- /css/                  # Compiled CSS (style.min.css) and source (input.css)|   |-- /documents/            # Project specification and documentation files|   |-- /images/               # Logos, icons, and other static image assets|   |-- /js/                   # All JavaScript files, organized by feature|   |   |-- firebase-config.js # Central Firebase initialization|   |   |-- chatbot.js         # Logic for the AI chatbot|   |   |-- plan-builder.js    # Logic for the Parenting Plan tool|   |   |-- book-reader.js     # Logic for the Publications reader|   |   |-- podcast-player.js  # Logic for parsing and playing podcast RSS|   |   -- ...                # Other feature-specific JS files |   -- /templates/            # Reusable HTML snippets/forms||-- /games/                    # Self-contained HTML/JS games||-- /training/                 # HTML pages for training courses||-- package.json               # Project dependencies (for development, e.g., Tailwind)|-- tailwind.config.js         # Tailwind CSS configuration file`-- README.md                  # Project overview and setup guide
+### 4. Key Feature Implementation
+
+#### 4.1. Parenting Plan Builder (`parenting-plan.html`)
+* **Functionality:** Allows users to dynamically build a parenting plan by filling in form fields. Users can add, remove, and reorder sections.
+* **Data Persistence:** Utilizes Firestore to automatically save a user's draft. The plan is saved under the user's unique ID (`userId`) in a dedicated `parenting_plans` collection. This allows users to return later and continue editing.
+* **Export:** Generates a clean, printable HTML view of the completed plan that users can save as a PDF or print.
+
+#### 4.2. Podcast Player (`podcast-player.html`)
+* **Data Source:** Fetches and parses a live RSS feed.
+* **Parsing:** Client-side JavaScript fetches the XML from the RSS feed URL. It then parses the XML to extract `<item>` nodes, reading child nodes like `<title>`, `<description>`, and `<enclosure>` to build a playlist.
+* **Playback:** Uses a standard HTML5 `<audio>` element. The `src` of this element is dynamically changed when a user selects an episode from the generated playlist.
+
+#### 4.3. AI Chatbot (`chatbot.html`)
+* **Engine:** Integrated with the Google Gemini API for natural language understanding and generation.
+* **Interaction:** The UI allows users to type messages. On submission, the message is sent to the Gemini API via a `fetch` request.
+* **Conversation History:** The chat history is maintained in the UI for the duration of the session and stored in Firestore to provide context for follow-up questions.
+
+### 5. Version Control & Auditing
+* All official documentation, including this document, must carry a version number and date.
+* Code changes should be tracked through a version control system like Git.
+* The `README.md` file serves as the primary entry point for new developers and should be kept up to date.
