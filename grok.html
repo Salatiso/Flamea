@@ -1,0 +1,194 @@
+<div class="container">
+        <div class="sidebar">
+            <h2>FLAMEA</h2>
+            <ul>
+                <li><a href="#step1">Introduction</a></li>
+                <li><a href="#step2">Residence & Custody</a></li>
+                <li><a href="#step3">Contact Arrangements</a></li>
+                <li><a href="#step4">Decision Making</a></li>
+                <li><a href="#step5">Communication Plan</a></li>
+                <li><a href="#step6">Contributions</a></li>
+                <li><a href="#step7">Event Logger</a></li>
+                <li><a href="#step8">Additional Notes</a></li>
+                <li><a href="#step9">Review & Generate</a></li>
+            </ul>
+        </div>
+        <div class="content">
+            <div class="text-center mb-8">
+                <svg class="mx-auto h-20 mb-4" viewBox="0 0 280 60" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M41.6521 1.93325C43.8322 3.14902 44.5323 5.92268 43.3165 8.1028L28.1021 34.6938C26.8863 36.8739 24.1126 37.574 21.9325 36.3582L3.63853 25.1611C1.45842 23.9453 0.758367 21.1717 1.97414 18.9915L17.1885 2.40052C18.4043 0.220409 21.178 -0.479644 23.3581 0.736128L41.6521 1.93325Z" fill="url(#paint0_linear_101_2)"/>
+                    <text x="70" y="45" font-family="'Roboto Slab', serif" font-weight="900" font-size="40" fill="#FFFFFF" class="text-shadow">FLAMEA</text>
+                    <defs>
+                        <linearGradient id="paint0_linear_101_2" x1="22.6453" y1="-2.16239" x2="22.6453" y2="40.3889" gradientUnits="userSpaceOnUse">
+                            <stop stop-color="#F97316"/>
+                            <stop offset="1" stop-color="#EA580C"/>
+                        </linearGradient>
+                    </defs>
+                </svg>
+                <h2 class="text-3xl font-bold mb-2">FATHERS. LEADERS. LEGACY.</h2>
+                <p class="text-xl mb-8">Empowering South African fathers to reclaim their role.</p>
+            </div>
+
+            <!-- Step 1: Introduction and Plan Purpose -->
+            <div id="step1" class="wizard-step">
+                <h3>Step 1: Introduction and Plan Purpose</h3>
+                <label for="language">Select Language:</label>
+                <select id="language">
+                    <option value="en">English</option>
+                    <option value="zu">Zulu</option>
+                    <option value="xh">Xhosa</option>
+                    <option value="af">Afrikaans</option>
+                </select>
+                <label for="planPurpose">Plan Purpose:</label>
+                <select id="planPurpose">
+                    <option value="existing">Existing Child</option>
+                    <option value="future">Future Child</option>
+                </select>
+                <h4>Parent/Guardian Details</h4>
+                <input type="text" placeholder="Parent Role (e.g., Father, Mother)" id="parentRole">
+                <input type="text" placeholder="Full Name" id="parentName">
+                <input type="text" placeholder="South African ID Number (Optional)" id="parentId">
+                <h4>Child Details</h4>
+                <input type="text" placeholder="Child Name" id="childName">
+                <input type="date" id="childDob">
+                <button onclick="nextStep(2)">Next</button>
+            </div>
+
+            <!-- Step 2: Residence and Custody -->
+            <div id="step2" class="wizard-step" style="display:none;">
+                <h3>Step 2: Residence and Custody</h3>
+                <label for="residence">Primary Residence:</label>
+                <select id="residence">
+                    <option value="parentA">Parent A</option>
+                    <option value="parentB">Parent B</option>
+                    <option value="other">Other Guardian</option>
+                </select>
+                <label for="custodyStatus">Custody Status:</label>
+                <select id="custodyStatus">
+                    <option value="sole">Sole Custody</option>
+                    <option value="joint">Joint Custody</option>
+                    <option value="inDispute">In Dispute</option>
+                </select>
+                <input type="custodyDocuments" type="file">
+                <button onclick="nextStep(3)">Next</button>
+                <button onclick="backStep(1)">Back</button>
+            </div>
+
+            <!-- Step 3: Contact Arrangements -->
+            <div id="step3" class="wizard-step" style="display:none;">
+                <h3>Step 3: Contact Arrangements</h3>
+                <div id="calendar" class="calendar"></div>
+                <label for="specialOccasions">Special Occasions:</label>
+                <textarea id="specialOccasions" placeholder="Details for holidays, birthdays, etc."></textarea>
+                <button onclick="nextStep(4)">Next</button>
+                <button onclick="backStep(2)">Back</button>
+            </div>
+
+            <!-- Step 4: Decision Making -->
+            <div id="step4" class="wizard-step" style="display:none;">
+                <h3>Step 4: Decision Making</h3>
+                <label for="educationDecisions">Education Decisions:</label>
+                <textarea id="educationDecisions" placeholder="How will education decisions be made?"></textarea>
+                <label for="religiousUpbringing">Religious Upbringing:</label>
+                <textarea id="religiousUpbringing" placeholder="How will religious decisions be made?"></textarea>
+                <label for="childInput">Child’s Input:</label>
+                <textarea id="childInput" placeholder="Child’s preferences, if applicable)"></textarea>
+                <button onclick="nextStep(5)">Next</button>
+                <button onclick="backStep(3)">Back</button>
+            </div>
+
+            <!-- Step 5: Communication Plan -->
+            <div id="step5" class="wizard-step" style="display:none;">
+                <h3>Step 5: Communication Plan</h3>
+                <label for="primaryCommunication">Primary Communication:</label>
+                <textarea id="primaryCommunication" placeholder="Methods for routine updates (e.g., WhatsApp, Email)"></textarea>
+                <label for="emergencyCommunication">Emergency Communication:</label>
+                <textarea id="emergencyCommunication" placeholder="Methods for urgent matters"></textarea>
+                <button onclick="nextStep(6)">Next</button>
+                <button onclick="backStep(4)">Back</button>
+            </div>
+
+            <!-- Step 6: Contributions and Responsibilities -->
+            <div id="step6" class="wizard-step" style="display:none;">
+                <h3>Step 6: Contributions and Responsibilities</h3>
+                <label for="expenseCategory">Expense Category:</label>
+                <select id="expenseCategory">
+                    <option value="education">Education</option>
+                    <option value="healthcare">Healthcare</option>
+                    <option value="living">Living Expenses</option>
+                </select>
+                <input type="number" id="amount" placeholder="Amount in ZAR">
+                <input type="file" id="receiptUpload">
+                <button onclick="nextStep(7)">Next</button>
+                <button onclick="backStep(5)">Back</button>
+            </div>
+
+            <!-- Step 7: Event Logger -->
+            <div id="step7" class="wizard-step" style="display:none;">
+                <h3>Step 7: Event Logger</h3>
+                <label for="eventDate">Event Date:</label>
+                <input type="date" id="eventDate">
+                <label for="eventType">Event Type:</label>
+                <select id="eventType">
+                    <option value="positive">Positive Event</option>
+                    <option value="disagreement">Disagreement</option>
+                    <option value="milestone">Milestone</option>
+                </select>
+                <textarea id="eventDetails" placeholder="Event details"></textarea>
+                <button onclick="nextStep(8)">Next</button>
+                <button onclick="backStep(6)">Back</button>
+            </div>
+
+            <!-- Step 8: Additional Notes -->
+            <div id="step8" class="wizard-step" style="display:none;">
+                <h3>Step 8: Additional Notes</h3>
+                <textarea id="additionalNotes" placeholder="Any additional information or context"></textarea>
+                <button onclick="nextStep(9)">Next</button>
+                <button onclick="backStep(7)">Back</button>
+            </div>
+
+            <!-- Step 9: Review and Generate Document -->
+            <div id="step9" class="wizard-step" style="display:none;">
+                <h3>Step 9: Review and Generate Document</h3>
+                <div id="reviewSummary"></div>
+                <label><input type="checkbox" id="disclaimerAgree"> I agree to the disclaimer</label>
+                <button onclick="generateDocument()">Generate PDF</button>
+                <button onclick="backStep(8)">Back</button>
+            </div>
+        </div>
+    </div>
+    <footer>
+        <p>&copy; 2025 FLAMEA. All rights reserved.</p>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/html2pdf.js@0.10.1/dist/html2pdf.bundle.min.js"></script>
+    <script>
+        function nextStep(step) {
+            document.getElementById(`step${step - 1}`).style.display = 'none';
+            document.getElementById(`step${step}`).style.display = 'block';
+        }
+
+        function backStep(step) {
+            document.getElementById(`step${step + 1}`).style.display = 'none';
+            document.getElementById(`step${step}`).style.display = 'block';
+        }
+
+        document.addEventListener('DOMContentLoaded', function() {
+            var calendarEl = document.getElementById('calendar');
+            var calendar = new FullCalendar.Calendar(calendarEl, {
+                initialView: 'dayGridMonth',
+                events: []
+            });
+            calendar.render();
+        });
+
+        function generateDocument() {
+            if (!document.getElementById('disclaimer').checked) {
+                alert('Please agree to the disclaimer');
+                return;
+            }
+            const element = document.querySelector('.content');
+            html2pdf().from(element).save('FLAMEA-Parenting-Plan.pdf');
+        }
+    </script>
