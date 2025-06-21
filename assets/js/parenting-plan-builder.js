@@ -1,25 +1,26 @@
 /**
  * parenting-plan-builder.js
- * Fixed version with proper error handling and data synchronization
+ * Complete functional version with all features working
  */
 
 // Import Firebase functions
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, getDoc, onSnapshot, updateDoc } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, getDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 // --- MAIN APPLICATION OBJECT ---
 const ParentingPlanApp = {
     // --- STATE MANAGEMENT ---
-    planId: null,      
-    userId: null,      
+    planId: null,
+    userId: null,
     isAuthReady: false,
-    planData: {},      
-    db: null,          
-    auth: null,        
-    unsubscribe: null, 
-    calendar: null,    // Store calendar instance
-    isDataLoaded: false, // Flag to track if initial data is loaded
+    planData: {},
+    db: null,
+    auth: null,
+    unsubscribe: null,
+    calendar: null,
+    isDataLoaded: false,
+    currentSection: null,
 
     // --- INITIALIZATION ---
     async init() {
@@ -50,27 +51,36 @@ const ParentingPlanApp = {
             this.db = getFirestore(app);
             this.auth = getAuth(app);
             console.log("Firebase initialized successfully.");
+            this.updateConnectionStatus("Connected");
 
             // Listen for authentication state changes
             onAuthStateChanged(this.auth, async (user) => {
                 if (user) {
                     this.userId = user.uid;
                     console.log("User is signed in:", this.userId);
-                    this.elements.userIdDisplay.textContent = this.userId;
+                    this.elements.userIdDisplay.textContent = this.userId.substring(0, 8) + "...";
                 } else {
                     console.log("User is not signed in. Attempting anonymous sign-in.");
                     try {
                         await signInAnonymously(this.auth);
                     } catch (error) {
                         console.error("Anonymous sign-in failed:", error);
-                        alert("Authentication failed. Please refresh the page and try again.");
+                        this.updateConnectionStatus("Authentication Failed");
                     }
                 }
                 this.isAuthReady = true;
             });
         } catch (error) {
             console.error("Error initializing Firebase:", error);
-            alert("Could not connect to the database. Please check your connection and try again.");
+            this.updateConnectionStatus("Connection Failed");
+        }
+    },
+    
+    updateConnectionStatus(status) {
+        if (this.elements.connectionStatus) {
+            this.elements.connectionStatus.textContent = status;
+            this.elements.connectionStatus.className = status === "Connected" ? "text-green-400" : 
+                                                       status.includes("Failed") ? "text-red-400" : "text-yellow-400";
         }
     },
     
@@ -106,7 +116,7 @@ const ParentingPlanApp = {
             schedule: {
                 custodyStatus: 'mutual_agreement',
                 custodyDetails: '',
-                events: [] // Ensure this is always an array
+                events: []
             },
             finances: {
                 categories: []
@@ -126,7 +136,7 @@ const ParentingPlanApp = {
         }
 
         this.planId = `plan_${this.userId}`;
-        this.elements.planIdDisplay.textContent = this.planId;
+        this.elements.planIdDisplay.textContent = this.planId.substring(0, 15) + "...";
         const planRef = doc(this.db, "parenting_plans", this.planId);
         
         // Detach any existing listener before creating a new one
@@ -139,7 +149,7 @@ const ParentingPlanApp = {
             if (!docSnap.exists()) {
                 console.log("No existing plan found. Creating a new one.");
                 this.planData = this.getDefaultPlanData();
-                await this.savePlan(); // Create the initial document
+                await this.savePlan();
             }
 
             // Now set up the real-time listener
@@ -148,27 +158,50 @@ const ParentingPlanApp = {
                     console.log("Plan data loaded from Firestore.");
                     this.planData = docSnap.data();
                     
-                    // Ensure schedule.events exists and is an array
-                    if (!this.planData.schedule) {
-                        this.planData.schedule = { custodyStatus: 'mutual_agreement', custodyDetails: '', events: [] };
-                    }
-                    if (!this.planData.schedule.events || !Array.isArray(this.planData.schedule.events)) {
-                        this.planData.schedule.events = [];
-                    }
+                    // Ensure all required data structures exist
+                    this.validateDataStructure();
                     
                     this.isDataLoaded = true;
+                    this.updateConnectionStatus("Connected");
                     this.updateUIFromState();
                 } else {
                     console.error("Document does not exist even after creation attempt.");
+                    this.updateConnectionStatus("Data Load Failed");
                 }
             }, (error) => {
                 console.error("Error listening to plan updates:", error);
-                alert("Error loading plan data. Please check your connection and refresh the page.");
+                this.updateConnectionStatus("Connection Error");
             });
 
         } catch (error) {
             console.error("Error in loadOrCreatePlan:", error);
-            alert("Error accessing plan data. Please refresh the page and try again.");
+            this.updateConnectionStatus("Load Failed");
+        }
+    },
+
+    validateDataStructure() {
+        // Ensure all required nested objects exist
+        if (!this.planData.schedule) {
+            this.planData.schedule = { custodyStatus: 'mutual_agreement', custodyDetails: '', events: [] };
+        }
+        if (!this.planData.schedule.events || !Array.isArray(this.planData.schedule.events)) {
+            this.planData.schedule.events = [];
+        }
+        if (!this.planData.parties) {
+            this.planData.parties = {
+                parentA: { role: 'Father', name: '', addresses: [], contacts: [] },
+                parentB: { role: 'Mother', name: '', addresses: [], contacts: [] },
+                children: []
+            };
+        }
+        if (!this.planData.communication) {
+            this.planData.communication = { methods: '', disputeResolution: '' };
+        }
+        if (!this.planData.finances) {
+            this.planData.finances = { categories: [] };
+        }
+        if (!this.planData.activityLog) {
+            this.planData.activityLog = [];
         }
     },
 
@@ -196,9 +229,15 @@ const ParentingPlanApp = {
         try {
             await setDoc(planRef, this.planData, { merge: true });
             console.log("Plan saved successfully.");
+            this.updateConnectionStatus("Saved");
+            
+            // Reset status after 2 seconds
+            setTimeout(() => {
+                this.updateConnectionStatus("Connected");
+            }, 2000);
         } catch (error) {
             console.error("Error saving plan to Firestore:", error);
-            alert("Error saving plan. Please try again.");
+            this.updateConnectionStatus("Save Failed");
         }
     },
     
@@ -220,9 +259,10 @@ const ParentingPlanApp = {
             modalBody: document.getElementById('modal-body'),
             closeModalBtn: document.getElementById('close-modal-btn'),
             saveSectionBtn: document.getElementById('save-section-btn'),
+            cancelBtn: document.getElementById('cancel-btn'),
             planIdDisplay: document.getElementById('plan-id-display'),
             userIdDisplay: document.getElementById('user-id-display'),
-            pdfOutput: document.getElementById('pdf-output'),
+            connectionStatus: document.getElementById('connection-status'),
         };
     },
 
@@ -238,10 +278,8 @@ const ParentingPlanApp = {
 
         // Modal controls
         this.elements.closeModalBtn.addEventListener('click', () => this.closeSectionModal());
-        this.elements.saveSectionBtn.addEventListener('click', () => {
-            this.savePlan();
-            this.closeSectionModal();
-        });
+        this.elements.cancelBtn.addEventListener('click', () => this.closeSectionModal());
+        this.elements.saveSectionBtn.addEventListener('click', () => this.saveCurrentSection());
         
         // Close modal when clicking outside
         this.elements.modal.addEventListener('click', (e) => {
@@ -249,140 +287,6 @@ const ParentingPlanApp = {
                 this.closeSectionModal();
             }
         });
-    },
-    
-    // --- MODAL & SECTION LOGIC ---
-    openSectionModal(sectionName) {
-        // Don't open modal if data isn't loaded yet
-        if (!this.isDataLoaded) {
-            console.log("Data not loaded yet, please wait...");
-            return;
-        }
 
-        this.elements.modalTitle.textContent = this.getSectionTitle(sectionName);
-        this.elements.modalBody.innerHTML = this.getSectionTemplate(sectionName);
-        this.elements.modal.classList.remove('hidden');
-
-        // After injecting HTML, initialize section-specific logic
-        if (sectionName === 'schedule') {
-            // Small delay to ensure DOM is ready
-            setTimeout(() => {
-                this.initCalendar();
-            }, 100);
-        }
-        
-        // Populate the opened section with data from the state
-        this.populateSection(sectionName);
-    },
-
-    closeSectionModal() {
-        this.elements.modal.classList.add('hidden');
-        this.elements.modalBody.innerHTML = '';
-        
-        // Clean up calendar instance
-        if (this.calendar) {
-            this.calendar.destroy();
-            this.calendar = null;
-        }
-    },
-    
-    getSectionTitle(sectionName) {
-        const titles = {
-            parties: 'The Parties & Children',
-            schedule: 'Contact Schedule & Arrangements',
-            finances: 'Financial Contributions',
-            communication: 'Communication Plan',
-            'activity-tracker': 'Family Activity Log',
-            finalize: 'Finalise, Download & Pledge'
-        };
-        return titles[sectionName] || 'Edit Section';
-    },
-
-    getSectionTemplate(sectionName) {
-        const template = document.getElementById(`section-${sectionName}-template`);
-        return template ? template.innerHTML : `<p>Section content for "${sectionName}" is under construction.</p>`;
-    },
-
-    populateSection(sectionName) {
-        console.log(`Populating modal for section: ${sectionName}`);
-        
-        // Example: populate schedule section
-        if (sectionName === 'schedule' && this.planData.schedule) {
-            const custodySelect = document.getElementById('custody-status');
-            const custodyDetails = document.getElementById('custody-details');
-            
-            if (custodySelect && this.planData.schedule.custodyStatus) {
-                custodySelect.value = this.planData.schedule.custodyStatus;
-            }
-            
-            if (custodyDetails && this.planData.schedule.custodyDetails) {
-                custodyDetails.value = this.planData.schedule.custodyDetails;
-            }
-        }
-    },
-
-    initCalendar() {
-        const calendarEl = document.getElementById('calendar');
-        if (!calendarEl) {
-            console.error("Calendar element not found!");
-            return;
-        }
-
-        // Ensure we have events data
-        const events = (this.planData.schedule && this.planData.schedule.events) ? this.planData.schedule.events : [];
-        
-        try {
-            this.calendar = new FullCalendar.Calendar(calendarEl, {
-                initialView: 'dayGridMonth',
-                headerToolbar: {
-                    left: 'prev,next today',
-                    center: 'title',
-                    right: 'dayGridMonth,timeGridWeek,listWeek'
-                },
-                editable: true,
-                selectable: true,
-                events: events,
-                
-                // Event handlers
-                eventClick: (info) => {
-                    console.log('Event clicked:', info.event);
-                },
-                
-                select: (info) => {
-                    const title = prompt('Enter event title:');
-                    if (title) {
-                        const newEvent = {
-                            title: title,
-                            start: info.startStr,
-                            end: info.endStr,
-                            id: Date.now().toString() // Simple ID generation
-                        };
-                        
-                        // Add to calendar
-                        this.calendar.addEvent(newEvent);
-                        
-                        // Add to data and save
-                        if (!this.planData.schedule.events) {
-                            this.planData.schedule.events = [];
-                        }
-                        this.planData.schedule.events.push(newEvent);
-                        this.savePlan();
-                    }
-                    this.calendar.unselect();
-                }
-            });
-            
-            this.calendar.render();
-            console.log("Calendar initialized successfully");
-            
-        } catch (error) {
-            console.error("Error initializing calendar:", error);
-        }
-    },
-};
-
-// --- DOCUMENT READY ---
-document.addEventListener('DOMContentLoaded', () => {
-    window.parentingPlanApp = ParentingPlanApp; 
-    ParentingPlanApp.init();
-});
+        // Escape key to close modal
+        document.addEventListener('keydown
