@@ -1,351 +1,193 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enhanced Parenting Plan Tool - Flamea</title>
+    <title>The Ultimate Family Management Tool - Flamea</title>
+    
+    <!-- External Libraries -->
     <script src="https://cdn.tailwindcss.com"></script>
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
 
+    <!-- Custom Styles -->
     <style>
         :root {
-            --primary-color: #4f46e5;
-            --secondary-color: #10b981;
-            --text-color: #1f2937;
-            --bg-color: #f9fafb;
             --header-font: 'Roboto Slab', serif;
             --body-font: 'Roboto', sans-serif;
         }
 
+        /* Animated Gradient Background from index.html */
+        @keyframes gradient-animation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+        .animated-gradient {
+            background: linear-gradient(-45deg, #1a202c, #2d3748, #4a5568, #2d3748);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+        }
+
+        /* General Styling */
         body {
             font-family: var(--body-font);
-            background-color: var(--bg-color);
         }
-
-        .main-container {
-            display: flex;
+        h1, h2, h3, h4, h5, h6 {
+            font-family: var(--header-font);
         }
-        
-        .main-content {
-            flex: 1;
-            padding: 1rem 2rem;
-            max-height: 100vh;
-            overflow-y: auto;
-        }
-
-        .step-container { display: none; }
-        .step-container.active { display: block; animation: fadeIn 0.5s; }
-        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
-
-        h2, h3 { font-family: var(--header-font); color: var(--text-color); }
         .form-input, .form-select, .form-textarea {
-            color: var(--text-color);
-            border-color: #d1d5db;
+            @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500 transition-colors;
         }
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            border-color: var(--primary-color);
-            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        .btn {
+            @apply py-2 px-4 rounded-lg font-semibold transition-all duration-300 ease-in-out;
+        }
+        .btn-primary {
+            @apply bg-green-600 text-white hover:bg-green-700 shadow-lg;
+        }
+        .btn-secondary {
+            @apply bg-gray-600 text-white hover:bg-gray-700;
+        }
+        .btn-danger {
+             @apply bg-red-600 text-white hover:bg-red-700;
+        }
+        .card {
+            @apply bg-gray-800 bg-opacity-80 backdrop-blur-sm p-6 rounded-xl shadow-2xl border border-gray-700;
         }
         
-        .btn-primary { background-color: var(--primary-color); }
-        .btn-primary:hover { background-color: #4338ca; }
-        .btn-secondary { background-color: #6b7280; }
-        .btn-secondary:hover { background-color: #4b5563; }
-        
-        /* Dashboard styles */
-        .dashboard-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; background: #ddd; outline: none; opacity: 0.7; transition: opacity .2s; border-radius: 5px; }
-        .dashboard-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
-        .dashboard-slider::-moz-range-thumb { width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
-        
-        .balance-bar-bg { background-color: #e5e7eb; }
-        .balance-bar-fill { transition: width 0.5s ease-in-out; }
-        .balanced { background-color: #34d399; }
-        .imbalanced-slight { background-color: #f59e0b; }
-        .imbalanced-major { background-color: #ef4444; }
-
-        .empathetic-nudge {
-            display: none;
-            padding: 0.75rem;
-            margin-top: 1rem;
-            border-radius: 0.5rem;
-            font-size: 0.875rem;
+        /* Section Hub styles */
+        .hub-card {
+            @apply bg-gray-700 p-6 rounded-lg text-center cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-700 hover:shadow-2xl hover:scale-105;
         }
-        .nudge-positive { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
-        .nudge-warning { background-color: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
-        .nudge-support { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
+        .hub-card i {
+            @apply text-4xl mb-4 text-green-400;
+        }
+        .hub-card h3 {
+            @apply text-xl font-bold text-white;
+        }
         
-        /* Modal for Disclaimer */
+        /* Modal styles */
         .modal-overlay {
-            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
-            background-color: rgba(17, 24, 39, 0.8); backdrop-filter: blur(4px);
-            display: flex; align-items: center; justify-content: center;
-            z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s;
+            @apply fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 transition-opacity;
         }
-        .modal-overlay.visible { opacity: 1; visibility: visible; }
         .modal-content {
-            background-color: white; padding: 2rem; border-radius: 0.75rem;
-            max-width: 600px; width: 90%; transform: scale(0.95); transition: transform 0.3s;
+            @apply bg-gray-800 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col;
         }
-        .modal-overlay.visible .modal-content { transform: scale(1); }
+        .modal-header {
+             @apply p-4 border-b border-gray-700 flex justify-between items-center;
+        }
+        .modal-body {
+            @apply p-6 overflow-y-auto;
+        }
+        .modal-footer {
+            @apply p-4 border-t border-gray-700 flex justify-end space-x-4;
+        }
 
+        /* FullCalendar Customizations */
+        .fc {
+            background-color: #2d3748;
+            color: white;
+        }
+        .fc .fc-toolbar-title { font-size: 1.5em; }
+        .fc .fc-button-primary { background-color: var(--primary-color); border-color: var(--primary-color); }
+        .fc .fc-daygrid-day-number { color: #a0aec0; }
+        .fc .fc-day-today { background-color: rgba(79, 70, 229, 0.2); }
+        .fc-event { border-radius: 4px; padding: 2px; }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
 
-    <div class="main-container">
-        <!-- Sidebar placeholder -->
+<body class="animated-gradient text-gray-200">
+
+    <div class="main-container flex min-h-screen">
+        <!-- Standardized Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
-        
-        <div class="main-content">
-            <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-8 my-8">
-                
-                <header class="text-center mb-8">
-                    <h1 class="text-4xl font-bold font-roboto-slab text-gray-800">Enhanced Parenting Plan Tool</h1>
-                    <p class="text-gray-500 mt-2">A live document to foster positive, equitable co-parenting.</p>
-                </header>
 
-                <!-- This will be the main form wizard -->
-                <form id="parenting-plan-form">
+        <!-- Main Content Area -->
+        <main class="main-content flex-1 p-4 md:p-8">
+            <div id="parenting-plan-tool">
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-4xl font-bold text-white">The Ultimate Family Management Tool</h1>
+                    <p class="text-lg text-gray-300 mt-2">A live, collaborative tool to build your parenting plan and track family activities.</p>
+                     <p class="text-sm text-gray-500 mt-2">Plan ID: <span id="plan-id-display">Not Saved</span> | User ID: <span id="user-id-display">Not Logged In</span></p>
+                </div>
 
-                    <!-- STEP 1: PARTIES & CHILDREN -->
-                    <div id="step-1" class="step-container active">
-                        <h2 class="text-2xl font-semibold mb-6">Step 1: The Family</h2>
-                        
-                        <div id="guardians-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
-                            <!-- Guardian A -->
-                            <div class="p-4 border rounded-lg space-y-4">
-                               <div class="flex items-center gap-4">
-                                    <select class="guardian-role form-select w-1/3 rounded-md">
-                                        <option>Father</option>
-                                        <option>Mother</option>
-                                        <option>Grandfather</option>
-                                        <option>Grandmother</option>
-                                        <option>Uncle</option>
-                                        <option>Aunt</option>
-                                        <option>Legal Guardian</option>
-                                        <option>Other</option>
-                                    </select>
-                                    <input type="text" placeholder="Full Name" class="guardian-name form-input flex-grow rounded-md">
-                                </div>
-                                <input type="text" placeholder="ID Number (Optional)" class="w-full form-input rounded-md">
-                                <div>
-                                    <input type="text" placeholder="Residential Address" class="w-full form-input rounded-md guardian-address">
-                                    <!-- Google Maps API could hook here -->
-                                </div>
-                                <label class="flex items-center">
-                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
-                                    <span class="ml-2 text-sm text-gray-600">Postal address is different</span>
-                                </label>
-                                <div class="hidden">
-                                     <input type="text" placeholder="Postal Address" class="w-full form-input rounded-md">
-                                </div>
-                            </div>
-                            <!-- Guardian B -->
-                            <div class="p-4 border rounded-lg space-y-4">
-                                <div class="flex items-center gap-4">
-                                    <select class="guardian-role form-select w-1/3 rounded-md">
-                                        <option>Mother</option>
-                                        <option>Father</option>
-                                        <option>Grandfather</option>
-                                        <option>Grandmother</option>
-                                        <option>Uncle</option>
-                                        <option>Aunt</option>
-                                        <option>Legal Guardian</option>
-                                        <option>Other</option>
-                                    </select>
-                                    <input type="text" placeholder="Full Name" class="guardian-name form-input flex-grow rounded-md">
-                                </div>
-                                <input type="text" placeholder="ID Number (Optional)" class="w-full form-input rounded-md">
-                                <div>
-                                    <input type="text" placeholder="Residential Address" class="w-full form-input rounded-md guardian-address">
-                                </div>
-                                <label class="flex items-center">
-                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
-                                    <span class="ml-2 text-sm text-gray-600">Postal address is different</span>
-                                </label>
-                                 <div class="hidden">
-                                     <input type="text" placeholder="Postal Address" class="w-full form-input rounded-md">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="p-4 border rounded-lg">
-                           <h3 class="text-lg font-semibold mb-4">Children</h3>
-                           <div id="children-list" class="space-y-4">
-                               <!-- Child entry template -->
-                           </div>
-                           <button type="button" id="add-child-btn" class="mt-4 text-indigo-600 hover:text-indigo-800 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Child</button>
-                        </div>
+                <!-- Section Navigation Hub -->
+                <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <div class="hub-card" data-section="parties">
+                        <i class="fas fa-users"></i>
+                        <h3>The Parties & Children</h3>
                     </div>
-
-                    <!-- STEP 2: RESIDENCE & CUSTODY -->
-                    <div id="step-2" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6">Step 2: Residence & Custody</h2>
-                        <div id="residence-custody-container" class="space-y-6">
-                            <!-- Populated by JS for each child -->
-                        </div>
+                    <div class="hub-card" data-section="schedule">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Contact Schedule</h3>
                     </div>
-
-                    <!-- STEP 3: CONTACT SCHEDULE -->
-                    <div id="step-3" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6">Step 3: Contact Arrangements</h2>
-                        <!-- Custody Dashboard -->
-                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
-                            <h3 class="font-semibold text-lg mb-2">Custody Time Allocation</h3>
-                            <div class="flex justify-between items-center text-sm font-medium mb-2">
-                                <span id="guardian-a-label">Guardian A</span>
-                                <span id="guardian-b-label">Guardian B</span>
-                            </div>
-                            <div class="balance-bar-bg w-full h-4 rounded-full overflow-hidden">
-                                <div id="custody-balance-bar" class="balance-bar-fill h-full rounded-full balanced"></div>
-                            </div>
-                            <div class="flex justify-between items-center text-xs text-gray-500 mt-1">
-                                <span id="guardian-a-perc">50%</span>
-                                <span id="guardian-b-perc">50%</span>
-                            </div>
-                            <div id="custody-nudge" class="empathetic-nudge"></div>
-                        </div>
-                        <div id="calendar"></div>
-                        <div class="empathetic-nudge" id="calendar-nudge"></div>
+                    <div class="hub-card" data-section="finances">
+                        <i class="fas fa-hand-holding-usd"></i>
+                        <h3>Financial Contributions</h3>
                     </div>
-                    
-                    <!-- STEP 4: DECISION MAKING -->
-                    <div id="step-4" class="step-container">
-                         <h2 class="text-2xl font-semibold mb-6">Step 4: Decision Making</h2>
-                         <div class="space-y-6">
-                             <div>
-                                 <label class="block font-bold mb-2">Education Decisions</label>
-                                 <textarea rows="3" placeholder="e.g., Jointly, with Parent A having the final say in case of disagreement. Both parents will attend parent-teacher meetings." class="form-textarea w-full rounded-md"></textarea>
-                             </div>
-                              <div>
-                                 <label class="block font-bold mb-2">Religious Upbringing</label>
-                                 <textarea rows="3" placeholder="e.g., The children will be raised in the [Religion] faith. Major religious decisions will be made jointly." class="form-textarea w-full rounded-md"></textarea>
-                             </div>
-                              <div>
-                                 <label class="block font-bold mb-2">Values and Discipline</label>
-                                 <textarea rows="3" placeholder="e.g., Both parents agree on positive discipline methods. No corporal punishment. Core values include honesty, respect, and hard work." class="form-textarea w-full rounded-md"></textarea>
-                             </div>
-                         </div>
+                     <div class="hub-card" data-section="communication">
+                        <i class="fas fa-comments"></i>
+                        <h3>Communication Plan</h3>
                     </div>
-
-                     <!-- STEP 5: COMMUNICATION PLAN -->
-                    <div id="step-5" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6">Step 5: Communication Plan</h2>
-                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                             <!-- Primary Communication -->
-                             <div class="p-4 border rounded-lg space-y-3">
-                                 <h3 class="text-lg font-semibold">Primary Communication</h3>
-                                 <p class="text-sm text-gray-500">For routine scheduling and updates.</p>
-                                 <input type="text" placeholder="Method (e.g., WhatsApp, Email)" class="form-input w-full rounded-md">
-                                 <input type="text" placeholder="Designated Contact Person" class="form-input w-full rounded-md">
-                                 <input type="text" placeholder="Contact Number / Email" class="form-input w-full rounded-md">
-                             </div>
-                             <!-- Emergency Communication -->
-                             <div class="p-4 border rounded-lg space-y-3">
-                                 <h3 class="text-lg font-semibold">Escalation / Emergency</h3>
-                                  <p class="text-sm text-gray-500">For urgent matters when primary fails.</p>
-                                 <input type="text" placeholder="Method (e.g., Phone Call)" class="form-input w-full rounded-md">
-                                 <input type="text" placeholder="Designated Contact Person" class="form-input w-full rounded-md">
-                                 <input type="text" placeholder="Contact Number / Email" class="form-input w-full rounded-md">
-                             </div>
-                         </div>
+                    <div class="hub-card" data-section="activity-tracker">
+                        <i class="fas fa-chart-line"></i>
+                        <h3>Family Activity Log</h3>
                     </div>
-
-                    <!-- STEP 6: EXPENSE & BENEFIT TRACKER -->
-                    <div id="step-6" class="step-container">
-                       <h2 class="text-2xl font-semibold mb-6">Step 6: Contributions & Responsibilities</h2>
-                       <!-- Expense Dashboard will go here -->
-                       <div id="expense-dashboard" class="bg-gray-50 p-4 rounded-lg mb-6"></div>
-                       <div id="expense-tracker" class="space-y-6"></div>
-                       <button type="button" id="add-expense-category-btn" class="mt-4 text-indigo-600 hover:text-indigo-800 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Expense Category</button>
+                     <div class="hub-card" data-section="finalize">
+                        <i class="fas fa-file-signature"></i>
+                        <h3>Finalise & Pledge</h3>
                     </div>
-
-                     <!-- STEP 7: EVENT LOGGER -->
-                    <div id="step-7" class="step-container">
-                         <h2 class="text-2xl font-semibold mb-6">Step 7: Event Logger</h2>
-                         <div class="p-4 border rounded-lg bg-gray-50">
-                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                                 <input type="date" id="event-date" class="form-input rounded-md">
-                                 <select id="event-type" class="form-select rounded-md">
-                                     <option>Positive Event</option>
-                                     <option>Disagreement</option>
-                                     <option>Milestone</option>
-                                     <option>Medical Issue</option>
-                                     <option>Other</option>
-                                 </select>
-                                 <input type="file" id="event-attachment" class="text-sm">
-                             </div>
-                             <textarea id="event-details" rows="4" placeholder="Describe the event..." class="form-textarea w-full rounded-md mb-4"></textarea>
-                             <button type="button" id="log-event-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg w-full">Log Event</button>
-                         </div>
-                         <div id="event-log-list" class="mt-6 space-y-4"></div>
-                    </div>
-                    
-                     <!-- STEP 8: ADDITIONAL NOTES -->
-                    <div id="step-8" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6">Step 8: Additional Notes</h2>
-                        <textarea rows="10" placeholder="Add any final thoughts, clarifications, or context that hasn't been covered in other sections..." class="form-textarea w-full rounded-md"></textarea>
-                    </div>
-
-                    <!-- STEP 9: REVIEW & GENERATE -->
-                    <div id="step-9" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6">Step 9: Final Review & Generation</h2>
-                        <div id="final-review-section" class="bg-gray-50 p-6 rounded-lg border space-y-4">
-                           <p class="text-center text-gray-500">Your generated plan will appear here for review before downloading.</p>
-                        </div>
-                    </div>
-                </form>
-                
-                <!-- Navigation Buttons -->
-                <div class="mt-8 flex justify-between">
-                    <button id="prev-btn" class="btn-secondary text-white font-bold py-2 px-6 rounded-lg transition" style="display: none;">Previous</button>
-                    <button id="next-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg transition">Next</button>
-                    <button id="generate-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition" style="display: none;">Generate Plan</button>
                 </div>
             </div>
+        </main>
+    </div>
+    
+    <!-- Section Editor Modal -->
+    <div id="section-modal" class="modal-overlay hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modal-title" class="text-2xl font-bold text-white"></h2>
+                <button id="close-modal-btn" class="text-gray-400 hover:text-white">&times;</button>
+            </div>
+            <div id="modal-body" class="modal-body">
+                <!-- Section content will be injected here by JS -->
+            </div>
+            <div class="modal-footer">
+                <button id="save-section-btn" class="btn btn-primary">Save and Close</button>
+            </div>
         </div>
     </div>
     
-     <!-- Disclaimer Modal -->
-    <div id="disclaimer-modal" class="modal-overlay">
-        <div class="modal-content">
-            <h3 class="text-2xl font-bold mb-4">Disclaimer</h3>
-            <p class="text-sm text-gray-600 mb-4">This tool is designed to assist parents in creating a comprehensive parenting plan. The generated document is based on the information you provide. It is strongly recommended to have this plan reviewed by a legal professional to ensure it is legally sound and enforceable in your jurisdiction. By clicking "Agree," you acknowledge that you understand this is a tool for guidance and not a substitute for professional legal advice.</p>
-            <div class="flex items-center mb-4">
-                <input id="disclaimer-agree" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
-                <label for="disclaimer-agree" class="ml-2">I have read and agree to the disclaimer.</label>
-            </div>
-            <button id="download-pdf-btn" disabled class="bg-gray-400 text-white font-bold py-2 px-6 rounded-lg w-full cursor-not-allowed">Download PDF</button>
-        </div>
-    </div>
-
-    <!-- Child template for JS -->
-    <template id="child-template">
-        <div class="child-entry p-3 border-t">
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <input type="text" placeholder="Child's Full Name" class="child-name form-input rounded-md">
-                <input type="date" class="child-dob form-input rounded-md">
-            </div>
-            <label class="flex items-center mt-3 text-sm">
-                <input type="checkbox" class="child-residence-toggle form-checkbox h-4 w-4 rounded">
-                <span class="ml-2 text-gray-600">Child resides at a different address.</span>
-            </label>
-            <div class="child-residence-details hidden mt-3 space-y-3">
-                 <input type="text" placeholder="Child's Residential Address" class="w-full form-input rounded-md child-address">
-                 <div class="grid grid-cols-2 gap-4">
-                    <input type="text" placeholder="Primary Contact Person" class="form-input rounded-md">
-                    <input type="text" placeholder="Contact Number" class="form-input rounded-md">
-                 </div>
-            </div>
-        </div>
+    <!-- Templates for Dynamic Content -->
+    <template id="section-parties-template">
+        <!-- Form content for The Parties & Children -->
     </template>
     
-    <!-- JS files -->
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/plan-builder.js"></script>
+    <template id="section-schedule-template">
+         <h3 class="text-xl font-bold mb-4 text-green-400">Custody & Living Arrangements</h3>
+         <select id="custody-status" class="form-select mb-4">
+            <option>We have a mutual agreement</option>
+            <option>We are in dispute</option>
+            <option>There is a court order in place</option>
+        </select>
+        <textarea id="custody-details" class="form-textarea" placeholder="Briefly describe the primary residence and care arrangements..."></textarea>
+        <h3 class="text-xl font-bold my-6 text-green-400">Interactive Contact Schedule</h3>
+        <div id='calendar' class="bg-gray-700 p-4 rounded-lg"></div>
+    </template>
 
+    <!-- Other templates for finances, communication, etc. will go here -->
+    
+    <!-- PDF Output container (hidden) -->
+    <div id="pdf-output" class="hidden"></div>
+    
+    <!-- Core Application Logic -->
+    <script src="./assets/js/parenting-plan-builder.js" type="module"></script>
 </body>
 </html>
