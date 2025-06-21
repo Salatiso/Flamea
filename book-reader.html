@@ -7,62 +7,97 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
     <style>
-        body { overflow: hidden; }
+        /* Base layout and theme setup */
+        body { overflow: hidden; font-family: 'Open Sans', sans-serif; }
         .reader-container {
             display: grid;
             grid-template-rows: auto 1fr auto;
             height: 100vh;
-            background-color: #1a202c; /* slate-800 */
+            transition: background-color 0.3s;
         }
-        .dark .reader-container { background-color: #1a202c; }
-        .light .reader-container { background-color: #f1f5f9; } /* slate-100 */
+        .dark { --bg-color: #111827; --text-color: #d1d5db; --page-bg: #1f2937; --page-border: #374151; --header-bg: rgba(17, 24, 39, 0.8); }
+        .light { --bg-color: #f3f4f6; --text-color: #1f2937; --page-bg: #fdfdfd; --page-border: #e5e7eb; --header-bg: rgba(255, 255, 255, 0.8); }
+        .sepia { --bg-color: #fbf3e9; --text-color: #5c4033; --page-bg: #f5e9da; --page-border: #e4d5c1; --header-bg: rgba(251, 243, 233, 0.8); }
+        
+        .reader-container { background-color: var(--bg-color); color: var(--text-color); }
+        .reader-header { background-color: var(--header-bg); }
+        .reader-footer { background-color: var(--header-bg); }
 
-        #reader-main {
-            overflow: hidden;
-            padding: 1rem;
-        }
-
+        /* Main reader viewport */
+        #reader-main { overflow: hidden; padding: 1rem 0; }
         #book-viewport {
             width: 100%;
             height: 100%;
             display: flex;
             justify-content: center;
             align-items: center;
-            gap: 2rem;
             transition: opacity 0.3s ease-in-out;
+            perspective: 2500px;
+        }
+
+        /* Book cover view */
+        #book-cover-view {
+            cursor: pointer;
+            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
+            transition: transform 0.3s ease;
+        }
+        #book-cover-view:hover { transform: scale(1.02); }
+
+        /* Page styles for the book feel */
+        .page-container {
+            width: 90%;
+            height: 95%;
+            max-width: 1400px;
+            display: flex;
+            gap: 1rem;
+            position: relative;
+            /* Creates the shadow in the middle, like a book's spine */
+            filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.3)) drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+        }
+        .page-container::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            bottom: 0;
+            left: 50%;
+            width: 5px;
+            background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 100%);
+            transform: translateX(-50%);
+            z-index: 10;
         }
 
         .page {
+            flex: 1;
             height: 100%;
-            width: 100%;
             overflow: hidden;
-            padding: 2.5rem 3rem;
-            text-align: justify;
-            background-color: #fefefe;
-            color: #1f2937;
-            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            padding: 3rem 3.5rem;
+            background-color: var(--page-bg);
+            color: var(--text-color);
             line-height: 1.7;
+            text-align: justify;
+            transition: background-color 0.3s, color 0.3s;
+            position: relative;
         }
-        .dark .page {
-            background-color: #1f2937; /* gray-800 */
-            color: #d1d5db; /* gray-300 */
-            border: 1px solid #374151;
+        .page-content {
+            height: 100%;
+            overflow: hidden;
+            hyphens: auto;
         }
-        .light .page {
-             background-color: #fdfdfd;
-             color: #1f2937;
+        .page-number {
+            position: absolute;
+            bottom: 1.5rem;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: 0.8rem;
+            opacity: 0.7;
         }
 
-        /* Hide the right page in single view mode */
-        #book-viewport.single-view #page-right {
-            display: none;
-        }
-        #book-viewport.single-view #page-left {
-            max-width: 800px;
-        }
-
+        /* Single page view adjustments */
+        #book-viewport.single-view .page-container { max-width: 700px; }
+        #book-viewport.single-view .page-container::before { display: none; }
+        #book-viewport.single-view #page-right { display: none; }
+        
         /* Font families */
         .font-lora { font-family: 'Lora', serif; }
         .font-opensans { font-family: 'Open Sans', sans-serif; }
@@ -70,44 +105,60 @@
     </style>
 </head>
 <body class="text-gray-300">
-    <div class="reader-container">
-        <header class="bg-gray-900/80 backdrop-blur-sm p-3 flex justify-between items-center shadow-lg border-b border-gray-700 z-20">
-            <a href="publications.html" class="text-gray-300 hover:text-white transition-colors"><i class="fas fa-arrow-left mr-2"></i>Back to Library</a>
-            <h1 id="book-title-header" class="text-lg font-bold text-white truncate px-4">Loading...</h1>
-            <div class="flex items-center gap-3">
+    <div id="reader-container" class="reader-container dark">
+        <!-- HEADER / TOOLBAR -->
+        <header class="reader-header p-3 flex justify-between items-center shadow-lg border-b border-gray-700 z-20">
+            <a href="publications.html" class="hover:text-white transition-colors"><i class="fas fa-arrow-left mr-2"></i>Back to Library</a>
+            <h1 id="book-title-header" class="text-lg font-bold truncate px-4">Loading...</h1>
+            <div class="flex items-center gap-2 md:gap-3">
                 <button id="view-single-btn" title="Single Page View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-file-alt"></i></button>
-                <button id="view-columns-btn" title="Book View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-book-open"></i></button>
+                <button id="view-double-btn" title="Two Page View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-book-open"></i></button>
                 <div class="border-l border-gray-600 h-6"></div>
                 <button id="font-dec-btn" title="Decrease Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>-</button>
                 <span id="font-size-display" class="text-sm w-10 text-center">18px</span>
                 <button id="font-inc-btn" title="Increase Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>+</button>
-                <select id="font-select" class="bg-gray-700 border-gray-600 rounded p-1 text-sm">
+                <select id="font-select" class="bg-gray-700 border-gray-600 rounded p-1 text-sm focus:ring-0 focus:border-gray-500">
                     <option value="font-lora">Lora (Serif)</option>
                     <option value="font-opensans">Open Sans</option>
                     <option value="font-robotoslab">Roboto Slab</option>
                 </select>
-                <button id="theme-toggle-btn" title="Toggle Light/Dark Mode" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-moon"></i></button>
+                <div class="border-l border-gray-600 h-6"></div>
+                <button id="theme-light-btn" title="Light Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-sun"></i></button>
+                <button id="theme-sepia-btn" title="Sepia Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-tint"></i></button>
+                <button id="theme-dark-btn" title="Dark Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-moon"></i></button>
             </div>
         </header>
 
+        <!-- MAIN CONTENT -->
         <main id="reader-main">
-            <div id="loading-spinner" class="text-center">
-                <i class="fas fa-spinner fa-spin text-5xl text-yellow-400"></i>
+            <!-- Loading Spinner -->
+            <div id="loading-spinner" class="h-full flex flex-col justify-center items-center">
+                <i class="fas fa-spinner fa-spin text-5xl text-orange-400"></i>
                 <p class="mt-4 text-lg">Loading your book...</p>
             </div>
+            
+            <!-- Book Cover -->
+            <div id="book-cover-view" class="h-full flex justify-center items-center hidden">
+                <img id="book-cover-img" src="" alt="Book Cover" class="h-4/5 rounded-lg shadow-2xl object-cover">
+            </div>
+            
+            <!-- Book Content -->
             <div id="book-viewport" class="hidden">
-                 <div id="page-left" class="page"></div>
-                 <div id="page-right" class="page"></div>
+                 <div class="page-container">
+                    <div id="page-left" class="page"><div class="page-content"></div><div class="page-number"></div></div>
+                    <div id="page-right" class="page"><div class="page-content"></div><div class="page-number"></div></div>
+                 </div>
             </div>
         </main>
         
-        <footer class="bg-gray-900 p-2 text-center text-sm z-10 border-t border-gray-700">
+        <!-- FOOTER / PAGINATION -->
+        <footer class="reader-footer p-2 text-center text-sm z-10 border-t border-gray-700">
             <div class="flex items-center justify-between max-w-4xl mx-auto">
                 <button id="prev-page-btn" class="p-2 rounded hover:bg-gray-700 disabled:opacity-50" disabled><i class="fas fa-chevron-left"></i></button>
                 <div class="flex-grow mx-4">
                     <span id="page-indicator">Page 0 of 0</span>
-                    <div class="w-full bg-gray-700 rounded-full h-2 mt-1">
-                        <div id="progress-bar" class="bg-yellow-400 h-2 rounded-full" style="width: 0%;"></div>
+                    <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1">
+                        <div id="progress-bar" class="bg-orange-400 h-1.5 rounded-full" style="width: 0%;"></div>
                     </div>
                 </div>
                 <button id="next-page-btn" class="p-2 rounded hover:bg-gray-700 disabled:opacity-50" disabled><i class="fas fa-chevron-right"></i></button>
@@ -119,20 +170,22 @@
     document.addEventListener('DOMContentLoaded', () => {
         // --- DATA ---
         const bookDatabase = {
-            'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/books/BK-Goliaths_Reckoning.txt' },
-            'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/books/BK-HomeSchooling_Father.txt' },
-            'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt' },
-            'know-yourself': { title: "Getting to know yourself", path: 'assets/books/BK-Know_Yourself.txt' },
-            'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt' },
-            'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_ozifundiselayo_ekhayeni.txt' },
+            'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/books/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
+            'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/books/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
+            'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
+            'know-yourself': { title: "Getting to know yourself", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
+            'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
+            'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_ozifundiselayo_ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' },
+            'safety-first-career': { title: "Safety First: OHS Career Journey", path: 'assets/books/BK-SF_Career.txt', cover: 'assets/images/SF_Career.jpg' },
+            'safety-first-plans': { title: "Safety First: The Essentials of OHS Plans", path: 'assets/books/BK-SF_Plans.txt', cover: 'assets/images/SF_Plans.jpg' }
         };
 
         // --- STATE ---
         const state = {
             fullText: '',
             pages: [],
-            currentPage: 0,
-            viewMode: 'columns', // or 'single'
+            currentPageIndex: 0, // This is the index in the pages array
+            viewMode: 'double', // 'double' or 'single'
             fontSize: 18,
             fontFamily: 'font-lora',
             theme: 'dark'
@@ -140,12 +193,16 @@
 
         // --- DOM ELEMENTS ---
         const elements = {
-            container: document.querySelector('.reader-container'),
+            container: document.getElementById('reader-container'),
             titleHeader: document.getElementById('book-title-header'),
             spinner: document.getElementById('loading-spinner'),
+            coverView: document.getElementById('book-cover-view'),
+            coverImg: document.getElementById('book-cover-img'),
             viewport: document.getElementById('book-viewport'),
-            pageLeft: document.getElementById('page-left'),
-            pageRight: document.getElementById('page-right'),
+            pageLeft: document.getElementById('page-left').querySelector('.page-content'),
+            pageRight: document.getElementById('page-right').querySelector('.page-content'),
+            pageLeftNumber: document.getElementById('page-left').querySelector('.page-number'),
+            pageRightNumber: document.getElementById('page-right').querySelector('.page-number'),
             prevBtn: document.getElementById('prev-page-btn'),
             nextBtn: document.getElementById('next-page-btn'),
             pageIndicator: document.getElementById('page-indicator'),
@@ -154,174 +211,209 @@
             fontIncBtn: document.getElementById('font-inc-btn'),
             fontSizeDisplay: document.getElementById('font-size-display'),
             fontSelect: document.getElementById('font-select'),
-            themeToggleBtn: document.getElementById('theme-toggle-btn'),
+            themeLightBtn: document.getElementById('theme-light-btn'),
+            themeSepiaBtn: document.getElementById('theme-sepia-btn'),
+            themeDarkBtn: document.getElementById('theme-dark-btn'),
             viewSingleBtn: document.getElementById('view-single-btn'),
-            viewColumnsBtn: document.getElementById('view-columns-btn'),
+            viewDoubleBtn: document.getElementById('view-double-btn'),
         };
-
-        // --- CORE FUNCTIONS ---
         
-        const getQueryParam = (param) => new URLSearchParams(window.location.search).get(param);
+        // --- CORE FUNCTIONS ---
 
-        const fetchBook = async (bookData) => {
-            try {
-                const response = await fetch(bookData.path);
-                if (!response.ok) throw new Error(`Could not load book at ${bookData.path}`);
-                state.fullText = await response.text();
-                elements.titleHeader.textContent = bookData.title;
+        /**
+         * The heart of the e-reader. This function takes the entire book text and intelligently
+         * splits it into pages that fit perfectly within the visible area.
+         */
+        const paginate = () => {
+            elements.spinner.style.display = 'flex';
+            elements.viewport.classList.add('hidden');
+            state.pages = [];
+            
+            // This is a necessary evil to ensure we get correct measurements
+            setTimeout(() => {
+                // 1. Create a hidden 'measurer' div to calculate text fit.
+                const measurer = document.createElement('div');
+                measurer.style.position = 'absolute';
+                measurer.style.left = '-9999px'; // Move it off-screen
+                measurer.style.width = elements.pageLeft.clientWidth + 'px';
+                measurer.style.height = 'auto';
+                measurer.style.font = `${state.fontSize}px ${window.getComputedStyle(elements.pageLeft).fontFamily}`;
+                measurer.style.lineHeight = window.getComputedStyle(elements.pageLeft).lineHeight;
+                measurer.style.textAlign = 'justify';
+                measurer.style.hyphens = 'auto';
+                document.body.appendChild(measurer);
+
+                const pageHeight = elements.pageLeft.clientHeight;
+                const words = state.fullText.split(/\s+/);
+                let currentPageText = '';
+
+                // 2. Iterate through all words, adding them to the measurer one by one.
+                for (const word of words) {
+                    const testText = currentPageText ? `${currentPageText} ${word}` : word;
+                    measurer.textContent = testText;
+                    
+                    // 3. If adding the word makes the measurer taller than the page,
+                    //    the current page is full.
+                    if (measurer.scrollHeight > pageHeight) {
+                        state.pages.push(currentPageText); // Finalize the current page
+                        currentPageText = word; // The new word starts the next page
+                    } else {
+                        currentPageText = testText; // Otherwise, keep adding to the current page
+                    }
+                }
+                state.pages.push(currentPageText); // Add the very last page
+
+                document.body.removeChild(measurer);
                 elements.spinner.style.display = 'none';
                 elements.viewport.classList.remove('hidden');
-                paginate();
-            } catch (error) {
-                console.error(error);
-                elements.spinner.innerHTML = `<p class="text-red-500">Failed to load book. Please try again.</p>`;
+                
+                renderCurrentPage();
+            }, 50); // A small delay allows the DOM to update styles before we measure.
+        };
+        
+        /**
+         * Renders the content of the current page(s) into the view.
+         */
+        const renderCurrentPage = () => {
+            const isDouble = state.viewMode === 'double' && window.innerWidth > 768;
+            elements.viewport.classList.toggle('single-view', !isDouble);
+            
+            let leftIndex = state.currentPageIndex;
+            // In double-page view, the left page should always be an even index.
+            if (isDouble && leftIndex % 2 !== 0) {
+                leftIndex--;
             }
+
+            elements.pageLeft.innerHTML = state.pages[leftIndex]?.replace(/\n/g, '<br>') || '';
+            elements.pageRight.innerHTML = isDouble ? (state.pages[leftIndex + 1]?.replace(/\n/g, '<br>') || '') : '';
+
+            updateUI(leftIndex, isDouble);
         };
 
-        const paginate = () => {
-            elements.viewport.style.opacity = 0; // Hide while we calculate
-            
-            // Create a temporary, hidden div to measure text
-            const measurer = document.createElement('div');
-            measurer.style.position = 'absolute';
-            measurer.style.visibility = 'hidden';
-            measurer.style.height = 'auto';
-            measurer.style.width = elements.pageLeft.clientWidth + 'px';
-            measurer.style.fontSize = state.fontSize + 'px';
-            measurer.style.fontFamily = window.getComputedStyle(elements.pageLeft).fontFamily;
-            measurer.style.lineHeight = window.getComputedStyle(elements.pageLeft).lineHeight;
-            measurer.innerHTML = 'a'; // a single character to get line height
-            document.body.appendChild(measurer);
-            
-            const pageHeight = elements.pageLeft.clientHeight;
-            const lineHeight = measurer.clientHeight;
-            const linesPerPage = Math.floor(pageHeight / lineHeight);
-            
-            document.body.removeChild(measurer);
-
-            const lines = state.fullText.split('\n');
-            let currentPageLines = 0;
-            let currentPageContent = '';
-            state.pages = [];
-
-            lines.forEach(line => {
-                // This is a simplification. A more robust solution would measure each line's wrapped height.
-                if (currentPageLines >= linesPerPage) {
-                    state.pages.push(currentPageContent);
-                    currentPageContent = '';
-                    currentPageLines = 0;
-                }
-                currentPageContent += line + '\n';
-                currentPageLines++;
-            });
-            state.pages.push(currentPageContent); // Add the last page
-
-            elements.viewport.style.opacity = 1;
-            renderPage(0);
-        };
-
-        const renderPage = (pageIndex) => {
-            state.currentPage = Math.max(0, Math.min(pageIndex, state.pages.length - 1));
-            
-            elements.viewport.style.opacity = 0;
-
-            setTimeout(() => {
-                const isTwoPage = state.viewMode === 'columns' && window.innerWidth > 768;
-                let leftPageIndex = state.currentPage;
-
-                if (isTwoPage) {
-                    if (leftPageIndex % 2 !== 0) {
-                        leftPageIndex--; // Ensure left page is always even
-                    }
-                    elements.pageLeft.innerHTML = (state.pages[leftPageIndex] || '').replace(/\n/g, '<br>');
-                    elements.pageRight.innerHTML = (state.pages[leftPageIndex + 1] || '').replace(/\n/g, '<br>');
-                } else {
-                    elements.pageLeft.innerHTML = (state.pages[leftPageIndex] || '').replace(/\n/g, '<br>');
-                    elements.pageRight.innerHTML = ''; // Clear right page
-                }
-
-                updateUI();
-                elements.viewport.style.opacity = 1;
-            }, 200);
-        };
-
-        const updateUI = () => {
-            const isTwoPage = state.viewMode === 'columns' && window.innerWidth > 768;
-            elements.viewport.classList.toggle('single-view', !isTwoPage);
-            
+        /**
+         * Updates all UI elements like buttons, progress bar, and page numbers.
+         */
+        const updateUI = (currentLeftIndex, isDouble) => {
             const totalPages = state.pages.length;
-            const displayPage = isTwoPage ? `${state.currentPage + 1}-${state.currentPage + 2}` : `${state.currentPage + 1}`;
-            elements.pageIndicator.textContent = `Page ${displayPage} of ${totalPages}`;
 
-            const progress = totalPages > 1 ? ((state.currentPage + (isTwoPage ? 2 : 1)) / totalPages) * 100 : 100;
+            // Page Indicator Text
+            const pageNumLeft = currentLeftIndex + 1;
+            const pageNumRight = currentLeftIndex + 2;
+            if (isDouble) {
+                elements.pageIndicator.textContent = totalPages > pageNumLeft ? `Pages ${pageNumLeft} - ${pageNumRight} of ${totalPages}` : `Page ${pageNumLeft} of ${totalPages}`;
+            } else {
+                elements.pageIndicator.textContent = `Page ${pageNumLeft} of ${totalPages}`;
+            }
+
+            // Page Numbers on the pages themselves
+            elements.pageLeftNumber.textContent = pageNumLeft;
+            elements.pageRightNumber.textContent = isDouble ? pageNumRight : '';
+            elements.pageRightNumber.style.display = isDouble && state.pages[pageNumRight-1] ? 'block' : 'none';
+
+
+            // Progress Bar
+            const progress = totalPages > 1 ? (Math.min(pageNumLeft, totalPages) / totalPages) * 100 : 100;
             elements.progressBar.style.width = `${progress}%`;
 
-            elements.prevBtn.disabled = state.currentPage === 0;
-            elements.nextBtn.disabled = state.currentPage >= totalPages - (isTwoPage ? 2 : 1);
+            // Button States
+            elements.prevBtn.disabled = currentLeftIndex === 0;
+            const nextIncrement = isDouble ? 2 : 1;
+            elements.nextBtn.disabled = currentLeftIndex >= totalPages - nextIncrement;
 
-            // Font styles
-            elements.pageLeft.style.fontSize = `${state.fontSize}px`;
-            elements.pageRight.style.fontSize = `${state.fontSize}px`;
-            elements.fontSizeDisplay.textContent = `${state.fontSize}px`;
-            
-            elements.pageLeft.className = `page ${state.fontFamily}`;
-            elements.pageRight.className = `page ${state.fontFamily}`;
-
-            // Theme
+            // Styles
             elements.container.className = `reader-container ${state.theme}`;
-            elements.themeToggleBtn.innerHTML = state.theme === 'dark' ? '<i class="fas fa-sun"></i>' : '<i class="fas fa-moon"></i>';
+            [elements.pageLeft, elements.pageRight].forEach(p => {
+                p.parentElement.style.fontSize = `${state.fontSize}px`;
+                p.parentElement.className = `page ${state.fontFamily}`;
+            });
+            elements.fontSizeDisplay.textContent = `${state.fontSize}px`;
+        };
+
+        const changePage = (direction) => {
+            const isDouble = state.viewMode === 'double' && window.innerWidth > 768;
+            const increment = isDouble ? 2 : 1;
+            
+            if (direction === 'next') {
+                state.currentPageIndex += increment;
+            } else if (direction === 'prev') {
+                state.currentPageIndex -= increment;
+            }
+            // Clamp the index to be within bounds
+            state.currentPageIndex = Math.max(0, Math.min(state.currentPageIndex, state.pages.length - 1));
+            renderCurrentPage();
         };
 
         // --- EVENT LISTENERS ---
-        elements.nextBtn.addEventListener('click', () => {
-            const increment = (state.viewMode === 'columns' && window.innerWidth > 768) ? 2 : 1;
-            renderPage(state.currentPage + increment);
-        });
+        elements.nextBtn.addEventListener('click', () => changePage('next'));
+        elements.prevBtn.addEventListener('click', () => changePage('prev'));
 
-        elements.prevBtn.addEventListener('click', () => {
-            const decrement = (state.viewMode === 'columns' && window.innerWidth > 768) ? 2 : 1;
-            renderPage(state.currentPage - decrement);
-        });
+        const handleSettingChange = (repaginate = false) => {
+            if (repaginate) {
+                paginate();
+            } else {
+                renderCurrentPage();
+            }
+        };
 
-        elements.fontIncBtn.addEventListener('click', () => {
-            if (state.fontSize < 32) state.fontSize++;
-            paginate();
-        });
-        elements.fontDecBtn.addEventListener('click', () => {
-            if (state.fontSize > 12) state.fontSize--;
-            paginate();
-        });
-        elements.fontSelect.addEventListener('change', (e) => {
-            state.fontFamily = e.target.value;
-            updateUI();
-        });
-        elements.themeToggleBtn.addEventListener('click', () => {
-            state.theme = state.theme === 'dark' ? 'light' : 'dark';
-            updateUI();
-        });
-        elements.viewSingleBtn.addEventListener('click', () => {
-            state.viewMode = 'single';
-            renderPage(state.currentPage);
-        });
-        elements.viewColumnsBtn.addEventListener('click', () => {
-            state.viewMode = 'columns';
-            renderPage(state.currentPage);
-        });
+        elements.fontIncBtn.addEventListener('click', () => { state.fontSize++; handleSettingChange(true); });
+        elements.fontDecBtn.addEventListener('click', () => { state.fontSize--; handleSettingChange(true); });
+        elements.fontSelect.addEventListener('change', (e) => { state.fontFamily = e.target.value; handleSettingChange(true); });
+        
+        elements.themeLightBtn.addEventListener('click', () => { state.theme = 'light'; handleSettingChange(); });
+        elements.themeSepiaBtn.addEventListener('click', () => { state.theme = 'sepia'; handleSettingChange(); });
+        elements.themeDarkBtn.addEventListener('click', () => { state.theme = 'dark'; handleSettingChange(); });
 
+        elements.viewSingleBtn.addEventListener('click', () => { state.viewMode = 'single'; handleSettingChange(); });
+        elements.viewDoubleBtn.addEventListener('click', () => { state.viewMode = 'double'; handleSettingChange(); });
+        
+        let resizeTimeout;
         window.addEventListener('resize', () => {
-             // A timeout helps prevent excessive recalculations during resize
-            clearTimeout(window.resizeTimeout);
-            window.resizeTimeout = setTimeout(paginate, 500);
+            clearTimeout(resizeTimeout);
+            resizeTimeout = setTimeout(() => handleSettingChange(true), 300);
         });
+        
+        elements.coverView.addEventListener('click', () => {
+            elements.coverView.classList.add('hidden');
+            paginate(); // First pagination happens here
+        }, { once: true });
+
 
         // --- INITIALIZATION ---
-        const bookId = getQueryParam('book');
-        const bookData = bookDatabase[bookId];
-        if (bookData) {
-            fetchBook(bookData);
-        } else {
-             elements.spinner.innerHTML = `<p class="text-red-500">No book selected. Please go back to the library.</p>`;
-        }
+        const init = async () => {
+            const bookId = new URLSearchParams(window.location.search).get('book');
+            const bookData = bookDatabase[bookId];
+
+            if (!bookData) {
+                elements.spinner.innerHTML = `<p class="text-red-400 text-center">Book not found. Please <a href="publications.html" class="underline">return to the library</a>.</p>`;
+                return;
+            }
+
+            elements.titleHeader.textContent = bookData.title;
+            
+            // Show the cover first
+            if (bookData.cover) {
+                elements.coverImg.src = bookData.cover;
+                elements.coverImg.alt = bookData.title;
+                elements.coverView.classList.remove('hidden');
+            } else {
+                // If no cover, just start pagination
+                paginate();
+            }
+
+            // Pre-fetch the book text in the background
+            try {
+                const response = await fetch(bookData.path);
+                if (!response.ok) throw new Error('Network response was not ok');
+                state.fullText = await response.text();
+                // Hide main spinner once text is loaded. Pagination spinner will take over.
+                elements.spinner.style.display = 'none';
+            } catch (error) {
+                console.error("Failed to fetch book:", error);
+                elements.spinner.innerHTML = `<p class="text-red-400 text-center">Could not load book content. Please try again.</p>`;
+            }
+        };
+        
+        init();
     });
     </script>
 </body>
