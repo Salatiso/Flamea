@@ -1,420 +1,358 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Flamea Book Reader</title>
+    <title>Book Reader</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&family=Lora:ital,wght@0,400..700;1,400..700&family=Open+Sans:ital,wght@0,300..800;1,300..800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,700;1,400&family=Comic+Neue:wght@700&display=swap" rel="stylesheet">
     <style>
-        /* Base layout and theme setup */
-        body { overflow: hidden; font-family: 'Open Sans', sans-serif; }
-        .reader-container {
-            display: grid;
-            grid-template-rows: auto 1fr auto;
-            height: 100vh;
-            transition: background-color 0.3s;
+        :root {
+            --book-bg: #fdfaf4;
+            --book-text: #3d2c1d;
+            --book-font: 'Lora', serif;
         }
-        .dark { --bg-color: #111827; --text-color: #d1d5db; --page-bg: #1f2937; --page-border: #374151; --header-bg: rgba(17, 24, 39, 0.8); }
-        .light { --bg-color: #f3f4f6; --text-color: #1f2937; --page-bg: #fdfdfd; --page-border: #e5e7eb; --header-bg: rgba(255, 255, 255, 0.8); }
-        .sepia { --bg-color: #fbf3e9; --text-color: #5c4033; --page-bg: #f5e9da; --page-border: #e4d5c1; --header-bg: rgba(251, 243, 233, 0.8); }
+
+        body {
+            background-color: #1a1a1a;
+            overflow: hidden; /* Prevent body scroll */
+        }
         
-        .reader-container { background-color: var(--bg-color); color: var(--text-color); }
-        .reader-header { background-color: var(--header-bg); }
-        .reader-footer { background-color: var(--header-bg); }
-
-        /* Main reader viewport */
-        #reader-main { overflow: hidden; padding: 1rem 0; }
-        #book-viewport {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            transition: opacity 0.3s ease-in-out;
-            perspective: 2500px;
+        .book-reader-container {
+            font-family: var(--book-font);
+            background-color: var(--book-bg);
+            color: var(--book-text);
+            transition: background-color 0.4s, color 0.4s;
         }
 
-        /* Book cover view */
-        #book-cover-view {
-            cursor: pointer;
-            box-shadow: 0 25px 50px -12px rgba(0,0,0,0.5);
-            transition: transform 0.3s ease;
+        /* Kids Theme */
+        .kids-theme {
+            --book-bg: #f0f8ff;
+            --book-text: #4a4a4a;
+            --book-font: 'Comic Neue', cursive;
         }
-        #book-cover-view:hover { transform: scale(1.02); }
-
-        /* Page styles for the book feel */
-        .page-container {
-            width: 90%;
-            height: 95%;
-            max-width: 1400px;
-            display: flex;
-            gap: 1rem;
-            position: relative;
-            /* Creates the shadow in the middle, like a book's spine */
-            filter: drop-shadow(0px 0px 10px rgba(0,0,0,0.3)) drop-shadow(2px 4px 6px rgba(0,0,0,0.1));
+        .kids-theme .toolbar {
+            background-color: #7dd3fc;
+            color: #0c4a6e;
         }
-        .page-container::before {
-            content: '';
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 50%;
-            width: 5px;
-            background: linear-gradient(to right, rgba(0,0,0,0) 0%, rgba(0,0,0,0.15) 50%, rgba(0,0,0,0) 100%);
-            transform: translateX(-50%);
-            z-index: 10;
+        .kids-theme .page-turn-btn {
+            background-color: #0ea5e9;
+        }
+        .kids-theme .page-turn-btn:hover {
+            background-color: #0284c7;
         }
 
-        .page {
-            flex: 1;
-            height: 100%;
-            overflow: hidden;
-            padding: 3rem 3.5rem;
-            background-color: var(--page-bg);
-            color: var(--text-color);
+        .page-content {
+            column-gap: 60px; /* Gap between pages */
             line-height: 1.7;
             text-align: justify;
-            transition: background-color 0.3s, color 0.3s;
-            position: relative;
+            /* The pagination script will handle content distribution */
         }
-        .page-content {
-            height: 100%;
+        
+        .page {
+            box-sizing: border-box;
             overflow: hidden;
-            hyphens: auto;
+            transition: opacity 0.4s ease-in-out;
+            opacity: 1;
         }
-        .page-number {
-            position: absolute;
-            bottom: 1.5rem;
-            left: 50%;
-            transform: translateX(-50%);
-            font-size: 0.8rem;
-            opacity: 0.7;
+        
+        .page.fading {
+            opacity: 0;
         }
 
-        /* Single page view adjustments */
-        #book-viewport.single-view .page-container { max-width: 700px; }
-        #book-viewport.single-view .page-container::before { display: none; }
-        #book-viewport.single-view #page-right { display: none; }
+        .single-page-view #page-right {
+            display: none;
+        }
+        .single-page-view #page-left {
+            margin: 0 auto; /* Center single page */
+        }
         
-        /* Font families */
-        .font-lora { font-family: 'Lora', serif; }
-        .font-opensans { font-family: 'Open Sans', sans-serif; }
-        .font-robotoslab { font-family: 'Roboto Slab', serif; }
+        #loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(0,0,0,0.7);
+            color: white;
+            z-index: 100;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            flex-direction: column;
+        }
+        .loader {
+            border: 8px solid #f3f3f3;
+            border-top: 8px solid #3498db;
+            border-radius: 50%;
+            width: 60px;
+            height: 60px;
+            animation: spin 1s linear infinite;
+            margin-bottom: 20px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
     </style>
 </head>
-<body class="text-gray-300">
-    <div id="reader-container" class="reader-container dark">
-        <!-- HEADER / TOOLBAR -->
-        <header class="reader-header p-3 flex justify-between items-center shadow-lg border-b border-gray-700 z-20">
-            <a href="publications.html" class="hover:text-white transition-colors"><i class="fas fa-arrow-left mr-2"></i>Back to Library</a>
-            <h1 id="book-title-header" class="text-lg font-bold truncate px-4">Loading...</h1>
-            <div class="flex items-center gap-2 md:gap-3">
-                <button id="view-single-btn" title="Single Page View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-file-alt"></i></button>
-                <button id="view-double-btn" title="Two Page View" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-book-open"></i></button>
-                <div class="border-l border-gray-600 h-6"></div>
-                <button id="font-dec-btn" title="Decrease Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>-</button>
-                <span id="font-size-display" class="text-sm w-10 text-center">18px</span>
-                <button id="font-inc-btn" title="Increase Font Size" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-font" style="font-size: 0.8em;"></i>+</button>
-                <select id="font-select" class="bg-gray-700 border-gray-600 rounded p-1 text-sm focus:ring-0 focus:border-gray-500">
-                    <option value="font-lora">Lora (Serif)</option>
-                    <option value="font-opensans">Open Sans</option>
-                    <option value="font-robotoslab">Roboto Slab</option>
-                </select>
-                <div class="border-l border-gray-600 h-6"></div>
-                <button id="theme-light-btn" title="Light Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-sun"></i></button>
-                <button id="theme-sepia-btn" title="Sepia Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-tint"></i></button>
-                <button id="theme-dark-btn" title="Dark Theme" class="p-2 rounded hover:bg-gray-700"><i class="fas fa-moon"></i></button>
-            </div>
-        </header>
+<body class="flex items-center justify-center h-screen w-screen">
 
-        <!-- MAIN CONTENT -->
-        <main id="reader-main">
-            <!-- Loading Spinner -->
-            <div id="loading-spinner" class="h-full flex flex-col justify-center items-center">
-                <i class="fas fa-spinner fa-spin text-5xl text-orange-400"></i>
-                <p class="mt-4 text-lg">Loading your book...</p>
-            </div>
-            
-            <!-- Book Cover -->
-            <div id="book-cover-view" class="h-full flex justify-center items-center hidden">
-                <img id="book-cover-img" src="" alt="Book Cover" class="h-4/5 rounded-lg shadow-2xl object-cover">
-            </div>
-            
-            <!-- Book Content -->
-            <div id="book-viewport" class="hidden">
-                 <div class="page-container">
-                    <div id="page-left" class="page"><div class="page-content"></div><div class="page-number"></div></div>
-                    <div id="page-right" class="page"><div class="page-content"></div><div class="page-number"></div></div>
-                 </div>
-            </div>
-        </main>
-        
-        <!-- FOOTER / PAGINATION -->
-        <footer class="reader-footer p-2 text-center text-sm z-10 border-t border-gray-700">
-            <div class="flex items-center justify-between max-w-4xl mx-auto">
-                <button id="prev-page-btn" class="p-2 rounded hover:bg-gray-700 disabled:opacity-50" disabled><i class="fas fa-chevron-left"></i></button>
-                <div class="flex-grow mx-4">
-                    <span id="page-indicator">Page 0 of 0</span>
-                    <div class="w-full bg-gray-700 rounded-full h-1.5 mt-1">
-                        <div id="progress-bar" class="bg-orange-400 h-1.5 rounded-full" style="width: 0%;"></div>
-                    </div>
-                </div>
-                <button id="next-page-btn" class="p-2 rounded hover:bg-gray-700 disabled:opacity-50" disabled><i class="fas fa-chevron-right"></i></button>
-            </div>
-        </footer>
+    <!-- HIDDEN DIV TO LOAD AND MEASURE BOOK CONTENT -->
+    <div id="full-text-source" class="absolute invisible" aria-hidden="true"></div>
+
+    <div id="loading-overlay">
+       <div class="loader"></div>
+       <span>Loading Book...</span>
     </div>
 
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        // --- DATA ---
-        const bookDatabase = {
-            'goliaths-reckoning': { title: "Goliath's Reckoning", path: 'assets/books/BK-Goliaths_Reckoning.txt', cover: 'assets/images/goliath.jpg' },
-            'homeschooling-father': { title: "The Homeschooling Father", path: 'assets/books/BK-HomeSchooling_Father.txt', cover: 'assets/images/homeschooling_father.jpg' },
-            'beyond-redress': { title: "Beyond Redress", path: 'assets/books/BK-Beyond_Redress.txt', cover: 'assets/images/redress.jpg' },
-            'know-yourself': { title: "Getting to know yourself", path: 'assets/books/BK-Know_Yourself.txt', cover: 'assets/images/know_yourself.jpg' },
-            'zazi-mzantsi-afrika': { title: "Zazi Mzantsi Afrika", path: 'assets/books/BK-Zazi_Mzantsi_Afrika.txt', cover: 'assets/images/zazi_mzantsi_afrika.png' },
-            'utata-ozifundiselayo-ekhayeni': { title: "Utata Ozifundiselayo Ekhayeni", path: 'assets/books/BK-Utata_ozifundiselayo_ekhayeni.txt', cover: 'assets/images/utata_ozifundiselayo.jpg' },
-            'safety-first-career': { title: "Safety First: OHS Career Journey", path: 'assets/books/BK-SF_Career.txt', cover: 'assets/images/SF_Career.jpg' },
-            'safety-first-plans': { title: "Safety First: The Essentials of OHS Plans", path: 'assets/books/BK-SF_Plans.txt', cover: 'assets/images/SF_Plans.jpg' }
-        };
+    <main id="reader" class="book-reader-container w-full h-full flex flex-col p-4 md:p-8 lg:p-12 transition-all duration-300">
+        
+        <!-- TOOLBAR -->
+        <div class="toolbar w-full flex-shrink-0 flex items-center justify-center gap-4 md:gap-6 p-3 rounded-lg bg-gray-800 text-white shadow-lg mb-4">
+            <button id="prev-btn" class="p-2 rounded-md hover:bg-gray-700 transition"><i class="fas fa-arrow-left"></i><span class="hidden md:inline ml-2">Prev</span></button>
+            <span id="page-indicator" class="text-sm font-semibold">Page 0 / 0</span>
+            <button id="next-btn" class="p-2 rounded-md hover:bg-gray-700 transition"><span class="hidden md:inline mr-2">Next</span><i class="fas fa-arrow-right"></i></button>
+            
+            <div class="h-6 border-l border-gray-600"></div>
 
-        // --- STATE ---
-        const state = {
-            fullText: '',
-            pages: [],
-            currentPageIndex: 0, // This is the index in the pages array
-            viewMode: 'double', // 'double' or 'single'
-            fontSize: 18,
-            fontFamily: 'font-lora',
-            theme: 'dark'
-        };
+            <button id="font-decrease-btn" class="p-2 rounded-md hover:bg-gray-700 transition" title="Decrease Font Size"><i class="fas fa-font" style="font-size: 0.8em;"></i>-</button>
+            <button id="font-increase-btn" class="p-2 rounded-md hover:bg-gray-700 transition" title="Increase Font Size"><i class="fas fa-font" style="font-size: 1.2em;"></i>+</button>
+            
+            <div class="h-6 border-l border-gray-600"></div>
+
+            <button id="view-toggle-btn" class="p-2 rounded-md hover:bg-gray-700 transition" title="Toggle Page View"><i class="fas fa-book-open"></i></button>
+            <button id="theme-toggle-btn" class="p-2 rounded-md hover:bg-gray-700 transition" title="Toggle Kids Theme"><i class="fas fa-child"></i></button>
+        </div>
+
+        <!-- BOOK PAGES CONTAINER -->
+        <div class="page-container flex-grow w-full flex justify-center items-stretch gap-8 overflow-hidden">
+            <div id="page-left" class="page w-full lg:w-1/2 bg-white/50 shadow-md rounded-lg p-8 md:p-12 overflow-hidden">
+                <div id="page-left-content" class="page-content h-full"></div>
+            </div>
+            <div id="page-right" class="page w-full lg:w-1/2 bg-white/50 shadow-md rounded-lg p-8 md:p-12 hidden lg:block overflow-hidden">
+                <div id="page-right-content" class="page-content h-full"></div>
+            </div>
+        </div>
+    </main>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', async () => {
+        // --- STATE MANAGEMENT ---
+        let bookText = '';
+        let pages = [];
+        let currentPageIndex = 0;
+        let isTwoPageView = window.innerWidth >= 1024;
+        let fontSize = 16; // initial font size in pixels
 
         // --- DOM ELEMENTS ---
-        const elements = {
-            container: document.getElementById('reader-container'),
-            titleHeader: document.getElementById('book-title-header'),
-            spinner: document.getElementById('loading-spinner'),
-            coverView: document.getElementById('book-cover-view'),
-            coverImg: document.getElementById('book-cover-img'),
-            viewport: document.getElementById('book-viewport'),
-            pageLeft: document.getElementById('page-left').querySelector('.page-content'),
-            pageRight: document.getElementById('page-right').querySelector('.page-content'),
-            pageLeftNumber: document.getElementById('page-left').querySelector('.page-number'),
-            pageRightNumber: document.getElementById('page-right').querySelector('.page-number'),
-            prevBtn: document.getElementById('prev-page-btn'),
-            nextBtn: document.getElementById('next-page-btn'),
-            pageIndicator: document.getElementById('page-indicator'),
-            progressBar: document.getElementById('progress-bar'),
-            fontDecBtn: document.getElementById('font-dec-btn'),
-            fontIncBtn: document.getElementById('font-inc-btn'),
-            fontSizeDisplay: document.getElementById('font-size-display'),
-            fontSelect: document.getElementById('font-select'),
-            themeLightBtn: document.getElementById('theme-light-btn'),
-            themeSepiaBtn: document.getElementById('theme-sepia-btn'),
-            themeDarkBtn: document.getElementById('theme-dark-btn'),
-            viewSingleBtn: document.getElementById('view-single-btn'),
-            viewDoubleBtn: document.getElementById('view-double-btn'),
-        };
+        const reader = document.getElementById('reader');
+        const sourceDiv = document.getElementById('full-text-source');
+        const pageLeft = document.getElementById('page-left');
+        const pageRight = document.getElementById('page-right');
+        const pageLeftContent = document.getElementById('page-left-content');
+        const pageRightContent = document.getElementById('page-right-content');
+        const pageIndicator = document.getElementById('page-indicator');
+        const loadingOverlay = document.getElementById('loading-overlay');
+        const nextBtn = document.getElementById('next-btn');
+        const prevBtn = document.getElementById('prev-btn');
+        const fontIncreaseBtn = document.getElementById('font-increase-btn');
+        const fontDecreaseBtn = document.getElementById('font-decrease-btn');
+        const viewToggleBtn = document.getElementById('view-toggle-btn');
+        const themeToggleBtn = document.getElementById('theme-toggle-btn');
+
+        // --- CORE PAGINATION LOGIC ---
+
+        // Debounce function to limit how often a function gets called
+        function debounce(func, wait) {
+            let timeout;
+            return function executedFunction(...args) {
+                const later = () => {
+                    clearTimeout(timeout);
+                    func(...args);
+                };
+                clearTimeout(timeout);
+                timeout = setTimeout(later, wait);
+            };
+        }
         
-        // --- CORE FUNCTIONS ---
+        async function paginate() {
+            loadingOverlay.style.display = 'flex';
+            console.log("Paginating...");
 
-        /**
-         * The heart of the e-reader. This function takes the entire book text and intelligently
-         * splits it into pages that fit perfectly within the visible area.
-         */
-        const paginate = () => {
-            elements.spinner.style.display = 'flex';
-            elements.viewport.classList.add('hidden');
-            state.pages = [];
+            // Ensure content containers are empty and styles are set
+            pageLeftContent.innerHTML = '';
+            pageRightContent.innerHTML = '';
+            pageLeftContent.style.fontSize = `${fontSize}px`;
+            pageRightContent.style.fontSize = `${fontSize}px`;
             
-            // This is a necessary evil to ensure we get correct measurements
-            setTimeout(() => {
-                // 1. Create a hidden 'measurer' div to calculate text fit.
-                const measurer = document.createElement('div');
-                measurer.style.position = 'absolute';
-                measurer.style.left = '-9999px'; // Move it off-screen
-                measurer.style.width = elements.pageLeft.clientWidth + 'px';
-                measurer.style.height = 'auto';
-                measurer.style.font = `${state.fontSize}px ${window.getComputedStyle(elements.pageLeft).fontFamily}`;
-                measurer.style.lineHeight = window.getComputedStyle(elements.pageLeft).lineHeight;
-                measurer.style.textAlign = 'justify';
-                measurer.style.hyphens = 'auto';
-                document.body.appendChild(measurer);
+            const tempMeasurePage = document.createElement('div');
+            tempMeasurePage.style.position = 'absolute';
+            tempMeasurePage.style.visibility = 'hidden';
+            tempMeasurePage.style.width = `${pageLeft.clientWidth}px`;
+            tempMeasurePage.style.height = `${pageLeft.clientHeight}px`;
+            tempMeasurePage.style.fontFamily = getComputedStyle(reader).getPropertyValue('--book-font');
+            tempMeasurePage.style.fontSize = `${fontSize}px`;
+            tempMeasurePage.style.lineHeight = getComputedStyle(pageLeftContent).lineHeight;
+            tempMeasurePage.style.textAlign = getComputedStyle(pageLeftContent).textAlign;
+            tempMeasurePage.style.padding = getComputedStyle(pageLeft).padding;
+            
+            document.body.appendChild(tempMeasurePage);
 
-                const pageHeight = elements.pageLeft.clientHeight;
-                const words = state.fullText.split(/\s+/);
-                let currentPageText = '';
-
-                // 2. Iterate through all words, adding them to the measurer one by one.
-                for (const word of words) {
-                    const testText = currentPageText ? `${currentPageText} ${word}` : word;
-                    measurer.textContent = testText;
-                    
-                    // 3. If adding the word makes the measurer taller than the page,
-                    //    the current page is full.
-                    if (measurer.scrollHeight > pageHeight) {
-                        state.pages.push(currentPageText); // Finalize the current page
-                        currentPageText = word; // The new word starts the next page
-                    } else {
-                        currentPageText = testText; // Otherwise, keep adding to the current page
-                    }
-                }
-                state.pages.push(currentPageText); // Add the very last page
-
-                document.body.removeChild(measurer);
-                elements.spinner.style.display = 'none';
-                elements.viewport.classList.remove('hidden');
+            const words = bookText.split(/\s+/);
+            pages = [];
+            let currentWords = [];
+            
+            for (const word of words) {
+                currentWords.push(word);
+                tempMeasurePage.innerText = currentWords.join(' ');
                 
-                renderCurrentPage();
-            }, 50); // A small delay allows the DOM to update styles before we measure.
-        };
-        
-        /**
-         * Renders the content of the current page(s) into the view.
-         */
-        const renderCurrentPage = () => {
-            const isDouble = state.viewMode === 'double' && window.innerWidth > 768;
-            elements.viewport.classList.toggle('single-view', !isDouble);
+                // If the content is overflowing the measure div
+                if (tempMeasurePage.scrollHeight > tempMeasurePage.clientHeight) {
+                    currentWords.pop(); // remove the word that caused overflow
+                    pages.push(currentWords.join(' '));
+                    currentWords = [word]; // start the new page with the overflowing word
+                }
+            }
+            // Add the last page
+            if (currentWords.length > 0) {
+                pages.push(currentWords.join(' '));
+            }
+
+            document.body.removeChild(tempMeasurePage);
+            console.log(`Pagination complete. ${pages.length} pages created.`);
+            loadingOverlay.style.display = 'none';
+        }
+
+
+        // --- DISPLAY LOGIC ---
+
+        function displayPages() {
+            const pageCount = pages.length;
+            const step = isTwoPageView ? 2 : 1;
             
-            let leftIndex = state.currentPageIndex;
-            // In double-page view, the left page should always be an even index.
-            if (isDouble && leftIndex % 2 !== 0) {
-                leftIndex--;
-            }
+            // Fade out
+            pageLeft.classList.add('fading');
+            pageRight.classList.add('fading');
 
-            elements.pageLeft.innerHTML = state.pages[leftIndex]?.replace(/\n/g, '<br>') || '';
-            elements.pageRight.innerHTML = isDouble ? (state.pages[leftIndex + 1]?.replace(/\n/g, '<br>') || '') : '';
+            setTimeout(() => {
+                // Update left page
+                pageLeftContent.innerHTML = pages[currentPageIndex] || '';
+                
+                // Update right page
+                if (isTwoPageView) {
+                    pageRightContent.innerHTML = pages[currentPageIndex + 1] || '';
+                    pageRight.style.display = 'block';
+                } else {
+                    pageRight.style.display = 'none';
+                }
 
-            updateUI(leftIndex, isDouble);
-        };
+                // Update indicator
+                const startPage = currentPageIndex + 1;
+                const endPage = isTwoPageView ? Math.min(startPage + 1, pageCount) : startPage;
+                pageIndicator.textContent = `Page ${startPage}${endPage > startPage ? ' - ' + endPage : ''} / ${pageCount}`;
 
-        /**
-         * Updates all UI elements like buttons, progress bar, and page numbers.
-         */
-        const updateUI = (currentLeftIndex, isDouble) => {
-            const totalPages = state.pages.length;
+                // Update button states
+                prevBtn.disabled = currentPageIndex === 0;
+                nextBtn.disabled = currentPageIndex >= pageCount - step;
 
-            // Page Indicator Text
-            const pageNumLeft = currentLeftIndex + 1;
-            const pageNumRight = currentLeftIndex + 2;
-            if (isDouble) {
-                elements.pageIndicator.textContent = totalPages > pageNumLeft ? `Pages ${pageNumLeft} - ${pageNumRight} of ${totalPages}` : `Page ${pageNumLeft} of ${totalPages}`;
-            } else {
-                elements.pageIndicator.textContent = `Page ${pageNumLeft} of ${totalPages}`;
-            }
+                // Fade in
+                pageLeft.classList.remove('fading');
+                pageRight.classList.remove('fading');
+            }, 200);
+        }
 
-            // Page Numbers on the pages themselves
-            elements.pageLeftNumber.textContent = pageNumLeft;
-            elements.pageRightNumber.textContent = isDouble ? pageNumRight : '';
-            elements.pageRightNumber.style.display = isDouble && state.pages[pageNumRight-1] ? 'block' : 'none';
-
-
-            // Progress Bar
-            const progress = totalPages > 1 ? (Math.min(pageNumLeft, totalPages) / totalPages) * 100 : 100;
-            elements.progressBar.style.width = `${progress}%`;
-
-            // Button States
-            elements.prevBtn.disabled = currentLeftIndex === 0;
-            const nextIncrement = isDouble ? 2 : 1;
-            elements.nextBtn.disabled = currentLeftIndex >= totalPages - nextIncrement;
-
-            // Styles
-            elements.container.className = `reader-container ${state.theme}`;
-            [elements.pageLeft, elements.pageRight].forEach(p => {
-                p.parentElement.style.fontSize = `${state.fontSize}px`;
-                p.parentElement.className = `page ${state.fontFamily}`;
-            });
-            elements.fontSizeDisplay.textContent = `${state.fontSize}px`;
-        };
-
-        const changePage = (direction) => {
-            const isDouble = state.viewMode === 'double' && window.innerWidth > 768;
-            const increment = isDouble ? 2 : 1;
-            
-            if (direction === 'next') {
-                state.currentPageIndex += increment;
-            } else if (direction === 'prev') {
-                state.currentPageIndex -= increment;
-            }
-            // Clamp the index to be within bounds
-            state.currentPageIndex = Math.max(0, Math.min(state.currentPageIndex, state.pages.length - 1));
-            renderCurrentPage();
-        };
-
-        // --- EVENT LISTENERS ---
-        elements.nextBtn.addEventListener('click', () => changePage('next'));
-        elements.prevBtn.addEventListener('click', () => changePage('prev'));
-
-        const handleSettingChange = (repaginate = false) => {
-            if (repaginate) {
-                paginate();
-            } else {
-                renderCurrentPage();
-            }
-        };
-
-        elements.fontIncBtn.addEventListener('click', () => { state.fontSize++; handleSettingChange(true); });
-        elements.fontDecBtn.addEventListener('click', () => { state.fontSize--; handleSettingChange(true); });
-        elements.fontSelect.addEventListener('change', (e) => { state.fontFamily = e.target.value; handleSettingChange(true); });
+        // --- EVENT HANDLERS ---
         
-        elements.themeLightBtn.addEventListener('click', () => { state.theme = 'light'; handleSettingChange(); });
-        elements.themeSepiaBtn.addEventListener('click', () => { state.theme = 'sepia'; handleSettingChange(); });
-        elements.themeDarkBtn.addEventListener('click', () => { state.theme = 'dark'; handleSettingChange(); });
+        const repaginateAndDisplay = async () => {
+            await paginate();
+            currentPageIndex = 0;
+            displayPages();
+        };
 
-        elements.viewSingleBtn.addEventListener('click', () => { state.viewMode = 'single'; handleSettingChange(); });
-        elements.viewDoubleBtn.addEventListener('click', () => { state.viewMode = 'double'; handleSettingChange(); });
-        
-        let resizeTimeout;
-        window.addEventListener('resize', () => {
-            clearTimeout(resizeTimeout);
-            resizeTimeout = setTimeout(() => handleSettingChange(true), 300);
+        nextBtn.addEventListener('click', () => {
+            const step = isTwoPageView ? 2 : 1;
+            if (currentPageIndex < pages.length - step) {
+                currentPageIndex += step;
+                displayPages();
+            }
+        });
+
+        prevBtn.addEventListener('click', () => {
+            const step = isTwoPageView ? 2 : 1;
+            if (currentPageIndex > 0) {
+                currentPageIndex -= step;
+                displayPages();
+            }
         });
         
-        elements.coverView.addEventListener('click', () => {
-            elements.coverView.classList.add('hidden');
-            paginate(); // First pagination happens here
-        }, { once: true });
+        fontIncreaseBtn.addEventListener('click', () => {
+            fontSize += 1;
+            repaginateAndDisplay();
+        });
 
+        fontDecreaseBtn.addEventListener('click', () => {
+            if (fontSize > 10) {
+                fontSize -= 1;
+                repaginateAndDisplay();
+            }
+        });
+
+        viewToggleBtn.addEventListener('click', () => {
+            isTwoPageView = !isTwoPageView;
+            reader.classList.toggle('single-page-view', !isTwoPageView);
+            repaginateAndDisplay();
+        });
+        
+        themeToggleBtn.addEventListener('click', () => {
+            reader.classList.toggle('kids-theme');
+            // Repagination is needed if font-family changes affect metrics
+            repaginateAndDisplay();
+        });
+        
+        window.addEventListener('resize', debounce(repaginateAndDisplay, 250));
 
         // --- INITIALIZATION ---
-        const init = async () => {
-            const bookId = new URLSearchParams(window.location.search).get('book');
-            const bookData = bookDatabase[bookId];
 
-            if (!bookData) {
-                elements.spinner.innerHTML = `<p class="text-red-400 text-center">Book not found. Please <a href="publications.html" class="underline">return to the library</a>.</p>`;
+        async function init() {
+            // 1. Get book filename from URL
+            const urlParams = new URLSearchParams(window.location.search);
+            const bookFile = urlParams.get('book');
+
+            if (!bookFile) {
+                loadingOverlay.innerHTML = '<span>No book selected. Please go to Publications.</span>';
                 return;
             }
 
-            elements.titleHeader.textContent = bookData.title;
-            
-            // Show the cover first
-            if (bookData.cover) {
-                elements.coverImg.src = bookData.cover;
-                elements.coverImg.alt = bookData.title;
-                elements.coverView.classList.remove('hidden');
-            } else {
-                // If no cover, just start pagination
-                paginate();
-            }
-
-            // Pre-fetch the book text in the background
+            // 2. Fetch the book content
             try {
-                const response = await fetch(bookData.path);
-                if (!response.ok) throw new Error('Network response was not ok');
-                state.fullText = await response.text();
-                // Hide main spinner once text is loaded. Pagination spinner will take over.
-                elements.spinner.style.display = 'none';
+                const response = await fetch(`assets/books/${bookFile}`);
+                if (!response.ok) throw new Error(`Book not found: ${bookFile}`);
+                bookText = await response.text();
+                sourceDiv.textContent = bookText;
+
             } catch (error) {
-                console.error("Failed to fetch book:", error);
-                elements.spinner.innerHTML = `<p class="text-red-400 text-center">Could not load book content. Please try again.</p>`;
+                console.error("Error loading book:", error);
+                loadingOverlay.innerHTML = `<span>Error loading book.</span>`;
+                return;
             }
-        };
-        
+            
+            // 3. Set initial view mode based on screen size
+            if (!isTwoPageView) {
+                 reader.classList.add('single-page-view');
+            }
+            
+            // 4. Paginate and display
+            await paginate();
+            displayPages();
+        }
+
         init();
     });
     </script>
 </body>
 </html>
+
