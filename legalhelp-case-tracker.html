@@ -1,0 +1,58 @@
+<div id="caseTrackerDashboard" class="mt-8">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Ongoing Cases</h3>
+    <ul id="ongoingCasesList" class="list-disc list-inside mb-6 text-gray-700">
+        <li>Case 1: Children's Court - In Progress - Next deadline: 2025-07-01</li>
+        <li>Case 2: PAIA Request - Awaiting Response - Next deadline: 2025-07-15</li>
+    </ul>
+    <button onclick="startNewCase()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded">Start a New Case</button>
+</div>
+
+<div id="newCaseForm" class="mt-8 hidden">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Start a New Case</h3>
+    <div class="mb-4">
+        <label for="caseType" class="block text-gray-700 text-sm font-bold mb-2">Select Case Type:</label>
+        <select id="caseType" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline">
+            <option value="">-- Select --</option>
+            <option value="childrens_court">Children's Court (Parental Rights & Responsibilities)</option>
+            <option value="maintenance_court">Maintenance Court Procedures</option>
+            <option value="small_claims">Small Claims Court</option>
+            <option value="paia_request">PAIA Request</option>
+            <option value="sassa_grants">SASSA Social Grants (Application/Appeal)</option>
+            <option value="equality_court">Equality Court (Discrimination/Hate Speech)</option>
+            <option value="domestic_violence">Domestic Violence Protection Order</option>
+            <option value="education_dispute">Education Dispute (Access/Placement)</option>
+            <option value="immigration">Immigration (Asylum/Visas)</option>
+            <option value="uif">UIF (Unemployment Insurance Fund)</option>
+            <option value="ombudsman">Ombudsman Process (Banking/Insurance/Health/Communications)</option>
+            <option value="lobola">Lobola (Bride-Price) Negotiation</option>
+            <option value="inhlawulo">Payment of Damages (Inhlawulo)</option>
+            <option value="traditional_court">Traditional Court Hearing</option>
+            <option value="custom">Custom Case</option>
+        </select>
+    </div>
+    <div id="customCaseFields" class="hidden mb-4">
+        <label for="customCaseName" class="block text-gray-700 text-sm font-bold mb-2">Custom Case Name:</label>
+        <input type="text" id="customCaseName" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline mb-2">
+        <label for="customCaseDescription" class="block text-gray-700 text-sm font-bold mb-2">Custom Case Description:</label>
+        <textarea id="customCaseDescription" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" rows="3"></textarea>
+    </div>
+    <button onclick="proceedToProcessMap()" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded">Proceed</button>
+    <button onclick="hideAllTrackerSections()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded ml-2">Back to Main Legal Help</button>
+</div>
+
+<div id="processMap" class="mt-8 hidden">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Process Steps: <span id="currentCaseTitle"></span></h3>
+    <ol id="processStepsList" class="list-decimal list-inside">
+        </ol>
+    <button onclick="saveCaseProgress()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-6">Save Progress</button>
+    <button onclick="backToDashboard()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mt-6 ml-2">Back to Dashboard</button>
+</div>
+
+<div id="customCaseDefinition" class="mt-8 hidden">
+    <h3 class="text-2xl font-bold text-gray-800 mb-4">Define Custom Case Steps: <span id="customCaseDefinitionTitle"></span></h3>
+    <div id="customStepsContainer">
+        </div>
+    <button onclick="addCustomStep()" class="bg-purple-500 hover:bg-purple-600 text-white font-bold py-2 px-4 rounded mt-6">Add Step</button>
+    <button onclick="saveCustomCase()" class="bg-green-500 hover:bg-green-600 text-white font-bold py-2 px-4 rounded mt-6 ml-2">Save Custom Case</button>
+    <button onclick="backToNewCaseForm()" class="bg-gray-500 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded mt-6 ml-2">Back to New Case</button>
+</div>
