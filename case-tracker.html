@@ -1,0 +1,186 @@
+<!-- 1. courses_khulu-legalhelp_dashboard.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <title>LegalHelp Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> .info-card { background: rgba(31, 41, 55, 0.7); backdrop-filter: blur(10px); border: 1px solid rgba(255, 255, 255, 0.1); transition: all 0.3s ease; } .info-card:hover { transform: translateY(-5px) scale(1.02); border-color: #f59e0b; } body { background-color: #111827; } </style>
+</head>
+<body class="text-gray-300">
+    <main class="p-8">
+        <h1 class="text-5xl font-bold text-white text-center font-roboto-slab">The LegalHelp Initiative</h1>
+        <p class="text-xl text-gray-400 mt-3 text-center">Your tools for navigating the system.</p>
+        <section class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mt-12 max-w-6xl mx-auto">
+            <!-- New Case Tracker Card -->
+            <div class="info-card p-6 rounded-lg lg:col-span-3 bg-indigo-900/50 border-indigo-500">
+                <h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-route mr-3 text-indigo-400"></i>Legal Process & Case Tracker</h3>
+                <p>Demystify complex procedures. Track your cases, manage documents, and meet deadlines with confidence. Your personal guide through the legal system.</p>
+                <a href="case_tracker_home.html" class="mt-4 inline-block bg-indigo-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-indigo-500 transition-colors">Launch Tracker</a>
+            </div>
+            <!-- Existing Cards -->
+            <div class="info-card p-6 rounded-lg"><h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-life-ring mr-3 text-teal-400"></i>Free Legal Help Directory</h3><p>Community-curated list of organizations offering free or low-cost legal assistance.</p></div>
+            <div class="info-card p-6 rounded-lg"><h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-university mr-3 text-purple-400"></i>The Court System Explained</h3><p>Demystify the South African court system and learn how to navigate it.</p></div>
+            <div class="info-card p-6 rounded-lg"><h3 class="text-2xl font-bold text-white mb-3"><i class="fas fa-book-reader mr-3 text-amber-400"></i>Know Your Rights Library</h3><p>An interactive, searchable library breaking down key legislation into plain language.</p></div>
+        </section>
+    </main>
+</body>
+</html>
+
+---
+
+<!-- 2. courses_khulu-case_tracker_home.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head><title>My Cases</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>body{background-color: #111827;}</style></head>
+<body class="text-gray-300 p-8">
+    <div class="max-w-4xl mx-auto">
+        <div class="flex justify-between items-center mb-8">
+            <h1 class="text-4xl font-bold text-white">My Cases</h1>
+            <button class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg"><i class="fas fa-plus mr-2"></i>Start a New Case</button>
+        </div>
+        <div class="space-y-4">
+            <!-- Sample Case 1 -->
+            <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-white">Parenting Plan - Children's Court</h3>
+                    <p class="text-sm text-gray-400">Next Step: Await Family Advocate Report - <span class="text-yellow-400">Due: 15 July 2025</span></p>
+                </div>
+                <div class="flex items-center space-x-2">
+                    <div class="w-48 h-4 bg-gray-700 rounded-full"><div class="h-4 bg-blue-500 rounded-full" style="width: 60%;"></div></div>
+                    <span class="text-xs font-mono">60%</span>
+                    <a href="#" class="text-blue-400 hover:underline">View</a>
+                </div>
+            </div>
+            <!-- Sample Case 2 -->
+            <div class="bg-gray-800 p-4 rounded-lg flex items-center justify-between">
+                <div>
+                    <h3 class="text-xl font-bold text-white">PAIA Request - Dept. of Housing</h3>
+                    <p class="text-sm text-gray-400">Status: <span class="text-red-400">Response Overdue</span></p>
+                </div>
+                 <div class="flex items-center space-x-2">
+                    <div class="w-48 h-4 bg-gray-700 rounded-full"><div class="h-4 bg-blue-500 rounded-full" style="width: 50%;"></div></div>
+                    <span class="text-xs font-mono">50%</span>
+                    <a href="#" class="text-blue-400 hover:underline">View</a>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+---
+
+<!-- 3. courses_khulu-case_tracker_new_case.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head><title>Start New Case</title><script src="https://cdn.tailwindcss.com"></script><style>body{background-color: #111827;}</style></head>
+<body class="text-gray-300 p-8 flex items-center justify-center min-h-screen">
+    <div class="w-full max-w-lg bg-gray-800 p-8 rounded-lg">
+        <h1 class="text-3xl font-bold text-white text-center mb-6">Start a New Case</h1>
+        <div class="space-y-6">
+            <div>
+                <label for="case-name" class="block mb-2 text-sm font-medium">Give your case a name:</label>
+                <input type="text" id="case-name" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5" placeholder="e.g., My Parenting Plan Application">
+            </div>
+            <div>
+                <label for="case-type" class="block mb-2 text-sm font-medium">Select process type:</label>
+                <select id="case-type" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg block w-full p-2.5">
+                    <option selected>Choose a process</option>
+                    <option value="childrens-court">Children's Court Matter</option>
+                    <option value="paia-request">PAIA Request</option>
+                    <option value="sassa-grant">SASSA Grant Application</option>
+                    <option value="lobola">Lobola Negotiation</option>
+                    <option value="custom">Custom Process</option>
+                </select>
+            </div>
+            <button type="submit" class="w-full text-white bg-blue-600 hover:bg-blue-700 font-medium rounded-lg text-sm px-5 py-2.5 text-center">Create Case Tracker</button>
+        </div>
+    </div>
+</body>
+</html>
+
+---
+
+<!-- 4. courses_khulu-case_tracker_process_view.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head><title>Case View</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>body{background-color: #111827;}</style></head>
+<body class="text-gray-300 p-8">
+    <div class="max-w-5xl mx-auto">
+        <h1 class="text-4xl font-bold text-white mb-2">Children's Court Process</h1>
+        <p class="text-gray-400 mb-8">Case: My Parenting Plan Application</p>
+        
+        <!-- Timeline -->
+        <div class="relative">
+            <!-- Line -->
+            <div class="absolute left-5 top-0 h-full w-0.5 bg-gray-700"></div>
+            
+            <!-- Step 1: Complete -->
+            <div class="relative pl-12 pb-8">
+                <div class="absolute left-0 top-1 w-10 h-10 bg-green-500 rounded-full flex items-center justify-center"><i class="fas fa-check text-white"></i></div>
+                <h3 class="text-xl font-bold text-white">Step 1: File Application</h3>
+                <p class="text-sm text-gray-400">Filed on: <span class="font-semibold text-green-400">10 June 2025</span></p>
+                <div class="bg-gray-800 p-4 mt-2 rounded-lg text-sm">
+                    <p><strong>Documents:</strong> Form 2, Supporting Affidavit.pdf <a href="#" class="text-blue-400 ml-2">view</a></p>
+                    <p><strong>Notes:</strong> Filed at Johannesburg Children's Court. Case # CCT-123/2025.</p>
+                </div>
+            </div>
+
+            <!-- Step 2: Active -->
+            <div class="relative pl-12 pb-8">
+                <div class="absolute left-0 top-1 w-10 h-10 bg-blue-500 rounded-full flex items-center justify-center animate-pulse"><i class="fas fa-arrow-right text-white"></i></div>
+                <h3 class="text-xl font-bold text-white">Step 2: Serve Documents</h3>
+                <p class="text-sm text-gray-400">Deadline: <span class="font-semibold text-yellow-400">24 June 2025</span></p>
+                <div class="bg-gray-800 p-4 mt-2 rounded-lg">
+                    <label class="block text-xs mb-1">Date Served:</label>
+                    <input type="date" class="bg-gray-700 border-gray-600 rounded p-1 text-sm mb-2">
+                    <label class="block text-xs mb-1">Upload Proof of Service:</label>
+                    <input type="file" class="text-xs mb-2">
+                    <button class="bg-blue-600 text-white px-3 py-1 text-xs rounded">Mark as Complete</button>
+                </div>
+            </div>
+
+            <!-- Step 3: Future -->
+            <div class="relative pl-12 pb-8">
+                <div class="absolute left-0 top-1 w-10 h-10 bg-gray-600 rounded-full flex items-center justify-center"><i class="fas fa-hourglass-start text-gray-400"></i></div>
+                <h3 class="text-xl font-bold text-gray-500">Step 3: First Appearance</h3>
+                <p class="text-sm text-gray-400">Scheduled for: 10 July 2025</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
+
+---
+
+<!-- 5. courses_khulu-case_tracker_reminders.html -->
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head><title>Reminders</title><script src="https://cdn.tailwindcss.com"></script><link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"><style>body{background-color: #111827;}</style></head>
+<body class="text-gray-300 p-8">
+    <div class="max-w-4xl mx-auto">
+        <h1 class="text-4xl font-bold text-white mb-8">Upcoming Deadlines & Reminders</h1>
+        <div class="space-y-4">
+            <!-- Reminder 1 -->
+            <div class="bg-yellow-900/50 border-l-4 border-yellow-400 p-4 rounded-lg flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-yellow-300">Serve Documents - Parenting Plan Case</h3>
+                    <p class="text-sm">Deadline in 3 days (24 June 2025)</p>
+                </div>
+                <button class="text-xs bg-gray-700 p-2 rounded">Dismiss</button>
+            </div>
+             <!-- Reminder 2 -->
+            <div class="bg-red-900/50 border-l-4 border-red-400 p-4 rounded-lg flex items-center justify-between">
+                <div>
+                    <h3 class="font-bold text-red-300">PAIA Response Overdue!</h3>
+                    <p class="text-sm">Dept. of Housing was due to respond by 18 June 2025. You can now lodge an internal appeal.</p>
+                </div>
+                 <button class="text-xs bg-gray-700 p-2 rounded">Dismiss</button>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
