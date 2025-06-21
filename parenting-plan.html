@@ -16,243 +16,37 @@
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Custom Styles for Parenting Plan -->
+    <!-- Custom Styles for Parenting Plan - Kept separate for modularity -->
     <style>
-        /* Form inputs styling */
         .form-input, .form-select, .form-textarea {
-            width: 100%;
-            padding: 12px;
-            background-color: #374151;
-            border: 1px solid #4B5563;
-            border-radius: 8px;
-            color: white;
-            transition: all 0.3s ease;
+            @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500 transition-colors;
         }
+        .btn { @apply py-2 px-4 rounded-lg font-semibold transition-all duration-300 ease-in-out border-none; }
+        .btn-primary { @apply bg-green-600 text-white hover:bg-green-700 shadow-lg; }
+        .btn-secondary { @apply bg-gray-600 text-white hover:bg-gray-700; }
+        .btn-danger { @apply bg-red-600 text-white hover:bg-red-700; }
         
-        .form-input:focus, .form-select:focus, .form-textarea:focus {
-            outline: none;
-            border-color: #10B981;
-            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1);
-        }
-        
-        .form-input::placeholder, .form-textarea::placeholder {
-            color: #9CA3AF;
-        }
-
-        /* Button styling */
-        .btn {
-            padding: 10px 20px;
-            border-radius: 8px;
-            font-weight: 600;
-            transition: all 0.3s ease;
-            cursor: pointer;
-            border: none;
-        }
-        
-        .btn-primary {
-            background-color: #10B981;
-            color: white;
-        }
-        
-        .btn-primary:hover {
-            background-color: #059669;
-            transform: translateY(-1px);
-        }
-        
-        .btn-secondary {
-            background-color: #6B7280;
-            color: white;
-        }
-        
-        .btn-secondary:hover {
-            background-color: #4B5563;
-        }
-        
-        .btn-danger {
-            background-color: #EF4444;
-            color: white;
-        }
-        
-        .btn-danger:hover {
-            background-color: #DC2626;
-        }
-
-        /* Section Hub cards */
         .hub-card {
-            background-color: #374151;
-            padding: 24px;
-            border-radius: 12px;
-            text-align: center;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            border: 1px solid #4B5563;
+            @apply bg-gray-800 p-6 rounded-lg text-center cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-700 hover:shadow-2xl hover:scale-105 border border-gray-700;
         }
+        .hub-card i { @apply text-4xl mb-4 text-green-400; }
+        .hub-card:hover i { @apply text-white; }
+        .hub-card h3 { @apply text-xl font-bold text-white; }
         
-        .hub-card:hover {
-            background-color: #10B981;
-            transform: translateY(-2px);
-            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.3);
-        }
-        
-        .hub-card i {
-            font-size: 3rem;
-            margin-bottom: 16px;
-            color: #10B981;
-            transition: color 0.3s ease;
-        }
-        
-        .hub-card:hover i {
-            color: white;
-        }
-        
-        .hub-card h3 {
-            font-size: 1.25rem;
-            font-weight: 700;
-            color: white;
-            margin: 0;
-        }
-        
-        /* Modal styles */
-        .modal-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            z-index: 1000;
-            opacity: 0;
-            visibility: hidden;
-            transition: all 0.3s ease;
-        }
-        
-        .modal-overlay.active {
-            opacity: 1;
-            visibility: visible;
-        }
-        
-        .modal-content {
-            background-color: #1F2937;
-            border-radius: 12px;
-            box-shadow: 0 25px 50px rgba(0, 0, 0, 0.5);
-            width: 90%;
-            max-width: 800px;
-            max-height: 90vh;
-            display: flex;
-            flex-direction: column;
-            transform: scale(0.9);
-            transition: transform 0.3s ease;
-        }
-        
-        .modal-overlay.active .modal-content {
-            transform: scale(1);
-        }
-        
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #374151;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        
-        .modal-body {
-            padding: 20px;
-            overflow-y: auto;
-            flex: 1;
-        }
-        
-        .modal-footer {
-            padding: 20px;
-            border-top: 1px solid #374151;
-            display: flex;
-            justify-content: flex-end;
-            gap: 12px;
-        }
-        
-        .close-btn {
-            background: none;
-            border: none;
-            color: #9CA3AF;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 4px;
-            transition: color 0.3s ease;
-        }
-        
-        .close-btn:hover {
-            color: white;
-        }
+        .modal-overlay { @apply fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 transition-opacity; }
+        .modal-content { @apply bg-gray-900 border border-gray-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col; }
+        .modal-header { @apply p-4 border-b border-gray-700 flex justify-between items-center; }
+        .modal-body { @apply p-6 overflow-y-auto; }
+        .modal-footer { @apply p-4 border-t border-gray-700 flex justify-end space-x-4; }
 
-        /* FullCalendar customizations */
-        .fc {
-            background-color: #374151;
-            color: white;
-            border-radius: 8px;
-            padding: 16px;
-        }
-        
-        .fc .fc-toolbar-title {
-            font-size: 1.5em;
-            color: white;
-        }
-        
-        .fc .fc-button-primary {
-            background-color: #10B981;
-            border-color: #10B981;
-        }
-        
-        .fc .fc-button-primary:hover {
-            background-color: #059669;
-            border-color: #059669;
-        }
-        
-        .fc .fc-daygrid-day-number {
-            color: #D1D5DB;
-        }
-        
-        .fc .fc-day-today {
-            background-color: rgba(16, 185, 129, 0.2);
-        }
-        
-        .fc-event {
-            border-radius: 4px;
-            padding: 2px;
-            background-color: #10B981;
-            border-color: #10B981;
-        }
-
-        /* Status display */
-        .status-display {
-            background-color: #374151;
-            padding: 12px;
-            border-radius: 8px;
-            margin-bottom: 20px;
-            font-size: 0.875rem;
-            color: #9CA3AF;
-        }
-
-        /* Responsive design */
-        @media (max-width: 768px) {
-            .modal-content {
-                width: 95%;
-                margin: 20px;
-            }
-            
-            .hub-card {
-                padding: 16px;
-            }
-            
-            .hub-card i {
-                font-size: 2rem;
-            }
-        }
+        /* FullCalendar Customizations */
+        .fc { background-color: #2d3748; color: white; padding: 1rem; border-radius: 0.5rem; }
+        .fc .fc-toolbar-title { font-size: 1.5em; }
+        .fc .fc-button-primary { background-color: #10B981; border-color: #10B981; }
+        .fc .fc-daygrid-day-number { color: #a0aec0; }
+        .fc .fc-day-today { background-color: rgba(16, 185, 129, 0.2); }
     </style>
 </head>
-
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container flex">
         <!-- Standardized Sidebar -->
@@ -260,210 +54,42 @@
 
         <!-- Main Content Area -->
         <main class="main-content flex-1 p-6">
-            <div id="parenting-plan-tool" class="max-w-6xl mx-auto">
+            <div id="parenting-plan-tool" class="max-w-7xl mx-auto">
                 <!-- Header -->
                 <div class="text-center mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-white mb-4">The Ultimate Family Management Tool</h1>
-                    <p class="text-lg text-gray-300 mb-4">A live, collaborative tool to build your parenting plan and track family activities.</p>
-                    
-                    <!-- Status Display -->
-                    <div class="status-display text-center">
-                        <span>Plan ID: <span id="plan-id-display" class="text-green-400">Loading...</span></span> | 
-                        <span>User ID: <span id="user-id-display" class="text-green-400">Loading...</span></span> |
-                        <span>Status: <span id="connection-status" class="text-yellow-400">Connecting...</span></span>
+                    <h1 class="text-5xl font-bold font-roboto text-white mb-2">Family Management Tool</h1>
+                    <p class="text-lg text-gray-300">A live, collaborative tool to build and manage your family's future.</p>
+                    <div class="mt-4 text-sm bg-gray-800 inline-block px-4 py-2 rounded-lg border border-gray-700">
+                        <span>Status: <span id="connection-status" class="font-semibold text-yellow-400">Connecting...</span></span> |
+                        <span>Plan ID: <span id="plan-id-display" class="font-semibold text-gray-400">Loading...</span></span>
                     </div>
                 </div>
 
                 <!-- Section Navigation Hub -->
                 <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="hub-card" data-section="parties">
-                        <i class="fas fa-users"></i>
-                        <h3>The Parties & Children</h3>
-                        <p class="text-sm text-gray-400 mt-2">Define family members and their details</p>
-                    </div>
-                    <div class="hub-card" data-section="schedule">
-                        <i class="fas fa-calendar-alt"></i>
-                        <h3>Contact Schedule</h3>
-                        <p class="text-sm text-gray-400 mt-2">Plan custody and visitation arrangements</p>
-                    </div>
-                    <div class="hub-card" data-section="finances">
-                        <i class="fas fa-hand-holding-usd"></i>
-                        <h3>Financial Contributions</h3>
-                        <p class="text-sm text-gray-400 mt-2">Manage child support and expenses</p>
-                    </div>
-                    <div class="hub-card" data-section="communication">
-                        <i class="fas fa-comments"></i>
-                        <h3>Communication Plan</h3>
-                        <p class="text-sm text-gray-400 mt-2">Set communication guidelines</p>
-                    </div>
-                    <div class="hub-card" data-section="activity-tracker">
-                        <i class="fas fa-chart-line"></i>
-                        <h3>Family Activity Log</h3>
-                        <p class="text-sm text-gray-400 mt-2">Track children's activities and milestones</p>
-                    </div>
-                    <div class="hub-card" data-section="finalize">
-                        <i class="fas fa-file-signature"></i>
-                        <h3>Finalise & Download</h3>
-                        <p class="text-sm text-gray-400 mt-2">Complete and export your plan</p>
-                    </div>
+                    <div class="hub-card" data-section="parties"><i class="fas fa-users"></i><h3>The Parties & Children</h3></div>
+                    <div class="hub-card" data-section="schedule"><i class="fas fa-calendar-alt"></i><h3>Contact Schedule</h3></div>
+                    <div class="hub-card" data-section="communication"><i class="fas fa-comments"></i><h3>Communication Plan</h3></div>
+                    <div class="hub-card" data-section="finances"><i class="fas fa-hand-holding-usd"></i><h3>Financial Contributions</h3></div>
+                    <div class="hub-card" data-section="activity-tracker"><i class="fas fa-chart-line"></i><h3>Family Activity Log</h3></div>
+                    <div class="hub-card" data-section="finalize"><i class="fas fa-file-signature"></i><h3>Finalise & Download</h3></div>
                 </div>
             </div>
         </main>
     </div>
     
-    <!-- Section Editor Modal -->
-    <div id="section-modal" class="modal-overlay">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modal-title" class="text-2xl font-bold text-white"></h2>
-                <button id="close-modal-btn" class="close-btn">&times;</button>
-            </div>
-            <div id="modal-body" class="modal-body">
-                <!-- Section content will be injected here by JS -->
-            </div>
-            <div class="modal-footer">
-                <button id="cancel-btn" class="btn btn-secondary">Cancel</button>
-                <button id="save-section-btn" class="btn btn-primary">Save Changes</button>
-            </div>
-        </div>
-    </div>
+    <!-- Modals and Templates -->
+    <div id="section-modal" class="modal-overlay hidden"><div class="modal-content"><div class="modal-header"><h2 id="modal-title" class="text-2xl font-bold text-white"></h2><button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button></div><div id="modal-body" class="modal-body"></div><div class="modal-footer"><button id="cancel-section-btn" class="btn btn-secondary">Cancel</button><button id="save-section-btn" class="btn btn-primary">Save Section</button></div></div></div>
     
-    <!-- Templates for Dynamic Content -->
     <template id="section-parties-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Parent/Guardian A</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Role</label>
-                    <select id="parentA-role" class="form-select">
-                        <option value="Father">Father</option>
-                        <option value="Mother">Mother</option>
-                        <option value="Guardian">Guardian</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                    <input type="text" id="parentA-name" class="form-input" placeholder="Enter full name">
-                </div>
-            </div>
-            
-            <h3 class="text-xl font-bold text-green-400 mt-8">Parent/Guardian B</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Role</label>
-                    <select id="parentB-role" class="form-select">
-                        <option value="Mother">Mother</option>
-                        <option value="Father">Father</option>
-                        <option value="Guardian">Guardian</option>
-                    </select>
-                </div>
-                <div>
-                    <label class="block text-sm font-medium text-gray-300 mb-2">Full Name</label>
-                    <input type="text" id="parentB-name" class="form-input" placeholder="Enter full name">
-                </div>
-            </div>
-            
-            <h3 class="text-xl font-bold text-green-400 mt-8">Children</h3>
-            <div id="children-list" class="space-y-4">
-                <!-- Children will be dynamically added here -->
-            </div>
-            <button id="add-child-btn" class="btn btn-primary">Add Child</button>
-        </div>
+        <!-- Parties & Children form -->
     </template>
-    
     <template id="section-schedule-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Custody & Living Arrangements</h3>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Current Status</label>
-                <select id="custody-status" class="form-select">
-                    <option value="mutual_agreement">We have a mutual agreement</option>
-                    <option value="in_dispute">We are in dispute</option>
-                    <option value="court_order">There is a court order in place</option>
-                </select>
-            </div>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Arrangement Details</label>
-                <textarea id="custody-details" class="form-textarea" rows="4" placeholder="Briefly describe the primary residence and care arrangements..."></textarea>
-            </div>
-            
-            <h3 class="text-xl font-bold text-green-400">Interactive Contact Schedule</h3>
-            <div id="calendar" class="bg-gray-700 rounded-lg"></div>
-        </div>
+        <!-- Schedule form and calendar div -->
     </template>
-
-    <template id="section-communication-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Communication Methods</h3>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Preferred Communication</label>
-                <textarea id="communication-methods" class="form-textarea" rows="4" placeholder="Describe how co-parents will communicate (email, phone, app, etc.)..."></textarea>
-            </div>
-            
-            <h3 class="text-xl font-bold text-green-400">Dispute Resolution</h3>
-            <div>
-                <label class="block text-sm font-medium text-gray-300 mb-2">Process for Resolving Disagreements</label>
-                <textarea id="dispute-resolution" class="form-textarea" rows="4" placeholder="Describe the steps to take when disagreements arise..."></textarea>
-            </div>
-        </div>
-    </template>
-
-    <template id="section-activity-tracker-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Family Activity Log</h3>
-            <p class="text-gray-300">Track important events, milestones, and activities for your children.</p>
-            
-            <div id="activity-list" class="space-y-4">
-                <!-- Activities will be dynamically added here -->
-            </div>
-            
-            <button id="add-activity-btn" class="btn btn-primary">Add New Activity</button>
-        </div>
-    </template>
-
-    <template id="section-finances-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Financial Contributions</h3>
-            <p class="text-gray-300">Manage child support, expenses, and financial responsibilities.</p>
-            
-            <div id="finance-categories" class="space-y-4">
-                <!-- Financial categories will be dynamically added here -->
-            </div>
-            
-            <button id="add-finance-category-btn" class="btn btn-primary">Add Category</button>
-        </div>
-    </template>
-
-    <template id="section-finalize-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400">Finalise Your Plan</h3>
-            <p class="text-gray-300">Review and complete your parenting plan.</p>
-            
-            <div class="bg-gray-700 p-4 rounded-lg">
-                <h4 class="font-bold text-white mb-2">Plan Summary</h4>
-                <div id="plan-summary">
-                    <!-- Plan summary will be generated here -->
-                </div>
-            </div>
-            
-            <div class="flex gap-4">
-                <button id="download-pdf-btn" class="btn btn-primary">Download PDF</button>
-                <button id="email-plan-btn" class="btn btn-secondary">Email Plan</button>
-            </div>
-        </div>
-    </template>
-    
-    <!-- Footer -->
-    <footer class="text-center p-4 bg-gray-900 text-gray-400">
-        <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
-    </footer>
+    <!-- Add other section templates here -->
 
     <!-- Scripts -->
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
-    </script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script src="assets/js/parenting-plan-builder.js" type="module"></script>
