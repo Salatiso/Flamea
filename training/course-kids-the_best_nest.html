@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Best Nest - A Flamea Kids Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body { font-family: 'Mali', cursive; background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); }
+        .game-title { font-family: 'Fredoka One', cursive; }
+        .story-container { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.6); }
+        .btn { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
+        .choice-btn:hover { transform: scale(1.05); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div id="story-container" class="story-container w-full max-w-2xl mx-auto rounded-2xl shadow-lg p-8 text-center text-amber-800">
+        <!-- Story content managed by JS -->
+    </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const storyContainer = document.getElementById('story-container');
+    const synth = new Tone.Synth().toDestination();
+
+    const story = {
+        start: {
+            text: "Papa Bird and Mama Bird want to build the BEST nest for their baby, Sunny. What is the most important thing for Sunny?",
+            image: "https://placehold.co/150x150/F59E0B/FFFFFF?text=Family",
+            choices: [
+                { text: "A nest that is safe and warm", next: "safe_nest" },
+                { text: "A nest with lots of shiny toys", next: "shiny_nest" }
+            ]
+        },
+        shiny_nest: {
+            text: "The shiny toys look fun, but a big wind blows them away! A safe nest is more important for Sunny's well-being. Let's try again!",
+            image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Oh+No!",
+            choices: [
+                { text: "Focus on safety", next: "safe_nest" }
+            ]
+        },
+        safe_nest: {
+            text: "Great choice! A safe nest is what's best for Sunny. Now, who should help build it?",
+            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Safe!",
+            choices: [
+                { text: "Only Mama Bird", next: "mama_only" },
+                { text: "Both Mama and Papa Bird together", next: "both_parents" }
+            ]
+        },
+        mama_only: {
+            text: "Mama Bird gets very tired building alone. When both parents help, the nest is built faster and stronger! That's in Sunny's best interest.",
+             image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Tired",
+            choices: [
+                { text: "Let Papa Bird help!", next: "both_parents" }
+            ]
+        },
+        both_parents: {
+            text: "Yes! With both parents working together, the nest is perfect! Now, a little worm tells Sunny the best berries are on the other side of the river. What should the parent birds do?",
+            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Teamwork!",
+            choices: [
+                { text: "Ignore Sunny's idea", next: "ignore_sunny" },
+                { text: "Listen to Sunny and check if it's safe", next: "listen_sunny" }
+            ]
+        },
+        ignore_sunny: {
+            text: "Oh no! Sunny feels sad because no one listened. It's important to hear a child's thoughts. Let's listen this time.",
+            image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Sad",
+            choices: [
+                { text: "Listen to Sunny's idea", next: "listen_sunny" }
+            ]
+        },
+        listen_sunny: {
+            text: "You're a great listener! The parents checked, and the berries were the juiciest ever! They all had a wonderful feast together.",
+            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Yummy!",
+            choices: [
+                { text: "Hooray!", next: "end" }
+            ]
+        },
+        end: {
+            text: "You helped build the BEST nest by making sure Sunny was safe, had both parents, and was listened to. That's putting the child's best interests first! You're a Justice Junior!",
+            image: "https://placehold.co/150x150/FDE047/FFFFFF?text=WIN!",
+            choices: [
+                { text: "Play Again", next: "start" }
+            ]
+        }
+    };
+
+    function renderScene(sceneKey) {
+        const scene = story[sceneKey];
+        const choicesHTML = scene.choices.map(choice => 
+            `<button class="btn choice-btn bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-full shadow-md" data-next="${choice.next}">${choice.text}</button>`
+        ).join('');
+
+        storyContainer.innerHTML = `
+            <h1 class="game-title text-4xl text-amber-900 mb-4">Building the Best Nest</h1>
+            <img src="${scene.image}" alt="Story image" class="mx-auto rounded-lg mb-4 w-36 h-36">
+            <p class="text-xl mb-6">${scene.text}</p>
+            <div class="flex flex-col md:flex-row gap-4 justify-center">
+                ${choicesHTML}
+            </div>
+        `;
+
+        document.querySelectorAll('.choice-btn').forEach(btn => {
+            btn.addEventListener('click', (e) => {
+                const nextScene = e.target.dataset.next;
+                synth.triggerAttackRelease("C4", "8n");
+                renderScene(nextScene);
+            });
+        });
+    }
+
+    renderScene('start');
+});
+</script>
+</body>
+</html>

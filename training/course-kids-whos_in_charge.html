@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Who's in Charge? - A Flamea Kids Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body { font-family: 'Mali', cursive; background: linear-gradient(135deg, #fbcfe8 0%, #f472b6 100%); }
+        .game-title { font-family: 'Fredoka One', cursive; }
+        .game-container { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.6); }
+        .leader-card { cursor: grab; transition: transform 0.2s, box-shadow 0.2s; }
+        .leader-card:hover { transform: scale(1.1); }
+        .drop-zone { border: 3px dashed #db2777; transition: background-color 0.3s; }
+        .drop-zone.over { background-color: rgba(236, 72, 153, 0.2); }
+        .correct-drop { animation: pulse-green 0.5s; }
+        .incorrect-drop { animation: shake-red 0.5s; }
+        @keyframes pulse-green { 0%, 100% { background-color: #34d399; } 50% { background-color: rgba(255,255,255,0.4); } }
+        @keyframes shake-red { 0%, 100% { transform: translateX(0); } 25% { transform: translateX(-5px); } 75% { transform: translateX(5px); } }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="game-container w-full max-w-4xl mx-auto rounded-2xl shadow-lg p-8 text-center text-pink-800">
+        <h1 class="game-title text-4xl md:text-5xl text-pink-700 mb-4">Who's in Charge?</h1>
+        <p class="mb-6">Our country is like a big team with different leaders for different parts. Drag the right leader to their job to build South Africa!</p>
+        
+        <div class="flex flex-col md:flex-row gap-8">
+            <!-- Building Area -->
+            <div class="flex-1 space-y-4">
+                <div data-role="National" class="drop-zone p-4 rounded-lg">
+                    <h3 class="font-bold text-xl mb-2">The Whole Country <i class="fas fa-globe-africa"></i></h3>
+                    <div class="leader-placeholder h-24 bg-pink-200 rounded-md flex items-center justify-center text-gray-500">Drop Leader Here</div>
+                </div>
+                <div data-role="Provincial" class="drop-zone p-4 rounded-lg">
+                     <h3 class="font-bold text-xl mb-2">Your Province <i class="fas fa-map"></i></h3>
+                    <div class="leader-placeholder h-24 bg-pink-200 rounded-md flex items-center justify-center text-gray-500">Drop Leader Here</div>
+                </div>
+                 <div data-role="Local" class="drop-zone p-4 rounded-lg">
+                     <h3 class="font-bold text-xl mb-2">Your Town/City <i class="fas fa-city"></i></h3>
+                    <div class="leader-placeholder h-24 bg-pink-200 rounded-md flex items-center justify-center text-gray-500">Drop Leader Here</div>
+                </div>
+            </div>
+            <!-- Leader Cards -->
+            <div id="leader-cards" class="flex-shrink-0 w-full md:w-1/3 space-y-4">
+                <!-- JS will populate this -->
+            </div>
+        </div>
+        <p id="feedback-text" class="mt-6 text-xl font-bold h-8"></p>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const leaderCardsContainer = document.getElementById('leader-cards');
+    const dropZones = document.querySelectorAll('.drop-zone');
+    const feedbackText = document.getElementById('feedback-text');
+
+    const leaders = [
+        { name: 'President', role: 'National', icon: 'fa-user-tie' },
+        { name: 'Premier', role: 'Provincial', icon: 'fa-user-graduate' },
+        { name: 'Mayor', role: 'Local', icon: 'fa-user-shield' }
+    ];
+
+    let correctPlacements = 0;
+    const synth = new Tone.Synth().toDestination();
+
+    function setupGame() {
+        correctPlacements = 0;
+        feedbackText.textContent = '';
+        leaderCardsContainer.innerHTML = '';
+        shuffleArray(leaders).forEach(leader => {
+            const card = document.createElement('div');
+            card.className = 'leader-card bg-white p-4 rounded-lg shadow-md';
+            card.draggable = true;
+            card.dataset.role = leader.role;
+            card.innerHTML = `<i class="fas ${leader.icon} text-3xl mb-2 text-pink-500"></i><p class="font-bold">${leader.name}</p>`;
+            card.addEventListener('dragstart', handleDragStart);
+            leaderCardsContainer.appendChild(card);
+        });
+
+        dropZones.forEach(zone => {
+            zone.querySelector('.leader-placeholder').innerHTML = 'Drop Leader Here';
+        });
+    }
+
+    function handleDragStart(e) {
+        e.dataTransfer.setData('text/plain', e.target.dataset.role);
+    }
+
+    dropZones.forEach(zone => {
+        zone.addEventListener('dragover', (e) => {
+            e.preventDefault();
+            zone.classList.add('over');
+        });
+        zone.addEventListener('dragleave', () => zone.classList.remove('over'));
+        zone.addEventListener('drop', handleDrop);
+    });
+
+    function handleDrop(e) {
+        e.preventDefault();
+        const droppedRole = e.dataTransfer.getData('text/plain');
+        const targetZone = e.currentTarget;
+        targetZone.classList.remove('over');
+
+        if (droppedRole === targetZone.dataset.role) {
+            synth.triggerAttackRelease("C5", "8n");
+            feedbackText.textContent = 'Great job!';
+            const leaderData = leaders.find(l => l.role === droppedRole);
+            targetZone.querySelector('.leader-placeholder').innerHTML = `<i class="fas ${leaderData.icon} text-4xl text-green-600"></i><p class="font-bold text-lg">${leaderData.name}</p>`;
+            targetZone.classList.add('correct-drop');
+            // Hide the dragged card
+            document.querySelector(`.leader-card[data-role='${droppedRole}']`).style.display = 'none';
+            correctPlacements++;
+            checkCompletion();
+        } else {
+            synth.triggerAttackRelease("E3", "8n");
+            feedbackText.textContent = 'Oops! Try a different spot.';
+            targetZone.classList.add('incorrect-drop');
+            setTimeout(() => targetZone.classList.remove('incorrect-drop'), 500);
+        }
+    }
+    
+    function checkCompletion() {
+        if (correctPlacements === leaders.length) {
+            feedbackText.textContent = 'You built the whole government! You\'re a Constitution Kid!';
+             setTimeout(setupGame, 3000); // Restart after a delay
+        }
+    }
+
+    function shuffleArray(array) {
+        return array.sort(() => Math.random() - 0.5);
+    }
+    
+    setupGame();
+});
+</script>
+</body>
+</html>

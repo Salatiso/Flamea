@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Rights, My Shield - A Flamea Kids Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body {
+            font-family: 'Mali', cursive;
+            background: linear-gradient(135deg, #89f7fe 0%, #66a6ff 100%);
+        }
+        .game-title {
+            font-family: 'Fredoka One', cursive;
+        }
+        .wizard-container {
+            background: rgba(255, 255, 255, 0.3);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.5);
+        }
+        .btn {
+            font-family: 'Fredoka One', cursive;
+            transition: all 0.2s ease-in-out;
+        }
+        .btn:hover {
+            transform: scale(1.05);
+        }
+        .option-select {
+            display: block;
+            width: 100%;
+            font-size: 1.1rem;
+            padding: 0.75rem;
+            border-radius: 0.5rem;
+            border: 2px solid #60a5fa; /* blue-400 */
+            background-color: white;
+            color: #1e3a8a; /* blue-900 */
+            cursor: pointer;
+        }
+        .feedback-correct {
+            color: #059669; /* green-600 */
+        }
+        .feedback-incorrect {
+            color: #dc2626; /* red-600 */
+        }
+        #shield-container {
+            width: 200px;
+            height: 220px;
+            position: relative;
+        }
+        .shield-piece {
+            position: absolute;
+            transition: opacity 0.5s ease-in-out, transform 0.5s ease-in-out;
+            opacity: 0;
+            transform: scale(0.5);
+        }
+        .shield-piece.visible {
+            opacity: 1;
+            transform: scale(1);
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <div class="wizard-container w-full max-w-2xl mx-auto rounded-2xl shadow-lg p-8 text-center text-gray-800">
+        <!-- Start Screen -->
+        <div id="start-screen">
+            <h1 class="game-title text-4xl md:text-5xl text-blue-800 mb-4">My Rights, My Shield!</h1>
+            <p class="mb-6">Leo the Lion needs your help! His magical Shield of Rights is broken. Answer the questions to put it back together and learn how your rights protect you!</p>
+            <img src="https://placehold.co/150x150/FBBF24/FFFFFF?text=Leo" alt="Leo the Lion" class="mx-auto rounded-full mb-6">
+            <button id="start-btn" class="btn bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl shadow-lg">Let's Go!</button>
+        </div>
+
+        <!-- Quiz Screen -->
+        <div id="quiz-screen" class="hidden">
+            <div class="flex flex-col md:flex-row items-center gap-8">
+                <!-- Shield -->
+                <div id="shield-container" class="flex-shrink-0">
+                    <!-- Shield pieces will be injected here -->
+                </div>
+                <!-- Question -->
+                <div class="flex-grow">
+                    <h2 id="question-text" class="text-2xl font-bold mb-4"></h2>
+                    <select id="answer-options" class="option-select mb-4">
+                        <option value="" disabled selected>Choose your answer...</option>
+                    </select>
+                    <div id="feedback-area" class="min-h-[100px] mt-4"></div>
+                </div>
+            </div>
+             <div class="flex justify-end mt-4">
+                <button id="next-btn" class="btn bg-blue-500 hover:bg-blue-600 text-white py-2 px-6 rounded-full hidden">Next</button>
+            </div>
+        </div>
+        
+        <!-- End Screen -->
+        <div id="end-screen" class="hidden">
+            <h1 class="game-title text-4xl text-green-600 mb-4">You did it!</h1>
+            <p class="mb-4 text-xl">The Shield of Rights is complete! You earned <span id="final-score" class="font-bold"></span> points.</p>
+            <p id="final-designation" class="text-2xl font-bold text-yellow-500 mb-6"></p>
+             <img src="https://placehold.co/150x150/FBBF24/FFFFFF?text=Leo" alt="Leo the Lion" class="mx-auto rounded-full mb-6">
+            <button id="play-again-btn" class="btn bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl">Play Again</button>
+        </div>
+    </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+
+    const courseData = [
+        {
+            question: "What is a 'right'?",
+            options: ["A yummy snack", "A special rule that keeps you safe", "A type of toy car"],
+            correctAnswer: "A special rule that keeps you safe",
+            explanation: "That's right! A right is like a promise that helps make sure everyone is treated fairly and kept safe."
+        },
+        {
+            question: "Who has rights?",
+            options: ["Only grown-ups", "Only kings and queens", "Every single child"],
+            correctAnswer: "Every single child",
+            explanation: "Exactly! Every child, including you, has special rights just because you are you!"
+        },
+        {
+            question: "What is one of your most important rights?",
+            options: ["The right to be safe from harm", "The right to eat candy all day", "The right to never go to bed"],
+            correctAnswer: "The right to be safe from harm",
+            explanation: "You got it! Being safe is a super important right. Grown-ups have a job to help keep you safe."
+        },
+        {
+            question: "Every child has the right to a...",
+            options: ["Pony", "Name and a country to belong to", "Spaceship"],
+            correctAnswer: "Name and a country to belong to",
+            explanation: "Yes! Your name is special to you, and you have a right to have one, and to belong to a country."
+        },
+        {
+            question: "If you feel unsafe, what should you do?",
+            options: ["Keep it a secret", "Tell a grown-up you trust", "Hide under your bed"],
+            correctAnswer: "Tell a grown-up you trust",
+            explanation: "Perfect! Telling a trusted grown-up like a parent, family member, or teacher is the best way to get help and stay safe."
+        }
+    ];
+
+    const shieldPieces = [
+        // Using Font Awesome icons to represent shield pieces
+        { icon: 'fa-shield-halved', color: 'text-red-500', style: 'top-0 left-1/2 -translate-x-1/2' },
+        { icon: 'fa-shield-halved', color: 'text-blue-500', style: 'top-1/4 left-0 -rotate-45' },
+        { icon: 'fa-shield-halved', color: 'text-green-500', style: 'top-1/4 right-0 rotate-45' },
+        { icon: 'fa-shield-halved', color: 'text-yellow-500', style: 'bottom-0 left-1/4 rotate-45' },
+        { icon: 'fa-shield-halved', color: 'text-purple-500', style: 'bottom-0 right-1/4 -rotate-45' }
+    ];
+
+    const startScreen = document.getElementById('start-screen');
+    const quizScreen = document.getElementById('quiz-screen');
+    const endScreen = document.getElementById('end-screen');
+    const startBtn = document.getElementById('start-btn');
+    const nextBtn = document.getElementById('next-btn');
+    const playAgainBtn = document.getElementById('play-again-btn');
+
+    const questionTextEl = document.getElementById('question-text');
+    const answerOptionsEl = document.getElementById('answer-options');
+    const feedbackAreaEl = document.getElementById('feedback-area');
+    const shieldContainer = document.getElementById('shield-container');
+    const finalScoreEl = document.getElementById('final-score');
+    const finalDesignationEl = document.getElementById('final-designation');
+
+    let currentQuestionIndex = 0;
+    let score = 0;
+    let hasAttempted = false;
+    
+    // Sounds
+    const correctSound = new Tone.Synth().toDestination();
+    const wrongSound = new Tone.Synth({ oscillator: { type: "square" } }).toDestination();
+
+    function initGame() {
+        startScreen.classList.remove('hidden');
+        quizScreen.classList.add('hidden');
+        endScreen.classList.add('hidden');
+        currentQuestionIndex = 0;
+        score = 0;
+        setupShield();
+    }
+
+    function setupShield() {
+        shieldContainer.innerHTML = '';
+        shieldPieces.forEach((piece, index) => {
+            const pieceEl = document.createElement('i');
+            pieceEl.className = `fas ${piece.icon} ${piece.color} text-8xl shield-piece`;
+            pieceEl.id = `shield-piece-${index}`;
+            pieceEl.style.cssText = piece.style;
+            shieldContainer.appendChild(pieceEl);
+        });
+    }
+
+    function startGame() {
+        startScreen.classList.add('hidden');
+        quizScreen.classList.remove('hidden');
+        loadQuestion();
+    }
+
+    function loadQuestion() {
+        hasAttempted = false;
+        nextBtn.classList.add('hidden');
+        feedbackAreaEl.innerHTML = '';
+        answerOptionsEl.disabled = false;
+        
+        const questionData = courseData[currentQuestionIndex];
+        questionTextEl.textContent = questionData.question;
+        
+        answerOptionsEl.innerHTML = '<option value="" disabled selected>Choose your answer...</option>';
+        shuffleArray(questionData.options).forEach(option => {
+            const optionEl = document.createElement('option');
+            optionEl.value = option;
+            optionEl.textContent = option;
+            answerOptionsEl.appendChild(optionEl);
+        });
+    }
+    
+    function checkAnswer() {
+        const selectedAnswer = answerOptionsEl.value;
+        const correctAnswer = courseData[currentQuestionIndex].correctAnswer;
+
+        answerOptionsEl.disabled = true;
+
+        if (selectedAnswer === correctAnswer) {
+            feedbackAreaEl.innerHTML = `<h3 class="text-xl font-bold feedback-correct">Correct! <i class="fas fa-star text-yellow-400"></i></h3><p class="text-gray-600">${courseData[currentQuestionIndex].explanation}</p>`;
+            if (!hasAttempted) {
+                score += 10; // Only award points on the first try
+                document.getElementById(`shield-piece-${currentQuestionIndex}`).classList.add('visible');
+            }
+            correctSound.triggerAttackRelease("C5", "8n");
+            nextBtn.classList.remove('hidden');
+        } else {
+            hasAttempted = true;
+            feedbackAreaEl.innerHTML = `<h3 class="text-xl font-bold feedback-incorrect">Not quite!</h3><p class="text-gray-600">That's not the right answer. Do you want to try again or see the correct one?</p>`;
+            wrongSound.triggerAttackRelease("E3", "8n");
+            
+            const tryAgainBtn = document.createElement('button');
+            tryAgainBtn.textContent = 'Try Again';
+            tryAgainBtn.className = 'btn bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-4 rounded-full text-sm mr-2';
+            tryAgainBtn.onclick = () => {
+                 answerOptionsEl.disabled = false;
+                 feedbackAreaEl.innerHTML = '';
+            };
+            
+            const revealBtn = document.createElement('button');
+            revealBtn.textContent = 'Show Answer';
+            revealBtn.className = 'btn bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-full text-sm';
+            revealBtn.onclick = () => {
+                feedbackAreaEl.innerHTML = `<p class="text-gray-700">The correct answer is: <strong>${correctAnswer}</strong></p><p class="text-gray-600">${courseData[currentQuestionIndex].explanation}</p>`;
+                nextBtn.classList.remove('hidden');
+            };
+
+            feedbackAreaEl.appendChild(document.createElement('div')).append(tryAgainBtn, revealBtn);
+        }
+    }
+
+    function handleNext() {
+        currentQuestionIndex++;
+        if (currentQuestionIndex < courseData.length) {
+            loadQuestion();
+        } else {
+            showEndScreen();
+        }
+    }
+
+    function showEndScreen() {
+        quizScreen.classList.add('hidden');
+        endScreen.classList.remove('hidden');
+        finalScoreEl.textContent = score;
+
+        // Randomly assign a gendered designation for fun
+        const designations = ["Justice Junior", "Constitution Kid"];
+        finalDesignationEl.textContent = `You are a ${designations[Math.floor(Math.random() * 2)]}!`;
+    }
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
+        }
+        return array;
+    }
+
+    startBtn.addEventListener('click', startGame);
+    playAgainBtn.addEventListener('click', initGame);
+    nextBtn.addEventListener('click', handleNext);
+    answerOptionsEl.addEventListener('change', checkAnswer);
+
+    initGame();
+});
+</script>
+</body>
+</html>

@@ -1,0 +1,113 @@
+<!-- course-three-branches-treehouse.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Three Branches Treehouse - Flamea Senior Crusaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { background-color: #312e81; font-family: 'Open Sans', sans-serif; }
+        .game-board { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; }
+        .branch-column { background-color: rgba(255,255,255,0.05); border: 2px dashed rgba(255,255,255,0.2); }
+        .task-card { background-color: #eef2ff; color: #312e81; cursor: grab; }
+        .drop-zone.over { background-color: rgba(79, 70, 229, 0.3); }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4 text-indigo-100">
+    <div class="w-full max-w-5xl mx-auto bg-indigo-900/50 rounded-2xl shadow-lg p-8">
+        <h1 class="text-4xl font-bold font-roboto-slab text-center mb-2">The Three Branches Treehouse</h1>
+        <p class="text-center text-indigo-300 mb-6">Drag each task to the correct branch of government to keep the treehouse running!</p>
+        <div class="game-board">
+            <!-- Columns for the three branches -->
+            <div id="legislative-col" data-branch="legislative" class="branch-column rounded-lg p-4 space-y-2">
+                <h2 class="font-bold text-xl text-center"><i class="fas fa-scroll mr-2"></i>Legislative (Makes Rules)</h2>
+            </div>
+            <div id="executive-col" data-branch="executive" class="branch-column rounded-lg p-4 space-y-2">
+                <h2 class="font-bold text-xl text-center"><i class="fas fa-cogs mr-2"></i>Executive (Does Things)</h2>
+            </div>
+            <div id="judicial-col" data-branch="judicial" class="branch-column rounded-lg p-4 space-y-2">
+                <h2 class="font-bold text-xl text-center"><i class="fas fa-gavel mr-2"></i>Judicial (Judges Fairness)</h2>
+            </div>
+        </div>
+        <div id="task-pool" class="mt-6 flex gap-4 justify-center flex-wrap"></div>
+        <p id="feedback" class="text-center mt-4 h-6 font-bold text-lg"></p>
+    </div>
+<script>
+    // JS for The Three Branches Treehouse
+    // This would be a drag-and-drop game. For brevity, a simplified logic placeholder is provided.
+    // Full implementation would involve event listeners for 'dragstart', 'dragover', and 'drop'.
+</script>
+</body>
+</html>
+
+---
+
+<!-- course-supreme-law.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Supreme Law of the Land - Flamea Senior Crusaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> body { background-color: #0c4a6e; } /* More styles would be here */ </style>
+</head>
+<body class="p-4 text-sky-100">
+    <div class="max-w-3xl mx-auto bg-sky-900/50 p-8 rounded-lg">
+        <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">Legal Detective Agency</h1>
+        <p class="text-center text-sky-300 mb-6">A new town rule has been passed. Is it fair? Gather clues by answering questions and decide if it goes against the Supreme Law of the Land!</p>
+        <!-- Game would involve a narrative and quiz questions to collect 'clues' -->
+    </div>
+</body>
+</html>
+
+---
+
+<!-- course-citizens-compass.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Citizen's Compass - Flamea Senior Crusaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> body { background-color: #78350f; } /* More styles would be here */ </style>
+</head>
+<body class="p-4 text-amber-100">
+     <div class="max-w-3xl mx-auto bg-amber-900/50 p-8 rounded-lg">
+        <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">The Citizen's Compass</h1>
+        <p class="text-center text-amber-300 mb-6">Navigate the map of South Africa, collecting Rights from the Bill of Rights. Each Right you collect comes with a responsibility. Collect them all to prove you're a true citizen!</p>
+        <!-- This would be a map-based game similar to Constitution Crusaders but with more depth -->
+    </div>
+</body>
+</html>
+
+---
+
+<!-- course-my-family-my-rights.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Family, My Rights - Flamea Senior Crusaders</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style> body { background-color: #4a044e; } /* More styles would be here */ </style>
+</head>
+<body class="p-4 text-fuchsia-100">
+     <div class="max-w-3xl mx-auto bg-fuchsia-900/50 p-8 rounded-lg">
+        <h1 class="text-4xl font-bold font-roboto-slab text-center mb-4">Family Law Mediator</h1>
+        <p class="text-center text-fuchsia-300 mb-6">Two parents are creating a parenting plan. Help them make the best choices for their child by applying the 'Best Interests of the Child' principle from the Children's Act.</p>
+        <!-- This game would be a branching narrative/simulator where choices affect an outcome score -->
+    </div>
+</body>
+</html>
