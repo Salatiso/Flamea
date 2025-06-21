@@ -5,41 +5,33 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Ultimate Family Management Tool - FLAMEA</title>
     
-    <!-- Match the main website styling -->
+    <!-- Main website styling -->
     <link href="assets/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     
-    <!-- External Libraries for Parenting Plan functionality -->
+    <!-- External Libraries for this tool -->
     <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
 
-    <!-- Custom Styles for Parenting Plan - Kept separate for modularity -->
+    <!-- Custom Styles for this tool -->
     <style>
-        .form-input, .form-select, .form-textarea {
-            @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500 transition-colors;
-        }
+        .form-input, .form-select, .form-textarea { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500 transition-colors; }
         .btn { @apply py-2 px-4 rounded-lg font-semibold transition-all duration-300 ease-in-out border-none; }
         .btn-primary { @apply bg-green-600 text-white hover:bg-green-700 shadow-lg; }
         .btn-secondary { @apply bg-gray-600 text-white hover:bg-gray-700; }
         .btn-danger { @apply bg-red-600 text-white hover:bg-red-700; }
-        
-        .hub-card {
-            @apply bg-gray-800 p-6 rounded-lg text-center cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-700 hover:shadow-2xl hover:scale-105 border border-gray-700;
-        }
+        .hub-card { @apply bg-gray-800 p-6 rounded-lg text-center cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-700 hover:shadow-2xl hover:scale-105 border border-gray-700; }
         .hub-card i { @apply text-4xl mb-4 text-green-400; }
         .hub-card:hover i { @apply text-white; }
         .hub-card h3 { @apply text-xl font-bold text-white; }
-        
         .modal-overlay { @apply fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 transition-opacity; }
         .modal-content { @apply bg-gray-900 border border-gray-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col; }
         .modal-header { @apply p-4 border-b border-gray-700 flex justify-between items-center; }
         .modal-body { @apply p-6 overflow-y-auto; }
         .modal-footer { @apply p-4 border-t border-gray-700 flex justify-end space-x-4; }
-
-        /* FullCalendar Customizations */
         .fc { background-color: #2d3748; color: white; padding: 1rem; border-radius: 0.5rem; }
         .fc .fc-toolbar-title { font-size: 1.5em; }
         .fc .fc-button-primary { background-color: #10B981; border-color: #10B981; }
@@ -53,26 +45,30 @@
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
-        <main class="main-content flex-1 p-6">
-            <div id="parenting-plan-tool" class="max-w-7xl mx-auto">
-                <!-- Header -->
-                <div class="text-center mb-8">
-                    <h1 class="text-5xl font-bold font-roboto text-white mb-2">Family Management Tool</h1>
-                    <p class="text-lg text-gray-300">A live, collaborative tool to build and manage your family's future.</p>
-                    <div class="mt-4 text-sm bg-gray-800 inline-block px-4 py-2 rounded-lg border border-gray-700">
-                        <span>Status: <span id="connection-status" class="font-semibold text-yellow-400">Connecting...</span></span> |
-                        <span>Plan ID: <span id="plan-id-display" class="font-semibold text-gray-400">Loading...</span></span>
+        <main class="main-content flex-1 p-6 flex justify-center items-start">
+             <!-- Using the "text-box" class from index.html for consistent styling -->
+            <div class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-7xl">
+                <div id="parenting-plan-tool">
+                    <!-- Header -->
+                    <div class="text-center mb-8">
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto text-white mb-2">Family Management Tool</h1>
+                        <p class="text-lg text-gray-300">A live, collaborative tool to build and manage your family's future.</p>
+                        <div class="mt-4 text-sm bg-gray-900 inline-block px-4 py-2 rounded-lg border border-gray-700">
+                            <span>Status: <span id="connection-status" class="font-semibold text-yellow-400">Connecting...</span></span> |
+                            <span>Plan ID: <span id="plan-id-display" class="font-semibold text-gray-400">N/A</span></span> |
+                            <span>User ID: <span id="user-id-display" class="font-semibold text-gray-400">N/A</span></span>
+                        </div>
                     </div>
-                </div>
 
-                <!-- Section Navigation Hub -->
-                <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                    <div class="hub-card" data-section="parties"><i class="fas fa-users"></i><h3>The Parties & Children</h3></div>
-                    <div class="hub-card" data-section="schedule"><i class="fas fa-calendar-alt"></i><h3>Contact Schedule</h3></div>
-                    <div class="hub-card" data-section="communication"><i class="fas fa-comments"></i><h3>Communication Plan</h3></div>
-                    <div class="hub-card" data-section="finances"><i class="fas fa-hand-holding-usd"></i><h3>Financial Contributions</h3></div>
-                    <div class="hub-card" data-section="activity-tracker"><i class="fas fa-chart-line"></i><h3>Family Activity Log</h3></div>
-                    <div class="hub-card" data-section="finalize"><i class="fas fa-file-signature"></i><h3>Finalise & Download</h3></div>
+                    <!-- Section Navigation Hub -->
+                    <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <div class="hub-card" data-section="parties"><i class="fas fa-users"></i><h3>The Parties & Children</h3></div>
+                        <div class="hub-card" data-section="schedule"><i class="fas fa-calendar-alt"></i><h3>Contact Schedule</h3></div>
+                        <div class="hub-card" data-section="communication"><i class="fas fa-comments"></i><h3>Communication Plan</h3></div>
+                        <div class="hub-card" data-section="finances"><i class="fas fa-hand-holding-usd"></i><h3>Financial Contributions</h3></div>
+                        <div class="hub-card" data-section="activity-tracker"><i class="fas fa-chart-line"></i><h3>Family Activity Log</h3></div>
+                        <div class="hub-card" data-section="finalize"><i class="fas fa-file-signature"></i><h3>Finalise & Download</h3></div>
+                    </div>
                 </div>
             </div>
         </main>
@@ -82,14 +78,59 @@
     <div id="section-modal" class="modal-overlay hidden"><div class="modal-content"><div class="modal-header"><h2 id="modal-title" class="text-2xl font-bold text-white"></h2><button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button></div><div id="modal-body" class="modal-body"></div><div class="modal-footer"><button id="cancel-section-btn" class="btn btn-secondary">Cancel</button><button id="save-section-btn" class="btn btn-primary">Save Section</button></div></div></div>
     
     <template id="section-parties-template">
-        <!-- Parties & Children form -->
+        <div class="space-y-6">
+            <h3 class="text-xl font-bold text-green-400 border-b border-gray-700 pb-2">Party A</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="parentA-name" class="form-input" placeholder="Full Name"><input type="text" id="parentA-role" class="form-input" placeholder="Role (e.g., Father)"></div>
+            <h3 class="text-xl font-bold text-green-400 border-b border-gray-700 pb-2">Party B</h3>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="parentB-name" class="form-input" placeholder="Full Name"><input type="text" id="parentB-role" class="form-input" placeholder="Role (e.g., Mother)"></div>
+            <div class="flex justify-between items-center"><h3 class="text-xl font-bold text-green-400">Children</h3><button id="add-child-btn" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Add Child</button></div>
+            <div id="children-container" class="space-y-4"></div>
+        </div>
     </template>
+    
+    <template id="child-entry-template">
+        <div class="child-entry bg-gray-800 p-4 rounded-lg"><div class="flex justify-between items-center mb-3"><p class="font-semibold text-white">Child Details</p><button class="remove-child-btn btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" class="form-input child-name" placeholder="Child's Full Name"><input type="date" class="form-input child-dob"></div></div>
+    </template>
+
     <template id="section-schedule-template">
-        <!-- Schedule form and calendar div -->
+         <h3 class="text-xl font-bold mb-4 text-green-400">Custody & Living Arrangements</h3>
+         <select id="custody-status" class="form-select mb-4"><option value="mutual_agreement">We have a mutual agreement</option><option value="in_dispute">We are in dispute</option><option value="court_order">There is a court order in place</option></select>
+         <textarea id="custody-details" class="form-textarea" placeholder="Briefly describe the primary residence and care arrangements..."></textarea>
+         <h3 class="text-xl font-bold my-6 text-green-400">Interactive Contact Schedule</h3>
+         <div id='calendar' class="bg-gray-800 p-4 rounded-lg"></div>
     </template>
-    <!-- Add other section templates here -->
+
+    <template id="section-communication-template">
+         <h3 class="text-xl font-bold mb-4 text-green-400">Communication Methods</h3>
+         <textarea id="communication-methods" class="form-textarea" rows="5" placeholder="Describe the preferred methods, frequency, and topics of communication (e.g., weekly emails for schedules, immediate calls for emergencies)."></textarea>
+         <h3 class="text-xl font-bold my-6 text-green-400">Dispute Resolution</h3>
+         <textarea id="dispute-resolution" class="form-textarea" rows="5" placeholder="Outline the agreed-upon steps for resolving disagreements (e.g., 1. Direct discussion, 2. Mediation with a specific person, 3. Involve Family Advocate)."></textarea>
+    </template>
+
+    <template id="section-finances-template">
+        <!-- Placeholder for now -->
+        <p>Financial section is under development.</p>
+    </template>
+    
+    <template id="section-activity-tracker-template">
+        <!-- Placeholder for now -->
+        <p>Activity tracker is under development.</p>
+    </template>
+
+    <template id="section-finalize-template">
+        <!-- Placeholder for now -->
+        <p>Finalize and Download section is under development.</p>
+    </template>
+
+    <!-- Footer -->
+    <footer class="text-center p-4 bg-gray-900 text-gray-400">
+        <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
+    </footer>
 
     <!-- Scripts -->
+    <script>
+        document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script src="assets/js/parenting-plan-builder.js" type="module"></script>
