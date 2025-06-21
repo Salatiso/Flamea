@@ -1,441 +1,351 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan Builder</title>
+    <title>Enhanced Parenting Plan Tool - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <!-- FullCalendar CSS -->
-    <link href='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.css' rel='stylesheet' />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&family=Roboto+Slab:wght@700&display=swap" rel="stylesheet">
+
     <style>
+        :root {
+            --primary-color: #4f46e5;
+            --secondary-color: #10b981;
+            --text-color: #1f2937;
+            --bg-color: #f9fafb;
+            --header-font: 'Roboto Slab', serif;
+            --body-font: 'Roboto', sans-serif;
+        }
+
         body {
-            font-family: 'Inter', sans-serif;
-            background-color: #f3f4f6;
+            font-family: var(--body-font);
+            background-color: var(--bg-color);
         }
 
-        /* Make input text black for legibility */
-        input,
-        textarea,
-        select,
-        .form-input,
-        .form-textarea,
-        .form-select {
-            color: #111827;
+        .main-container {
+            display: flex;
         }
         
-        input::placeholder, textarea::placeholder {
-            color: #9ca3af;
+        .main-content {
+            flex: 1;
+            padding: 1rem 2rem;
+            max-height: 100vh;
+            overflow-y: auto;
         }
 
-        .step-container {
+        .step-container { display: none; }
+        .step-container.active { display: block; animation: fadeIn 0.5s; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        h2, h3 { font-family: var(--header-font); color: var(--text-color); }
+        .form-input, .form-select, .form-textarea {
+            color: var(--text-color);
+            border-color: #d1d5db;
+        }
+        .form-input:focus, .form-select:focus, .form-textarea:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 2px rgba(79, 70, 229, 0.2);
+        }
+        
+        .btn-primary { background-color: var(--primary-color); }
+        .btn-primary:hover { background-color: #4338ca; }
+        .btn-secondary { background-color: #6b7280; }
+        .btn-secondary:hover { background-color: #4b5563; }
+        
+        /* Dashboard styles */
+        .dashboard-slider { -webkit-appearance: none; appearance: none; width: 100%; height: 10px; background: #ddd; outline: none; opacity: 0.7; transition: opacity .2s; border-radius: 5px; }
+        .dashboard-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
+        .dashboard-slider::-moz-range-thumb { width: 25px; height: 25px; background: var(--primary-color); cursor: pointer; border-radius: 50%; }
+        
+        .balance-bar-bg { background-color: #e5e7eb; }
+        .balance-bar-fill { transition: width 0.5s ease-in-out; }
+        .balanced { background-color: #34d399; }
+        .imbalanced-slight { background-color: #f59e0b; }
+        .imbalanced-major { background-color: #ef4444; }
+
+        .empathetic-nudge {
             display: none;
+            padding: 0.75rem;
+            margin-top: 1rem;
+            border-radius: 0.5rem;
+            font-size: 0.875rem;
         }
-
-        .step-container.active {
-            display: block;
-        }
-
-        .progress-bar-step {
-            transition: all 0.3s ease;
-        }
-
-        /* Custom styles for FullCalendar */
-        .fc-toolbar-title {
-            font-size: 1.25rem;
-            color: #111827;
-        }
-
-        .fc-daygrid-day-number {
-            color: #374151;
-        }
+        .nudge-positive { background-color: #d1fae5; color: #065f46; border: 1px solid #6ee7b7; }
+        .nudge-warning { background-color: #fef3c7; color: #92400e; border: 1px solid #fbbf24; }
+        .nudge-support { background-color: #dbeafe; color: #1e40af; border: 1px solid #93c5fd; }
         
-        .fc-day-today {
-            background-color: #fef9c3 !important;
+        /* Modal for Disclaimer */
+        .modal-overlay {
+            position: fixed; top: 0; left: 0; right: 0; bottom: 0;
+            background-color: rgba(17, 24, 39, 0.8); backdrop-filter: blur(4px);
+            display: flex; align-items: center; justify-content: center;
+            z-index: 50; opacity: 0; visibility: hidden; transition: opacity 0.3s;
         }
+        .modal-overlay.visible { opacity: 1; visibility: visible; }
+        .modal-content {
+            background-color: white; padding: 2rem; border-radius: 0.75rem;
+            max-width: 600px; width: 90%; transform: scale(0.95); transition: transform 0.3s;
+        }
+        .modal-overlay.visible .modal-content { transform: scale(1); }
 
-        .fc-event {
-             background-color: #3b82f6 !important;
-             border-color: #2563eb !important;
-        }
-
-        .review-section h3 {
-            font-size: 1.5rem;
-            font-weight: 600;
-            color: #1e3a8a;
-            border-bottom: 2px solid #93c5fd;
-            padding-bottom: 0.5rem;
-            margin-top: 1.5rem;
-            margin-bottom: 1rem;
-        }
-        .review-section p {
-            margin-bottom: 0.75rem;
-        }
-        .review-section .item-label {
-            font-weight: 600;
-            color: #374151;
-        }
-         .review-section .item-value {
-            color: #111827;
-            padding-left: 1rem;
-        }
     </style>
 </head>
-
 <body class="bg-gray-100 text-gray-800">
 
-    <div id="sidebar-container"></div>
-
-
-    <div class="flex-1 flex flex-col">
-        <div class="p-4 md:p-8">
-            <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg p-6 md:p-8">
+    <div class="main-container">
+        <!-- Sidebar placeholder -->
+        <div id="sidebar-placeholder"></div>
+        
+        <div class="main-content">
+            <div class="max-w-6xl mx-auto bg-white rounded-2xl shadow-lg p-8 my-8">
                 
                 <header class="text-center mb-8">
-                    <h1 class="text-3xl md:text-4xl font-bold text-gray-800">Parenting Plan Builder</h1>
-                    <p class="text-gray-500 mt-2">Create a comprehensive co-parenting agreement step-by-step.</p>
+                    <h1 class="text-4xl font-bold font-roboto-slab text-gray-800">Enhanced Parenting Plan Tool</h1>
+                    <p class="text-gray-500 mt-2">A live document to foster positive, equitable co-parenting.</p>
                 </header>
 
-                <!-- Progress Bar -->
-                <div id="progress-bar" class="flex justify-between items-center mb-8">
-                    <!-- Steps will be injected by JS -->
-                </div>
-
+                <!-- This will be the main form wizard -->
                 <form id="parenting-plan-form">
-                    <!-- Step 1: Parent Information -->
+
+                    <!-- STEP 1: PARTIES & CHILDREN -->
                     <div id="step-1" class="step-container active">
-                        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 1: Parent & Child Information</h2>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                            <div class="p-4 border rounded-lg">
-                                <h3 class="font-bold mb-2">Parent A</h3>
-                                <input type="text" id="parentA_name" placeholder="Full Name" class="w-full p-2 border rounded-md">
+                        <h2 class="text-2xl font-semibold mb-6">Step 1: The Family</h2>
+                        
+                        <div id="guardians-container" class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-8">
+                            <!-- Guardian A -->
+                            <div class="p-4 border rounded-lg space-y-4">
+                               <div class="flex items-center gap-4">
+                                    <select class="guardian-role form-select w-1/3 rounded-md">
+                                        <option>Father</option>
+                                        <option>Mother</option>
+                                        <option>Grandfather</option>
+                                        <option>Grandmother</option>
+                                        <option>Uncle</option>
+                                        <option>Aunt</option>
+                                        <option>Legal Guardian</option>
+                                        <option>Other</option>
+                                    </select>
+                                    <input type="text" placeholder="Full Name" class="guardian-name form-input flex-grow rounded-md">
+                                </div>
+                                <input type="text" placeholder="ID Number (Optional)" class="w-full form-input rounded-md">
+                                <div>
+                                    <input type="text" placeholder="Residential Address" class="w-full form-input rounded-md guardian-address">
+                                    <!-- Google Maps API could hook here -->
+                                </div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                                    <span class="ml-2 text-sm text-gray-600">Postal address is different</span>
+                                </label>
+                                <div class="hidden">
+                                     <input type="text" placeholder="Postal Address" class="w-full form-input rounded-md">
+                                </div>
                             </div>
-                            <div class="p-4 border rounded-lg">
-                                <h3 class="font-bold mb-2">Parent B</h3>
-                                <input type="text" id="parentB_name" placeholder="Full Name" class="w-full p-2 border rounded-md">
+                            <!-- Guardian B -->
+                            <div class="p-4 border rounded-lg space-y-4">
+                                <div class="flex items-center gap-4">
+                                    <select class="guardian-role form-select w-1/3 rounded-md">
+                                        <option>Mother</option>
+                                        <option>Father</option>
+                                        <option>Grandfather</option>
+                                        <option>Grandmother</option>
+                                        <option>Uncle</option>
+                                        <option>Aunt</option>
+                                        <option>Legal Guardian</option>
+                                        <option>Other</option>
+                                    </select>
+                                    <input type="text" placeholder="Full Name" class="guardian-name form-input flex-grow rounded-md">
+                                </div>
+                                <input type="text" placeholder="ID Number (Optional)" class="w-full form-input rounded-md">
+                                <div>
+                                    <input type="text" placeholder="Residential Address" class="w-full form-input rounded-md guardian-address">
+                                </div>
+                                <label class="flex items-center">
+                                    <input type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                                    <span class="ml-2 text-sm text-gray-600">Postal address is different</span>
+                                </label>
+                                 <div class="hidden">
+                                     <input type="text" placeholder="Postal Address" class="w-full form-input rounded-md">
+                                </div>
                             </div>
                         </div>
-                        <div class="mt-6 p-4 border rounded-lg">
-                           <h3 class="font-bold mb-2">Children</h3>
-                           <div id="children-list">
-                               <div class="flex items-center gap-4 mb-2">
-                                   <input type="text" name="child_name" placeholder="Child's Full Name" class="w-1/2 p-2 border rounded-md">
-                                   <input type="date" name="child_dob" class="w-1/2 p-2 border rounded-md">
-                               </div>
+
+                        <div class="p-4 border rounded-lg">
+                           <h3 class="text-lg font-semibold mb-4">Children</h3>
+                           <div id="children-list" class="space-y-4">
+                               <!-- Child entry template -->
                            </div>
-                           <button type="button" id="add-child-btn" class="mt-2 text-blue-600 hover:text-blue-800 font-semibold"><i class="fas fa-plus-circle"></i> Add Another Child</button>
+                           <button type="button" id="add-child-btn" class="mt-4 text-indigo-600 hover:text-indigo-800 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Child</button>
                         </div>
                     </div>
 
-                    <!-- Step 2: Custody & Visitation -->
+                    <!-- STEP 2: RESIDENCE & CUSTODY -->
                     <div id="step-2" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 2: Custody & Visitation</h2>
-                        <div class="space-y-6">
-                            <div>
-                                <label for="custody_type" class="block font-bold mb-2">Physical Custody</label>
-                                <select id="custody_type" class="w-full p-2 border rounded-md">
-                                    <option value="sole_a">Sole Custody to Parent A</option>
-                                    <option value="sole_b">Sole Custody to Parent B</option>
-                                    <option value="joint">Joint/Shared Custody</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label for="visitation_schedule" class="block font-bold mb-2">Basic Visitation Schedule Description</label>
-                                <textarea id="visitation_schedule" rows="4" placeholder="e.g., Every other weekend from Friday 6 PM to Sunday 6 PM, alternating holidays." class="w-full p-2 border rounded-md"></textarea>
-                            </div>
-                            <div>
-                               <h3 class="text-xl font-semibold mb-4 text-gray-700">Visitation Calendar</h3>
-                               <p class="text-sm text-gray-500 mb-4">Click on dates to add or remove specific visitation days for the non-custodial parent or to mark specific days for each parent in a joint custody arrangement. This helps visualize the schedule.</p>
-                               <div id="calendar" class="border rounded-lg p-4"></div>
-                            </div>
+                        <h2 class="text-2xl font-semibold mb-6">Step 2: Residence & Custody</h2>
+                        <div id="residence-custody-container" class="space-y-6">
+                            <!-- Populated by JS for each child -->
                         </div>
                     </div>
 
-                    <!-- Step 3: Decision Making & Communication -->
+                    <!-- STEP 3: CONTACT SCHEDULE -->
                     <div id="step-3" class="step-container">
-                        <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 3: Decision Making & Communication</h2>
-                         <div class="space-y-6">
-                            <div>
-                                <label class="block font-bold mb-2">Major Decisions (Education, Health, Religion)</label>
-                                <select id="major_decisions" class="w-full p-2 border rounded-md">
-                                    <option value="joint">Both parents must agree (Joint)</option>
-                                    <option value="parent_a">Parent A has final say</option>
-                                    <option value="parent_b">Parent B has final say</option>
-                                </select>
+                        <h2 class="text-2xl font-semibold mb-6">Step 3: Contact Arrangements</h2>
+                        <!-- Custody Dashboard -->
+                         <div class="bg-gray-50 p-4 rounded-lg mb-6">
+                            <h3 class="font-semibold text-lg mb-2">Custody Time Allocation</h3>
+                            <div class="flex justify-between items-center text-sm font-medium mb-2">
+                                <span id="guardian-a-label">Guardian A</span>
+                                <span id="guardian-b-label">Guardian B</span>
                             </div>
-                             <div>
-                                <label for="communication_method" class="block font-bold mb-2">Primary Method of Communication</label>
-                                <input type="text" id="communication_method" placeholder="e.g., Email, dedicated co-parenting app" class="w-full p-2 border rounded-md">
+                            <div class="balance-bar-bg w-full h-4 rounded-full overflow-hidden">
+                                <div id="custody-balance-bar" class="balance-bar-fill h-full rounded-full balanced"></div>
                             </div>
+                            <div class="flex justify-between items-center text-xs text-gray-500 mt-1">
+                                <span id="guardian-a-perc">50%</span>
+                                <span id="guardian-b-perc">50%</span>
+                            </div>
+                            <div id="custody-nudge" class="empathetic-nudge"></div>
                         </div>
+                        <div id="calendar"></div>
+                        <div class="empathetic-nudge" id="calendar-nudge"></div>
                     </div>
-
-                    <!-- Step 4: Final Review -->
+                    
+                    <!-- STEP 4: DECISION MAKING -->
                     <div id="step-4" class="step-container">
-                         <h2 class="text-2xl font-semibold mb-6 text-gray-700">Step 4: Review Your Plan</h2>
-                         <div id="review-section" class="bg-gray-50 p-6 rounded-lg border">
-                            <!-- Generated Plan will be injected here -->
-                            <p class="text-center text-gray-500">Your generated plan will appear here for review.</p>
+                         <h2 class="text-2xl font-semibold mb-6">Step 4: Decision Making</h2>
+                         <div class="space-y-6">
+                             <div>
+                                 <label class="block font-bold mb-2">Education Decisions</label>
+                                 <textarea rows="3" placeholder="e.g., Jointly, with Parent A having the final say in case of disagreement. Both parents will attend parent-teacher meetings." class="form-textarea w-full rounded-md"></textarea>
+                             </div>
+                              <div>
+                                 <label class="block font-bold mb-2">Religious Upbringing</label>
+                                 <textarea rows="3" placeholder="e.g., The children will be raised in the [Religion] faith. Major religious decisions will be made jointly." class="form-textarea w-full rounded-md"></textarea>
+                             </div>
+                              <div>
+                                 <label class="block font-bold mb-2">Values and Discipline</label>
+                                 <textarea rows="3" placeholder="e.g., Both parents agree on positive discipline methods. No corporal punishment. Core values include honesty, respect, and hard work." class="form-textarea w-full rounded-md"></textarea>
+                             </div>
                          </div>
                     </div>
-                </form>
 
+                     <!-- STEP 5: COMMUNICATION PLAN -->
+                    <div id="step-5" class="step-container">
+                        <h2 class="text-2xl font-semibold mb-6">Step 5: Communication Plan</h2>
+                         <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                             <!-- Primary Communication -->
+                             <div class="p-4 border rounded-lg space-y-3">
+                                 <h3 class="text-lg font-semibold">Primary Communication</h3>
+                                 <p class="text-sm text-gray-500">For routine scheduling and updates.</p>
+                                 <input type="text" placeholder="Method (e.g., WhatsApp, Email)" class="form-input w-full rounded-md">
+                                 <input type="text" placeholder="Designated Contact Person" class="form-input w-full rounded-md">
+                                 <input type="text" placeholder="Contact Number / Email" class="form-input w-full rounded-md">
+                             </div>
+                             <!-- Emergency Communication -->
+                             <div class="p-4 border rounded-lg space-y-3">
+                                 <h3 class="text-lg font-semibold">Escalation / Emergency</h3>
+                                  <p class="text-sm text-gray-500">For urgent matters when primary fails.</p>
+                                 <input type="text" placeholder="Method (e.g., Phone Call)" class="form-input w-full rounded-md">
+                                 <input type="text" placeholder="Designated Contact Person" class="form-input w-full rounded-md">
+                                 <input type="text" placeholder="Contact Number / Email" class="form-input w-full rounded-md">
+                             </div>
+                         </div>
+                    </div>
+
+                    <!-- STEP 6: EXPENSE & BENEFIT TRACKER -->
+                    <div id="step-6" class="step-container">
+                       <h2 class="text-2xl font-semibold mb-6">Step 6: Contributions & Responsibilities</h2>
+                       <!-- Expense Dashboard will go here -->
+                       <div id="expense-dashboard" class="bg-gray-50 p-4 rounded-lg mb-6"></div>
+                       <div id="expense-tracker" class="space-y-6"></div>
+                       <button type="button" id="add-expense-category-btn" class="mt-4 text-indigo-600 hover:text-indigo-800 font-semibold"><i class="fas fa-plus-circle mr-2"></i>Add Expense Category</button>
+                    </div>
+
+                     <!-- STEP 7: EVENT LOGGER -->
+                    <div id="step-7" class="step-container">
+                         <h2 class="text-2xl font-semibold mb-6">Step 7: Event Logger</h2>
+                         <div class="p-4 border rounded-lg bg-gray-50">
+                             <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
+                                 <input type="date" id="event-date" class="form-input rounded-md">
+                                 <select id="event-type" class="form-select rounded-md">
+                                     <option>Positive Event</option>
+                                     <option>Disagreement</option>
+                                     <option>Milestone</option>
+                                     <option>Medical Issue</option>
+                                     <option>Other</option>
+                                 </select>
+                                 <input type="file" id="event-attachment" class="text-sm">
+                             </div>
+                             <textarea id="event-details" rows="4" placeholder="Describe the event..." class="form-textarea w-full rounded-md mb-4"></textarea>
+                             <button type="button" id="log-event-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg w-full">Log Event</button>
+                         </div>
+                         <div id="event-log-list" class="mt-6 space-y-4"></div>
+                    </div>
+                    
+                     <!-- STEP 8: ADDITIONAL NOTES -->
+                    <div id="step-8" class="step-container">
+                        <h2 class="text-2xl font-semibold mb-6">Step 8: Additional Notes</h2>
+                        <textarea rows="10" placeholder="Add any final thoughts, clarifications, or context that hasn't been covered in other sections..." class="form-textarea w-full rounded-md"></textarea>
+                    </div>
+
+                    <!-- STEP 9: REVIEW & GENERATE -->
+                    <div id="step-9" class="step-container">
+                        <h2 class="text-2xl font-semibold mb-6">Step 9: Final Review & Generation</h2>
+                        <div id="final-review-section" class="bg-gray-50 p-6 rounded-lg border space-y-4">
+                           <p class="text-center text-gray-500">Your generated plan will appear here for review before downloading.</p>
+                        </div>
+                    </div>
+                </form>
+                
                 <!-- Navigation Buttons -->
                 <div class="mt-8 flex justify-between">
-                    <button id="prev-btn" class="bg-gray-300 hover:bg-gray-400 text-gray-800 font-bold py-2 px-6 rounded-lg transition" style="display: none;">Previous</button>
-                    <button id="next-btn" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-6 rounded-lg transition">Next</button>
-                    <button id="finish-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition" style="display: none;">Finish & Generate Plan</button>
+                    <button id="prev-btn" class="btn-secondary text-white font-bold py-2 px-6 rounded-lg transition" style="display: none;">Previous</button>
+                    <button id="next-btn" class="btn-primary text-white font-bold py-2 px-6 rounded-lg transition">Next</button>
+                    <button id="generate-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg transition" style="display: none;">Generate Plan</button>
                 </div>
             </div>
         </div>
     </div>
     
-    <!-- FullCalendar JS -->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@5.11.3/main.min.js'></script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function () {
-            // --- STATE MANAGEMENT ---
-            let currentStep = 1;
-            const totalSteps = 4;
-            let calendarInstance = null;
-            let planData = {
-                visitationDates: []
-            };
+     <!-- Disclaimer Modal -->
+    <div id="disclaimer-modal" class="modal-overlay">
+        <div class="modal-content">
+            <h3 class="text-2xl font-bold mb-4">Disclaimer</h3>
+            <p class="text-sm text-gray-600 mb-4">This tool is designed to assist parents in creating a comprehensive parenting plan. The generated document is based on the information you provide. It is strongly recommended to have this plan reviewed by a legal professional to ensure it is legally sound and enforceable in your jurisdiction. By clicking "Agree," you acknowledge that you understand this is a tool for guidance and not a substitute for professional legal advice.</p>
+            <div class="flex items-center mb-4">
+                <input id="disclaimer-agree" type="checkbox" class="form-checkbox h-5 w-5 text-indigo-600 rounded">
+                <label for="disclaimer-agree" class="ml-2">I have read and agree to the disclaimer.</label>
+            </div>
+            <button id="download-pdf-btn" disabled class="bg-gray-400 text-white font-bold py-2 px-6 rounded-lg w-full cursor-not-allowed">Download PDF</button>
+        </div>
+    </div>
 
-            // --- DOM ELEMENTS ---
-            const nextBtn = document.getElementById('next-btn');
-            const prevBtn = document.getElementById('prev-btn');
-            const finishBtn = document.getElementById('finish-btn');
-            const progressBar = document.getElementById('progress-bar');
-            const addChildBtn = document.getElementById('add-child-btn');
+    <!-- Child template for JS -->
+    <template id="child-template">
+        <div class="child-entry p-3 border-t">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <input type="text" placeholder="Child's Full Name" class="child-name form-input rounded-md">
+                <input type="date" class="child-dob form-input rounded-md">
+            </div>
+            <label class="flex items-center mt-3 text-sm">
+                <input type="checkbox" class="child-residence-toggle form-checkbox h-4 w-4 rounded">
+                <span class="ml-2 text-gray-600">Child resides at a different address.</span>
+            </label>
+            <div class="child-residence-details hidden mt-3 space-y-3">
+                 <input type="text" placeholder="Child's Residential Address" class="w-full form-input rounded-md child-address">
+                 <div class="grid grid-cols-2 gap-4">
+                    <input type="text" placeholder="Primary Contact Person" class="form-input rounded-md">
+                    <input type="text" placeholder="Contact Number" class="form-input rounded-md">
+                 </div>
+            </div>
+        </div>
+    </template>
+    
+    <!-- JS files -->
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/plan-builder.js"></script>
 
-            const steps = [
-                { id: 1, title: 'Parents & Children' },
-                { id: 2, title: 'Custody' },
-                { id: 3, title: 'Decisions' },
-                { id: 4, title: 'Review' }
-            ];
-
-            // --- FUNCTIONS ---
-            
-            function initializeCalendar() {
-                const calendarEl = document.getElementById('calendar');
-                if (calendarEl && !calendarInstance) {
-                    calendarInstance = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        headerToolbar: {
-                            left: 'prev,next today',
-                            center: 'title',
-                            right: 'dayGridMonth,timeGridWeek'
-                        },
-                        selectable: true,
-                        select: function(info) {
-                            const title = prompt('Event Title (e.g., Parent A Visit):');
-                            if (title) {
-                                calendarInstance.addEvent({
-                                    title: title,
-                                    start: info.startStr,
-                                    end: info.endStr,
-                                    allDay: info.allDay,
-                                    id: Date.now().toString() // Unique ID for removal
-                                });
-                            }
-                            calendarInstance.unselect();
-                        },
-                        eventClick: function(info) {
-                            if (confirm("Are you sure you want to remove this event?")) {
-                                info.event.remove();
-                            }
-                        }
-                    });
-                    calendarInstance.render();
-                }
-            }
-            
-            function updateProgressBar() {
-                let progressHTML = '';
-                steps.forEach((step, index) => {
-                    const stepNumber = index + 1;
-                    const isActive = stepNumber === currentStep;
-                    const isCompleted = stepNumber < currentStep;
-
-                    let barClass = 'bg-gray-300';
-                    if (isActive) barClass = 'bg-blue-600';
-                    if (isCompleted) barClass = 'bg-green-500';
-
-                    let textClass = 'text-gray-500';
-                    if(isActive) textClass = 'text-blue-700 font-bold';
-                    if(isCompleted) textClass = 'text-green-700';
-
-                    progressHTML += `
-                        <div class="flex-1 text-center progress-bar-step">
-                            <div class="relative mb-2">
-                                <div class="absolute w-full top-1/2 -mt-1 h-2 ${isCompleted ? 'bg-green-500' : 'bg-gray-300'}"></div>
-                                <div class="w-6 h-6 rounded-full ${barClass} mx-auto text-white flex items-center justify-center">${isCompleted ? '<i class="fas fa-check"></i>' : stepNumber}</div>
-                            </div>
-                            <div class="text-xs ${textClass}">${step.title}</div>
-                        </div>
-                    `;
-                });
-                progressBar.innerHTML = progressHTML;
-            }
-
-            function showStep(stepNumber) {
-                document.querySelectorAll('.step-container').forEach(el => el.classList.remove('active'));
-                const activeStepEl = document.getElementById(`step-${stepNumber}`);
-                if(activeStepEl) {
-                    activeStepEl.classList.add('active');
-                } else {
-                    console.error("Could not find step element for step:", stepNumber);
-                    return;
-                }
-
-
-                // Initialize calendar on step 2
-                if (stepNumber === 2) {
-                    // Use a short timeout to ensure the container is visible before rendering
-                    setTimeout(() => initializeCalendar(), 50);
-                }
-
-                // Button visibility
-                prevBtn.style.display = (stepNumber > 1) ? 'inline-block' : 'none';
-                nextBtn.style.display = (stepNumber < totalSteps) ? 'inline-block' : 'none';
-                finishBtn.style.display = (stepNumber === totalSteps) ? 'inline-block' : 'none';
-                
-                // If on the final step, immediately generate the preview.
-                if (stepNumber === totalSteps) {
-                    generatePlan();
-                }
-
-                updateProgressBar();
-            }
-
-            function gatherData() {
-                // Parents
-                planData.parentA = document.getElementById('parentA_name').value.trim();
-                planData.parentB = document.getElementById('parentB_name').value.trim();
-                
-                // Children
-                planData.children = [];
-                const childNameInputs = document.querySelectorAll('input[name="child_name"]');
-                const childDobInputs = document.querySelectorAll('input[name="child_dob"]');
-                childNameInputs.forEach((input, index) => {
-                    if (input.value.trim()) {
-                        planData.children.push({
-                            name: input.value.trim(),
-                            dob: childDobInputs[index].value
-                        });
-                    }
-                });
-
-                // Custody
-                const custodySelect = document.getElementById('custody_type');
-                planData.custodyType = custodySelect.options[custodySelect.selectedIndex].text;
-                planData.visitationSchedule = document.getElementById('visitation_schedule').value.trim();
-                
-                // Calendar Events
-                if (calendarInstance) {
-                    planData.visitationDates = calendarInstance.getEvents().map(event => ({
-                        title: event.title,
-                        start: event.startStr,
-                        end: event.endStr
-                    }));
-                }
-                
-                // Decisions
-                const decisionSelect = document.getElementById('major_decisions');
-                planData.majorDecisions = decisionSelect.options[decisionSelect.selectedIndex].text;
-                planData.communicationMethod = document.getElementById('communication_method').value.trim();
-
-            }
-
-            function generatePlan() {
-                gatherData();
-                const reviewSection = document.getElementById('review-section');
-                
-                let childrenHtml = planData.children.map(c => `<p><span class="item-label">Child:</span> <span class="item-value">${c.name} (DOB: ${c.dob || 'N/A'})</span></p>`).join('');
-
-                let datesHtml = 'No specific dates added.';
-                if (planData.visitationDates.length > 0) {
-                    datesHtml = planData.visitationDates.map(d => `<li class="ml-4 list-disc">${d.title} (From: ${new Date(d.start).toDateString()})</li>`).join('');
-                    datesHtml = `<ul>${datesHtml}</ul>`;
-                }
-
-                const planHtml = `
-                    <h3 class="text-center mb-4 font-bold text-2xl">Generated Parenting Plan</h3>
-                    
-                    <h3>Parties Involved</h3>
-                    <p><span class="item-label">Parent A:</span> <span class="item-value">${planData.parentA || 'Not Specified'}</span></p>
-                    <p><span class="item-label">Parent B:</span> <span class="item-value">${planData.parentB || 'Not Specified'}</span></p>
-                    
-                    <h3>Children Subject to this Agreement</h3>
-                    ${childrenHtml || '<p><span class="item-value">No children specified.</span></p>'}
-
-                    <h3>Custody and Visitation</h3>
-                    <p><span class="item-label">Physical Custody Arrangement:</span> <span class="item-value">${planData.custodyType || 'Not Specified'}</span></p>
-                    <p><span class="item-label">General Visitation Description:</span> <span class="item-value">${planData.visitationSchedule || 'Not Specified'}</span></p>
-                    <p><span class="item-label">Specific Visitation Dates:</span></p>
-                    <div class="item-value">${datesHtml}</div>
-
-                    <h3>Decision Making and Communication</h3>
-                    <p><span class="item-label">Major Decisions (Health, Education, etc.):</span> <span class="item-value">${planData.majorDecisions || 'Not Specified'}</span></p>
-                    <p><span class="item-label">Primary Communication Method:</span> <span class="item-value">${planData.communicationMethod || 'Not Specified'}</span></p>
-
-                    <div class="mt-8 pt-4 border-t-2 text-sm text-gray-500">
-                        <p><strong>Disclaimer:</strong> This is not a legal document. It is a tool to help parents organize their agreement. It is strongly recommended to have this plan reviewed by a legal professional.</p>
-                    </div>
-                `;
-
-                reviewSection.innerHTML = planHtml;
-            }
-
-            // --- EVENT LISTENERS ---
-            nextBtn.addEventListener('click', () => {
-                if (currentStep < totalSteps) {
-                    currentStep++;
-                    showStep(currentStep);
-                }
-            });
-
-            prevBtn.addEventListener('click', () => {
-                if (currentStep > 1) {
-                    currentStep--;
-                    showStep(currentStep);
-                }
-            });
-            
-            finishBtn.addEventListener('click', () => {
-                // The plan is already generated by showStep(4). This button can be used for a final action.
-                // For now, it just confirms completion.
-                alert('Parenting Plan Generated! You can now review, print, or save this page.');
-                 // Optional: Add print functionality
-                 // window.print();
-            });
-
-            addChildBtn.addEventListener('click', () => {
-                const list = document.getElementById('children-list');
-                const newItem = document.createElement('div');
-                newItem.className = 'flex items-center gap-4 mb-2';
-                newItem.innerHTML = `
-                    <input type="text" name="child_name" placeholder="Child's Full Name" class="w-1/2 p-2 border rounded-md">
-                    <input type="date" name="child_dob" class="w-1/2 p-2 border rounded-md">
-                `;
-                list.appendChild(newItem);
-            });
-
-            // --- INITIALIZATION ---
-            showStep(currentStep);
-        });
-
-        // Load sidebar
-        fetch('sidebar.html')
-            .then(response => response.text())
-            .then(data => {
-                document.getElementById('sidebar-container').innerHTML = data;
-            });
-    </script>
 </body>
-
 </html>
