@@ -7,55 +7,209 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
+    <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        .page-container {
-            min-height: 100vh;
+        body, html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            overflow: hidden; /* Prevents all scrolling */
+        }
+        .main-content {
+            height: 100vh;
+            width: 100%;
             display: flex;
-            flex-direction: column;
+            overflow-x: auto;
+            overflow-y: hidden;
+            scroll-snap-type: x mandatory; /* Key for horizontal snapping */
+            -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
+        }
+        .page-section {
+            flex: 0 0 100vw; /* Each section takes full viewport width */
+            height: 100vh;
+            scroll-snap-align: start; /* Snap to the start of each section */
+            position: relative;
+            display: flex;
             justify-content: center;
             align-items: center;
-            padding: 4rem 2rem;
+            padding: 2rem;
             background-size: cover;
             background-position: center;
-            background-attachment: fixed; /* Creates the parallax effect */
+        }
+        .content-wrapper {
             position: relative;
+            z-index: 10;
+            background: rgba(17, 24, 39, 0.85);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 2rem 3rem;
+            border-radius: 1.5rem;
+            max-width: 900px;
+            text-align: center;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.5);
         }
         .font-roboto-slab { font-family: 'Roboto Slab', serif; }
-        .text-shadow { text-shadow: 2px 2px 8px rgba(0,0,0,0.7); }
-
-        .flip-card-container { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 2rem; width: 100%; max-w-6xl; }
-        .flip-card { background-color: transparent; width: 100%; height: 220px; perspective: 1000px; }
-        .flip-card-inner { position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.7s; transform-style: preserve-3d; }
-        .flip-card:hover .flip-card-inner { transform: rotateY(180deg); }
-        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; -webkit-backface-visibility: hidden; backface-visibility: hidden; border-radius: 0.75rem; display: flex; flex-direction: column; justify-content: center; align-items: center; padding: 1.5rem; border: 1px solid #4b5563; }
-        .flip-card-front { background-color: #1f2937; /* gray-800 */ }
-        .flip-card-back { background-color: #4f46e5; transform: rotateY(180deg); }
-        .flip-card h3 { font-family: 'Roboto Slab', serif; font-size: 1.5rem; }
+        .text-shadow { text-shadow: 1px 1px 3px rgba(0,0,0,0.4); }
+        .nav-dots {
+            position: fixed;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            display: flex;
+            gap: 1rem;
+            z-index: 20;
+        }
+        .nav-dot {
+            width: 12px;
+            height: 12px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 50%;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .nav-dot.active {
+            background: #F97316; /* orange-500 */
+            transform: scale(1.2);
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            gap: 1.5rem;
+            text-align: left;
+            margin-top: 2rem;
+        }
+        .info-grid .icon {
+            font-size: 3rem;
+            color: #F97316;
+            padding-top: 0.5rem;
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
-     <div class="main-container">
+    <div class="main-container">
         <!-- Sidebar placeholder -->
-        <div id="sidebar-placeholder"></div>
+        <div id="sidebar-placeholder" class="fixed top-0 left-0 h-full z-30"></div>
 
-        <!-- Main Content Area -->
-        <main class="main-content">
-            <div class="page-container" style="background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?q=80&w=2070&auto=format&fit=crop&ixlib=rb-4.0.3');">
-                <div class="relative z-10 text-center w-full max-w-7xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl">
-                    <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-12 text-shadow">Every Movement Starts With a <span class="text-orange-400">Single Spark.</span></h1>
-                    <div class="flip-card-container">
-                        <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Personal Use</h3><i class="fas fa-user mt-2 text-4xl text-blue-400"></i></div><div class="flip-card-back"><p class="text-base">Use our tools for yourself and your family. Build your legacy.</p></div></div></div>
-                        <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Contribute</h3><i class="fas fa-lightbulb mt-2 text-4xl text-yellow-400"></i></div><div class="flip-card-back"><p class="text-base">Share your ideas and experiences to improve the platform for all.</p></div></div></div>
-                        <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Ambassador</h3><i class="fas fa-award mt-2 text-4xl text-purple-400"></i></div><div class="flip-card-back"><p class="text-base">Lead your community. Mentor others. Embody the Flamea principles.</p></div></div></div>
-                        <div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Partner</h3><i class="fas fa-handshake mt-2 text-4xl text-green-400"></i></div><div class="flip-card-back"><p class="text-base">Use Flamea tools commercially with a fair and flexible license.</p></div></div></div>
+        <main id="main-content-scroll" class="main-content">
+            <!-- Section 1: Welcome -->
+            <section id="section-1" class="page-section" style="background-image: url('https://images.unsplash.com/photo-1533134486753-c833f0ed4866?q=80&w=2070&auto=format&fit=crop');">
+                <div class="content-wrapper">
+                    <h1 class="text-4xl md:text-5xl font-black font-roboto-slab mb-4 text-shadow">Join the <span class="text-orange-400">Flamea Movement</span></h1>
+                    <p class="text-lg">Become part of a community dedicated to building stronger families through empowered fatherhood. Scroll to discover how you can participate.</p>
+                    <i class="fas fa-arrow-right mt-8 text-2xl animate-pulse"></i>
+                </div>
+            </section>
+
+            <!-- Section 2: Personal Use -->
+            <section id="section-2" class="page-section" style="background-image: url('https://images.unsplash.com/photo-1455390582262-044cdead277a?q=80&w=1973&auto=format&fit=crop');">
+                 <div class="content-wrapper">
+                    <h2 class="text-3xl md:text-4xl font-black font-roboto-slab text-blue-400 mb-4 text-shadow">Personal Use License</h2>
+                    <p class="mb-6">For every father building his legacy.</p>
+                    <div class="info-grid">
+                        <i class="fas fa-user icon"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">Who is this for?</h3>
+                            <p>Any individual using the platform for their personal, non-commercial needs and family matters.</p>
+                        </div>
+                        <i class="fas fa-id-card icon"></i>
+                         <div>
+                            <h3 class="font-bold text-xl">What you get:</h3>
+                            <p>A free, non-exclusive license to use all tools, read content, and generate documents. You may not resell or re-brand these resources.</p>
+                        </div>
                     </div>
                 </div>
-            </div>
+            </section>
+
+            <!-- Section 3: Ambassador -->
+            <section id="section-3" class="page-section" style="background-image: url('https://images.unsplash.com/photo-1521791136064-7986c2920216?q=80&w=2069&auto=format&fit=crop');">
+                 <div class="content-wrapper">
+                    <h2 class="text-3xl md:text-4xl font-black font-roboto-slab text-purple-400 mb-4 text-shadow">Ambassador Program</h2>
+                    <p class="mb-6">For the leaders who guide their communities.</p>
+                    <div class="info-grid">
+                        <i class="fas fa-award icon"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">Who is this for?</h3>
+                            <p>Community leaders who mentor others, promote Flamea's principles, and facilitate local support groups.</p>
+                        </div>
+                        <i class="fas fa-file-contract icon"></i>
+                         <div>
+                            <h3 class="font-bold text-xl">What you get:</h3>
+                            <p>An Ambassador Agreement granting rights to use Flamea materials for non-commercial training, provided the source is always credited.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Section 4: Partner -->
+            <section id="section-4" class="page-section" style="background-image: url('https://images.unsplash.com/photo-1556761175-5973dc0f32e7?q=80&w=2232&auto=format&fit=crop');">
+                 <div class="content-wrapper">
+                    <h2 class="text-3xl md:text-4xl font-black font-roboto-slab text-green-400 mb-4 text-shadow">Commercial Partner</h2>
+                    <p class="mb-6">For professionals integrating our tools into their practice.</p>
+                    <div class="info-grid">
+                        <i class="fas fa-handshake icon"></i>
+                        <div>
+                            <h3 class="font-bold text-xl">Who is this for?</h3>
+                            <p>Lawyers, social workers, mediators, and other professionals who wish to use Flamea's powerful tools in their services.</p>
+                        </div>
+                        <i class="fas fa-briefcase icon"></i>
+                         <div>
+                            <h3 class="font-bold text-xl">What you get:</h3>
+                            <p>A flexible, fair-use commercial license. Please contact us directly to discuss partnership terms and integration.</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
         </main>
+        
+        <div id="nav-dots" class="nav-dots"></div>
     </div>
 
-      <script type="module" src="assets/js/main.js"></script>
-      <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const container = document.getElementById('main-content-scroll');
+            const sections = document.querySelectorAll('.page-section');
+            const dotsContainer = document.getElementById('nav-dots');
+
+            if (!container || sections.length === 0) return;
+
+            // Create navigation dots
+            sections.forEach((section, index) => {
+                const dot = document.createElement('div');
+                dot.classList.add('nav-dot');
+                dot.dataset.index = index;
+                if (index === 0) {
+                    dot.classList.add('active');
+                }
+                dot.addEventListener('click', () => {
+                    container.scrollTo({
+                        left: section.offsetLeft,
+                        behavior: 'smooth'
+                    });
+                });
+                dotsContainer.appendChild(dot);
+            });
+
+            const dots = document.querySelectorAll('.nav-dot');
+
+            // Update active dot on scroll
+            const observer = new IntersectionObserver((entries) => {
+                entries.forEach(entry => {
+                    if (entry.isIntersecting) {
+                        const sectionId = entry.target.id;
+                        const activeIndex = Array.from(sections).findIndex(s => s.id === sectionId);
+                        dots.forEach(dot => dot.classList.remove('active'));
+                        if (dots[activeIndex]) {
+                             dots[activeIndex].classList.add('active');
+                        }
+                    }
+                });
+            }, { threshold: 0.5, root: container });
+
+            sections.forEach(section => observer.observe(section));
+        });
+    </script>
 </body>
 </html>
