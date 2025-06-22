@@ -12,29 +12,44 @@
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container flex">
-        <!-- Standardized Sidebar -->
+        <!-- Sidebar (same as index.html) -->
         <div id="sidebar-placeholder"></div>
-
         <!-- Main Content Area -->
         <main class="main-content flex-1 p-6 flex justify-center items-center min-h-screen">
             <div class="absolute inset-0 bg-black/60"></div>
-
-                <div class="relative z-10 w-full max-w-4xl space-y-8">
-                    <!-- Countdown Timer Box -->
-                    <div id="countdown-container" class="content-box p-6 rounded-2xl shadow-2xl">
-                        <h2 class="text-xl md:text-2xl font-bold text-orange-400 font-roboto-slab mb-4 text-center">Official Platform Launch Countdown</h2>
-                        <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-4 text-white">
-                            <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="days" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Days</div></div>
-                            <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="hours" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Hours</div></div>
-                            <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="minutes" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Minutes</div></div>
-                            <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="seconds" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Seconds</div></div>
+            <div class="relative z-10 w-full max-w-4xl space-y-8 flex flex-col items-center">
+                <!-- Countdown Timer Box -->
+                <div id="countdown-container" class="content-box p-6 rounded-2xl shadow-2xl w-full">
+                    <h2 class="text-xl md:text-2xl font-bold text-orange-400 font-roboto-slab mb-4 text-center">Official Platform Launch Countdown</h2>
+                    <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-4 text-white">
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center">
+                            <div id="days" class="text-3xl md:text-4xl countdown-number">0</div>
+                            <div class="text-xs md:text-sm uppercase">Days</div>
+                        </div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center">
+                            <div id="hours" class="text-3xl md:text-4xl countdown-number">0</div>
+                            <div class="text-xs md:text-sm uppercase">Hours</div>
+                        </div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center">
+                            <div id="minutes" class="text-3xl md:text-4xl countdown-number">0</div>
+                            <div class="text-xs md:text-sm uppercase">Minutes</div>
+                        </div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center">
+                            <div id="seconds" class="text-3xl md:text-4xl countdown-number">0</div>
+                            <div class="text-xs md:text-sm uppercase">Seconds</div>
                         </div>
                     </div>
+                </div>
 
-            <!-- Home Panel -->
-            <main class="main-content flex-1 p-6 flex justify-center items-center min-h-screen">
-                <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
-                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Empowering South African fathers to reclaim their role.</p>
+                <!-- Main Content (centered, all your content here) -->
+                <div class="w-full flex flex-col items-center">
+                    <!-- YOUR EXISTING CONTENT GOES HERE -->
+                </div>
+
+                <!-- Carousel at the bottom -->
+                <div class="carousel-container content-box rounded-2xl shadow-2xl w-full mt-8">
+                    <!-- Slides will be injected here by JS -->
+                </div>
             </div>
         </main>
     </div>
@@ -42,26 +57,14 @@
     <footer class="text-center p-4 bg-gray-900 text-gray-400">
         <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
     </footer>
-    <!-- Scripts -->
-     <!-- Carousel Box -->
-                    <div class="carousel-container content-box rounded-2xl shadow-2xl">
-                        <!-- Slides will be injected here -->
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-
-  
-
-    <!-- Scripts -->
+    <!-- Scripts (same as index.html) -->
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
     <script>
-        // --- Countdown & Carousel Logic (same as before) ---
+        // Countdown & Carousel Logic (from index.html)
         (function() {
             // Countdown
             const daysEl = document.getElementById('days'), hoursEl = document.getElementById('hours'), minutesEl = document.getElementById('minutes'), secondsEl = document.getElementById('seconds');
@@ -106,12 +109,5 @@
             setInterval(nextSlide, 7000);
         })();
     </script>
-    <script>
-        document.addEventListener('DOMContentLoaded', function() {
-            document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
-    </script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
 </body>
 </html>
