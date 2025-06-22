@@ -1,135 +1,498 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>The Ultimate Family Management Tool - FLAMEA</title>
-    
-    <!-- Main website styling -->
-    <link href="assets/css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    
-    <!-- External Libraries for this tool -->
-    <script src='https://cdn.jsdelivr.net/npm/fullcalendar@6.1.11/index.global.min.js'></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js"></script>
-
-    <!-- Custom Styles for this tool -->
+    <title>Parenting Plan Builder - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-        .form-input, .form-select, .form-textarea { @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg text-white placeholder-gray-400 focus:ring-green-500 focus:border-green-500 transition-colors; }
-        .btn { @apply py-2 px-4 rounded-lg font-semibold transition-all duration-300 ease-in-out border-none; }
-        .btn-primary { @apply bg-green-600 text-white hover:bg-green-700 shadow-lg; }
-        .btn-secondary { @apply bg-gray-600 text-white hover:bg-gray-700; }
-        .btn-danger { @apply bg-red-600 text-white hover:bg-red-700; }
-        .hub-card { @apply bg-gray-800 p-6 rounded-lg text-center cursor-pointer transition-all duration-300 ease-in-out hover:bg-green-700 hover:shadow-2xl hover:scale-105 border border-gray-700; }
-        .hub-card i { @apply text-4xl mb-4 text-green-400; }
-        .hub-card:hover i { @apply text-white; }
-        .hub-card h3 { @apply text-xl font-bold text-white; }
-        .modal-overlay { @apply fixed inset-0 bg-black bg-opacity-75 flex justify-center items-center z-50 transition-opacity; }
-        .modal-content { @apply bg-gray-900 border border-gray-700 rounded-lg shadow-xl w-full max-w-4xl max-h-[90vh] flex flex-col; }
-        .modal-header { @apply p-4 border-b border-gray-700 flex justify-between items-center; }
-        .modal-body { @apply p-6 overflow-y-auto; }
-        .modal-footer { @apply p-4 border-t border-gray-700 flex justify-end space-x-4; }
-        .fc { background-color: #2d3748; color: white; padding: 1rem; border-radius: 0.5rem; }
-        .fc .fc-toolbar-title { font-size: 1.5em; }
-        .fc .fc-button-primary { background-color: #10B981; border-color: #10B981; }
-        .fc .fc-daygrid-day-number { color: #a0aec0; }
-        .fc .fc-day-today { background-color: rgba(16, 185, 129, 0.2); }
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .section-card {
+            background-color: white;
+            border-radius: 0.75rem;
+            border: 1px solid #e5e7eb;
+            box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+            transition: all 0.3s ease-in-out;
+        }
+
+        .section-card:hover {
+            box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+            transform: translateY(-2px);
+        }
+
+        textarea,
+        input[type="text"],
+        input[type="email"],
+        select {
+            @apply w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500;
+        }
+
+        .btn-primary {
+            @apply bg-indigo-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 transition-colors;
+        }
+        
+        .btn-secondary {
+            @apply bg-gray-200 text-gray-800 font-semibold py-2 px-4 rounded-lg hover:bg-gray-300 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-400 transition-colors;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex">
-        <!-- Standardized Sidebar -->
-        <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content Area -->
-        <main class="main-content flex-1 p-6 flex justify-center items-start">
-             <!-- Using the "text-box" class from index.html for consistent styling -->
-            <div class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md w-full max-w-7xl">
-                <div id="parenting-plan-tool">
-                    <!-- Header -->
-                    <div class="text-center mb-8">
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto text-white mb-2">Family Management Tool</h1>
-                        <p class="text-lg text-gray-300">A live, collaborative tool to build and manage your family's future.</p>
-                        <div class="mt-4 text-sm bg-gray-900 inline-block px-4 py-2 rounded-lg border border-gray-700">
-                            <span>Status: <span id="connection-status" class="font-semibold text-yellow-400">Connecting...</span></span> |
-                            <span>Plan ID: <span id="plan-id-display" class="font-semibold text-gray-400">N/A</span></span> |
-                            <span>User ID: <span id="user-id-display" class="font-semibold text-gray-400">N/A</span></span>
+<body class="bg-gray-50 text-gray-800">
+
+    <div id="sidebar-container"></div>
+
+    <div class="lg:ml-64">
+        <main class="p-4 sm:p-6 lg:p-8">
+            <div class="max-w-4xl mx-auto">
+
+                <!-- Header -->
+                <div class="text-center mb-8">
+                    <h1 class="text-3xl sm:text-4xl font-bold text-indigo-700">Parenting Plan Builder</h1>
+                    <p class="mt-2 text-lg text-gray-600">Craft a comprehensive and collaborative parenting plan.</p>
+                </div>
+
+                <!-- User ID Display & Share Button -->
+                <div class="bg-indigo-100 border-l-4 border-indigo-500 text-indigo-700 p-4 rounded-md mb-6" role="alert">
+                    <p class="font-bold">Your Unique Sharing ID</p>
+                    <p>Share this ID with the other parent to give them access to this plan. Your ID is: <strong id="userIdDisplay" class="select-all">Loading...</strong></p>
+                     <button id="shareButton" class="mt-2 text-sm btn-primary py-1 px-3" disabled>
+                        <i class="fas fa-share-alt mr-2"></i>Share Plan
+                    </button>
+                </div>
+
+                <!-- Parenting Plan Form -->
+                <form id="parentingPlanForm">
+                    <div class="space-y-8">
+
+                        <!-- Section: Child Information -->
+                        <div class="section-card p-6">
+                            <h2 class="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">1. Child(ren)'s Information</h2>
+                            <div id="children-container" class="space-y-4">
+                                <!-- Child fields will be dynamically added here -->
+                            </div>
+                            <button type="button" id="addChildBtn" class="mt-4 btn-secondary"><i class="fas fa-plus mr-2"></i>Add Another Child</button>
+                        </div>
+
+                        <!-- Section: Custody & Visitation -->
+                        <div class="section-card p-6">
+                            <h2 class="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">2. Custody and Visitation</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="physicalCustody" class="block text-sm font-medium text-gray-700">Physical Custody Arrangement:</label>
+                                    <textarea id="physicalCustody" name="physicalCustody" rows="4" placeholder="Describe the primary residence and physical custody schedule (e.g., sole custody, joint custody with weekly rotation, 2-2-5-5 schedule, etc.)."></textarea>
+                                </div>
+                                <div>
+                                    <label for="visitationSchedule" class="block text-sm font-medium text-gray-700">Visitation Schedule:</label>
+                                    <textarea id="visitationSchedule" name="visitationSchedule" rows="4" placeholder="Detail the specific visitation schedule for the non-custodial parent, including weekdays, weekends, and specific times for pickup and drop-off."></textarea>
+                                </div>
+                                 <div>
+                                    <label for="holidaySchedule" class="block text-sm font-medium text-gray-700">Holiday & Vacation Schedule:</label>
+                                    <textarea id="holidaySchedule" name="holidaySchedule" rows="4" placeholder="Outline how holidays (e.g., Christmas, school breaks, birthdays) and vacations will be divided or alternated between parents."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Section: Decision Making -->
+                        <div class="section-card p-6">
+                             <h2 class="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">3. Decision-Making Responsibilities</h2>
+                             <div class="space-y-4">
+                                <div>
+                                    <label for="decisionEducation" class="block text-sm font-medium text-gray-700">Education:</label>
+                                    <textarea id="decisionEducation" name="decisionEducation" rows="3" placeholder="Who will make decisions regarding school choice, tutoring, and other educational matters? (e.g., joint decision, one parent has final say)."></textarea>
+                                </div>
+                                 <div>
+                                    <label for="decisionHealthcare" class="block text-sm font-medium text-gray-700">Healthcare:</label>
+                                    <textarea id="decisionHealthcare" name="decisionHealthcare" rows="3" placeholder="Who will make decisions about medical, dental, and mental health care, including choice of doctors and treatments?"></textarea>
+                                </div>
+                                 <div>
+                                    <label for="decisionReligion" class="block text-sm font-medium text-gray-700">Religious Upbringing:</label>
+                                    <textarea id="decisionReligion" name="decisionReligion" rows="3" placeholder="Describe any agreements on the child's religious upbringing."></textarea>
+                                </div>
+                             </div>
+                        </div>
+
+                        <!-- Section: Financial Support -->
+                        <div class="section-card p-6">
+                            <h2 class="text-2xl font-semibold mb-4 text-gray-900 border-b pb-2">4. Financial Responsibilities</h2>
+                            <div class="space-y-4">
+                                <div>
+                                    <label for="childSupport" class="block text-sm font-medium text-gray-700">Child Support:</label>
+                                    <textarea id="childSupport" name="childSupport" rows="3" placeholder="State the amount of child support to be paid, by whom, and the frequency (e.g., R3000 per month paid by Parent A)."></textarea>
+                                </div>
+                                <div>
+                                    <label for="healthInsurance" class="block text-sm font-medium text-gray-700">Health Insurance:</label>
+                                    <textarea id="healthInsurance" name="healthInsurance" rows="3" placeholder="Which parent will provide health insurance for the child(ren)? How will uninsured medical expenses be divided?"></textarea>
+                                </div>
+                                <div>
+                                    <label for="extraExpenses" class="block text-sm font-medium text-gray-700">Extracurricular & School Expenses:</label>
+                                    <textarea id="extraExpenses" name="extraExpenses" rows="3" placeholder="How will costs for activities, school uniforms, trips, etc., be shared? (e.g., 50/50 split, proportional to income)."></textarea>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <!-- Actions -->
+                        <div class="flex items-center justify-end space-x-4 pt-4">
+                            <button id="saveButton" type="button" class="btn-primary"><i class="fas fa-save mr-2"></i>Save Plan</button>
+                            <button id="downloadPdfButton" type="button" class="btn-secondary"><i class="fas fa-file-pdf mr-2"></i>Download as PDF</button>
                         </div>
                     </div>
+                </form>
 
-                    <!-- Section Navigation Hub -->
-                    <div id="section-hub" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <div class="hub-card" data-section="parties"><i class="fas fa-users"></i><h3>The Parties & Children</h3></div>
-                        <div class="hub-card" data-section="schedule"><i class="fas fa-calendar-alt"></i><h3>Contact Schedule</h3></div>
-                        <div class="hub-card" data-section="communication"><i class="fas fa-comments"></i><h3>Communication Plan</h3></div>
-                        <div class="hub-card" data-section="finances"><i class="fas fa-hand-holding-usd"></i><h3>Financial Contributions</h3></div>
-                        <div class="hub-card" data-section="activity-tracker"><i class="fas fa-chart-line"></i><h3>Family Activity Log</h3></div>
-                        <div class="hub-card" data-section="finalize"><i class="fas fa-file-signature"></i><h3>Finalise & Download</h3></div>
-                    </div>
-                </div>
             </div>
         </main>
     </div>
-    
-    <!-- Modals and Templates -->
-    <div id="section-modal" class="modal-overlay hidden"><div class="modal-content"><div class="modal-header"><h2 id="modal-title" class="text-2xl font-bold text-white"></h2><button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl leading-none">&times;</button></div><div id="modal-body" class="modal-body"></div><div class="modal-footer"><button id="cancel-section-btn" class="btn btn-secondary">Cancel</button><button id="save-section-btn" class="btn btn-primary">Save Section</button></div></div></div>
-    
-    <template id="section-parties-template">
-        <div class="space-y-6">
-            <h3 class="text-xl font-bold text-green-400 border-b border-gray-700 pb-2">Party A</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="parentA-name" class="form-input" placeholder="Full Name"><input type="text" id="parentA-role" class="form-input" placeholder="Role (e.g., Father)"></div>
-            <h3 class="text-xl font-bold text-green-400 border-b border-gray-700 pb-2">Party B</h3>
-            <div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" id="parentB-name" class="form-input" placeholder="Full Name"><input type="text" id="parentB-role" class="form-input" placeholder="Role (e.g., Mother)"></div>
-            <div class="flex justify-between items-center"><h3 class="text-xl font-bold text-green-400">Children</h3><button id="add-child-btn" class="btn btn-primary"><i class="fas fa-plus mr-2"></i>Add Child</button></div>
-            <div id="children-container" class="space-y-4"></div>
+
+    <!-- Share Modal -->
+    <div id="shareModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                <div class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-indigo-100">
+                    <i class="fas fa-share-alt text-indigo-600 fa-lg"></i>
+                </div>
+                <h3 class="text-lg leading-6 font-medium text-gray-900 mt-2">Share Parenting Plan</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p class="text-sm text-gray-500 mb-4">
+                        Enter the other parent's User ID to give them access to view and edit this plan.
+                    </p>
+                    <input type="text" id="shareUserIdInput" placeholder="Other Parent's User ID" class="w-full">
+                </div>
+                <div class="items-center px-4 py-3 space-x-2">
+                    <button id="confirmShareButton" class="btn-primary w-full mb-2">Confirm Share</button>
+                    <button id="closeShareModalButton" class="btn-secondary w-full">Cancel</button>
+                </div>
+            </div>
         </div>
-    </template>
+    </div>
     
-    <template id="child-entry-template">
-        <div class="child-entry bg-gray-800 p-4 rounded-lg"><div class="flex justify-between items-center mb-3"><p class="font-semibold text-white">Child Details</p><button class="remove-child-btn btn btn-danger btn-sm"><i class="fas fa-trash-alt"></i></button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><input type="text" class="form-input child-name" placeholder="Child's Full Name"><input type="date" class="form-input child-dob"></div></div>
-    </template>
+    <!-- Custom Alert Modal -->
+    <div id="alertModal" class="fixed inset-0 bg-gray-600 bg-opacity-50 overflow-y-auto h-full w-full hidden z-50">
+        <div class="relative top-20 mx-auto p-5 border w-96 shadow-lg rounded-md bg-white">
+            <div class="mt-3 text-center">
+                 <div id="alertIconContainer" class="mx-auto flex items-center justify-center h-12 w-12 rounded-full bg-green-100">
+                    <!-- Icon will be inserted here -->
+                </div>
+                <h3 id="alertTitle" class="text-lg leading-6 font-medium text-gray-900 mt-2">Success!</h3>
+                <div class="mt-2 px-7 py-3">
+                    <p id="alertMessage" class="text-sm text-gray-500">Your action was completed successfully.</p>
+                </div>
+                <div class="items-center px-4 py-3">
+                    <button id="closeAlertModalButton" class="btn-primary w-full">OK</button>
+                </div>
+            </div>
+        </div>
+    </div>
 
-    <template id="section-schedule-template">
-         <h3 class="text-xl font-bold mb-4 text-green-400">Custody & Living Arrangements</h3>
-         <select id="custody-status" class="form-select mb-4"><option value="mutual_agreement">We have a mutual agreement</option><option value="in_dispute">We are in dispute</option><option value="court_order">There is a court order in place</option></select>
-         <textarea id="custody-details" class="form-textarea" placeholder="Briefly describe the primary residence and care arrangements..."></textarea>
-         <h3 class="text-xl font-bold my-6 text-green-400">Interactive Contact Schedule</h3>
-         <div id='calendar' class="bg-gray-800 p-4 rounded-lg"></div>
-    </template>
 
-    <template id="section-communication-template">
-         <h3 class="text-xl font-bold mb-4 text-green-400">Communication Methods</h3>
-         <textarea id="communication-methods" class="form-textarea" rows="5" placeholder="Describe the preferred methods, frequency, and topics of communication (e.g., weekly emails for schedules, immediate calls for emergencies)."></textarea>
-         <h3 class="text-xl font-bold my-6 text-green-400">Dispute Resolution</h3>
-         <textarea id="dispute-resolution" class="form-textarea" rows="5" placeholder="Outline the agreed-upon steps for resolving disagreements (e.g., 1. Direct discussion, 2. Mediation with a specific person, 3. Involve Family Advocate)."></textarea>
-    </template>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="./assets/js/sidebar-loader.js"></script>
 
-    <template id="section-finances-template">
-        <p>Financial section is under development.</p>
-    </template>
-    
-    <template id="section-activity-tracker-template">
-        <p>Activity tracker is under development.</p>
-    </template>
+    <script type="module">
+        // =================================================================================
+        // IMPORTANT: This script requires the Firebase SDK. Ensure you have a valid
+        // firebase-config.js file or have included the SDKs in your project.
+        // This script uses ES Modules, so it must be included with type="module".
+        // =================================================================================
+        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+        import { getFirestore, doc, setDoc, getDoc, updateDoc, arrayUnion } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
-    <template id="section-finalize-template">
-        <p>Finalize and Download section is under development.</p>
-    </template>
+        // --- Firebase Initialization ---
+        // These variables MUST be defined in your environment (e.g., via a script tag)
+        // For local development, you can replace them with your actual config.
+        const firebaseConfig = typeof __firebase_config !== 'undefined' ? JSON.parse(__firebase_config) : {};
+        const appId = typeof __app_id !== 'undefined' ? __app_id : 'default-app-id';
+        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
 
-    <!-- Footer -->
-    <footer class="text-center p-4 bg-gray-900 text-gray-400">
-        <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
-    </footer>
+        let db, auth;
+        let currentUserId = null;
+        let planDocRef = null;
 
-    <!-- Scripts -->
-    <script>
-        document.getElementById('currentYear').textContent = new Date().getFullYear();
+        try {
+            const app = initializeApp(firebaseConfig);
+            db = getFirestore(app);
+            auth = getAuth(app);
+        } catch (e) {
+            console.error("Firebase initialization failed:", e);
+            showAlert("Error", "Could not connect to the database. Please refresh the page.", "error");
+        }
+        
+        // --- UI Elements ---
+        const userIdDisplay = document.getElementById('userIdDisplay');
+        const saveButton = document.getElementById('saveButton');
+        const shareButton = document.getElementById('shareButton');
+        const form = document.getElementById('parentingPlanForm');
+        
+        // --- Modal Elements ---
+        const shareModal = document.getElementById('shareModal');
+        const closeShareModalButton = document.getElementById('closeShareModalButton');
+        const confirmShareButton = document.getElementById('confirmShareButton');
+        const shareUserIdInput = document.getElementById('shareUserIdInput');
+        
+        const alertModal = document.getElementById('alertModal');
+        const alertTitle = document.getElementById('alertTitle');
+        const alertMessage = document.getElementById('alertMessage');
+        const alertIconContainer = document.getElementById('alertIconContainer');
+        const closeAlertModalButton = document.getElementById('closeAlertModalButton');
+
+
+        // --- Authentication ---
+        onAuthStateChanged(auth, async (user) => {
+            if (user) {
+                // User is signed in.
+                currentUserId = user.uid;
+                console.log("Authenticated User ID:", currentUserId);
+                userIdDisplay.textContent = currentUserId;
+                
+                // Define the document reference based on the user's ID
+                // This matches the Firestore security rule: `plan_{userId}`
+                const planId = `plan_${currentUserId}`;
+                planDocRef = doc(db, "parenting_plans", planId);
+
+                // Enable buttons and load data
+                saveButton.disabled = false;
+                shareButton.disabled = false;
+                await loadPlan();
+
+            } else {
+                // User is signed out. Attempt to sign in.
+                console.log("No user signed in. Attempting authentication...");
+                if (initialAuthToken) {
+                    try {
+                         await signInWithCustomToken(auth, initialAuthToken);
+                         console.log("Signed in with custom token.");
+                    } catch (error) {
+                        console.error("Custom token sign-in failed, trying anonymous.", error);
+                        await signInAnonymously(auth);
+                    }
+                } else {
+                    await signInAnonymously(auth);
+                    console.log("Signed in anonymously.");
+                }
+            }
+        });
+
+
+        // --- Core Functions ---
+
+        /**
+         * Saves the current parenting plan data to Firestore.
+         * Uses setDoc with { merge: true } to create or update the document.
+         */
+        async function savePlan() {
+            if (!planDocRef) {
+                showAlert("Error", "Not authenticated. Cannot save plan.", "error");
+                return;
+            }
+
+            const formData = new FormData(form);
+            const data = {};
+            for (let [key, value] of formData.entries()) {
+                data[key] = value;
+            }
+
+            // Handle children data separately
+            data.children = getChildrenData();
+
+            console.log("Saving data:", data);
+
+            try {
+                // We create a metadata field to store authorized users, including the creator.
+                const initialMetadata = {
+                    authorizedUsers: [currentUserId]
+                };
+
+                await setDoc(planDocRef, { 
+                    planData: data,
+                    metadata: initialMetadata
+                }, { merge: true });
+                
+                showAlert("Success", "Your parenting plan has been saved successfully!", "success");
+
+            } catch (error) {
+                console.error("Error saving plan:", error);
+                showAlert("Error", "Failed to save the plan. Please check your connection and try again.", "error");
+            }
+        }
+        
+        /**
+         * Loads the parenting plan from Firestore and populates the form.
+         */
+        async function loadPlan() {
+            if (!planDocRef) return;
+            
+            console.log(`Attempting to load plan from: ${planDocRef.path}`);
+            try {
+                const docSnap = await getDoc(planDocRef);
+
+                if (docSnap.exists()) {
+                    console.log("Plan found. Loading data...");
+                    const plan = docSnap.data();
+                    const planData = plan.planData || {}; // Handle case where planData might not exist
+
+                    // Populate standard form fields
+                    for (const key in planData) {
+                        if (form.elements[key]) {
+                            form.elements[key].value = planData[key];
+                        }
+                    }
+                    
+                    // Populate children fields
+                    if (planData.children && Array.isArray(planData.children)) {
+                        document.getElementById('children-container').innerHTML = ''; // Clear existing
+                        planData.children.forEach(child => addChild(child.name, child.dob));
+                    } else {
+                         // If no children data, add one empty child block
+                         addChild();
+                    }
+
+                    showAlert("Plan Loaded", "Your existing parenting plan has been loaded.", "info");
+
+                } else {
+                    // Document does not exist, likely a new user. Add one child block to start.
+                    console.log("No existing plan found. This is a new plan.");
+                    addChild();
+                }
+            } catch (error) {
+                console.error("Error loading plan:", error);
+                // This could be a permissions error. We will show a generic message.
+                showAlert("Load Error", "Could not load your plan. If you were shared this plan, ensure the user ID was correct.", "error");
+            }
+        }
+        
+        /**
+         * Shares the plan with another user by adding their UID to the authorizedUsers array.
+         * @param {string} otherUserId - The UID of the user to share with.
+         */
+        async function sharePlan(otherUserId) {
+            if (!planDocRef || !otherUserId) {
+                showAlert("Invalid Input", "Please enter a valid User ID to share.", "error");
+                return;
+            }
+            
+            try {
+                // First, ensure the document exists by saving the current state.
+                await savePlan();
+
+                // Then, update the document to add the new user to the authorized list.
+                await updateDoc(planDocRef, {
+                    "metadata.authorizedUsers": arrayUnion(otherUserId)
+                });
+                
+                showAlert("Success!", `Plan shared successfully with user: ${otherUserId}`, "success");
+                closeShareModal();
+
+            } catch (error) {
+                console.error("Error sharing plan:", error);
+                showAlert("Sharing Failed", "Could not share the plan. Please verify the User ID and try again.", "error");
+            }
+        }
+
+
+        // --- UI & Event Handlers ---
+        
+        saveButton.addEventListener('click', savePlan);
+        
+        // Modal Handling
+        shareButton.addEventListener('click', () => shareModal.classList.remove('hidden'));
+        closeShareModalButton.addEventListener('click', closeShareModal);
+        confirmShareButton.addEventListener('click', () => {
+            const otherUserId = shareUserIdInput.value.trim();
+            sharePlan(otherUserId);
+        });
+
+        function closeShareModal() {
+            shareModal.classList.add('hidden');
+            shareUserIdInput.value = '';
+        }
+
+        // Alert Modal
+        function showAlert(title, message, type = "success") {
+            alertTitle.textContent = title;
+            alertMessage.textContent = message;
+
+            const icons = {
+                success: '<i class="fas fa-check text-green-600 fa-lg"></i>',
+                error: '<i class="fas fa-times text-red-600 fa-lg"></i>',
+                info: '<i class="fas fa-info-circle text-blue-600 fa-lg"></i>'
+            };
+            const colors = {
+                success: 'bg-green-100',
+                error: 'bg-red-100',
+                info: 'bg-blue-100'
+            };
+
+            alertIconContainer.innerHTML = icons[type] || icons.success;
+            alertIconContainer.className = `mx-auto flex items-center justify-center h-12 w-12 rounded-full ${colors[type] || colors.success}`;
+
+            alertModal.classList.remove('hidden');
+        }
+        closeAlertModalButton.addEventListener('click', () => alertModal.classList.add('hidden'));
+
+
+        // Child Form Management
+        const addChildBtn = document.getElementById('addChildBtn');
+        const childrenContainer = document.getElementById('children-container');
+        let childCount = 0;
+        
+        function addChild(name = '', dob = '') {
+            childCount++;
+            const childDiv = document.createElement('div');
+            childDiv.className = 'p-4 border rounded-lg bg-gray-50';
+            childDiv.innerHTML = `
+                <h3 class="font-semibold text-lg mb-2">Child ${childCount}</h3>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div>
+                        <label for="childName${childCount}" class="block text-sm font-medium text-gray-700">Full Name</label>
+                        <input type="text" id="childName${childCount}" name="childName${childCount}" value="${name}" placeholder="Child's full name">
+                    </div>
+                    <div>
+                        <label for="childDob${childCount}" class="block text-sm font-medium text-gray-700">Date of Birth</label>
+                        <input type="date" id="childDob${childCount}" name="childDob${childCount}" value="${dob}" class="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm">
+                    </div>
+                </div>`;
+            childrenContainer.appendChild(childDiv);
+        }
+
+        function getChildrenData() {
+            const children = [];
+            for (let i = 1; i <= childCount; i++) {
+                const name = document.getElementById(`childName${i}`).value;
+                const dob = document.getElementById(`childDob${i}`).value;
+                if(name || dob) {
+                   children.push({ name, dob });
+                }
+            }
+            return children;
+        }
+
+        addChildBtn.addEventListener('click', () => addChild());
+
+        // PDF Download
+        const downloadPdfButton = document.getElementById('downloadPdfButton');
+        downloadPdfButton.addEventListener('click', () => {
+            const { jsPDF } = window.jspdf;
+            const pdf = new jsPDF();
+            const content = document.getElementById('parentingPlanForm');
+
+            showAlert("Generating PDF...", "Please wait while your document is being prepared.", "info");
+
+            html2canvas(content).then(canvas => {
+                const imgData = canvas.toDataURL('image/png');
+                const pdfWidth = pdf.internal.pageSize.getWidth();
+                const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+                pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+                pdf.save("parenting-plan.pdf");
+            });
+        });
+
     </script>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script src="assets/js/parenting-plan-builder.js" type="module"></script>
 </body>
+
 </html>
