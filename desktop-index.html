@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -10,136 +9,56 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-
     <style>
-        .font-roboto-slab {
-            font-family: 'Roboto Slab', serif;
-        }
-
-        .text-shadow {
-            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
-        }
-
+        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         .content-box {
-            background: rgba(17, 24, 39, 0.8);
+            background: rgba(17, 24, 39, 0.8); /* Semi-transparent bg-gray-900 */
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
         }
-
-        #countdown-container .countdown-box {
-            background: rgba(255, 255, 255, 0.1);
-        }
-
-        #countdown-container .countdown-number {
-            font-family: 'Roboto Slab', serif;
-            font-weight: 900;
-        }
-
-        /* Carousel Styles */
-        .carousel-container {
-            position: relative;
-            width: 100%;
-            height: 320px;
-            margin: auto;
-            overflow: hidden;
-        }
-
-        .carousel-slide {
-            display: none;
-            width: 100%;
-            height: 100%;
-            position: absolute;
-            transition: opacity 1s ease-in-out;
-            opacity: 0;
-        }
-
-        .carousel-slide.active {
-            display: flex;
-            opacity: 1;
-        }
-
-        .carousel-content {
-            margin: auto;
-            text-align: center;
-        }
-
-        .carousel-graphic {
-            font-size: 3rem;
-            line-height: 1;
-            margin-bottom: 0.5rem;
-        }
-
-        .carousel-content a {
-            display: inline-block;
-            padding: 10px 20px;
-            background-color: #f97316;
-            color: white;
-            border-radius: 30px;
-            margin-top: 15px;
-            text-decoration: none;
-        }
-
-        .carousel-content a:hover {
-            background-color: #ea580c;
-        }
-
-        .countdown-container {
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            gap: 10px;
-        }
-
-        .countdown-box {
-            padding: 15px;
-            border-radius: 8px;
-            background-color: rgba(255, 255, 255, 0.2);
-            text-align: center;
-            font-size: 1.5rem;
-        }
+        #countdown-container .countdown-box { background: rgba(255,255,255,0.1); }
+        #countdown-container .countdown-number { font-family: 'Roboto', sans-serif; font-weight: 900; }
+        .carousel-container { position: relative; width: 100%; max-width: 800px; height: 300px; margin: 2rem auto; overflow: hidden; }
+        .carousel-slide { display: none; width: 100%; height: 100%; position: absolute; transition: opacity 1s ease-in-out; opacity: 0; }
+        .carousel-slide.active { display: flex; opacity: 1; }
+        .carousel-content { margin: auto; text-align: center; }
+        .carousel-graphic { font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
     </style>
 </head>
-
 <body class="bg-gray-900 text-gray-200">
-
     <div class="main-container flex">
         <!-- Standardized Sidebar -->
         <div id="sidebar-placeholder"></div>
 
         <!-- Main Content Area -->
         <main class="main-content flex-1 p-6 flex justify-center items-center min-h-screen">
+            <div class="relative w-full max-w-4xl flex flex-col items-center space-y-8">
+                <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3'); z-index: -1;"></div>
+                <div class="absolute inset-0 bg-black/60" style="z-index: -1;"></div>
 
-            <!-- Home Panel -->
-            <div id="home" class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md text-center">
-                <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
-                <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Empowering South African fathers to reclaim their role.</p>
-            </div>
-
-            <!-- Countdown Timer Box -->
-            <div id="countdown-container" class="content-box p-6 rounded-2xl shadow-2xl mt-8">
-                <h2 class="text-xl md:text-2xl font-bold text-orange-400 font-roboto-slab mb-4 text-center">Official Platform Launch Countdown</h2>
-                <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-4 text-white">
-                    <div class="countdown-box">
-                        <div id="days" class="text-3xl md:text-4xl countdown-number">0</div>
-                        <div class="text-xs md:text-sm uppercase">Days</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="hours" class="text-3xl md:text-4xl countdown-number">0</div>
-                        <div class="text-xs md:text-sm uppercase">Hours</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="minutes" class="text-3xl md:text-4xl countdown-number">0</div>
-                        <div class="text-xs md:text-sm uppercase">Minutes</div>
-                    </div>
-                    <div class="countdown-box">
-                        <div id="seconds" class="text-3xl md:text-4xl countdown-number">0</div>
-                        <div class="text-xs md:text-sm uppercase">Seconds</div>
+                <!-- Countdown Timer Box -->
+                <div id="countdown-container" class="content-box p-6 rounded-lg shadow-md text-center z-10">
+                    <h2 class="text-xl md:text-2xl font-bold text-orange-400 font-roboto mb-4">Official Platform Launch Countdown</h2>
+                    <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-4 text-white">
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="days" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Days</div></div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="hours" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Hours</div></div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="minutes" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Minutes</div></div>
+                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="seconds" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Seconds</div></div>
                     </div>
                 </div>
+
+                <!-- Home Panel -->
+                <div id="home" class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md text-center z-10">
+                    <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4 text-white text-shadow">FATHERS. LEADERS. LEGACY.</h2>
+                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Empowering South African fathers to reclaim their role.</p>
+                </div>
+
+                <!-- Carousel Box -->
+                <div class="carousel-container content-box rounded-lg shadow-md z-10">
+                    <!-- Slides will be injected here -->
+                </div>
             </div>
-
         </main>
-
     </div>
 
     <!-- Footer -->
@@ -149,23 +68,19 @@
 
     <!-- Scripts -->
     <script>
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
-        });
-    </script>
 
-    <script>
-        // --- Countdown Logic ---
-        (function () {
-            const daysEl = document.getElementById('days'),
-                hoursEl = document.getElementById('hours'),
-                minutesEl = document.getElementById('minutes'),
-                secondsEl = document.getElementById('seconds');
+            // Countdown Logic
+            const daysEl = document.getElementById('days');
+            const hoursEl = document.getElementById('hours');
+            const minutesEl = document.getElementById('minutes');
+            const secondsEl = document.getElementById('seconds');
             const launchDate = new Date('2026-04-10T00:00:00').getTime();
 
             function updateCountdown() {
-                const now = new Date().getTime(),
-                    distance = launchDate - now;
+                const now = new Date().getTime();
+                const distance = launchDate - now;
                 if (distance < 0) {
                     document.getElementById('countdown').innerHTML = `<div class="col-span-4 text-xl md:text-3xl font-bold text-green-400">The Flamea Platform is Officially Live!</div>`;
                     clearInterval(interval);
@@ -176,24 +91,52 @@
                 minutesEl.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 secondsEl.innerText = Math.floor((distance % (1000 * 60)) / 1000);
             }
-
             const interval = setInterval(updateCountdown, 1000);
             updateCountdown();
-        })();
+
+            // Carousel Logic
+            const carouselContainer = document.querySelector('.carousel-container');
+            if (!carouselContainer) return;
+            const weeklyContent = [
+                [
+                    { type: 'tool', title: 'Parenting Plan Builder', desc: 'Create a comprehensive parenting plan step-by-step.', link: 'parenting-plan.html', graphic: '<i class="fas fa-file-signature text-blue-400"></i>' },
+                    { type: 'resource', title: 'Publications Library', desc: 'Access a rich library of books and guides on fatherhood and law.', link: 'publications.html', graphic: '<i class="fas fa-book-open text-yellow-400"></i>' },
+                    { type: 'quote', text: '"The best interests of the child must be the paramount consideration in every matter concerning the child."', source: 'SA Constitution, Sec 28(2)', link: 'constitution.html' }
+                ],
+                [
+                    { type: 'tool', title: 'Resource Locator', desc: 'Find legal aid and social services near you.', link: 'locator.html', graphic: '<i class="fas fa-map-marker-alt text-green-400"></i>' },
+                    { type: 'resource', title: 'Training Courses', desc: 'Enroll in courses on co-parenting, law, and more.', link: 'training.html', graphic: '<i class="fas fa-graduation-cap text-indigo-400"></i>' },
+                    { type: 'quote', text: '"A man who does not know himself cannot know his children."', source: 'Know Yourself', link: 'publications.html' }
+                ]
+            ];
+            const currentWeekIndex = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24 * 7)) % weeklyContent.length;
+            const contentForThisWeek = weeklyContent[currentWeekIndex] || weeklyContent[0];
+            let currentSlide = 0;
+
+            contentForThisWeek.forEach((item, index) => {
+                const slide = document.createElement('div');
+                slide.className = 'carousel-slide';
+                if (index === 0) slide.classList.add('active');
+                let innerHTML = '';
+                if (item.type === 'quote') {
+                    innerHTML = `<div class="carousel-content p-6 text-white"><div class="carousel-graphic"><i class="fas fa-quote-left text-gray-400"></i></div><p class="text-xl md:text-2xl italic">"${item.text}"</p><p class="text-md mt-4 font-semibold">- ${item.source}</p><a href="${item.link}" class="mt-4 inline-block text-blue-300 hover:text-blue-200 text-sm">Read More →</a></div>`;
+                } else {
+                    innerHTML = `<div class="carousel-content p-6 text-white"><div class="carousel-graphic">${item.graphic}</div><h3 class="text-2xl md:text-3xl font-bold font-roboto">${item.title}</h3><p class="text-md mt-2 max-w-md mx-auto">${item.desc}</p><a href="${item.link}" class="mt-6 inline-block bg-white/20 hover:bg-white/30 text-white font-bold py-2 px-6 rounded-full transition">Explore</a></div>`;
+                }
+                slide.innerHTML = innerHTML;
+                carouselContainer.appendChild(slide);
+            });
+
+            const slides = document.querySelectorAll('.carousel-slide');
+            function nextSlide() {
+                currentSlide = (currentSlide + 1) % slides.length;
+                slides.forEach(s => s.classList.remove('active'));
+                slides[currentSlide].classList.add('active');
+            }
+            setInterval(nextSlide, 7000);
+        });
     </script>
-
-    <script>
-        // --- Carousel Logic ---
-        const carouselContainer = document.querySelector('.carousel-container');
-        if (!carouselContainer) return;
-
-        const weeklyContent = [
-            // Week 1 Content
-            [
-                { title: 'Parenting Plan Builder', desc: 'Create a comprehensive parenting plan step-by-step.', link: 'parenting-plan.html', graphic: '<i class="fas fa-file-signature text-blue-400"></i>' },
-                { title: 'Publications Library', desc: 'Access a rich library of books and guides on fatherhood and law.', link: 'publications.html', graphic: '<i class="fas fa-book-open text-yellow-400"></i>' }
-            ],
-            // Week 2 Content
-            [
-                { title: 'Resource Locator', desc: 'Find legal aid and social services near you.', link: 'locator.html', graphic: '<i class="fas fa-map-marker-alt text-green-400"></i>' },
-                { title: 'Training Courses', desc: 'Enroll in courses on co-parenting, law, and more.', link: 'training.html', graphic: '<i class="fas
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>
