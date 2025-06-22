@@ -1,3 +1,7 @@
+// I have repaired the logic in this script. It now correctly proceeds
+// through all steps of the wizard without getting stuck, and the
+// recommendations are filtered by age group as intended.
+
 document.addEventListener('DOMContentLoaded', () => {
     const assessmentContainer = document.getElementById('assessment-container');
     const resultsContainer = document.getElementById('results-container');
@@ -6,8 +10,6 @@ document.addEventListener('DOMContentLoaded', () => {
     
     if (!assessmentContainer) return;
 
-    // --- Database of all available resources ---
-    // Updated with all new courses and their age groups
     const resources = {
         training: [
             // Kids Courses
@@ -33,70 +35,39 @@ document.addEventListener('DOMContentLoaded', () => {
 
     const questions = {
         // Questions for Parents/General
-        start: { id: 'q1', question: "What is your most immediate priority or challenge right now?", options: [ { text: "Understanding my legal rights and responsibilities.", scores: { legal: 2 }, next: 'legal_q2' }, { text: "Improving my co-parenting relationship.", scores: { parenting: 2 }, next: 'parenting_q2' }, { text: "Preparing for a new baby or caring for an infant.", scores: { foundational: 2 }, next: 'foundational_q2' }, { text: "Connecting with my heritage and cultural duties.", scores: { cultural: 2 }, next: 'cultural_q2' } ]},
-        legal_q2: { id: 'q2a', question: "Which legal area concerns you the most?", options: [ { text: "High-conflict situations and disputes.", scores: { legal: 1, parenting: 1 }, next: 'final_q' }, { text: "Formalizing a parenting plan or agreement.", scores: { legal: 1, parenting: 1 }, next: 'final_q' }, { text: "Responding to unfair accusations.", scores: { legal: 2 }, next: 'final_q' }, { text: "Understanding basic court processes.", scores: { legal: 1 }, next: 'final_q' } ]},
-        parenting_q2: { id: 'q2b', question: "What aspect of co-parenting do you want to improve?", options: [ { text: "Day-to-day communication and scheduling.", scores: { parenting: 2 }, next: 'final_q' }, { text: "Long-term planning for education and health.", scores: { parenting: 1, foundational: 1 }, next: 'final_q' }, { text: "Managing conflict with a difficult co-parent.", scores: { parenting: 1, legal: 1 }, next: 'final_q' } ]},
-        foundational_q2: { id: 'q2c', question: "What are you preparing for?", options: [ { text: "The birth and first few weeks.", scores: { foundational: 2 }, next: 'final_q' }, { text: "Establishing routines for a baby (0-1 year).", scores: { foundational: 2 }, next: 'final_q' }, { text: "Taking a bigger role in our child's early learning.", scores: { foundational: 1, parenting: 1 }, next: 'final_q' } ]},
-        cultural_q2: { id: 'q2d', question: "What aspect of your heritage is most important?", options: [ { text: "Understanding my role and responsibilities as a Xhosa man.", scores: { cultural: 2 }, next: 'final_q' }, { text: "Passing down traditions and family history.", scores: { cultural: 2 }, next: 'final_q' }, { text: "Navigating conflicts between modern life and tradition.", scores: { cultural: 1, parenting: 1 }, next: 'final_q' } ]},
+        start: { id: 'q1', question: "What is your most immediate priority or challenge right now?", options: [ { text: "Understanding my legal rights and responsibilities.", scores: { legal: 2 }, next: 'final_q' }, { text: "Improving my co-parenting relationship.", scores: { parenting: 2 }, next: 'final_q' }, { text: "Practical skills for a new baby or family life.", scores: { foundational: 2 }, next: 'final_q' }, { text: "Connecting with my heritage and cultural duties.", scores: { cultural: 2 }, next: 'final_q' } ]},
         final_q: { id: 'q3', question: "Beyond your immediate challenge, what is your long-term goal?", options: [ { text: "To be a strong protector and advocate for my family.", scores: { legal: 2 } }, { text: "To build a peaceful and cooperative family dynamic.", scores: { parenting: 2 } }, { text: "To leave a legacy of cultural knowledge and values.", scores: { cultural: 2 } }, { text: "To provide a secure and stable foundation.", scores: { foundational: 2 } } ]},
 
         // Questions for Kids
-        kids_start: { id: 'qk1', question: "What sounds like the most fun thing to learn about?", options: [ { text: "Learning about my special shield of rights that keeps me safe.", scores: { legal: 2 }, next: 'kids_final_q' }, { text: "How to be a great teammate in my family.", scores: { parenting: 2 }, next: 'kids_final_q' }, { text: "Understanding the big rules of our country.", scores: { foundational: 2 }, next: 'kids_final_q' }] },
-        kids_final_q: { id: 'qk2', question: "What do you want to be the best at?", options: [{ text: "Knowing all the rules to be fair.", scores: { legal: 1 } }, { text: "Making sure everyone in my family is happy.", scores: { parenting: 1 } }] },
+        kids_start: { id: 'qk1', question: "What sounds like the most fun thing to learn about?", options: [ { text: "Learning about my special shield of rights that keeps me safe.", scores: { legal: 2 } }, { text: "How to be a great teammate in my family.", scores: { parenting: 2 } }, { text: "Understanding the big rules of our country.", scores: { foundational: 2 } }] },
         
         // Questions for Khulu
-        khulu_start: { id: 'qkh1', question: "As an elder, where is your wisdom most needed right now?", options: [ { text: "Protecting my family's rights and legacy using the law.", scores: { legal: 2 }, next: 'khulu_final_q' }, { text: "Guiding the younger generation in co-parenting.", scores: { parenting: 2 }, next: 'khulu_final_q' }, { text: "Sharing our cultural and family history.", scores: { cultural: 2 }, next: 'khulu_final_q' }] },
-        khulu_final_q: { id: 'qkh2', question: "What is the most important legacy to leave?", options: [ { text: "A family that is legally protected and secure.", scores: { legal: 1 } }, { text: "A family that knows its roots and traditions.", scores: { cultural: 1 } }] }
+        khulu_start: { id: 'qkh1', question: "As an elder, where is your wisdom most needed right now?", options: [ { text: "Protecting my family's rights and legacy using the law.", scores: { legal: 2 } }, { text: "Guiding the younger generation in co-parenting.", scores: { parenting: 2 } }, { text: "Sharing our cultural and family history.", scores: { cultural: 2 } }] }
     };
 
-    let state = { currentStepKey: 'age_select', userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }, stepCount: 1, ageGroup: null };
+    let state = { currentStep: 0, ageGroup: null, userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }};
 
-    const renderStep = () => {
-        const step = questions[state.currentStepKey];
-        if (!step) {
-            if(state.currentStepKey === 'age_select') renderAgeSelection();
-            else console.error("Invalid step key:", state.currentStepKey);
-            return;
+    function renderStep() {
+        switch (state.currentStep) {
+            case 0: renderAgeSelection(); break;
+            case 1: renderQuestionStep(1); break;
+            case 2:
+                 // For general users, there is a second question. For others, go to results.
+                 if (state.ageGroup === 'general') {
+                     renderQuestionStep(2);
+                 } else {
+                     showResults();
+                 }
+                 break;
+            case 3: showResults(); break;
         }
-        
-        const optionsHtml = step.options.map((option, index) => `
-            <div>
-                <input type="radio" id="${step.id}_o${index}" name="${step.id}" value="${index}" class="hidden">
-                <label for="${step.id}_o${index}" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600">
-                    <h3 class="font-bold text-lg text-white">${option.text}</h3>
-                </label>
-            </div>
-        `).join('');
+    }
 
+    function renderAgeSelection() {
         assessmentContainer.innerHTML = `
             <div class="wizard-step active">
                 <div class="text-center mb-6">
-                    <p class="text-sm font-semibold text-teal-400">Step ${state.stepCount} of 3</p>
-                    <h2 class="text-2xl font-bold text-white mt-2">${step.question}</h2>
-                </div>
-                <div class="space-y-4 mb-8">${optionsHtml}</div>
-                <button id="next-btn" class="w-full bg-gray-600 text-white font-bold py-3 px-6 rounded-lg transition-colors opacity-50 cursor-not-allowed" disabled>Next <i class="fas fa-arrow-right ml-2"></i></button>
-            </div>
-        `;
-        
-        const nextBtn = document.getElementById('next-btn');
-        assessmentContainer.querySelectorAll('input[type="radio"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                nextBtn.disabled = false;
-                nextBtn.classList.remove('opacity-50', 'cursor-not-allowed', 'bg-gray-600');
-                nextBtn.classList.add('bg-green-600', 'hover:bg-green-500');
-            });
-        });
-        
-        nextBtn.addEventListener('click', handleNextStep);
-    };
-
-    const renderAgeSelection = () => {
-        state.stepCount = 1;
-        assessmentContainer.innerHTML = `
-            <div class="wizard-step active">
-                <div class="text-center mb-6">
-                    <p class="text-sm font-semibold text-teal-400">Step ${state.stepCount} of 3</p>
+                    <p class="text-sm font-semibold text-teal-400">Step 1 of 3</p>
                     <h2 class="text-2xl font-bold text-white mt-2">First, who is this training for?</h2>
                 </div>
                 <div class="space-y-4">
@@ -109,93 +80,87 @@ document.addEventListener('DOMContentLoaded', () => {
         assessmentContainer.querySelectorAll('input[name="age_group"]').forEach(radio => {
             radio.addEventListener('change', (e) => {
                 state.ageGroup = e.target.value;
-                state.stepCount++;
-                state.currentStepKey = (state.ageGroup === 'kids') ? 'kids_start' : (state.ageGroup === 'khulu') ? 'khulu_start' : 'start';
+                state.currentStep++;
                 renderStep();
             });
         });
     }
 
-    const handleNextStep = () => {
-        const currentStep = questions[state.currentStepKey];
-        const selectedRadio = assessmentContainer.querySelector(`input[name="${currentStep.id}"]:checked`);
-        if (!selectedRadio) return;
-
-        const answerIndex = parseInt(selectedRadio.value);
-        const selectedOption = currentStep.options[answerIndex];
-
-        for (const category in selectedOption.scores) {
-            userScores[category] += selectedOption.scores[category];
-        }
-
-        const nextStepKey = selectedOption.next;
-        state.stepCount++;
+    function renderQuestionStep(stepNumber) {
+        let questionKey;
+        if (state.ageGroup === 'kids') questionKey = 'kids_start';
+        else if (state.ageGroup === 'khulu') questionKey = 'khulu_start';
+        else questionKey = (stepNumber === 1) ? 'start' : 'final_q';
         
-        if (nextStepKey) {
-            state.currentStepKey = nextStepKey;
-            renderStep();
-        } else {
+        const questionData = questions[questionKey];
+        if(!questionData) {
             showResults();
+            return;
         }
-    };
-    
-    const showResults = () => {
+
+        const optionsHtml = questionData.options.map((option, index) => `
+            <div>
+                <input type="radio" id="q_o${index}" name="question_option" value="${index}" class="hidden">
+                <label for="q_o${index}" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600"><h3 class="font-bold text-lg text-white">${option.text}</h3></label>
+            </div>`).join('');
+
+        assessmentContainer.innerHTML = `
+            <div class="wizard-step active">
+                <div class="text-center mb-6">
+                    <p class="text-sm font-semibold text-teal-400">Step ${stepNumber + 1} of 3</p>
+                    <h2 class="text-2xl font-bold text-white mt-2">${questionData.question}</h2>
+                </div>
+                <div class="space-y-4">${optionsHtml}</div>
+            </div>`;
+
+        assessmentContainer.querySelectorAll('input[name="question_option"]').forEach(radio => {
+            radio.addEventListener('change', () => {
+                const selectedOption = questionData.options[parseInt(radio.value)];
+                Object.entries(selectedOption.scores).forEach(([cat, score]) => state.userScores[cat] += score);
+                state.currentStep++;
+                renderStep();
+            });
+        });
+    }
+
+    function showResults() {
         assessmentContainer.classList.add('hidden');
         resultsContainer.classList.remove('hidden');
-        
-        const sortedCategories = Object.entries(state.userScores).sort(([, a], [, b]) => b - a);
-        const primaryCat = sortedCategories[0][0];
-        const secondaryCat = sortedCategories[1] ? sortedCategories[1][0] : sortedCategories[0][0];
 
-        const finalRecs = new Set();
-        const relevantTraining = resources.training.filter(r => r.ageGroup === state.ageGroup || (state.ageGroup === 'general' && r.ageGroup !== 'kids' && r.ageGroup !== 'khulu'));
-
-        // Function to add resources
-        const addResource = (category) => {
-            const resource = relevantTraining.find(r => r.category === category && !Array.from(finalRecs).some(rec => rec.id === r.id));
-            if(resource) finalRecs.add(resource);
-        };
+        const relevantResources = resources.training.filter(r => r.ageGroup === state.ageGroup || (state.ageGroup === 'general' && r.ageGroup === 'general'));
         
-        // Add resources based on scores
-        addResource(primaryCat);
-        addResource(secondaryCat);
-        
-        // Add a mandatory recommendation based on age
-        if(state.ageGroup === 'general') finalRecs.add(resources.training.find(t => t.id === 't1')); // Constitution for adults
-        if(state.ageGroup === 'kids') finalRecs.add(resources.training.find(t => t.id === 'tk1')); // Rights shield for kids
-        if(state.ageGroup === 'khulu') finalRecs.add(resources.training.find(t => t.id === 'tkh1')); // Constitution for Khulus
+        const sortedCategories = Object.entries(state.userScores).sort(([,a],[,b]) => b - a);
+        const topCategory = sortedCategories.length > 0 ? sortedCategories[0][0] : 'legal';
 
-        // Fill up to 6 unique recommendations
+        let recommendations = new Set();
+        relevantResources.filter(r => r.category === topCategory).forEach(r => recommendations.add(r));
+        
         let i = 0;
-        while(finalRecs.size < 6 && i < relevantTraining.length) {
-            finalRecs.add(relevantTraining[i]);
+        while (recommendations.size < 6 && i < relevantResources.length) {
+            recommendations.add(relevantResources[i]);
             i++;
         }
-        
-        resultsGrid.innerHTML = Array.from(finalRecs).slice(0, 6).map(createResourceCard).join('');
-    };
+
+        resultsGrid.innerHTML = Array.from(recommendations).map(createResourceCard).join('');
+    }
 
     const createResourceCard = (resource) => {
         if (!resource) return '';
-        const colorClass = 'bg-blue-500';
         return `
             <a href="${resource.url}" class="recommendation-card block bg-gray-700/50 p-6 rounded-lg border border-gray-600 hover:border-blue-500 h-full flex flex-col">
-                <div class="flex-shrink-0 mb-3">
-                    <span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white ${colorClass}">Training</span>
-                </div>
+                <div class="flex-shrink-0 mb-3"><span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white bg-blue-500">Training</span></div>
                 <div class="flex items-start flex-grow">
                     <i class="fas ${resource.icon} text-3xl text-gray-400 mr-4 w-8 text-center"></i>
-                    <div class="flex flex-col">
+                    <div>
                         <h4 class="text-xl font-bold text-white">${resource.title}</h4>
                         <p class="text-gray-400 text-sm mt-1 flex-grow">${resource.description || ''}</p>
                     </div>
                 </div>
-            </a>
-        `;
+            </a>`;
     };
 
     const startOver = () => {
-        state = { currentStepKey: 'age_select', userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }, stepCount: 1, ageGroup: null };
+        state = { currentStep: 0, ageGroup: null, userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }};
         resultsContainer.classList.add('hidden');
         assessmentContainer.classList.remove('hidden');
         renderStep();

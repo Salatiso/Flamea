@@ -8,22 +8,22 @@
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.css">
     <style>
+        body { font-family: 'Open Sans', sans-serif; }
         .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; background-color: #111827; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; padding: 0 1.5rem; }
-        .accordion-item.active .accordion-content { max-height: 1500px; padding: 1.5rem; }
+        .accordion-item.active .accordion-content { max-height: 2000px; /* Increased max-height */ padding: 1.5rem; }
         .accordion-icon { transition: transform 0.3s ease-out; }
         .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        .option-card:hover { transform: translateY(-4px); }
+        .course-card:hover { border-color: #3b82f6; background-color: #1f2937; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder"></div>
 
-        <!-- Main Content -->
         <main class="main-content p-8 md:p-12">
             <div class="max-w-7xl mx-auto">
                 <div class="text-center mb-12 bg-gray-800/50 p-6 rounded-lg">
@@ -32,28 +32,28 @@
                 </div>
 
                 <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    <a href="training-assessment.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="training-assessment.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300">
                         <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
                         <p class="text-gray-400">New here? Get a personalized training plan.</p>
                     </a>
-                    <a href="#course-catalogue" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="#course-catalogue" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300">
                         <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
                         <p class="text-gray-400">Browse our full catalogue of courses.</p>
                     </a>
-                    <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500 transition-all duration-300 transform hover:-translate-y-1">
+                    <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500 transition-all duration-300">
                         <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
                         <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
                         <p class="text-gray-400">Test your knowledge in our interactive arcade.</p>
                     </a>
                 </div>
 
-                <div id="course-catalogue" class="space-y-8">
+                <div id="course-catalogue" class="space-y-4">
                     <!-- This div will be populated by training.js -->
-                    <div class="text-center text-gray-400">
+                    <div class="text-center text-gray-400 p-10">
                         <i class="fas fa-spinner fa-spin text-3xl"></i>
-                        <p>Loading Courses...</p>
+                        <p class="mt-2">Loading Courses...</p>
                     </div>
                 </div>
             </div>
@@ -61,301 +61,6 @@
     </div>
 
     <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/training.js"></script>
+    <script src="assets/js/training.js"></script>
 </body>
 </html>
-```javascript
-// assets/js/training.js
-
-document.addEventListener('DOMContentLoaded', async () => {
-    const courseCatalogue = document.getElementById('course-catalogue');
-    if (!courseCatalogue) return;
-
-    // In a real web server, you might fetch this list from an API.
-    // For this environment, this hardcoded list simulates a directory scan.
-    const allCourseFiles = [
-        'training/course_kids-rights_shield.html', 'training/course_kids-big_rule_book.html',
-        'training/course_kids-whos_in_charge.html', 'training/course-kids-the_best_nest.html',
-        'training/courses_khulu-the_constitution_your_ultimate_shield.html', 'training/courses_khulu-the_childrens_act.html',
-        'training/courses_khulu-the_equal_guardian.html', 'training/courses_khulu-accessing_your_rights.html',
-        'training/courses_khulu-the_homesteaders_resilience.html', 'training/courses_khulu-when_trouble_comes_home.html',
-        'training/courses_khulu-our_ways_their_laws.html', 'training/courses_khulu-the_homeschooling_choice.html',
-        'training/courses_khulu-the_unwritten_phd.html', 'training/courses_khulu-from_birth_to_belonging.html',
-        'training/courses_khulu-two_families_become_one.html', 'training/courses_khulu-when_a_loved_one_departs.html',
-        'training/course-constitution.html', 'training/course-childrens-act.html',
-        'training/course-coparenting.html', 'training/course-family-law.html',
-        'training/course-newborn-daily-care.html', 'training/course-unbroken-chain.html',
-        'training/course-ancestors-within.html', 'training/course-extended-family.html'
-    ];
-
-    const getCourseDetails = async (url) => {
-        try {
-            const response = await fetch(url);
-            if (!response.ok) return null;
-            const text = await response.text();
-            const parser = new DOMParser();
-            const doc = parser.parseFromString(text, 'text/html');
-            const title = doc.querySelector('title')?.textContent.split('-')[0].split(':')[0].trim() || 'Untitled Course';
-            const description = doc.querySelector('meta[name="description"]')?.content || `An essential course on ${title}.`;
-            return { url, title, description };
-        } catch (error) {
-            console.error(`Could not fetch details for ${url}:`, error);
-            return null;
-        }
-    };
-    
-    const categorizeCourse = (course) => {
-        const url = course.url.toLowerCase();
-        if (url.includes('_kids-') || url.includes('-kids-')) return 'FLAMEA Kids (Ages 4-13)';
-        if (url.includes('_khulu-')) return 'Khulu Courses (For Grandparents & Elders)';
-        return 'Foundational Courses (For Fathers & Parents)';
-    };
-
-    const coursePromises = allCourseFiles.map(getCourseDetails);
-    const allCourses = (await Promise.all(coursePromises)).filter(Boolean);
-
-    const coursesByCategory = allCourses.reduce((acc, course) => {
-        const category = categorizeCourse(course);
-        if (!acc[category]) acc[category] = [];
-        acc[category].push(course);
-        return acc;
-    }, {});
-    
-    const categoryOrder = ['Foundational Courses (For Fathers & Parents)', 'Khulu Courses (For Grandparents & Elders)', 'FLAMEA Kids (Ages 4-13)'];
-    let catalogueHtml = '';
-
-    for (const category of categoryOrder) {
-        const courses = coursesByCategory[category];
-        if (courses && courses.length > 0) {
-            catalogueHtml += `
-                <div class="accordion-item bg-gray-800 rounded-lg">
-                    <div class="accordion-header flex justify-between items-center p-6 cursor-pointer">
-                        <h3 class="text-2xl font-bold font-roboto-slab text-white">${category}</h3>
-                        <i class="fas fa-chevron-down accordion-icon text-gray-400"></i>
-                    </div>
-                    <div class="accordion-content border-t border-gray-700">
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            ${courses.map(course => `
-                                <a href="${course.url}" class="block bg-gray-900/50 p-4 rounded-lg hover:bg-gray-700 transition-colors">
-                                    <h4 class="font-bold text-teal-400">${course.title}</h4>
-                                </a>
-                            `).join('')}
-                        </div>
-                    </div>
-                </div>`;
-        }
-    }
-    
-    courseCatalogue.innerHTML = catalogueHtml;
-
-    courseCatalogue.querySelectorAll('.accordion-header').forEach(header => {
-        header.addEventListener('click', () => {
-            header.closest('.accordion-item').classList.toggle('active');
-        });
-    });
-});
-```html
-<!-- training-assessment.html -->
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Find Your Learning Path - Flamea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="assets/css/style.min.css">
-    <style>
-        .wizard-step { display: none; }
-        .wizard-step.active { display: block; animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn {
-            from { opacity: 0; transform: translateY(10px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        .option-label { transition: background-color 0.3s, border-color 0.3s; cursor: pointer; }
-        .option-label:hover { background-color: rgba(255, 255, 255, 0.05); border-color: #f59e0b; }
-        input[type="radio"]:checked + .option-label { background-color: rgba(59, 130, 246, 0.2); border-color: #3b82f6; }
-        .recommendation-card { transition: all 0.3s ease-in-out; }
-        .recommendation-card:hover { transform: scale(1.03); box-shadow: 0 10px 15px -3px rgba(0,0,0,0.3), 0 4px 6px -4px rgba(0,0,0,0.3); }
-    </style>
-</head>
-<body class="bg-gray-900 text-gray-300 font-open-sans">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-        <main class="main-content p-6 sm:p-8">
-            <div class="max-w-4xl mx-auto">
-                <header id="hub-header" class="text-center mb-12">
-                    <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                        <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">Find Your Path</h1>
-                        <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">This quick assessment will recommend a personalized package of resources.</p>
-                    </div>
-                </header>
-                <div id="assessment-container" class="bg-gray-800 rounded-xl p-6 md:p-8 shadow-lg"></div>
-                <div id="results-container" class="hidden">
-                     <h2 class="text-3xl font-bold text-white text-center mb-8">Your Personalized Resource Package</h2>
-                     <div id="results-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"></div>
-                     <div class="text-center mt-12">
-                        <button id="restart-assessment-btn" class="bg-amber-600 hover:bg-amber-700 text-white font-bold py-3 px-8 rounded-lg">
-                            <i class="fas fa-redo-alt mr-2"></i>Start Over
-                        </button>
-                    </div>
-                </div>
-            </div>
-        </main>
-    </div>
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/training-assessment.js"></script>
-</body>
-</html>
-```javascript
-// assets/js/training-assessment.js
-
-document.addEventListener('DOMContentLoaded', () => {
-    const assessmentContainer = document.getElementById('assessment-container');
-    const resultsContainer = document.getElementById('results-container');
-    const resultsGrid = document.getElementById('results-grid');
-    const restartBtn = document.getElementById('restart-assessment-btn');
-    
-    if (!assessmentContainer) return;
-
-    // --- Database of all available resources ---
-    const resources = {
-        training: [
-            // Kids
-            { id: 'tk1', title: 'My Rights, My Shield', ageGroup: 'kids', category: 'legal', icon: 'fa-shield-halved', url: 'training/course_kids-rights_shield.html', description: 'Learn about your rights as a protective shield.' },
-            { id: 'tk2', title: 'The Big Rule Book', ageGroup: 'kids', category: 'legal', icon: 'fa-book-open', url: 'training/course_kids-big_rule_book.html', description: 'Discover why the Constitution is the most important rule book.' },
-            // Khulu
-            { id: 'tkh1', title: 'The Constitution: Your Ultimate Shield', ageGroup: 'khulu', category: 'legal', icon: 'fa-landmark', url: 'training/courses_khulu-the_constitution_your_ultimate_shield.html', description: 'Understand your supreme rights as a grandparent and citizen.' },
-            { id: 'tkh2', title: 'Accessing Your Rights: SASSA & Home Affairs', ageGroup: 'khulu', category: 'foundational', icon: 'fa-id-card', url: 'training/courses_khulu-accessing_your_rights.html', description: 'A practical guide to navigating government services.' },
-            // General
-            { id: 't1', title: 'The SA Constitution', ageGroup: 'general', description: 'The supreme law. Understand your foundational rights.', category: 'legal', icon: 'fa-landmark', url: 'training/course-constitution.html' },
-            { id: 't2', title: "The Children's Act", ageGroup: 'general', description: 'A deep dive into parental rights and responsibilities.', category: 'legal', icon: 'fa-child', url: 'training/course-childrens-act.html' },
-            { id: 't3', title: 'Co-Parenting 101', ageGroup: 'general', description: 'Master communication and conflict resolution.', category: 'parenting', icon: 'fa-hands-helping', url: 'training/course-coparenting.html' },
-            { id: 't4', title: 'Newborn & Daily Care', ageGroup: 'general', description: 'Gain confidence in essential daily tasks for infants.', category: 'foundational', icon: 'fa-baby-carriage', url: 'training/course-newborn-daily-care.html'},
-            { id: 't5', title: 'The Unbroken Chain', ageGroup: 'general', description: 'Successor vs. Heir in Xhosa Tradition.', category: 'cultural', icon: 'fa-link', url: 'training/course-unbroken-chain.html'}
-        ],
-        // Other resource types can be added here
-    };
-
-    const questions = {
-        // General Questions
-        general_q1: { id: 'qg1', question: "What is your most immediate priority or challenge?", options: [ { text: "Understanding my legal rights.", scores: { legal: 2 } }, { text: "Improving my co-parenting relationship.", scores: { parenting: 2 } }, { text: "Practical skills for a new baby or family life.", scores: { foundational: 2 } }, { text: "Connecting with my heritage and cultural duties.", scores: { cultural: 2 } }] },
-        // Kids Questions
-        kids_q1: { id: 'qk1', question: "What sounds most fun to learn about?", options: [ { text: "My special rules that keep me safe!", scores: { legal: 2 } }, { text: "Games about being a good friend and teammate.", scores: { parenting: 1, foundational: 1 } }] },
-        // Khulu Questions
-        khulu_q1: { id: 'qkh1', question: "What kind of support do you need most?", options: [ { text: "Understanding my legal rights as a grandparent.", scores: { legal: 2 } }, { text: "Helping my children co-parent better.", scores: { parenting: 2 } }, { text: "Dealing with government offices like SASSA.", scores: { foundational: 2 } }] }
-    };
-
-    let state = { currentStep: 0, ageGroup: null, userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }};
-
-    function renderStep() {
-        switch (state.currentStep) {
-            case 0: renderAgeSelection(); break;
-            case 1: renderQuestionStep(); break;
-            case 2: showResults(); break;
-        }
-    }
-
-    function renderAgeSelection() {
-        assessmentContainer.innerHTML = `
-            <div class="wizard-step active">
-                <div class="text-center mb-6">
-                    <p class="text-sm font-semibold text-teal-400">Step 1 of 2</p>
-                    <h2 class="text-2xl font-bold text-white mt-2">Who is this training for?</h2>
-                </div>
-                <div class="space-y-4">
-                    <div><input type="radio" id="age_kids" name="age_group" value="kids" class="hidden"><label for="age_kids" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600"><h3 class="font-bold text-lg text-white">A Child (Ages 4-13)</h3></label></div>
-                    <div><input type="radio" id="age_general" name="age_group" value="general" class="hidden"><label for="age_general" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600"><h3 class="font-bold text-lg text-white">A Parent or Adult</h3></label></div>
-                    <div><input type="radio" id="age_khulu" name="age_group" value="khulu" class="hidden"><label for="age_khulu" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600"><h3 class="font-bold text-lg text-white">A Grandparent or Elder (uKhulu)</h3></label></div>
-                </div>
-            </div>`;
-        
-        assessmentContainer.querySelectorAll('input[name="age_group"]').forEach(radio => {
-            radio.addEventListener('change', (e) => {
-                state.ageGroup = e.target.value;
-                state.currentStep++;
-                renderStep();
-            });
-        });
-    }
-    
-    function renderQuestionStep() {
-        let questionData;
-        if (state.ageGroup === 'kids') questionData = questions.kids_q1;
-        else if (state.ageGroup === 'khulu') questionData = questions.khulu_q1;
-        else questionData = questions.general_q1;
-
-        const optionsHtml = questionData.options.map((option, index) => `
-            <div>
-                <input type="radio" id="q_o${index}" name="question_option" value="${index}" class="hidden">
-                <label for="q_o${index}" class="option-label block p-5 bg-gray-700/50 rounded-lg border-2 border-gray-600"><h3 class="font-bold text-lg text-white">${option.text}</h3></label>
-            </div>`).join('');
-
-        assessmentContainer.innerHTML = `
-            <div class="wizard-step active">
-                <div class="text-center mb-6">
-                    <p class="text-sm font-semibold text-teal-400">Step 2 of 2</p>
-                    <h2 class="text-2xl font-bold text-white mt-2">${questionData.question}</h2>
-                </div>
-                <div class="space-y-4">${optionsHtml}</div>
-            </div>`;
-
-        assessmentContainer.querySelectorAll('input[name="question_option"]').forEach(radio => {
-            radio.addEventListener('change', () => {
-                const selectedOption = questionData.options[parseInt(radio.value)];
-                Object.entries(selectedOption.scores).forEach(([cat, score]) => state.userScores[cat] += score);
-                state.currentStep++;
-                renderStep();
-            });
-        });
-    }
-
-    function showResults() {
-        assessmentContainer.classList.add('hidden');
-        resultsContainer.classList.remove('hidden');
-
-        const relevantResources = resources.training.filter(r => r.ageGroup === state.ageGroup || (state.ageGroup !== 'kids' && r.ageGroup === 'general'));
-        
-        const sortedCategories = Object.entries(state.userScores).sort(([,a],[,b]) => b - a);
-        const topCategory = sortedCategories[0][0];
-
-        let recommendations = new Set();
-        // Add top 3 from the primary category
-        relevantResources.filter(r => r.category === topCategory).slice(0, 3).forEach(r => recommendations.add(r));
-        
-        // Fill up to 6 with other relevant resources
-        let i = 0;
-        while (recommendations.size < 6 && i < relevantResources.length) {
-            recommendations.add(relevantResources[i]);
-            i++;
-        }
-
-        resultsGrid.innerHTML = Array.from(recommendations).map(createResourceCard).join('');
-    }
-
-    const createResourceCard = (resource) => {
-        if (!resource) return '';
-        return `
-            <a href="${resource.url}" class="recommendation-card block bg-gray-700/50 p-6 rounded-lg border border-gray-600 hover:border-blue-500 h-full flex flex-col">
-                <div class="flex-shrink-0 mb-3"><span class="text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full text-white bg-blue-500">Training</span></div>
-                <div class="flex items-start flex-grow">
-                    <i class="fas ${resource.icon} text-3xl text-gray-400 mr-4 w-8 text-center"></i>
-                    <div>
-                        <h4 class="text-xl font-bold text-white">${resource.title}</h4>
-                        <p class="text-gray-400 text-sm mt-1 flex-grow">${resource.description || ''}</p>
-                    </div>
-                </div>
-            </a>`;
-    };
-
-    const startOver = () => {
-        state = { currentStep: 0, ageGroup: null, userScores: { legal: 0, parenting: 0, cultural: 0, foundational: 0 }};
-        resultsContainer.classList.add('hidden');
-        assessmentContainer.classList.remove('hidden');
-        renderStep();
-    };
-
-    restartBtn.addEventListener('click', startOver);
-    renderStep();
-});
