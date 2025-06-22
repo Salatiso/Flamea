@@ -1,145 +1,115 @@
-import { chatbotDb } from './firebase-chatbot-config.js';
-import { collection, addDoc, serverTimestamp, query, orderBy, limit, getDocs } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+// /assets/js/chatbot.js
+// This script powers the iSazi chatbot interface, connecting to the Gemini API for responses.
 
 document.addEventListener('DOMContentLoaded', () => {
-    const chatModal = document.getElementById('chatbot-modal');
-    if (!chatModal) return;
-
-    const chatMessagesContainer = document.getElementById('chat-messages');
-    const chatForm = document.getElementById('chat-form');
+    // --- DOM Elements ---
+    const chatWindow = document.getElementById('chat-window');
     const chatInput = document.getElementById('chat-input');
-    const formButton = chatForm ? chatForm.querySelector('button') : null;
-    const typingIndicator = document.getElementById('typing-indicator');
+    const sendBtn = document.getElementById('send-btn');
+    
+    // --- Chat History ---
+    // We start with a system message to set the context for the AI
+    const chatHistory = [{
+        role: "system",
+        parts: [{ text: "You are iSazi, a wise, empathetic, and knowledgeable AI assistant for South African fathers. Your purpose is to provide guidance on fatherhood, family law, cultural matters, and personal growth, grounded in the context of the South African constitution. You are not a lawyer and must not give legal advice, but you can explain legal concepts and suggest when to seek professional legal help. Your tone should be supportive, respectful, and encouraging, like a wise elder or 'uMalume'. Respond in clear, accessible English. Do not use markdown formatting." }]
+    }];
 
-    if (!chatForm || !chatInput || !formButton || !chatMessagesContainer) {
-        return;
+    // --- Functions ---
+
+    /**
+     * Appends a message to the chat window.
+     * @param {string} message The text content of the message.
+     * @param {string} sender 'user' or 'bot'.
+     */
+    function appendMessage(message, sender) {
+        const messageDiv = document.createElement('div');
+        if (sender === 'user') {
+            messageDiv.className = 'flex items-start gap-3 mb-4 justify-end';
+            messageDiv.innerHTML = `
+                <div class="bg-gray-700 text-white p-3 rounded-lg rounded-br-none max-w-md">
+                    <p>${message}</p>
+                </div>
+            `;
+        } else {
+            messageDiv.className = 'flex items-start gap-3 mb-4';
+            messageDiv.innerHTML = `
+                <div class="bg-blue-500 text-white p-3 rounded-lg rounded-bl-none max-w-md">
+                    <p id="bot-thinking">...</p>
+                </div>
+            `;
+        }
+        chatWindow.appendChild(messageDiv);
+        chatWindow.scrollTop = chatWindow.scrollHeight; // Scroll to the latest message
+        return messageDiv; // Return the message element to update it later
     }
 
-    chatForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        const messageText = chatInput.value.trim();
-        if (messageText === '') return;
+    /**
+     * Handles sending the user's message and getting a response from the AI.
+     */
+    async function handleSendMessage() {
+        const userMessage = chatInput.value.trim();
+        if (userMessage === '') return;
 
-        chatInput.disabled = true;
-        formButton.disabled = true;
-        if(typingIndicator) typingIndicator.style.display = 'block';
-
-        appendMessage(messageText, 'user');
+        // Display user's message
+        appendMessage(userMessage, 'user');
         chatInput.value = '';
+        
+        // Add user message to history
+        chatHistory.push({ role: "user", parts: [{ text: userMessage }] });
+
+        // Display thinking indicator
+        const botMessageDiv = appendMessage('', 'bot');
+        const botParagraph = botMessageDiv.querySelector('#bot-thinking');
 
         try {
-            const contextFromBooks = await searchKnowledgeBase(messageText);
-            const botResponse = await getGeminiResponse(messageText, contextFromBooks);
-            const formattedResponse = botResponse.replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>').replace(/\n/g, '<br>');
-            appendMessage(formattedResponse, 'bot');
+            // --- Gemini API Call ---
+            // The API key is left as an empty string. The Canvas environment will provide it.
+            const apiKey = ""; 
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
             
-            await addDoc(collection(chatbotDb, 'conversations'), {
-                user_message: messageText,
-                bot_response: botResponse,
-                retrieved_context: contextFromBooks,
-                timestamp: serverTimestamp(),
+            // We create a payload with the entire chat history for context
+            const payload = { contents: chatHistory };
+
+            const response = await fetch(apiUrl, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(payload)
             });
+
+            if (!response.ok) {
+                const errorBody = await response.json();
+                throw new Error(`API Error: ${response.status} - ${errorBody.error?.message || 'Unknown error'}`);
+            }
+
+            const result = await response.json();
+            
+            // Safely access the response text
+            const botResponse = result.candidates?.[0]?.content?.parts?.[0]?.text;
+            
+            if (botResponse) {
+                // Update bot's message with the actual response
+                botParagraph.textContent = botResponse;
+                // Add bot response to history
+                chatHistory.push({ role: "model", parts: [{ text: botResponse }] });
+            } else {
+                throw new Error("Received an empty or invalid response from the AI.");
+            }
 
         } catch (error) {
             console.error("Chatbot Error:", error);
-            const errorMessage = "Sorry, I had trouble finding an answer. My knowledge base might be updating or the AI service is currently unavailable. Please try again later.";
-            appendMessage(errorMessage, 'bot-error');
-        } finally {
-            chatInput.disabled = false;
-            formButton.disabled = false;
-            if(typingIndicator) typingIndicator.style.display = 'none';
-            chatInput.focus();
+            botParagraph.textContent = "I'm sorry, I encountered an error and cannot respond right now. Please try again later.";
+        }
+    }
+
+    // --- Event Listeners ---
+    sendBtn.addEventListener('click', handleSendMessage);
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter') {
+            handleSendMessage();
         }
     });
 
-    async function searchKnowledgeBase(userMessage) {
-        console.log("Searching knowledge base for:", userMessage);
-        const knowledgeBaseRef = collection(chatbotDb, "knowledge_base");
-        const keywords = userMessage.toLowerCase().split(' ').filter(word => word.length > 4); // Use more specific keywords
-        if (keywords.length === 0) return "";
-
-        try {
-            // FIX: Instead of a complex query that fails without an index, 
-            // fetch a limited number of recent documents and filter client-side.
-            // This is less efficient for large datasets but works without backend setup.
-            const q = query(knowledgeBaseRef, orderBy("timestamp", "desc"), limit(50));
-            const querySnapshot = await getDocs(q);
-            
-            let relevantChunks = [];
-            querySnapshot.forEach(doc => {
-                const content = doc.data().content.toLowerCase();
-                // Check if any keyword appears in the content
-                if (keywords.some(keyword => content.includes(keyword))) {
-                    relevantChunks.push(doc.data().content);
-                }
-            });
-
-            if (relevantChunks.length > 0) {
-                console.log(`Found ${relevantChunks.length} relevant context chunks.`);
-                // Join the most relevant chunks (up to a certain limit to manage prompt size)
-                return relevantChunks.slice(0, 3).join("\n\n---\n\n");
-            } else {
-                 console.log("No specific context found, using general knowledge.");
-                 return "";
-            }
-        } catch (error) {
-             console.error("Error searching knowledge base:", error);
-             return "";
-        }
-    }
-
-    function appendMessage(htmlContent, type) {
-        const messageElement = document.createElement('div');
-        messageElement.classList.add('message-bubble', `${type}-message`);
-        messageElement.innerHTML = htmlContent;
-        chatMessagesContainer.appendChild(messageElement);
-        chatMessagesContainer.scrollTop = chatMessagesContainer.scrollHeight;
-    }
-
-    async function getGeminiResponse(userMessage, context) {
-        let prompt;
-
-        if (context) {
-            prompt = `Based *only* on the following information from my books: \n\n---START OF BOOK CONTENT---\n${context}\n---END OF BOOK CONTENT---\n\nNow, as a helpful legal information assistant for South African Family Law named iSazi, answer the following user question. If the answer is not in the provided book content, state that you cannot find the information in the provided texts. Do not provide legal advice. User question: "${userMessage}"`;
-        } else {
-            prompt = `You are a helpful legal information assistant for South Africa, named iSazi. Your expertise is strictly in South African Family Law. Your purpose is to provide general information, not legal advice. Do not answer questions outside of this scope. Based on this, answer the following user question: "${userMessage}"`;
-        }
-        
-        // Use the appropriate Gemini model for this task
-        const model = 'gemini-2.0-flash';
-        const apiKey = ""; // Will be populated by the environment.
-        const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent?key=${apiKey}`;
-
-        const payload = {
-            contents: [{ parts: [{ text: prompt }] }],
-            // Add safety settings to reduce chances of getting blocked responses
-            safetySettings: [
-                { category: "HARM_CATEGORY_HARASSMENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                { category: "HARM_CATEGORY_HATE_SPEECH", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                { category: "HARM_CATEGORY_SEXUALLY_EXPLICIT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-                { category: "HARM_CATEGORY_DANGEROUS_CONTENT", threshold: "BLOCK_MEDIUM_AND_ABOVE" },
-            ],
-        };
-
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-
-        if (!response.ok) {
-            const errorBody = await response.text();
-            throw new Error(`API request failed: ${response.statusText}. Body: ${errorBody}`);
-        }
-
-        const result = await response.json();
-        const botText = result?.candidates?.[0]?.content?.parts?.[0]?.text;
-
-        if (botText) {
-            return botText;
-        } else {
-            console.warn("Invalid response structure from AI service:", result);
-            throw new Error("Received no text in the response from the AI service.");
-        }
-    }
+    console.log("iSazi Chatbot initialized.");
+    // Note: This chatbot does not use Firebase for storing chat history.
+    // The history is stored in memory for the duration of the session.
 });
