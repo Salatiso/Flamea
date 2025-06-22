@@ -1,0 +1,87 @@
+1. Introduction & Vision
+This document outlines a proposal for the development and integration of a "Comprehensive Case & Process Tracker" into the LegalHelp platform. The vision is to create an intuitive, empowering tool that demystifies complex legal, administrative, and traditional processes for all South Africans. Users will be able to track their individual cases, understand the necessary steps and required documentation, manage deadlines, and feel in control of their journey, whether they are navigating the formal court system, engaging in cultural protocols like lobola, or handling disputes with ombudsmen.
+This tool will transform the LegalHelp website from a static information portal into a dynamic, interactive personal legal companion.
+2. Core Objectives
+Demystify Processes: Break down complex procedures (legal, administrative, traditional) into clear, sequential, and easy-to-understand steps.
+Empower Users: Give users a clear roadmap, showing them what is required at each stage, what to expect, and what their options are.
+Centralise Information: Allow users to manage all their case-related information, including key dates, required documents, outcomes, and notes, in one secure place.
+Improve Access to Justice: Help users navigate systems that are often intimidating and difficult to access, thereby reducing barriers to justice and resolution.
+Flexibility & Customisation: Cater to both standardised legal processes and unique, user-defined processes, including cultural practices.
+3. Key Features & Functionality
+The tracker will be built around a core user journey: Select -> Understand -> Track -> Manage.
+3.1. Case/Process Selection (The "Select" Phase)
+Initial Dropdown Menu: The user will start by selecting a category of case/process. This list will be prepopulated but expandable.
+Categories:
+Court Cases (Criminal, Civil, Family, Small Claims, Equality)
+Children's Court Matters
+Disputes (Landlord/Tenant, Ombudsman, Consumer Protection)
+Administrative Processes (e.g., PAIA request, Social Grant application)
+Traditional/Cultural Processes (e.g., Lobola, Damages Negotiations)
+Custom Case Creation: A prominent option: "Track a New Custom Process". This allows a user to define a process not on the list, giving it a name (e.g., "My Dispute with my Neighbour").
+3.2. Process Simulation & Step Outline (The "Understand" Phase)
+Standardised Templates: For predefined processes (like a Children's Court case), the tool will automatically load a complete timeline with all the standard steps.
+Example: Children's Court Case
+Step 1: Initiation:
+Documents: Form 2, Supporting Affidavit.
+Action: File documents at the Children's Court Clerk.
+Process Info: Explanation of how the clerk stamps the documents and what "service" means.
+Step 2: Serving Documents:
+Option A (SAPS): How to request service, what to expect (free).
+Option B (Sheriff): How to request service, estimated costs, and process.
+Step 3: First Appearance:
+Action: Attend court.
+Possible Outcomes (Dropdown): Preliminary Order, Final Order, Postponement, Referral to Family Advocate.
+Step 4: Family Advocate:
+Action: Attend appointment.
+Documents: What to bring to the appointment.
+Outcome: Family Advocate's Report issued.
+And so on... including appeals/reviews.
+Custom Process Builder: For custom cases, the user will build their own timeline by adding steps. Each step will have fields for:
+Step Name (e.g., "Send Letter of Demand")
+Required Documents (User can type this in or select from a generic list: "Affidavit," "Formal Letter," "ID Copy," etc.)
+Notes/Description
+3.3. Tracking & Notifications (The "Track" Phase)
+Date Management: Every step will have fields for:
+Target/Deadline Date: When the step should be completed by.
+Actual Completion Date: The date the user actually finished the step.
+Status Indicators: Each step will have a clear visual status:
+To Do: Not yet started.
+In Progress: Started but not complete.
+Completed: Done.
+Postponed/Delayed: For court dates etc.
+Reminders & Alerts:
+The system will have built-in, customisable reminders for deadlines (e.g., 7 days before, 3 days before). This is crucial for appeal periods and filing dates.
+These notifications will appear within the LegalHelp website when the user logs in.
+3.4. Document & Outcome Management (The "Manage" Phase)
+Document Checklist: Each step will clearly list the required documents. Users can check them off as they acquire/complete them.
+Outcome Recording: After key events (like a court appearance), the user can select the outcome from a dropdown:
+Final Verdict, Postponement, Case Thrown Out, Referred to Mediation, Settlement Reached, etc.
+Next Steps: Based on the outcome, the tool can suggest the next logical steps. For a Postponement, it will prompt the user to enter the New Date. For a Final Verdict, it will present the option to start an Appeal Process.
+4. Integration with LegalHelp Website
+New Navigation Item: A new, prominent tab/link titled "My Case Tracker" or "Process Tracker" will be added to the main header navigation (in header.html).
+User Accounts: This functionality will require users to be logged in to save their case data. The existing login.html structure will be used. All case data will be linked to the user's unique ID.
+Dedicated Page: The tracker will live on its own page (e.g., case-tracker.html). This page will be the main hub for this feature.
+Dashboard View: The main view of the case-tracker.html page will be a dashboard showing all the user's currently tracked cases/processes with a summary of their status.
+Aesthetics: The new functionality will seamlessly adopt the existing website's look and feel (styles from style.css).
+5. Technical Implementation Plan
+Frontend: The tracker will be built using HTML, CSS, and JavaScript, consistent with the existing site. We will make it fully responsive and mobile-friendly.
+Backend & Data Storage: To securely save user-specific case data, we will need a database. Firebase Firestore is the ideal choice as it is a real-time, secure, and scalable database that works excellently with JavaScript-heavy frontends. It will allow us to store each user's cases, steps, dates, and notes securely under their own user ID.
+Templating: We will use JavaScript to dynamically generate the HTML for the process steps based on the templates we define or the custom steps the user creates.
+6. Prioritisation of Processes to Standardise
+As you correctly noted, we cannot standardise everything at once. We will prioritise based on the most common and urgent needs of the people.
+Phase 1 (High Priority):
+Children's Court (Maintenance & Contact)
+Small Claims Court
+Protection Orders (Domestic Violence)
+PAIA Requests
+Landlord/Tenant Disputes (Rental Housing Tribunal)
+Phase 2:
+Criminal Court (Basic procedure from arrest to plea)
+Civil Claims (Magistrate's Court)
+Lobola Negotiations (as a common cultural process)
+Phase 3 & Beyond:
+Equality Court
+Ombudsman Schemes (Banking, Insurance, etc.)
+Appeals and Reviews
+The custom tool will be available from Day 1, ensuring that even if a process isn't standardised yet, users can still track it.
+This is our starting plan, our blueprint. Please review it and let me know your thoughts. We can refine any part of it. Once you are happy with this proposal, I will proceed with building the actual functionality.

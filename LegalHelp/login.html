@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp - Join the Community</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="header-placeholder"></div>
+    <main class="main-content pt-24 pb-12 px-4 md:px-8 flex items-center justify-center min-h-screen">
+        <div class="max-w-7xl mx-auto w-full">
+             <div class="text-center">
+                <h2 class="text-4xl font-bold font-roboto-slab text-white">Unlock Your Personal Legal Hub</h2>
+                <p class="mt-2 text-lg text-gray-400">Create a free account to track cases, save progress, and join a community of support.</p>
+            </div>
+            <div class="grid lg:grid-cols-2 gap-10 mt-10 items-start">
+                <!-- Auth Box -->
+                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
+                    <div id="auth-container">
+                        <!-- Email/Password Forms -->
+                        <div id="email-password-forms">
+                            <form id="login-form" class="space-y-6">
+                                <h3 class="text-2xl font-bold text-center text-white">Sign In</h3>
+                                <input name="email" type="email" autocomplete="email" required placeholder="Email address" class="w-full p-3 rounded-md form-input">
+                                <input name="password" type="password" autocomplete="current-password" required placeholder="Password" class="w-full p-3 rounded-md form-input">
+                                <button type="submit" class="w-full font-bold py-3 px-4 rounded-lg bg-indigo-600 hover:bg-indigo-700 transition-transform hover:scale-105">Sign In</button>
+                            </form>
+                            <p class="text-center text-sm text-gray-400 mt-4">
+                                Don't have an account? <a href="#" id="show-register-link" class="font-semibold text-green-400 hover:underline">Register here</a>.
+                            </p>
+                        </div>
+                        <div id="register-form-container" class="hidden">
+                            <form id="register-form" class="space-y-6">
+                                <h3 class="text-2xl font-bold text-center text-white">Create Your Account</h3>
+                                <input name="name" type="text" autocomplete="name" required placeholder="Your Full Name" class="w-full p-3 rounded-md form-input">
+                                <input name="email" type="email" autocomplete="email" required placeholder="Email address" class="w-full p-3 rounded-md form-input">
+                                <input name="password" type="password" autocomplete="new-password" required placeholder="Password (min. 6 characters)" class="w-full p-3 rounded-md form-input">
+                                <button type="submit" class="w-full font-bold py-3 px-4 rounded-lg bg-green-600 hover:bg-green-700 transition-transform hover:scale-105">Create Account</button>
+                            </form>
+                             <p class="text-center text-sm text-gray-400 mt-4">
+                                Already have an account? <a href="#" id="show-login-link" class="font-semibold text-indigo-400 hover:underline">Sign in here</a>.
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <!-- Divider and Social Logins -->
+                    <div class="relative flex py-5 items-center">
+                        <div class="flex-grow border-t border-gray-600"></div><span class="flex-shrink mx-4 text-gray-400 uppercase text-sm">Or</span><div class="flex-grow border-t border-gray-600"></div>
+                    </div>
+                    <div class="space-y-4">
+                        <button id="google-signin-btn" class="social-btn w-full font-bold py-3 px-4 rounded-lg bg-white text-gray-800 hover:bg-gray-200 transition-transform hover:scale-105 flex items-center justify-center gap-3">
+                            <i class="fab fa-google"></i>Sign In with Google
+                        </button>
+                        <button id="apple-signin-btn" class="social-btn w-full font-bold py-3 px-4 rounded-lg bg-black text-white hover:bg-gray-900 transition-transform hover:scale-105 flex items-center justify-center gap-3">
+                            <i class="fab fa-apple"></i>Sign In with Apple
+                        </button>
+                    </div>
+                     <div id="auth-message" class="mt-4 text-center h-6 text-red-400 font-semibold"></div>
+                </div>
+
+                <!-- Benefits -->
+                <div class="bg-gray-800 p-8 rounded-xl shadow-lg border border-gray-700">
+                    <h3 class="text-2xl font-bold text-center mb-6 text-white">Your Membership Benefits</h3>
+                    <ul class="space-y-5 text-gray-300">
+                        <li class="flex items-start gap-4"><i class="fas fa-tasks text-green-400 mt-1 fa-fw"></i><div><span class="font-bold text-white">Personal Case Tracker:</span> Securely manage and track your legal processes from start to finish. Never miss a deadline.</div></li>
+                        <li class="flex items-start gap-4"><i class="fas fa-bell text-green-400 mt-1 fa-fw"></i><div><span class="font-bold text-white">Save & Track Law Updates:</span> Follow specific Acts of Parliament and get notified when they are amended.</div></li>
+                        <li class="flex items-start gap-4"><i class="fas fa-users text-green-400 mt-1 fa-fw"></i><div><span class="font-bold text-white">Engage in Community Forums:</span> Participate in discussions with legal experts and peers who have walked the same path.</div></li>
+                        <li class="flex items-start gap-4"><i class="fas fa-hands-helping text-green-400 mt-1 fa-fw"></i><div><span class="font-bold text-white">Contribute Knowledge:</span> Suggest edits, share resources, and help maintain the accuracy of our shared database.</div></li>
+                         <li class="flex items-start gap-4"><i class="fas fa-bookmark text-green-400 mt-1 fa-fw"></i><div><span class="font-bold text-white">Personalized Dashboard:</span> Your own hub to see all your tracked cases, saved resources, and contributions in one place.</div></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </main>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+</body>
+</html>

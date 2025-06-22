@@ -1,0 +1,312 @@
+/**
+ * LegalHelp - Higher & Special Courts Database
+ * Republic of South Africa
+ *
+ * This file contains a comprehensive list of all Superior Courts (Constitutional Court,
+ * Supreme Court of Appeal, High Courts) and National Specialist Courts (Labour, Land Claims, etc.).
+ *
+ * Data compiled from official sources from the Department of Justice and
+ * Constitutional Development and the Office of the Chief Justice.
+ */
+export const higher_special_courts_sa = [
+  // --- Apex Courts ---
+  {
+    "name": "Constitutional Court of South Africa",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (Apex)",
+    "address": "1 Hospital Street, Constitution Hill, Johannesburg, 2001",
+    "province": "Gauteng",
+    "city_town": "Johannesburg",
+    "phone": "011 359 7400",
+    "website": "https://www.concourt.org.za/",
+    "lat": -26.1912,
+    "lng": 28.0423,
+    "notes": "The highest court in the Republic, with jurisdiction over all constitutional matters."
+  },
+  {
+    "name": "Supreme Court of Appeal",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (Apex)",
+    "address": "Cnr President Brand & Union Avenue, Bloemfontein, 9301",
+    "province": "Free State",
+    "city_town": "Bloemfontein",
+    "phone": "051 412 7400",
+    "website": "https://www.sCofA.org.za/",
+    "lat": -29.1169,
+    "lng": 26.2185,
+    "notes": "The highest court of appeal in all matters except those concerning the Constitution."
+  },
+  // --- High Court Divisions ---
+  {
+    "name": "High Court, Eastern Cape Division, Makhanda (Grahamstown)",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "100 High Street, Makhanda, 6139",
+    "province": "Eastern Cape",
+    "city_town": "Makhanda",
+    "phone": "046 603 5000",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/eastern-cape",
+    "lat": -33.31,
+    "lng": 26.52,
+    "notes": "Main Seat for the Eastern Cape Division of the High Court."
+  },
+  {
+    "name": "High Court, Eastern Cape Local Seat, Bhisho",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "R63, Bhisho, 5605",
+    "province": "Eastern Cape",
+    "city_town": "Bhisho",
+    "phone": "040 608 5900",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/eastern-cape",
+    "lat": -32.85,
+    "lng": 27.43,
+    "notes": "Local Seat of the Eastern Cape High Court. Formerly the Supreme Court of Ciskei."
+  },
+  {
+    "name": "High Court, Eastern Cape Local Seat, Gqeberha (Port Elizabeth)",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "2 Bird Street, Central, Gqeberha, 6001",
+    "province": "Eastern Cape",
+    "city_town": "Gqeberha",
+    "phone": "041 502 6600",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/eastern-cape",
+    "lat": -33.9638,
+    "lng": 25.6173,
+    "notes": "Local Seat of the Eastern Cape High Court."
+  },
+  {
+    "name": "High Court, Eastern Cape Local Seat, Mthatha",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "Cnr Sutherland Street & Owen Street, Mthatha, 5099",
+    "province": "Eastern Cape",
+    "city_town": "Mthatha",
+    "phone": "047 501 4700",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/eastern-cape",
+    "lat": -31.59,
+    "lng": 28.79,
+    "notes": "Local Seat of the Eastern Cape High Court. Formerly the Supreme Court of Transkei."
+  },
+  {
+    "name": "High Court, Free State Division, Bloemfontein",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "Cnr President Brand & Fontein Street, Bloemfontein, 9301",
+    "province": "Free State",
+    "city_town": "Bloemfontein",
+    "phone": "051 492 4501",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/free-state",
+    "lat": -29.11,
+    "lng": 26.21,
+    "notes": "Main Seat for the Free State Division of the High Court."
+  },
+  {
+    "name": "High Court, Gauteng Division, Pretoria",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "c/o Paul Kruger and Madiba Streets, Pretoria, 0002",
+    "province": "Gauteng",
+    "city_town": "Pretoria",
+    "phone": "012 492 6857",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/gauteng",
+    "lat": -25.7461,
+    "lng": 28.1883,
+    "notes": "Main Seat for the Gauteng Division of the High Court."
+  },
+  {
+    "name": "High Court, Gauteng Local Division, Johannesburg",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "c/o Pritchard and Kruis Streets, Johannesburg, 2001",
+    "province": "Gauteng",
+    "city_town": "Johannesburg",
+    "phone": "010 494 8000",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/gauteng",
+    "lat": -26.2038,
+    "lng": 28.0468,
+    "notes": "Local Division of the Gauteng High Court."
+  },
+  {
+    "name": "High Court, KwaZulu-Natal Division, Pietermaritzburg",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "301 Church Street, Pietermaritzburg, 3201",
+    "province": "KwaZulu-Natal",
+    "city_town": "Pietermaritzburg",
+    "phone": "033 845 8200",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/kwazulu-natal",
+    "lat": -29.60,
+    "lng": 30.38,
+    "notes": "Main Seat for the KwaZulu-Natal Division of the High Court."
+  },
+  {
+    "name": "High Court, KwaZulu-Natal Local Division, Durban",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "12 Samora Machel Street, Durban, 4001",
+    "province": "KwaZulu-Natal",
+    "city_town": "Durban",
+    "phone": "031 362 5800",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/kwazulu-natal",
+    "lat": -29.86,
+    "lng": 31.02,
+    "notes": "Local Division of the KwaZulu-Natal High Court."
+  },
+  {
+    "name": "High Court, Limpopo Division, Polokwane",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "36 Biccard Street, Polokwane, 0699",
+    "province": "Limpopo",
+    "city_town": "Polokwane",
+    "phone": "015 230 4000",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/limpopo",
+    "lat": -23.90,
+    "lng": 29.45,
+    "notes": "Main Seat for the Limpopo Division of the High Court."
+  },
+  {
+    "name": "High Court, Limpopo Local Division, Thohoyandou",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "Government Complex, Thohoyandou, 0950",
+    "province": "Limpopo",
+    "city_town": "Thohoyandou",
+    "phone": "015 962 1001",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/limpopo",
+    "lat": -22.95,
+    "lng": 30.48,
+    "notes": "Local Division of the Limpopo High Court. Formerly the Supreme Court of Venda."
+  },
+  {
+    "name": "High Court, Mpumalanga Division, Mbombela",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "12 Streak Street, Mbombela, 1200",
+    "province": "Mpumalanga",
+    "city_town": "Mbombela",
+    "phone": "013 758 9500",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/mpumalanga",
+    "lat": -25.46,
+    "lng": 30.97,
+    "notes": "Main Seat for the Mpumalanga Division of the High Court."
+  },
+  {
+    "name": "High Court, Mpumalanga Local Division, Middelburg",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "Cnr Wanderers Avenue & Lilian Ngoyi Street, Middelburg, 1050",
+    "province": "Mpumalanga",
+    "city_town": "Middelburg",
+    "phone": "013 249 3000",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/mpumalanga",
+    "lat": -25.76,
+    "lng": 29.46,
+    "notes": "Local Division of the Mpumalanga High Court."
+  },
+  {
+    "name": "High Court, Northern Cape Division, Kimberley",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "2 Sol Plaatje Drive, Kimberley, 8301",
+    "province": "Northern Cape",
+    "city_town": "Kimberley",
+    "phone": "053 839 0700",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/northern-cape",
+    "lat": -28.74,
+    "lng": 24.77,
+    "notes": "Main Seat for the Northern Cape Division of the High Court."
+  },
+  {
+    "name": "High Court, North West Division, Mahikeng",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "15 Justice Avenue, Mahikeng, 2745",
+    "province": "North West",
+    "city_town": "Mahikeng",
+    "phone": "018 392 8200",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/north-west",
+    "lat": -25.86,
+    "lng": 25.64,
+    "notes": "Main Seat for the North West Division of the High Court. Formerly the Supreme Court of Bophuthatswana."
+  },
+  {
+    "name": "High Court, Western Cape Division, Cape Town",
+    "category": "Justice & Legal",
+    "sub_category": "Superior Court (High Court)",
+    "address": "35 Keerom Street, Cape Town City Centre, Cape Town, 8001",
+    "province": "Western Cape",
+    "city_town": "Cape Town",
+    "phone": "021 480 2411",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/western-cape",
+    "lat": -33.9252,
+    "lng": 18.4196,
+    "notes": "Main Seat for the Western Cape Division of the High Court."
+  },
+  // --- National Specialist Courts ---
+  {
+    "name": "Labour Court, National Seat, Johannesburg",
+    "category": "Justice & Legal",
+    "sub_category": "Specialist Court (National)",
+    "address": "Arbour Square Building, 86 Juta Street, Braamfontein, Johannesburg, 2001",
+    "province": "Gauteng",
+    "city_town": "Johannesburg",
+    "phone": "010 494 9236",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/superior-courts-contact/labour-and-labour-appeals-court",
+    "lat": -26.194,
+    "lng": 28.037,
+    "notes": "National seat for the Labour Court and Labour Appeal Court. Handles labour disputes."
+  },
+  {
+    "name": "Land Claims Court, National Seat, Randburg",
+    "category": "Justice & Legal",
+    "sub_category": "Specialist Court (National)",
+    "address": "Trust Bank Centre, Cnr Hill Street & Kent Avenue, Randburg, 2194",
+    "province": "Gauteng",
+    "city_town": "Randburg",
+    "phone": "010 493 6316",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/superior-courts-contact/land-claims-court",
+    "lat": -26.095,
+    "lng": 28.005,
+    "notes": "National court with itinerant jurisdiction across South Africa to adjudicate on land restitution and reform matters."
+  },
+  {
+    "name": "Electoral Court",
+    "category": "Justice & Legal",
+    "sub_category": "Specialist Court (National)",
+    "address": "c/o Supreme Court of Appeal, Bloemfontein, 9301",
+    "province": "Free State",
+    "city_town": "Bloemfontein",
+    "phone": "051 412 7400",
+    "website": "https://www.electoralcourt.org.za/",
+    "lat": -29.1169,
+    "lng": 26.2185,
+    "notes": "Has the status of a High Court. Reviews decisions of the Electoral Commission (IEC) and handles electoral disputes and appeals."
+  },
+  {
+    "name": "Competition Appeal Court",
+    "category": "Justice & Legal",
+    "sub_category": "Specialist Court (National)",
+    "address": "c/o High Court, Western Cape Division, Cape Town, 8001",
+    "province": "Western Cape",
+    "city_town": "Cape Town",
+    "phone": "021 480 2636",
+    "website": "https://www.judiciary.org.za/index.php/contact-us/superior-courts-contact/competition-appeals-court",
+    "lat": -33.9252,
+    "lng": 18.4196,
+    "notes": "Has the status of a High Court. Hears appeals from and reviews decisions of the Competition Tribunal."
+  },
+  {
+    "name": "Tax Court",
+    "category": "Justice & Legal",
+    "sub_category": "Specialist Court (Functional)",
+    "address": "Operates within High Court Divisions",
+    "province": "National",
+    "city_town": "Various",
+    "phone": null,
+    "website": "https://www.sars.gov.za",
+    "notes": "A functional court that sits within the High Court divisions to hear appeals against assessments by SARS. It is not a separate building."
+  }
+];

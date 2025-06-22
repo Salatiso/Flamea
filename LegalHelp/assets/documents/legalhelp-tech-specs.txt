@@ -1,0 +1,24 @@
+LegalHelp: Technical Specification
+Project Name: LegalHelp
+
+Core Objective: To create a centralized, comprehensive, and accessible digital library of South African and comparative international law.
+
+Primary Domain: legalhelp.co.za (or similar, hosted on salatiso.com infrastructure).
+
+Architecture: Headless CMS Model.
+
+Backend: Firebase (Firestore for database, Authentication for users).
+
+Frontend: HTML, CSS (TailwindCSS), and modular, vanilla JavaScript. No complex frameworks.
+
+Key Features:
+
+Tabbed Interface: Main navigation will use a clean, tabbed layout to switch between legal categories.
+
+Modular Data: All legal content will be stored in separate .js files within an assets/js/data/ directory (e.g., national-legislation.js, case-law.js) for easy updates.
+
+Dynamic Rendering: A single main.js file will be responsible for fetching data from the modular files and rendering it into the index.html template.
+
+Universal Search: A prominent search bar will filter content across all data modules simultaneously.
+
+Ecosystem Integration: The hub will be accessible as a branded section/widget within other sites like flamea.org by making API calls to the central hub.

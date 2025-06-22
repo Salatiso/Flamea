@@ -1,0 +1,28 @@
+Prompt for Next Development Session
+Objective: Continue the development of the LegalHelp hub.
+
+Context: We have established the final name ("LegalHelp"), chosen the UI design (Variation 1: Tabbed Interface), and created the complete initial file structure, including the index.html, CSS, main.js, and the modular JavaScript data files (data_national-legislation.js, data_case-law.js, etc.).
+
+Next Steps:
+
+Populate Data Files: The current data files (data_*.js) contain placeholder content. The next task is to begin populating them with the real, comprehensive legal text as outlined in the project's technical documentation.
+
+Start with data_national-legislation.js, adding the full text of the Constitution's Preamble and Bill of Rights, and the key sections of the Children's Act.
+
+For each entry, expand the object to include more detail, such as fullText, enactedDate, amendments, and commentary.
+
+Enhance the UI:
+
+Modify the renderContent function in main.js to display this new, more detailed information. For example, when a user clicks on an Act, it should expand to show its full text or key sections.
+
+Implement a "Copy Citation" button for each legal entry.
+
+Create a dedicated "About" tab with content explaining the mission and vision of LegalHelp.
+
+Develop the Flamea Interface:
+
+Create the flamea-interface.html file. This will be a simple HTML structure that represents how the LegalHelp content will be displayed inside the flamea.org website. It should have placeholders for a title, search bar, and content area.
+
+Modify the main.js in the LegalHelp project to include a function renderForFlamea(). This function will demonstrate how the legal data can be fetched and injected into the flamea-interface.html template, styled with Flamea's brand colors (which would be defined in a separate CSS file for that specific implementation). This demonstrates the "headless" concept.
+
+Please proceed with these next steps.

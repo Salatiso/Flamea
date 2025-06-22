@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp - Dashboard</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="header-placeholder"></div>
+
+    <main class="main-content pt-24 pb-12 px-4 md:px-8">
+        <div id="dashboard-loading" class="text-center py-20">
+            <i class="fas fa-spinner fa-spin text-4xl text-indigo-400"></i>
+            <p class="mt-4 text-gray-400">Loading Dashboard...</p>
+        </div>
+
+        <div id="dashboard-content" class="max-w-7xl mx-auto hidden">
+            <!-- Welcome Header -->
+            <div class="flex items-center gap-4 mb-8">
+                <img id="user-avatar" src="https://placehold.co/64x64/374151/FFFFFF?text=LH" class="w-16 h-16 rounded-full border-2 border-indigo-400" alt="User Avatar">
+                <div>
+                    <h1 id="welcome-message" class="text-3xl font-bold font-roboto-slab text-white">Welcome!</h1>
+                    <p id="user-email" class="text-indigo-300 font-mono"></p>
+                </div>
+            </div>
+
+            <!-- Quick Actions Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- Case Tracker Card -->
+                <a href="case-tracker.html" class="dashboard-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-indigo-500 hover:-translate-y-1 transition-all duration-300 flex items-center gap-4">
+                    <i class="fas fa-tasks text-4xl text-indigo-400 fa-fw"></i>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Case Tracker</h3>
+                        <p class="text-gray-400 text-sm">Manage your legal processes.</p>
+                    </div>
+                </a>
+                
+                <!-- Profile Card -->
+                <div class="dashboard-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-green-500 hover:-translate-y-1 transition-all duration-300 flex items-center gap-4">
+                    <i class="fas fa-user-edit text-4xl text-green-400 fa-fw"></i>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">My Profile</h3>
+                        <p class="text-gray-400 text-sm">Update your personal information.</p>
+                    </div>
+                </div>
+
+                <!-- Community Card -->
+                 <a href="community.html" class="dashboard-card bg-gray-800 p-6 rounded-xl border border-gray-700 hover:border-blue-500 hover:-translate-y-1 transition-all duration-300 flex items-center gap-4">
+                    <i class="fas fa-users text-4xl text-blue-400 fa-fw"></i>
+                    <div>
+                        <h3 class="text-xl font-bold text-white">Community Hub</h3>
+                        <p class="text-gray-400 text-sm">Engage with forums and resources.</p>
+                    </div>
+                </a>
+            </div>
+
+            <!-- Profile Edit Section (Example) -->
+            <div id="profile-section" class="mt-12 bg-gray-800 p-8 rounded-xl border border-gray-700">
+                <h2 class="text-2xl font-bold text-white mb-6">Edit Your Profile</h2>
+                <form id="profile-form" class="space-y-4">
+                    <div>
+                        <label for="displayName" class="block text-sm font-medium text-gray-300 mb-1">Display Name</label>
+                        <input type="text" name="displayName" id="displayName" class="w-full p-3 rounded-md form-input" placeholder="Your display name">
+                    </div>
+                    <!-- Add more profile fields as needed -->
+                    <div class="text-right">
+                        <button type="submit" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-6 rounded-lg">Save Changes</button>
+                    </div>
+                    <p id="profile-message" class="text-green-400 text-sm text-center pt-2"></p>
+                </form>
+            </div>
+        </div>
+    </main>
+
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/dashboard.js"></script>
+</body>
+</html>
