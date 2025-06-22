@@ -1,326 +1,217 @@
-<!DOCTYPE html>
-<html lang="en" class="dark">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan Dashboard - Flamea</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.10/index.global.min.js"></script>
-    <style>
-        body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
-        .input-field {
-            @apply w-full bg-gray-700 border border-gray-600 rounded-md py-2 px-3 text-white focus:ring-blue-500 focus:border-blue-500 transition;
+// This script is a complete rewrite to address the functionality issues in the Parenting Plan Builder.
+// It ensures proper data handling, dynamic element creation, and reliable Firebase interaction.
+
+document.addEventListener('DOMContentLoaded', () => {
+    // --- Firebase Initialization ---
+    // This uses the main Flamea app configuration. It expects 'firebase.apps' to be populated by 'firebase-config.js'
+    if (!firebase.apps.length) {
+        console.error("Firebase is not initialized. Make sure firebase-config.js is loaded correctly.");
+        return;
+    }
+    const auth = firebase.auth();
+    const db = firebase.firestore();
+    let userId = null; // To be set on auth state change
+
+    // --- DOM Element References ---
+    const savePlanBtn = document.getElementById('savePlanBtn');
+    const downloadPdfBtn = document.getElementById('downloadPdfBtn');
+    const addChildBtn = document.getElementById('addChildBtn');
+    const childrenContainer = document.getElementById('children-container');
+    
+    const notificationModal = document.getElementById('notificationModal');
+    const notificationMessage = document.getElementById('notificationMessage');
+    const closeModalBtn = document.getElementById('closeModalBtn');
+
+    // --- Functions ---
+
+    /**
+     * Shows a notification message to the user.
+     * @param {string} message The message to display.
+     */
+    function showNotification(message) {
+        notificationMessage.textContent = message;
+        notificationModal.style.display = 'block';
+    }
+
+    /**
+     * Closes the notification modal.
+     */
+    closeModalBtn.onclick = function() {
+        notificationModal.style.display = 'none';
+    };
+
+    /**
+     * Adds a new set of input fields for a child.
+     * @param {object} [childData] - Optional data to pre-fill the fields.
+     */
+    function addChild(childData = { name: '', dob: '' }) {
+        const childId = `child-${Date.now()}`; // Unique ID for the new element
+        const childDiv = document.createElement('div');
+        childDiv.className = 'grid grid-cols-1 md:grid-cols-3 gap-4 p-4 border rounded bg-gray-50';
+        childDiv.id = childId;
+        
+        childDiv.innerHTML = `
+            <input type="text" value="${childData.name}" data-field="name" class="w-full p-2 border rounded" placeholder="Child's Full Name">
+            <input type="date" value="${childData.dob}" data-field="dob" class="w-full p-2 border rounded" placeholder="Date of Birth">
+            <button class="bg-red-500 hover:bg-red-600 text-white font-bold py-2 px-3 rounded-lg remove-child-btn">
+                <i class="fas fa-trash-alt"></i> Remove
+            </button>
+        `;
+        
+        childrenContainer.appendChild(childDiv);
+        
+        // Add event listener to the new remove button
+        childDiv.querySelector('.remove-child-btn').addEventListener('click', () => {
+            document.getElementById(childId).remove();
+        });
+    }
+    
+    /**
+     * Gathers all the data from the form fields into a single object.
+     * @returns {object} The parenting plan data.
+     */
+    function getPlanData() {
+        const children = [];
+        document.querySelectorAll('#children-container > div').forEach(childDiv => {
+            children.push({
+                name: childDiv.querySelector('input[data-field="name"]').value,
+                dob: childDiv.querySelector('input[data-field="dob"]').value,
+            });
+        });
+
+        return {
+            partyA: {
+                title: document.getElementById('partyA-title').value,
+                name: document.getElementById('partyA-name').value,
+                idNumber: document.getElementById('partyA-id').value,
+                address: document.getElementById('partyA-address').value,
+                email: document.getElementById('partyA-email').value,
+                phone: document.getElementById('partyA-phone').value,
+            },
+            partyB: {
+                title: document.getElementById('partyB-title').value,
+                name: document.getElementById('partyB-name').value,
+                idNumber: document.getElementById('partyB-id').value,
+                address: document.getElementById('partyB-address').value,
+                email: document.getElementById('partyB-email').value,
+                phone: document.getElementById('partyB-phone').value,
+            },
+            children: children,
+            contactSchedule: document.getElementById('contact-schedule').value,
+            updatedAt: firebase.firestore.FieldValue.serverTimestamp()
+        };
+    }
+    
+    /**
+     * Loads the parenting plan data from Firestore and populates the form.
+     */
+    async function loadPlan() {
+        if (!userId) {
+            showNotification("You must be logged in to load a plan.");
+            return;
         }
-        .hub-card { transition: all 0.3s ease; border-color: #374151; }
-        .hub-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(0,0,0,0.2); }
-        .modal { backdrop-filter: blur(5px); }
-        .btn-primary { @apply bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded-lg transition-colors; }
-        .btn-secondary { @apply bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-4 rounded-lg transition-colors; }
-    </style>
-</head>
-<body class="text-gray-300">
+        try {
+            const docRef = db.collection('parentingPlans').doc(userId);
+            const doc = await docRef.get();
 
-    <div id="sidebar-container"></div>
-
-    <div class="lg:ml-64 p-4 sm:p-8">
-        <header class="text-center mb-10">
-            <h1 class="text-4xl font-bold font-roboto-slab text-white">Parenting Plan Dashboard</h1>
-            <p class="text-lg text-gray-400 mt-2">Your central hub for managing your family agreement.</p>
-        </header>
-
-        <div class="max-w-4xl mx-auto bg-gray-800 p-3 rounded-lg mb-8 text-sm flex justify-between items-center">
-            <div>
-                <span>Your User ID: <strong id="user-id-display" class="text-yellow-400 select-all">Loading...</strong></span>
-            </div>
-            <div>
-                 <button id="sharePlanBtn" class="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-1 px-3 rounded-md text-xs transition disabled:opacity-50" disabled><i class="fas fa-share-alt mr-2"></i>Share Plan</button>
-            </div>
-        </div>
-
-        <div id="section-hub" class="max-w-4xl mx-auto grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-             <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="parties">
-                <i class="fas fa-users text-3xl text-blue-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Parties & Children</h3>
-                <p class="text-gray-400 mt-1">Manage parent and child information.</p>
-            </div>
-            <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="schedule">
-                <i class="fas fa-calendar-alt text-3xl text-green-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Contact Schedule</h3>
-                <p class="text-gray-400 mt-1">Set custody and visitation arrangements.</p>
-            </div>
-             <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="communication">
-                <i class="fas fa-comments text-3xl text-purple-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Communication</h3>
-                <p class="text-gray-400 mt-1">Define how you'll communicate.</p>
-            </div>
-            <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="finances">
-                <i class="fas fa-coins text-3xl text-yellow-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Financials</h3>
-                <p class="text-gray-400 mt-1">Outline support and expense sharing.</p>
-            </div>
-             <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="decision_making">
-                <i class="fas fa-gavel text-3xl text-red-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Decision Making</h3>
-                <p class="text-gray-400 mt-1">Specify who decides on key issues.</p>
-            </div>
-            <div class="hub-card bg-gray-800 p-6 rounded-xl border-2 cursor-pointer" data-section="finalize">
-                <i class="fas fa-file-download text-3xl text-teal-400 mb-3"></i>
-                <h3 class="text-xl font-bold text-white">Finalize & Download</h3>
-                <p class="text-gray-400 mt-1">Generate a PDF of your plan.</p>
-            </div>
-        </div>
-
-        <div id="section-modal" class="fixed inset-0 bg-black bg-opacity-70 hidden flex items-center justify-center p-4 z-50 modal">
-            <div class="bg-gray-800 rounded-2xl shadow-2xl w-full max-w-3xl max-h-[90vh] flex flex-col border border-gray-600">
-                <header class="p-4 flex justify-between items-center border-b border-gray-700">
-                    <h2 id="modal-title" class="text-2xl font-bold text-white">Edit Section</h2>
-                    <button id="close-modal-btn" class="text-gray-400 hover:text-white text-3xl">&times;</button>
-                </header>
-                <div id="modal-body" class="p-6 overflow-y-auto"></div>
-                <footer class="p-4 flex justify-end space-x-4 border-t border-gray-700">
-                    <button id="cancel-section-btn" class="btn-secondary">Cancel</button>
-                    <button id="save-section-btn" class="btn-primary">Save & Close</button>
-                </footer>
-            </div>
-        </div>
-    </div>
-
-    <template id="section-parties-template">
-        <div class="space-y-4">
-             <h3 class="text-lg font-semibold text-white">Parent Information</h3>
-             <div><label class="block mb-1 text-sm">Parent A Name</label><input type="text" id="parentA-name" class="input-field"></div>
-             <div><label class="block mb-1 text-sm">Parent B Name</label><input type="text" id="parentB-name" class="input-field"></div>
-             <h3 class="text-lg font-semibold text-white mt-6">Children Information</h3>
-             <div id="children-list" class="space-y-3"></div>
-             <button id="add-child-btn" class="btn-secondary mt-2 text-sm">+ Add Child</button>
-        </div>
-    </template>
-    <template id="section-schedule-template">
-         <div><label class="block mb-1">Custody & Visitation Details</label><textarea id="custody-details" class="input-field" rows="5" placeholder="Describe the physical custody and visitation schedule..."></textarea></div>
-         <div id="calendar" class="mt-4 bg-white text-gray-800 p-2 rounded-md"></div>
-    </template>
-    <template id="section-communication-template">
-         <div><label class="block mb-1">Communication Methods & Frequency</label><textarea id="communication-methods" class="input-field" rows="8" placeholder="e.g., Weekly email updates, text messages for urgent matters only..."></textarea></div>
-    </template>
-    <template id="section-finances-template">
-        <div><label class="block mb-1">Financial Arrangements</label><textarea id="financial-details" class="input-field" rows="8" placeholder="Detail child support, health insurance coverage, sharing of extracurricular/medical expenses..."></textarea></div>
-    </template>
-     <template id="section-decision_making-template">
-        <div><label class="block mb-1">Decision Making Protocol</label><textarea id="decision-details" class="input-field" rows="8" placeholder="Outline who has the final say on education, healthcare, religious upbringing..."></textarea></div>
-    </template>
-    <template id="section-finalize-template">
-        <p>Your plan is ready to be downloaded. Click the button below to generate a PDF document of all saved sections.</p>
-        <button id="download-pdf-btn" class="btn-primary mt-4">Download PDF</button>
-    </template>
-
-    <script src="./assets/js/sidebar-loader.js"></script>
-    <script type="module">
-        import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-        import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
-        // THIS IS THE FIX: Hardcoded Firebase config as provided by you.
-        const firebaseConfig = {
-            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
-            authDomain: "flamea.firebaseapp.com",
-            projectId: "flamea",
-            storageBucket: "flamea.appspot.com",
-            messagingSenderId: "681868881622",
-            appId: "1:681868881622:web:d20687c688b2d1d943a377",
-            measurementId: "G-MX7X9JQE51"
-        };
-        const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
-
-        const ParentingPlanApp = {
-            db: null, auth: null, userId: null, planId: null, planData: null,
-            unsubscribe: null, currentOpenSection: null, calendar: null, elements: {},
-
-            init() {
-                this.mapDOMElements();
-                this.initFirebase();
-                this.attachEventListeners();
-            },
-
-            initFirebase() {
-                try {
-                    const app = initializeApp(firebaseConfig);
-                    this.db = getFirestore(app);
-                    this.auth = getAuth(app);
-                    this.handleAuthentication();
-                } catch (e) {
-                    console.error("Firebase init failed:", e);
-                    alert("Critical Error: Could not connect to the database.");
-                }
-            },
-            
-            handleAuthentication() {
-                onAuthStateChanged(this.auth, async (user) => {
-                    if (user) {
-                        this.userId = user.uid;
-                        this.elements.userIdDisplay.textContent = this.userId;
-                        this.elements.sharePlanBtn.disabled = false;
-                        this.planId = `plan_${this.userId}`;
-                        this.loadOrCreatePlan();
-                    } else {
-                         try {
-                            initialAuthToken ? await signInWithCustomToken(this.auth, initialAuthToken) : await signInAnonymously(this.auth);
-                        } catch (error) { console.error("Sign-in failed:", error); }
-                    }
-                });
-            },
-
-            loadOrCreatePlan() {
-                if (!this.planId) return;
-                if (this.unsubscribe) this.unsubscribe();
-
-                const planRef = doc(this.db, "parenting_plans", this.planId);
-                this.unsubscribe = onSnapshot(planRef, (docSnap) => {
-                    if (docSnap.exists()) {
-                        this.planData = docSnap.data();
-                    } else {
-                        this.planData = this.getDefaultPlanData();
-                        this.savePlan();
-                    }
-                }, error => {
-                    console.error("Snapshot error:", error);
-                    alert("Permissions Error: Could not load your plan data. If this was shared with you, please verify the ID and permissions with the owner.");
-                });
-            },
-
-            async savePlan() {
-                if (!this.planData || !this.planId) return;
-                this.planData.metadata.lastModified = new Date().toISOString();
-                this.planData.metadata.lastModifiedBy = this.userId;
-
-                const planRef = doc(this.db, "parenting_plans", this.planId);
-                try {
-                    await setDoc(planRef, this.planData, { merge: true });
-                    console.log("Plan saved.");
-                } catch (error) { console.error("Error saving plan:", error); }
-            },
-
-            mapDOMElements() {
-                this.elements = {
-                    hub: document.getElementById('section-hub'),
-                    modal: document.getElementById('section-modal'),
-                    modalTitle: document.getElementById('modal-title'),
-                    modalBody: document.getElementById('modal-body'),
-                    closeModalBtn: document.getElementById('close-modal-btn'),
-                    cancelSectionBtn: document.getElementById('cancel-section-btn'),
-                    saveSectionBtn: document.getElementById('save-section-btn'),
-                    userIdDisplay: document.getElementById('user-id-display'),
-                    sharePlanBtn: document.getElementById('sharePlanBtn'),
-                };
-            },
-
-            attachEventListeners() {
-                this.elements.hub.addEventListener('click', e => {
-                    const card = e.target.closest('.hub-card');
-                    if (card) this.openSectionModal(card.dataset.section);
-                });
-                this.elements.closeModalBtn.addEventListener('click', () => this.closeSectionModal());
-                this.elements.cancelSectionBtn.addEventListener('click', () => this.closeSectionModal());
-                this.elements.saveSectionBtn.addEventListener('click', () => this.handleSave());
-            },
-            
-            openSectionModal(sectionName) {
-                if (!this.planData) { alert("Plan data is not ready. Please wait."); return; }
-                this.currentOpenSection = sectionName;
-                this.elements.modalTitle.textContent = document.querySelector(`.hub-card[data-section="${sectionName}"] h3`).textContent;
-                const template = document.getElementById(`section-${sectionName}-template`);
-                if (template) {
-                    this.elements.modalBody.innerHTML = template.innerHTML;
-                    this.populateSection(sectionName);
-                    this.elements.modal.classList.remove('hidden');
-                }
-            },
-
-            closeSectionModal() {
-                 this.elements.modal.classList.add('hidden');
-                 if (this.calendar) { this.calendar.destroy(); this.calendar = null; }
-            },
-            
-            handleSave() {
-                this.collectSectionData(this.currentOpenSection);
-                this.savePlan();
-                this.closeSectionModal();
-            },
-
-            collectSectionData(sectionName) {
-                 switch (sectionName) {
-                    case 'parties':
-                        this.planData.parties.parentA.name = document.getElementById('parentA-name').value;
-                        this.planData.parties.parentB.name = document.getElementById('parentB-name').value;
-                        break;
-                    case 'schedule':
-                        this.planData.schedule.custodyDetails = document.getElementById('custody-details').value;
-                        break;
-                    case 'communication':
-                        this.planData.communication.methods = document.getElementById('communication-methods').value;
-                        break;
-                    case 'finances':
-                         this.planData.finances.details = document.getElementById('financial-details').value;
-                        break;
-                     case 'decision_making':
-                         this.planData.decision_making.details = document.getElementById('decision-details').value;
-                        break;
-                }
-            },
-
-            populateSection(sectionName) {
-                // Ensure data structure exists before populating
-                if (!this.planData[sectionName]) this.planData[sectionName] = {};
+            if (doc.exists) {
+                const data = doc.data();
                 
-                switch(sectionName) {
-                    case 'parties':
-                        if (!this.planData.parties.parentA) this.planData.parties.parentA = {};
-                        if (!this.planData.parties.parentB) this.planData.parties.parentB = {};
-                        document.getElementById('parentA-name').value = this.planData.parties.parentA.name || '';
-                        document.getElementById('parentB-name').value = this.planData.parties.parentB.name || '';
-                        break;
-                    case 'schedule':
-                        document.getElementById('custody-details').value = this.planData.schedule.custodyDetails || '';
-                        this.initCalendar();
-                        break;
-                    case 'communication':
-                        document.getElementById('communication-methods').value = this.planData.communication.methods || '';
-                        break;
-                    case 'finances':
-                         document.getElementById('financial-details').value = this.planData.finances.details || '';
-                        break;
-                     case 'decision_making':
-                         document.getElementById('decision-details').value = this.planData.decision_making.details || '';
-                        break;
+                // Populate Parties
+                document.getElementById('partyA-title').value = data.partyA?.title || '';
+                document.getElementById('partyA-name').value = data.partyA?.name || '';
+                document.getElementById('partyA-id').value = data.partyA?.idNumber || '';
+                document.getElementById('partyA-address').value = data.partyA?.address || '';
+                document.getElementById('partyA-email').value = data.partyA?.email || '';
+                document.getElementById('partyA-phone').value = data.partyA?.phone || '';
+                
+                document.getElementById('partyB-title').value = data.partyB?.title || '';
+                document.getElementById('partyB-name').value = data.partyB?.name || '';
+                document.getElementById('partyB-id').value = data.partyB?.idNumber || '';
+                document.getElementById('partyB-address').value = data.partyB?.address || '';
+                document.getElementById('partyB-email').value = data.partyB?.email || '';
+                document.getElementById('partyB-phone').value = data.partyB?.phone || '';
+                
+                // Populate Children
+                childrenContainer.innerHTML = ''; // Clear existing fields
+                if (data.children && Array.isArray(data.children)) {
+                    data.children.forEach(child => addChild(child));
                 }
-            },
-            
-            initCalendar() {
-                const calendarEl = document.getElementById('calendar');
-                if (calendarEl) {
-                    this.calendar = new FullCalendar.Calendar(calendarEl, {
-                        initialView: 'dayGridMonth',
-                        headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
-                        events: this.planData.schedule.events || []
-                    });
-                    this.calendar.render();
-                }
-            },
 
-            getDefaultPlanData() {
-                 return {
-                    metadata: { ownerId: this.userId, authorizedUsers: [this.userId] },
-                    parties: { parentA: { name: '' }, parentB: { name: '' }, children: [] },
-                    schedule: { custodyDetails: '', events: [] },
-                    communication: { methods: '' },
-                    finances: { details: '' },
-                    decision_making: { details: '' },
-                };
+                // Populate Schedule
+                document.getElementById('contact-schedule').value = data.contactSchedule || '';
+
+                showNotification("Plan loaded successfully.");
+            } else {
+                console.log("No existing plan found for this user. Starting fresh.");
             }
-        };
+        } catch (error) {
+            console.error("Error loading plan: ", error);
+            showNotification("Error: Could not load your plan.");
+        }
+    }
 
-        ParentingPlanApp.init();
-    </script>
-</body>
-</html>
+    /**
+     * Saves the current plan data to Firestore.
+     */
+    async function savePlan() {
+        if (!userId) {
+            showNotification("You must be logged in to save a plan.");
+            return;
+        }
+
+        const planData = getPlanData();
+
+        try {
+            // Using .set() with { merge: true } will create the doc if it doesn't exist,
+            // or update it if it does, without overwriting the entire document.
+            await db.collection('parentingPlans').doc(userId).set(planData, { merge: true });
+            showNotification("Plan saved successfully!");
+        } catch (error) {
+            console.error("Error saving plan: ", error);
+            showNotification("Error: Could not save your plan.");
+        }
+    }
+    
+    /**
+     * Downloads the current plan as a PDF.
+     */
+    function downloadPdf() {
+        showNotification("Preparing PDF...");
+        const { jsPDF } = window.jspdf;
+        const planContent = document.getElementById('plan-content');
+
+        html2canvas(planContent, { scale: 2 }).then(canvas => {
+            const imgData = canvas.toDataURL('image/png');
+            const pdf = new jsPDF('p', 'mm', 'a4');
+            const pdfWidth = pdf.internal.pageSize.getWidth();
+            const pdfHeight = (canvas.height * pdfWidth) / canvas.width;
+            
+            pdf.addImage(imgData, 'PNG', 0, 0, pdfWidth, pdfHeight);
+            pdf.save('parenting-plan.pdf');
+            showNotification("PDF downloaded.");
+        }).catch(err => {
+            console.error("Error generating PDF:", err);
+            showNotification("Failed to generate PDF.");
+        });
+    }
+
+    // --- Event Listeners ---
+    addChildBtn.addEventListener('click', () => addChild());
+    savePlanBtn.addEventListener('click', savePlan);
+    downloadPdfBtn.addEventListener('click', downloadPdf);
+    
+    // --- Authentication Observer ---
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            userId = user.uid;
+            console.log("User is logged in:", userId);
+            loadPlan(); // Automatically load the user's plan
+        } else {
+            userId = null;
+            console.log("User is logged out.");
+            // Optionally, clear the form or show a login prompt
+            showNotification("Please log in to manage your parenting plan.");
+        }
+    });
+});

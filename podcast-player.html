@@ -1,169 +1,67 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA Voice Podcast</title>
+    <title>Podcast Player - Flamea</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
     <style>
         body {
-            font-family: 'Inter', sans-serif;
-        }
-        /* Custom scrollbar for a better look */
-        .custom-scrollbar::-webkit-scrollbar {
-            width: 8px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-track {
-            background: #f1f1f1;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb {
-            background: #888;
-            border-radius: 10px;
-        }
-        .custom-scrollbar::-webkit-scrollbar-thumb:hover {
-            background: #555;
+            background-image: url('assets/images/background.jpg');
+            background-size: cover;
+            background-attachment: fixed;
         }
     </style>
 </head>
-<body class="bg-gray-100 text-gray-800">
 
-    <div class="container mx-auto p-4 md:p-8">
-        <div class="max-w-4xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
-            
-            <!-- Header -->
-            <div id="podcast-header" class="p-6 bg-gray-800 text-white flex flex-col md:flex-row items-center space-y-4 md:space-y-0 md:space-x-6">
-                <!-- Podcast Art will be loaded here -->
-            </div>
+<body class="bg-gray-100 text-gray-800 font-sans">
 
-            <!-- Main Content -->
-            <div class="flex flex-col lg:flex-row">
-                <!-- Episode List -->
-                <div class="w-full lg:w-1/2 border-r border-gray-200">
-                    <div class="p-4 border-b border-gray-200">
-                        <h2 class="text-xl font-bold">Episodes</h2>
-                    </div>
-                    <div id="episode-list" class="max-h-[60vh] overflow-y-auto custom-scrollbar">
-                        <!-- Episodes will be loaded here -->
-                        <div id="loading" class="p-6 text-center">
-                            <p class="text-gray-500">Loading episodes...</p>
-                        </div>
+    <!-- Sidebar Placeholder -->
+    <div id="sidebar-placeholder"></div>
+
+    <main class="ml-0 md:ml-64 p-8 transition-all duration-300">
+        <div class="container mx-auto">
+            <h1 class="text-4xl font-bold text-white mb-8">Flamea Podcast</h1>
+
+            <div id="player-container" class="max-w-2xl mx-auto bg-white/90 rounded-xl shadow-lg p-6">
+                <!-- Loading State -->
+                <div id="loading-state" class="text-center">
+                    <i class="fas fa-spinner fa-spin text-4xl text-blue-600"></i>
+                    <p class="mt-4 text-lg">Loading latest episodes...</p>
+                </div>
+                
+                <!-- Player UI (hidden until loaded) -->
+                <div id="player-ui" class="hidden">
+                    <img id="episode-artwork" src="https://placehold.co/600x600/1e293b/ffffff?text=Flamea" alt="Episode Artwork" class="w-full h-auto rounded-lg mb-6 shadow-md">
+                    <h2 id="episode-title" class="text-2xl font-bold mb-2">Episode Title</h2>
+                    <p id="episode-description" class="text-gray-600 mb-6">Episode description will go here...</p>
+
+                    <audio id="audio-player" controls class="w-full"></audio>
+                </div>
+
+                <!-- Playlist -->
+                <div id="playlist-container" class="mt-8">
+                    <h3 class="text-xl font-semibold mb-4 border-b pb-2">All Episodes</h3>
+                    <div id="playlist" class="space-y-3 max-h-96 overflow-y-auto">
+                        <!-- Playlist items will be injected here -->
                     </div>
                 </div>
 
-                <!-- Player and Details -->
-                <div class="w-full lg:w-1/2">
-                    <div class="p-6">
-                        <h3 id="current-episode-title" class="text-2xl font-bold mb-4">Select an episode to play</h3>
-                        <div class="my-4">
-                            <audio id="audio-player" controls class="w-full rounded-lg">
-                                Your browser does not support the audio element.
-                            </audio>
-                        </div>
-                        <div id="current-episode-description" class="prose max-w-none text-gray-600 max-h-60 overflow-y-auto custom-scrollbar">
-                            <p>The description will appear here once you select an episode.</p>
-                        </div>
-                    </div>
+                 <!-- Error State -->
+                 <div id="error-state" class="hidden text-center p-4 bg-red-100 text-red-700 rounded-lg">
+                    <p id="error-message"></p>
                 </div>
+
             </div>
         </div>
-    </div>
+    </main>
 
-    <script>
-        // Self-invoking async function to encapsulate code
-        (async function() {
-            // --- CONFIGURATION ---
-            // The RSS feed URL.
-            // Using a CORS proxy to bypass browser security restrictions on fetching cross-origin resources.
-            const RSS_URL = 'https://api.allorigins.win/get?url=' + encodeURIComponent('https://anchor.fm/s/10357aacc/podcast/rss');
-            
-            // --- DOM ELEMENT REFERENCES ---
-            const episodeList = document.getElementById('episode-list');
-            const audioPlayer = document.getElementById('audio-player');
-            const currentTitle = document.getElementById('current-episode-title');
-            const currentDescription = document.getElementById('current-episode-description');
-            const podcastHeader = document.getElementById('podcast-header');
-            const loadingIndicator = document.getElementById('loading');
-
-            try {
-                // --- FETCH AND PARSE RSS FEED ---
-                const response = await fetch(RSS_URL);
-                if (!response.ok) {
-                    throw new Error(`HTTP error! status: ${response.status}`);
-                }
-                const data = await response.json();
-                const feedContent = data.contents;
-
-                const parser = new DOMParser();
-                const xmlDoc = parser.parseFromString(feedContent, "application/xml");
-                
-                // Check for parsing errors
-                const parseError = xmlDoc.querySelector("parsererror");
-                if (parseError) {
-                    console.error("Error parsing XML:", parseError);
-                    throw new Error("Failed to parse the RSS feed.");
-                }
-
-                // --- POPULATE PODCAST HEADER ---
-                const channelTitle = xmlDoc.querySelector('channel > title')?.textContent || 'Podcast';
-                const channelDescription = xmlDoc.querySelector('channel > description')?.textContent || 'No description available.';
-                const channelImage = xmlDoc.querySelector('channel > itunes\\:image, channel > image[href]')?.getAttribute('href');
-
-                podcastHeader.innerHTML = `
-                    <img src="${channelImage || 'https://placehold.co/150x150/e2e8f0/334155?text=Art'}" alt="Podcast Cover Art" class="w-32 h-32 rounded-lg shadow-md flex-shrink-0">
-                    <div class="text-center md:text-left">
-                        <h1 class="text-3xl font-bold">${channelTitle}</h1>
-                        <p class="text-gray-300 mt-2">${channelDescription}</p>
-                    </div>
-                `;
-
-                // --- POPULATE EPISODE LIST ---
-                const items = xmlDoc.querySelectorAll("item");
-                episodeList.innerHTML = ''; // Clear loading indicator
-
-                items.forEach((item, index) => {
-                    const title = item.querySelector("title")?.textContent || 'Untitled Episode';
-                    const description = item.querySelector("description")?.textContent || 'No description.';
-                    // The enclosure tag holds the direct audio link
-                    const enclosure = item.querySelector("enclosure");
-                    const audioUrl = enclosure?.getAttribute("url");
-
-                    if (audioUrl) {
-                        const div = document.createElement('div');
-                        div.className = 'p-4 border-b border-gray-200 hover:bg-gray-100 cursor-pointer transition duration-200';
-                        div.innerHTML = `<h4 class="font-semibold">${title}</h4>`;
-                        
-                        // Add a click event listener to each episode item
-                        div.addEventListener('click', () => {
-                            // Update player details
-                            currentTitle.textContent = title;
-                            // The description contains HTML, so we use innerHTML
-                            currentDescription.innerHTML = description;
-                            audioPlayer.src = audioUrl;
-                            audioPlayer.play();
-                            
-                            // Highlight the selected item
-                            document.querySelectorAll('#episode-list > div').forEach(el => el.classList.remove('bg-blue-100', 'border-l-4', 'border-blue-500'));
-                            div.classList.add('bg-blue-100', 'border-l-4', 'border-blue-500');
-                        });
-
-                        episodeList.appendChild(div);
-                    }
-                });
-                
-                // Load the first episode by default
-                if (items.length > 0) {
-                   episodeList.querySelector('div').click();
-                }
-
-
-            } catch (error) {
-                console.error("Error fetching or processing podcast feed:", error);
-                loadingIndicator.innerHTML = `<p class="text-red-500 font-semibold">Failed to load podcast feed. Please try again later.</p>`;
-            }
-        })();
-    </script>
+    <!-- App Scripts -->
+    <script src="assets/js/firebase-config.js"></script>
+    <script src="assets/js/sidebar-loader.js"></script>
+    <script src="assets/js/podcast-player.js"></script>
 
 </body>
 </html>

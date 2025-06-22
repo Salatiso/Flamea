@@ -1,158 +1,132 @@
-/**
- * Flamea.org - Centralized Authentication Script (Corrected)
- * This file manages all user authentication processes sitewide.
- * - Handles new user registration (Email/Password & Google).
- * - Handles existing user login.
- * - Creates user profiles in Firestore.
- * - Manages login/logout state and UI updates.
- * - It NO LONGER handles redirects, allowing each page to manage its own content visibility.
- */
+// /assets/js/auth.js
+// This script handles all authentication logic for the main Flamea app.
+// It includes Google & Apple sign-in, inactivity timeout, and user state management.
 
-import {
-    onAuthStateChanged,
-    signInWithEmailAndPassword,
-    createUserWithEmailAndPassword,
-    signInWithPopup,
-    signOut,
-    GoogleAuthProvider,
-    updateProfile
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import {
-    doc,
-    setDoc,
-    getDoc,
-    serverTimestamp
-} from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { auth, db } from './firebase-config.js';
-
-const googleProvider = new GoogleAuthProvider();
-
-const loginForm = document.getElementById('login-form');
-const registerForm = document.getElementById('register-form');
-const googleSignInButton = document.getElementById('google-signin-btn');
-const authMessage = document.getElementById('auth-message');
-
-function showMessage(message, isError = false) {
-    if (authMessage) {
-        authMessage.textContent = message;
-        authMessage.className = `mb-4 text-center h-6 ${isError ? 'text-red-400' : 'text-green-400'}`;
-    }
-}
-
-if (loginForm) {
-    loginForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        showMessage('Signing in...', false);
-        try {
-            await signInWithEmailAndPassword(auth, loginForm.email.value, loginForm.password.value);
-            // SUCCESS: onAuthStateChanged will handle the rest.
-        } catch (error) {
-            console.error("Login Error:", error.message);
-            showMessage(getFriendlyAuthError(error.code), true);
-        }
-    });
-}
-
-if (registerForm) {
-    registerForm.addEventListener('submit', async (e) => {
-        e.preventDefault();
-        showMessage('Creating account...', false);
-        try {
-            const userCredential = await createUserWithEmailAndPassword(auth, registerForm.email.value, registerForm.password.value);
-            await updateProfile(userCredential.user, { displayName: registerForm.name.value });
-            await createUserProfileDocument(userCredential.user, { displayName: registerForm.name.value });
-            // SUCCESS: onAuthStateChanged will handle the rest.
-        } catch (error) {
-            console.error("Registration Error:", error.message);
-            showMessage(getFriendlyAuthError(error.code), true);
-        }
-    });
-}
-
-if (googleSignInButton) {
-    googleSignInButton.addEventListener('click', async () => {
-        showMessage('Redirecting to Google...', false);
-        try {
-            const result = await signInWithPopup(auth, googleProvider);
-            await createUserProfileDocument(result.user);
-            // SUCCESS: onAuthStateChanged will handle the rest.
-        } catch (error) {
-            console.error("Google Sign-In Error:", error.message);
-            showMessage(getFriendlyAuthError(error.code), true);
-        }
-    });
-}
-
-async function createUserProfileDocument(user, additionalData = {}) {
-    if (!user) return;
-    const userRef = doc(db, `users/${user.uid}`);
-    const snapshot = await getDoc(userRef);
-
-    if (!snapshot.exists()) {
-        const { displayName, email, photoURL } = user;
-        const createdAt = serverTimestamp();
-        try {
-            await setDoc(userRef, {
-                displayName: displayName || additionalData.displayName,
-                email,
-                photoURL: photoURL || 'https://placehold.co/128x128/374151/FFFFFF?text=User',
-                createdAt,
-                ...additionalData
-            });
-        } catch (error) {
-            console.error("Error creating user profile:", error);
-        }
-    }
-}
-
-function getFriendlyAuthError(errorCode) {
-    switch (errorCode) {
-        case 'auth/user-not-found':
-        case 'auth/wrong-password':
-            return 'Invalid email or password. Please try again.';
-        case 'auth/email-already-in-use':
-            return 'This email address is already registered.';
-        case 'auth/weak-password':
-            return 'Password should be at least 6 characters long.';
-        case 'auth/invalid-email':
-            return 'Please enter a valid email address.';
-        default:
-            return 'An unexpected error occurred. Please try again.';
-    }
-}
-
-onAuthStateChanged(auth, (user) => {
-    updateAuthUI(user);
-    const event = new CustomEvent('auth-state-changed', { detail: { user } });
-    document.dispatchEvent(event);
-
-    const currentPage = window.location.pathname.split("/").pop() || "index.html";
-    const isAuthPage = ['community.html'].includes(currentPage);
-
-    if (user && isAuthPage) {
-        window.location.replace('dashboard.html');
-    }
-});
-
-export function updateAuthUI(user) {
-    const authLinksContainer = document.getElementById('sidebar-auth-links');
-    if (!authLinksContainer) return;
-
-    if (user) {
-        authLinksContainer.innerHTML = `
-            <a href="dashboard.html" class="block w-full text-center bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-4 rounded-lg transition-colors mb-2">My Dashboard</a>
-            <button id="sidebar-logout-btn" class="text-sm text-gray-400 hover:text-white hover:underline">Logout</button>
-        `;
-    } else {
-        authLinksContainer.innerHTML = `
-            <a href="community.html" class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-lg transition-colors">Login / Register</a>
-        `;
+document.addEventListener('DOMContentLoaded', () => {
+    // Make sure the main firebase config is loaded
+    if (!firebase.apps.length) {
+        console.error("Firebase is not initialized. Make sure firebase-config.js is loaded first.");
+        return;
     }
 
-    const logoutBtn = document.getElementById('sidebar-logout-btn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', () => {
-            signOut(auth).catch(error => console.error("Logout Error:", error));
+    const auth = firebase.auth();
+
+    // --- Provider Initialization ---
+    const googleProvider = new firebase.auth.GoogleAuthProvider();
+    const appleProvider = new firebase.auth.OAuthProvider('apple.com');
+
+    // --- DOM Elements (assuming they exist on login.html) ---
+    const loginWithGoogleBtn = document.getElementById('login-google');
+    const loginWithAppleBtn = document.getElementById('login-apple');
+    const logoutBtn = document.getElementById('logout-button'); // Assume this ID exists in your sidebar/header
+    const userDisplay = document.getElementById('user-display'); // To show logged-in user info
+
+    // --- Sign-in Functions ---
+    if (loginWithGoogleBtn) {
+        loginWithGoogleBtn.addEventListener('click', () => {
+            auth.signInWithPopup(googleProvider)
+                .then((result) => {
+                    console.log("Signed in with Google:", result.user.displayName);
+                    window.location.href = '/dashboard.html'; // Redirect to dashboard after login
+                }).catch((error) => {
+                    console.error("Google Sign-in Error:", error);
+                    alert(`Error: ${error.message}`);
+                });
         });
     }
-}
+
+    if (loginWithAppleBtn) {
+        loginWithAppleBtn.addEventListener('click', () => {
+            // IMPORTANT: For Apple Sign-In to work, you MUST enable it in your
+            // Firebase Console -> Authentication -> Sign-in method -> Add Apple.
+            auth.signInWithPopup(appleProvider)
+                .then((result) => {
+                    console.log("Signed in with Apple:", result.user.displayName);
+                    window.location.href = '/dashboard.html'; // Redirect to dashboard after login
+                }).catch((error) => {
+                    console.error("Apple Sign-in Error:", error);
+                    // Common error is "operation-not-allowed" if not enabled in Firebase console
+                    alert(`Error: ${error.message}. Please ensure Apple Sign-in is enabled in the Firebase console.`);
+                });
+        });
+    }
+
+    // --- Logout Function ---
+    if (logoutBtn) {
+        logoutBtn.addEventListener('click', () => {
+            auth.signOut().then(() => {
+                console.log("User signed out.");
+                window.location.href = '/login.html'; // Redirect to login page after logout
+            }).catch(error => console.error("Sign out error", error));
+        });
+    }
+
+
+    // --- Auth State Observer ---
+    // This function runs on every page load and when the auth state changes.
+    auth.onAuthStateChanged(user => {
+        if (user) {
+            // User is signed in.
+            console.log("Current user:", user.email || user.providerData[0].uid);
+            if (userDisplay) {
+                userDisplay.textContent = user.displayName || user.email;
+            }
+            // Start the inactivity timer
+            inactivityTimer.start();
+
+        } else {
+            // User is signed out.
+            console.log("No user is signed in.");
+            // Stop the inactivity timer
+            inactivityTimer.stop();
+            // If not on the login page, redirect there
+            if (window.location.pathname !== '/login.html' && window.location.pathname !== '/') {
+               // window.location.href = '/login.html';
+            }
+        }
+    });
+
+    // --- Inactivity Timeout Logic ---
+    const inactivityTimer = (() => {
+        let timeout;
+        const waitingTime = 60 * 60 * 1000; // 60 minutes in milliseconds
+
+        const events = ['mousemove', 'mousedown', 'keypress', 'scroll', 'touchstart'];
+
+        function resetTimer() {
+            clearTimeout(timeout);
+            timeout = setTimeout(logoutUser, waitingTime);
+        }
+
+        function logoutUser() {
+            console.log("User inactive, signing out.");
+            auth.signOut().then(() => {
+                alert("You have been logged out due to inactivity.");
+                window.location.href = '/login.html';
+            });
+        }
+
+        function addEventListeners() {
+            events.forEach(event => document.addEventListener(event, resetTimer, true));
+        }
+
+        function removeEventListeners() {
+             events.forEach(event => document.removeEventListener(event, resetTimer, true));
+             clearTimeout(timeout);
+        }
+
+        return {
+            start: () => {
+                removeEventListeners(); // Clean up first
+                addEventListeners();
+                resetTimer();
+                console.log("Inactivity timer started.");
+            },
+            stop: () => {
+                removeEventListeners();
+                console.log("Inactivity timer stopped.");
+            }
+        };
+    })();
+
+});

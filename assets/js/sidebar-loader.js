@@ -1,91 +1,46 @@
-/**
- * Flamea.org - Sidebar Loader
- * Fetches sidebar.html and injects it into the #sidebar-placeholder div.
- * It also sets the 'active' class on the link corresponding to the current page.
- */
-document.addEventListener('DOMContentLoaded', () => {
-    // Find the placeholder element for the sidebar
+// /assets/js/sidebar-loader.js
+// This script fetches the sidebar.html file and injects it into any page that has a div with the id "sidebar-placeholder".
+// This ensures the sidebar is consistent across all pages of the application.
+
+document.addEventListener("DOMContentLoaded", function() {
     const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
-    
-    // If the placeholder doesn't exist on the page, do nothing.
-    if (!sidebarPlaceholder) {
-        console.log('No sidebar placeholder found on this page.');
-        return;
-    }
 
-    // Fetch the sidebar's HTML content
-    fetch('sidebar.html')
-        .then(response => {
-            // Check if the file was successfully fetched
-            if (!response.ok) {
-                throw new Error('Network response was not ok. Could not load sidebar.html');
-            }
-            return response.text();
-        })
-        .then(data => {
-            // Inject the sidebar HTML into the placeholder
-            sidebarPlaceholder.innerHTML = data;
-
-            // After the sidebar is loaded, activate the correct link
-            setActiveLink();
-
-            // Also, initialize submenu functionality for the newly added sidebar
-            initializeSubmenus();
-        })
-        .catch(error => {
-            console.error('Error fetching or loading sidebar:', error);
-            // Display an error message inside the placeholder if loading fails
-            sidebarPlaceholder.innerHTML = '<p class="text-red-400 p-4">Error: Could not load navigation sidebar.</p>';
-        });
-
-    /**
-     * Finds the current page's link in the sidebar and applies the 'active' class.
-     */
-    function setActiveLink() {
-        // Get the current page's file name (e.g., "about.html")
-        const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        
-        // Find all navigation links within the newly loaded sidebar
-        const navLinks = document.querySelectorAll('#main-nav a');
-
-        navLinks.forEach(link => {
-            const linkPage = link.getAttribute('href').split("/").pop();
-            if (linkPage === currentPage) {
-                link.classList.add('active');
-                
-                // If the active link is inside a submenu, open that submenu
-                const parentSubmenu = link.closest('.submenu-container');
-                if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block'; // Make it visible
-                    // Also, mark the parent toggle as active/open
-                    const parentToggle = parentSubmenu.previousElementSibling.querySelector('.submenu-toggle');
-                    if (parentToggle) {
-                         parentToggle.querySelector('i').classList.add('rotate-180');
-                    }
+    // Check if the placeholder element exists on the current page
+    if (sidebarPlaceholder) {
+        // Fetch the sidebar content
+        fetch('sidebar.html')
+            .then(response => {
+                // Check if the file was found
+                if (!response.ok) {
+                    throw new Error('sidebar.html not found. Please check the file path.');
                 }
-            }
-        });
-    }
+                return response.text();
+            })
+            .then(data => {
+                // Inject the sidebar HTML into the placeholder
+                sidebarPlaceholder.innerHTML = data;
+                console.log("Sidebar loaded successfully.");
 
-    /**
-     * Adds event listeners to all submenu toggles within the sidebar.
-     */
-    function initializeSubmenus() {
-        const submenuToggles = document.querySelectorAll('.submenu-toggle');
-        submenuToggles.forEach(button => {
-            const submenu = button.closest('[data-menu-item]').querySelector('.submenu-container');
-            if(submenu) {
-                button.addEventListener('click', (event) => {
-                    event.stopPropagation(); // Prevent other click events from firing
-                    const icon = button.querySelector('i');
-                    const isVisible = submenu.style.display === 'block';
-                    
-                    submenu.style.display = isVisible ? 'none' : 'block';
-                    if(icon) {
-                       icon.classList.toggle('rotate-180', !isVisible);
-                    }
-                });
-            }
-        });
+                // **Fix for background image**: 
+                // Your background image issue is likely a CSS path problem.
+                // Ensure your main CSS file or the style tag in your HTML has the correct path.
+                // Example for an inline style in your HTML <head>:
+                // <style>
+                //   body {
+                //     background-image: url('assets/images/background.jpg');
+                //     background-size: cover;
+                //     background-attachment: fixed;
+                //   }
+                // </style>
+                // Double-check that the image exists at 'assets/images/background.jpg'.
+            })
+            .catch(error => {
+                console.error('Error loading sidebar:', error);
+                // Display an error message inside the placeholder for easy debugging
+                sidebarPlaceholder.innerHTML = `<div class="p-4 text-red-500 bg-red-100">Error: Sidebar could not be loaded. ${error.message}</div>`;
+            });
+    } else {
+        // This is not an error, some pages like login might not have a sidebar
+        console.log("No sidebar placeholder found on this page.");
     }
 });
