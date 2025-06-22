@@ -5,27 +5,11 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA - Parenting Plan Builder</title>
     <link href="assets/css/style.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="[invalid url, do not cite]
-    <link rel="preconnect" href="[invalid url, do not cite]
-    <link rel="preconnect" href="[invalid url, do not cite] crossorigin>
-    <link href="[invalid url, do not cite] rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js"></script>
-    <script>
-        const firebaseConfig = {
-            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
-            authDomain: "flamea.firebaseapp.com",
-            projectId: "flamea",
-            storageBucket: "flamea.firebasestorage.app",
-            messagingSenderId: "681868881622",
-            appId: "1:681868881622:web:d20687c688b2d1d943a377",
-            measurementId: "G-MX7X9JQE51"
-        };
-        const app = initializeApp(firebaseConfig);
-        const analytics = getAnalytics(app);
-    </script>
     <style>
         .parenting-plan-dashboard { max-width: 800px; margin: auto; text-align: center; }
         .sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
@@ -93,6 +77,32 @@
     <!-- Scripts -->
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
+    </script>
+    <script type="module">
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
+
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
+
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
+
+        // Make Firebase instances globally available
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
     </script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
