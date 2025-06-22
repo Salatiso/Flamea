@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp - Resource Compass</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .view-container { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .view-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        .feature-card { transition: all 0.3s ease; }
+        .feature-card:hover { transform: translateY(-5px); }
+        .resource-card { transition: all 0.2s ease-in-out; }
+        .resource-card:hover { background-color: #1f2937; }
+        .wizard-step { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .wizard-step.active { display: block; }
+    </style>
+    <!-- FIX: Using async and defer is best practice. The JS fix handles the timing. -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initLocator" async defer></script>
+</head>
+<body class="bg-gray-900 text-gray-200">
+    <div id="header-placeholder"></div>
+
+    <main class="main-content pt-24 pb-12 px-4 md:px-8">
+        <div class="max-w-7xl mx-auto">
+            <header class="text-center mb-12">
+                <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Resource Compass</h1>
+                <p class="text-lg text-gray-400 mt-3 max-w-3xl mx-auto">Find courts, public bodies, and legal support services across South Africa.</p>
+            </header>
+
+            <!-- View containers remain the same -->
+            <div id="selection-view" class="view-container active">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12">
+                    <div id="start-wizard-btn" class="feature-card bg-gray-800 p-8 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-indigo-500 cursor-pointer">
+                        <i class="fas fa-magic text-5xl text-indigo-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Resource Finder Wizard</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Not sure what you need? Let us guide you.</p>
+                        <span class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-500 transition-colors w-full mt-auto">Start Wizard</span>
+                    </div>
+                    <div id="explore-resources-btn" class="feature-card bg-gray-800 p-8 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 cursor-pointer">
+                        <i class="fas fa-map-marked-alt text-5xl text-green-400 mb-4"></i>
+                        <h3 class="text-2xl font-bold mb-2">Manual Search & Map</h3>
+                        <p class="text-gray-400 flex-grow mb-4">Know what you're looking for? Search the full directory.</p>
+                         <span class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-500 transition-colors w-full mt-auto">Search Manually</span>
+                    </div>
+                </div>
+            </div>
+
+            <div id="wizard-view" class="view-container">
+                 <div id="wizard-section" class="bg-gray-800 p-8 rounded-lg shadow-xl"></div>
+                 <button id="back-to-selection-wizard" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Back to Options</button>
+            </div>
+
+            <div id="explorer-view" class="view-container">
+                <div class="bg-gray-800 p-6 rounded-lg mb-8 shadow-xl">
+                    <div class="grid md:grid-cols-3 gap-4 items-end">
+                        <div><label for="category-filter" class="block text-sm font-medium text-gray-300 mb-1">1. Category</label><select id="category-filter" class="form-select"></select></div>
+                        <div><label for="province-filter" class="block text-sm font-medium text-gray-300 mb-1">2. Province</label><select id="province-filter" class="form-select"></select></div>
+                        <div><label for="city-filter" class="block text-sm font-medium text-gray-300 mb-1">3. City/Town</label><select id="city-filter" class="form-select"></select></div>
+                    </div>
+                    <div class="mt-6 pt-6 border-t border-gray-700">
+                        <label for="address-input" class="block text-sm font-medium text-gray-300 mb-1">Or, find nearest by your address</label>
+                        <div class="relative"><input type="text" id="address-input" placeholder="e.g., 1 Hospital St, Johannesburg" class="w-full p-3 rounded-md form-input pl-10"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i></div>
+                         <button id="geolocate-btn" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-location-crosshairs mr-2"></i>Use my current location</button>
+                    </div>
+                </div>
+                <div id="locator-status" class="text-center my-4 text-yellow-400 h-6"></div>
+                <div class="grid lg:grid-cols-2 gap-8">
+                    <div id="map" class="h-96 lg:h-[600px] w-full bg-gray-700 rounded-lg border-2 border-gray-600"></div>
+                    <div id="results-list" class="space-y-4 max-h-[600px] overflow-y-auto pr-2"><div class="text-center text-gray-400 p-8"><i class="fas fa-search-location text-4xl mb-4"></i><p>Your search results will appear here.</p></div></div>
+                </div>
+                 <button id="back-to-selection-explorer" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Back to Options</button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Correct script loading order -->
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/locator.js"></script>
+</body>
+</html>

@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp - Case Tracker</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        .step-item { border-left: 4px solid #4a5568; transition: all 0.3s ease; }
+        .step-item.status-todo { border-left-color: #4a5568; }
+        .step-item.status-inprogress { border-left-color: #6366f1; }
+        .step-item.status-done { border-left-color: #22c55e; }
+        .step-item.status-postponed { border-left-color: #f97316; }
+        .modal-wrapper { display: none; }
+        .modal-wrapper.active { display: flex; }
+        .view-container { display: none; animation: fadeIn 0.5s ease-in-out; }
+        .view-container.active { display: block; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+
+    <div id="header-placeholder"></div>
+
+    <main class="main-content pt-24 pb-12 px-4 md:px-8">
+        <!-- Loading state is now the default view -->
+        <div id="loading-state" class="text-center py-20 view-container active">
+            <i class="fas fa-spinner fa-spin text-4xl text-indigo-400"></i>
+            <p class="mt-4 text-gray-400">Loading Case Tracker...</p>
+        </div>
+
+        <!-- Main content is hidden until auth check passes -->
+        <div id="main-content" class="view-container">
+            <!-- Dashboard View -->
+            <div id="dashboard-view" class="view-container">
+                <div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4">
+                    <h1 class="text-4xl font-bold font-roboto-slab text-white">My Tracked Processes</h1>
+                    <button id="start-new-case-btn" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-transform hover:scale-105 flex items-center justify-center gap-2">
+                        <i class="fas fa-plus"></i>Start New Process
+                    </button>
+                </div>
+                <div id="cases-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <p id="no-cases-message" class="text-gray-400 italic col-span-full text-center py-8">You are not tracking any processes. Click "Start New Process" to begin.</p>
+                </div>
+            </div>
+
+            <!-- Detail View -->
+            <div id="detail-view" class="view-container">
+                <button id="back-to-dashboard-btn" class="mb-6 text-indigo-400 font-semibold hover:underline flex items-center gap-2">
+                    <i class="fas fa-arrow-left"></i>Back to Dashboard
+                </button>
+                <div class="bg-gray-800 border border-gray-700 p-6 md:p-8 rounded-lg shadow-2xl">
+                    <h2 id="detail-case-name" class="text-3xl font-bold font-roboto-slab text-white mb-1"></h2>
+                    <p id="detail-case-type" class="text-sm text-gray-500 mb-6 font-mono"></p>
+                    <div id="steps-container" class="space-y-6"></div>
+                    <div id="custom-step-area" class="mt-8 hidden">
+                         <h3 class="text-xl font-bold text-white mb-3">Add a new step:</h3>
+                         <div class="p-4 border border-gray-600 rounded-lg bg-gray-900">
+                            <input type="text" id="custom-step-name" placeholder="Name of the step" class="w-full p-3 rounded-md form-input mb-2">
+                            <textarea id="custom-step-desc" placeholder="Describe the step or add notes..." class="w-full p-3 rounded-md form-input mb-2" rows="3"></textarea>
+                            <button id="add-custom-step-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg">Add Step</button>
+                         </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- New Case Modal -->
+    <div id="new-case-modal" class="modal-wrapper fixed top-0 left-0 w-full h-full items-center justify-center bg-black bg-opacity-70 z-50 p-4">
+        <div class="bg-gray-800 p-8 rounded-xl shadow-2xl w-full max-w-lg mx-auto border border-gray-700">
+            <h2 class="text-2xl font-bold font-roboto-slab text-white mb-6">Start a New Process</h2>
+            <form id="new-case-form" class="space-y-4">
+                <div>
+                    <label for="case-name" class="block text-gray-300 font-semibold mb-2">Process Name:</label>
+                    <input type="text" id="case-name" name="case-name" class="w-full p-3 rounded-md form-input" placeholder="e.g., My Child Maintenance Case" required>
+                </div>
+                <div>
+                    <label for="case-type" class="block text-gray-300 font-semibold mb-2">Process Type:</label>
+                    <select id="case-type" name="case-type" class="w-full p-3 rounded-md form-input bg-gray-700 border-gray-600">
+                        <option value="">-- Choose a Template or Custom --</option>
+                        <optgroup label="Court & Legal Processes">
+                            <option value="childrensCourt">Children's Court (Maintenance/Contact)</option>
+                            <option value="smallClaims">Small Claims Court</option>
+                        </optgroup>
+                         <optgroup label="Traditional & Custom">
+                            <option value="lobola">Lobola Negotiations</option>
+                            <option value="custom">Other / Custom Process</option>
+                        </optgroup>
+                    </select>
+                </div>
+                <div class="flex justify-end space-x-4 pt-4">
+                    <button type="button" id="cancel-new-case-btn" class="bg-gray-600 hover:bg-gray-500 text-white font-bold py-2 px-6 rounded-lg">Cancel</button>
+                    <button type="submit" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-6 rounded-lg">Create</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <!-- Correct, sequential script loading -->
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/case-tracker.js"></script>
+
+</body>
+</html>

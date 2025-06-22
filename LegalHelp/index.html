@@ -8,41 +8,79 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.css">
-    <!-- Google Maps script is now loaded directly in the head -->
-    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDCaHv8AC2iqwk8ijt377Nfe3gMR54WLX4&libraries=places,geometry&callback=initLocator" async defer></script>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body>
 
-    <!-- The Header is part of the main page shell and is no longer loaded from a separate file -->
-    <header class="fixed top-0 left-0 w-full p-4 z-50 flex justify-between items-center bg-gray-900/50 backdrop-blur-sm border-b border-gray-700/50">
-        <a href="#/" class="text-2xl font-bold font-roboto-slab text-white">
-            <i class="fas fa-balance-scale text-indigo-400"></i> Legal<span class="text-indigo-400">Help</span>
-        </a>
-        <nav id="main-nav" class="hidden lg:flex items-center bg-gray-800/80 rounded-full px-2 py-1 shadow-lg">
-            <!-- Navigation links now point to hash routes for the SPA router -->
-            <a href="#/" class="nav-link" data-translate-key="nav.home">Home</a>
-            <a href="#/forms" class="nav-link" data-translate-key="nav.forms">Forms</a>
-            <a href="#/resources" class="nav-link" data-translate-key="nav.resources">Resources</a>
-            <a href="#/community" class="nav-link" data-translate-key="nav.community">Community</a>
-            <a href="#/case-tracker" class="nav-link" data-translate-key="nav.casetracker">Case Tracker</a>
-            <a href="#/join" class="nav-link">Join</a>
-        </nav>
-        <div class="flex items-center gap-4">
-            <div class="language-selector">
-                <select id="language-switcher" class="bg-gray-700 border border-gray-600 text-white text-sm rounded-full focus:ring-indigo-500 focus:border-indigo-500 p-2">
-                    <option value="en">English</option>
-                    <option value="zu">isiZulu</option>
-                    <option value="xh">isiXhosa</option>
-                </select>
-            </div>
-             <a id="login-or-dashboard-link" href="login.html" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-4 rounded-full transition-colors hidden sm:block" data-translate-key="nav.login">Login</a>
-             <button id="sign-out-btn" class="hidden bg-red-600 hover:bg-red-700 text-white font-bold py-2 px-4 rounded-full transition-colors sm:block">Sign Out</button>
+    <div id="header-placeholder"></div>
+
+    <div class="app-shell">
+        <div id="mainContainer" class="main-container">
+            <!-- Section 1: Home -->
+            <section class="section hero-gradient text-white">
+                <div class="text-center max-w-4xl">
+                    <i class="fas fa-balance-scale text-6xl text-indigo-200 mb-6"></i>
+                    <h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-4" data-translate-key="home.title">The Law, Demystified.</h1>
+                    <p class="text-xl text-indigo-200 mb-8" data-translate-key="home.subtitle">Your comprehensive, single-view archive of South African legislation.</p>
+                    <div class="relative max-w-xl mx-auto">
+                        <input type="search" placeholder="Search any Act, case, or section..." class="w-full p-4 rounded-full bg-white/20 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition" data-translate-key="home.search_placeholder" placeholder-key="home.search_placeholder">
+                        <button class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-500 rounded-full h-12 w-12 flex items-center justify-center"><i class="fas fa-search text-xl"></i></button>
+                    </div>
+                     <p class="mt-8 text-indigo-200" data-translate-key="home.swipe_prompt">Use navigation or swipe to explore</p>
+                </div>
+            </section>
+
+            <!-- Section 2: The Constitution -->
+            <section class="section">
+                <div class="text-center max-w-4xl">
+                    <i class="fas fa-landmark text-6xl text-green-400 mb-6"></i>
+                    <h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="constitution.title">The Constitution</h2>
+                    <p class="text-lg text-gray-400 mb-6" data-translate-key="constitution.subtitle">The supreme law of the Republic. The foundation of our democracy and the ultimate source of all law. Explore the Bill of Rights, the structure of the state, and landmark Constitutional Court cases that have shaped our nation.</p>
+                    <a href="forms.html" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors" data-translate-key="constitution.cta">View Related Forms</a>
+                </div>
+            </section>
+
+            <!-- Section 3: Statutes & Acts -->
+            <section class="section">
+                <div class="text-center max-w-4xl">
+                     <i class="fas fa-scroll text-6xl text-blue-400 mb-6"></i>
+                    <h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="statutes.title">Statutes & Acts</h2>
+                    <p class="text-lg text-gray-400" data-translate-key="statutes.subtitle">Access a comprehensive database of laws passed by Parliament. The full text of all national acts will be searchable, categorized, and linked to relevant amendments and regulations for easy reference.</p>
+                </div>
+            </section>
+            
+            <!-- Section 4: Case Law -->
+            <section class="section">
+                <div class="text-center max-w-4xl">
+                    <i class="fas fa-gavel text-6xl text-yellow-400 mb-6"></i>
+                    <h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="caselaw.title">Case Law</h2>
+                    <p class="text-lg text-gray-400" data-translate-key="caselaw.subtitle">Delve into the judgments that shape our legal landscape. This section will provide summaries and full-text access to key decisions from the Constitutional Court, Supreme Court of Appeal, and High Courts.</p>
+                </div>
+            </section>
+            
+            <!-- Section 5: Legislation Updates -->
+            <section class="section">
+                <div class="text-center w-full max-w-5xl">
+                    <i class="fas fa-bullhorn text-6xl text-red-400 mb-6"></i>
+                    <h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="updates.title">Legislation Updates</h2>
+                    <p class="text-lg text-gray-400 mb-6" data-translate-key="updates.subtitle">How does law in South Africa change? Understand the process and help us keep this database current.</p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left bg-gray-900/50 p-6 rounded-lg">
+                        <div>
+                            <h3 class="font-bold text-xl text-white mb-2" data-translate-key="updates.api_title">Is There an Automated API?</h3>
+                            <p class="text-gray-300" data-translate-key="updates.api_desc">Currently, the South African government does not provide a centralized, real-time API for legislation updates. This makes automatic tracking a significant challenge.</p>
+                        </div>
+                        <div>
+                            <h3 class="font-bold text-xl text-white mb-2" data-translate-key="updates.gazette_title">The Government Gazette</h3>
+                            <p class="text-gray-300" data-translate-key="updates.gazette_desc">All new Acts, amendments, and regulations are published in the Government Gazette. It is typically published **every Friday**, though special editions can be released any day. This is the official source of truth.</p>
+                        </div>
+                    </div>
+                     <div class="mt-8">
+                         <a href="community.html" class="bg-red-600 hover:bg-red-700 text-white font-bold py-3 px-8 rounded-lg transition-colors text-lg" data-translate-key="updates.cta">Join the Community Watch</a>
+                    </div>
+                </div>
+            </section>
         </div>
-    </header>
-
-    <!-- This is the main container where all "page" content will be rendered by the router -->
-    <main id="app-root" class="overflow-x-hidden"></main>
-
+    </div>
+    
     <!-- Floating Action Button for Chatbot -->
     <button id="open-chatbot-modal" class="fixed bottom-6 right-6 bg-purple-600 text-white w-16 h-16 rounded-full shadow-lg flex items-center justify-center text-3xl hover:bg-purple-700 transition-transform hover:scale-110">
         <i class="fas fa-robot"></i>
@@ -50,51 +88,7 @@
     
     <!-- Modal container -->
     <div id="modal-container"></div>
-
-    <!-- ================================================================= -->
-    <!--                   PAGE CONTENT TEMPLATES                        -->
-    <!-- ================================================================= -->
-
-    <template id="template-home">
-        <!-- Content from the original index.html, with its unique horizontal slider structure -->
-        <div class="app-shell">
-            <div id="mainContainer" class="main-container">
-                <!-- Section 1: Home -->
-                <section class="section hero-gradient text-white"><div class="text-center max-w-4xl"><i class="fas fa-balance-scale text-6xl text-indigo-200 mb-6"></i><h1 class="text-5xl md:text-6xl font-black font-roboto-slab mb-4" data-translate-key="home.title">The Law, Demystified.</h1><p class="text-xl text-indigo-200 mb-8" data-translate-key="home.subtitle">Your comprehensive, single-view archive of South African legislation.</p><div class="relative max-w-xl mx-auto"><input type="search" placeholder="Search any Act, case, or section..." class="w-full p-4 rounded-full bg-white/20 text-white placeholder-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-300 transition" data-translate-key="home.search_placeholder" placeholder-key="home.search_placeholder"><button class="absolute right-2 top-1/2 -translate-y-1/2 bg-indigo-600 hover:bg-indigo-500 rounded-full h-12 w-12 flex items-center justify-center"><i class="fas fa-search text-xl"></i></button></div><p class="mt-8 text-indigo-200" data-translate-key="home.swipe_prompt">Use navigation or swipe to explore</p></div></section>
-                <!-- Section 2: The Constitution -->
-                <section class="section"><div class="text-center max-w-4xl"><i class="fas fa-landmark text-6xl text-green-400 mb-6"></i><h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="constitution.title">The Constitution</h2><p class="text-lg text-gray-400 mb-6" data-translate-key="constitution.subtitle">The supreme law of the Republic. The foundation of our democracy and the ultimate source of all law.</p><a href="#/forms" class="bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-6 rounded-lg transition-colors" data-translate-key="constitution.cta">View Related Forms</a></div></section>
-                <!-- Section 3: Statutes & Acts -->
-                <section class="section"><div class="text-center max-w-4xl"><i class="fas fa-scroll text-6xl text-blue-400 mb-6"></i><h2 class="text-4xl font-bold font-roboto-slab text-white mb-4" data-translate-key="statutes.title">Statutes & Acts</h2><p class="text-lg text-gray-400" data-translate-key="statutes.subtitle">Access a comprehensive database of laws passed by Parliament. The full text of all national acts will be searchable and categorized.</p></div></section>
-            </div>
-        </div>
-    </template>
-
-    <template id="template-forms">
-        <!-- Content from forms.html -->
-        <div class="main-content pt-24 pb-12 px-4 md:px-8"><div class="max-w-4xl mx-auto"><div class="text-center"><h1 class="text-4xl sm:text-5xl font-bold text-white mb-3" data-translate-key="forms.title">Forms & Documents Hub</h1><p class="text-lg text-gray-400 mb-12" data-translate-key="forms.subtitle">Empower yourself with the right documents. Knowledge is the first step to justice.</p></div><div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16"><div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-2"><i class="fas fa-magic text-5xl text-green-400 mb-4"></i><h4 class="text-2xl font-bold text-white mb-2" data-translate-key="forms.wizard_title">Simple Start Wizard</h4><p class="text-gray-400" data-translate-key="forms.wizard_desc">Not sure where to begin? We’ll guide you to the right form.</p></div><div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-2"><i class="fas fa-search text-5xl text-blue-400 mb-4"></i><h4 class="text-2xl font-bold text-white mb-2" data-translate-key="forms.explorer_title">Manual Explorer</h4><p class="text-gray-400" data-translate-key="forms.explorer_desc">Know what you need? Browse all forms by category.</p></div></div><div id="wizard-section" class="hidden bg-gray-900/50 p-8 rounded-lg mb-12 border border-gray-700"></div><div id="explorer-section" class="hidden space-y-8 mb-12"></div></div></div>
-    </template>
-
-    <template id="template-resources">
-        <!-- Content from resources.html -->
-        <div class="main-content pt-24 pb-12 px-4 md:px-8"><div class="max-w-7xl mx-auto"><header class="text-center mb-12"><h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Resource Compass</h1><p class="text-lg text-gray-400 mt-3 max-w-3xl mx-auto">Find courts, public bodies, and legal support services across South Africa.</p></header><div id="selection-view" class="view-container active"><div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-12"><div id="start-wizard-btn" class="feature-card bg-gray-800 p-8 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-indigo-500 cursor-pointer"><i class="fas fa-magic text-5xl text-indigo-400 mb-4"></i><h3 class="text-2xl font-bold mb-2">Resource Finder Wizard</h3><p class="text-gray-400 flex-grow mb-4">Not sure what you need? Let us guide you.</p><span class="bg-indigo-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-indigo-500 transition-colors w-full mt-auto">Start Wizard</span></div><div id="explore-resources-btn" class="feature-card bg-gray-800 p-8 rounded-lg flex flex-col items-center text-center border border-gray-700 hover:border-green-500 cursor-pointer"><i class="fas fa-map-marked-alt text-5xl text-green-400 mb-4"></i><h3 class="text-2xl font-bold mb-2">Manual Search & Map</h3><p class="text-gray-400 flex-grow mb-4">Know what you're looking for? Search the full directory.</p><span class="bg-green-600 text-white font-bold py-3 px-8 rounded-lg hover:bg-green-500 transition-colors w-full mt-auto">Search Manually</span></div></div></div><div id="wizard-view" class="view-container"><div id="wizard-section" class="bg-gray-800 p-8 rounded-lg shadow-xl"></div><button id="back-to-selection-wizard" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Back to Options</button></div><div id="explorer-view" class="view-container"><div class="bg-gray-800 p-6 rounded-lg mb-8 shadow-xl"><div class="grid md:grid-cols-3 gap-4 items-end"><div><label for="category-filter" class="block text-sm font-medium text-gray-300 mb-1">1. Category</label><select id="category-filter" class="form-select"></select></div><div><label for="province-filter" class="block text-sm font-medium text-gray-300 mb-1">2. Province</label><select id="province-filter" class="form-select"></select></div><div><label for="city-filter" class="block text-sm font-medium text-gray-300 mb-1">3. City/Town</label><select id="city-filter" class="form-select"></select></div></div><div class="mt-6 pt-6 border-t border-gray-700"><label for="address-input" class="block text-sm font-medium text-gray-300 mb-1">Or, find nearest by your address</label><div class="relative"><input type="text" id="address-input" placeholder="e.g., 1 Hospital St, Johannesburg" class="w-full p-3 rounded-md form-input pl-10"><i class="fas fa-search absolute left-3 top-1/2 -translate-y-1/2 text-gray-400"></i></div><button id="geolocate-btn" class="mt-3 text-sm text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-location-crosshairs mr-2"></i>Use my current location</button></div></div><div id="locator-status" class="text-center my-4 text-yellow-400 h-6"></div><div class="grid lg:grid-cols-2 gap-8"><div id="map" class="h-96 lg:h-[600px] w-full bg-gray-700 rounded-lg border-2 border-gray-600"></div><div id="results-list" class="space-y-4 max-h-[600px] overflow-y-auto pr-2"><div class="text-center text-gray-400 p-8"><i class="fas fa-search-location text-4xl mb-4"></i><p>Your search results will appear here.</p></div></div></div><button id="back-to-selection-explorer" class="mt-8 text-indigo-400 hover:text-indigo-300 font-semibold"><i class="fas fa-arrow-left mr-2"></i>Back to Options</button></div></div></div>
-    </template>
-
-    <template id="template-community">
-        <!-- Content from community.html -->
-        <div class="main-content pt-24 pb-12 px-4 md:px-8"><div class="max-w-5xl mx-auto"><div class="text-center mb-12"><h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The LegalHelp Community</h1><p class="text-lg text-gray-400 mt-3">A living database requires a living community. This is where you come in.</p></div><div class="bg-gray-800 border border-gray-700 rounded-lg p-8 mb-10 text-center"><h2 class="text-2xl font-bold text-indigo-400 mb-4">Our Vision: A Collaborative Legal Ecosystem</h2><p class="max-w-3xl mx-auto">Legislation is not static. It changes weekly. Keeping an open-access database current is a monumental task for one team, but achievable for a dedicated community.</p></div><div class="grid md:grid-cols-2 lg:grid-cols-3 gap-6"><div class="category-card p-6 rounded-lg"><i class="fas fa-gavel text-3xl text-yellow-400 mb-4"></i><h3 class="text-xl font-bold text-white">Lawyers & Advocates</h3><p class="text-gray-400 mt-2 text-sm">Help interpret new judgments. Explain the practical impact of new amendments.</p></div><div class="category-card p-6 rounded-lg"><i class="fas fa-user-graduate text-3xl text-blue-400 mb-4"></i><h3 class="text-xl font-bold text-white">Law Students</h3><p class="text-gray-400 mt-2 text-sm">Help track changes in the Government Gazette. Summarize new bills.</p></div><div class="category-card p-6 rounded-lg"><i class="fas fa-users text-3xl text-green-400 mb-4"></i><h3 class="text-xl font-bold text-white">Engaged Citizens</h3><p class="text-gray-400 mt-2 text-sm">Spot outdated information. Help translate legal jargon into plain language.</p></div></div><div class="text-center mt-12"><a href="#/join" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-4 px-10 rounded-lg text-xl transition-transform hover:scale-105 inline-block">Join the Movement</a></div></div></div>
-    </template>
-
-    <template id="template-case-tracker">
-        <!-- Content from case-tracker.html -->
-        <div class="main-content pt-24 pb-12 px-4 md:px-8"><div id="loading-state-casetracker" class="text-center py-20 view-container active"><i class="fas fa-spinner fa-spin text-4xl text-indigo-400"></i><p class="mt-4 text-gray-400">Verifying access...</p></div><div id="main-content-casetracker" class="view-container"><div id="dashboard-view-casetracker" class="view-container"><div class="flex flex-col md:flex-row justify-between items-center mb-8 gap-4"><h1 class="text-4xl font-bold font-roboto-slab text-white">My Tracked Processes</h1><button id="start-new-case-btn" class="w-full md:w-auto bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-3 px-6 rounded-lg transition-transform hover:scale-105 flex items-center justify-center gap-2"><i class="fas fa-plus"></i>Start New Process</button></div><div id="cases-list" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"><p id="no-cases-message" class="text-gray-400 italic col-span-full text-center py-8">You are not tracking any processes.</p></div></div><div id="detail-view-casetracker" class="view-container"><button id="back-to-dashboard-btn" class="mb-6 text-indigo-400 font-semibold hover:underline flex items-center gap-2"><i class="fas fa-arrow-left"></i>Back to Dashboard</button><div class="bg-gray-800 border border-gray-700 p-6 md:p-8 rounded-lg shadow-2xl"><h2 id="detail-case-name" class="text-3xl font-bold font-roboto-slab text-white mb-1"></h2><p id="detail-case-type" class="text-sm text-gray-500 mb-6 font-mono"></p><div id="steps-container" class="space-y-6"></div><div id="custom-step-area" class="mt-8 hidden"><h3 class="text-xl font-bold text-white mb-3">Add a new step:</h3><div class="p-4 border border-gray-600 rounded-lg bg-gray-900"><input type="text" id="custom-step-name" placeholder="Name of the step" class="w-full p-3 rounded-md form-input mb-2"><textarea id="custom-step-desc" placeholder="Describe the step..." class="w-full p-3 rounded-md form-input mb-2" rows="3"></textarea><button id="add-custom-step-btn" class="bg-green-600 hover:bg-green-700 text-white font-bold py-2 px-5 rounded-lg">Add Step</button></div></div></div></div></div></div>
-    </template>
     
-    <template id="template-join">
-        <!-- Content from join-the-movement.html -->
-        <div class="main-content pt-24 pb-12 px-4 md:px-8 flex items-center justify-center min-h-screen"><div class="text-center w-full max-w-6xl mx-auto bg-gray-900/80 backdrop-blur-md p-8 md:p-12 rounded-2xl border border-white/10 shadow-2xl"><h1 class="text-4xl md:text-5xl font-black font-roboto-slab mb-10">Every Great Library is Built by Many Hands.</h1><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8"><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Use the Tools</h3><i class="fas fa-user-check mt-3 text-4xl text-blue-400"></i></div><div class="flip-card-back"><p class="text-base">Empower yourself with free, unlimited access to all our templates and legal information.</p></div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Contribute Knowledge</h3><i class="fas fa-lightbulb mt-3 text-4xl text-yellow-400"></i></div><div class="flip-card-back"><p class="text-base">Find a mistake? Know about a new amendment? Submit your updates and help the community.</p></div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Become an Ambassador</h3><i class="fas fa-award mt-3 text-4xl text-purple-400"></i></div><div class="flip-card-back"><p class="text-base">Become a trusted voice. Mentor others on the forums and help guide new users.</p></div></div></div><div class="flip-card"><div class="flip-card-inner"><div class="flip-card-front"><h3>Become a Partner</h3><i class="fas fa-handshake mt-3 text-4xl text-green-400"></i></div><div class="flip-card-back"><p class="text-base">Integrate our data or tools into your own platform through our developing API program.</p></div></div></div></div><div class="mt-12"><a href="login.html" class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-8 rounded-lg text-lg transition-transform hover:scale-105 inline-block">Sign Up to Get Started</a></div></div></div>
-    </template>
-
-    <!-- Main Application Router Script -->
-    <script type="module" src="assets/js/app-router.js"></script>
+    <script type="module" src="assets/js/main.js"></script>
 </body>
 </html>

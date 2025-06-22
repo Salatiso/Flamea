@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>LegalHelp - Forms & Documents Hub</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-900 text-gray-200">
+    
+    <div id="header-placeholder"></div>
+    
+    <main class="main-content pt-24 pb-12 px-4 md:px-8">
+        <div class="max-w-4xl mx-auto">
+            <div class="text-center">
+                <h1 class="text-4xl sm:text-5xl font-bold text-white mb-3" data-translate-key="forms.title">Forms & Documents Hub</h1>
+                <p class="text-lg text-gray-400 mb-12" data-translate-key="forms.subtitle">Empower yourself with the right documents. Knowledge is the first step to justice.</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-8 mb-16">
+                <div id="start-wizard-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-green-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-2">
+                    <i class="fas fa-magic text-5xl text-green-400 mb-4"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2" data-translate-key="forms.wizard_title">Simple Start Wizard</h4>
+                    <p class="text-gray-400" data-translate-key="forms.wizard_desc">Not sure where to begin? We’ll guide you to the right form.</p>
+                </div>
+                <div id="explore-forms-btn" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 cursor-pointer transition-all duration-300 transform hover:-translate-y-2">
+                    <i class="fas fa-search text-5xl text-blue-400 mb-4"></i>
+                    <h4 class="text-2xl font-bold text-white mb-2" data-translate-key="forms.explorer_title">Manual Explorer</h4>
+                    <p class="text-gray-400" data-translate-key="forms.explorer_desc">Know what you need? Browse all forms by category.</p>
+                </div>
+            </div>
+            
+            <div id="wizard-section" class="hidden bg-gray-900/50 p-8 rounded-lg mb-12 border border-gray-700">
+                <!-- Wizard content will be injected by forms.js -->
+            </div>
+            <div id="explorer-section" class="hidden space-y-8 mb-12">
+                <!-- Explorer content will be injected by forms.js -->
+            </div>
+        </div>
+    </main>
+    
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/forms.js"></script>
+</body>
+</html>
