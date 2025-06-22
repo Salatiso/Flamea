@@ -1,0 +1,19 @@
+/* /assets/css/style.css */
+/* This file is intended for any custom CSS overrides or animations */
+/* that are not easily achievable with Tailwind's utility classes. */
+
+/* Example: Custom animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(10px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.fade-in {
+    animation: fadeIn 0.5s ease-in-out;
+}

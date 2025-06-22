@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Needs Assessment - Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
+        .font-slab { font-family: 'Roboto Slab', serif; }
+        .option-card { transition: background-color 0.2s, border-color 0.2s; }
+        input[type="radio"]:checked + .option-card {
+            background-color: #4a5568; /* gray-700 */
+            border-color: #f59e0b; /* amber-500 */
+        }
+    </style>
+</head>
+<body class="text-gray-200">
+
+    <header class="bg-gray-800/80 backdrop-blur-sm p-4 flex items-center sticky top-0 z-10 border-b border-gray-700">
+        <a href="index.html" class="text-xl text-gray-300 w-8"><i class="fas fa-times"></i></a>
+        <div class="w-full bg-gray-700 rounded-full h-2.5 mx-4">
+            <div class="bg-amber-500 h-2.5 rounded-full" style="width: 33%"></div>
+        </div>
+        <div class="w-8"></div>
+    </header>
+
+    <main class="p-6">
+        <div class="text-center">
+            <p class="font-semibold text-amber-400 mb-2">Step 1 of 3</p>
+            <h1 class="font-slab text-2xl font-bold mb-8">First, who is this training for?</h1>
+        </div>
+        
+        <form class="space-y-4">
+             <div>
+                <input type="radio" id="age_general" name="age_group" value="general" class="hidden" checked>
+                <label for="age_general" class="option-card cursor-pointer block p-5 bg-gray-800 rounded-lg border-2 border-gray-700">
+                    <h3 class="font-bold text-lg text-white">A Parent or Adult</h3>
+                </label>
+            </div>
+            <div>
+                <input type="radio" id="age_kids" name="age_group" value="kids" class="hidden">
+                <label for="age_kids" class="option-card cursor-pointer block p-5 bg-gray-800 rounded-lg border-2 border-gray-700">
+                    <h3 class="font-bold text-lg text-white">A Child (Ages 4-13)</h3>
+                </label>
+            </div>
+             <div>
+                <input type="radio" id="age_khulu" name="age_group" value="khulu" class="hidden">
+                <label for="age_khulu" class="option-card cursor-pointer block p-5 bg-gray-800 rounded-lg border-2 border-gray-700">
+                    <h3 class="font-bold text-lg text-white">A Grandparent or Elder (uKhulu)</h3>
+                </label>
+            </div>
+            
+            <div class="pt-8">
+                 <button type="submit" class="w-full bg-amber-500 hover:bg-amber-600 text-gray-900 font-bold py-4 px-8 rounded-lg transition-colors text-lg">
+                    Continue
+                </button>
+            </div>
+        </form>
+    </main>
+
+</body>
+</html>
