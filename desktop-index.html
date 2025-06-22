@@ -7,71 +7,214 @@
     <link href="assets/css/style.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
-        .content-box {
-            background: rgba(17, 24, 39, 0.8); /* Semi-transparent bg-gray-900 */
+        /* Enhanced styling for countdown and carousel */
+        .countdown-container {
+            background: rgba(31, 41, 55, 0.9);
             backdrop-filter: blur(8px);
             border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 2rem;
         }
-        #countdown-container .countdown-box { background: rgba(255,255,255,0.1); }
-        #countdown-container .countdown-number { font-family: 'Roboto', sans-serif; font-weight: 900; }
-        .carousel-container { position: relative; width: 100%; max-width: 800px; height: 300px; margin: 2rem auto; overflow: hidden; }
-        .carousel-slide { display: none; width: 100%; height: 100%; position: absolute; transition: opacity 1s ease-in-out; opacity: 0; }
-        .carousel-slide.active { display: flex; opacity: 1; }
-        .carousel-content { margin: auto; text-align: center; }
-        .carousel-graphic { font-size: 3rem; line-height: 1; margin-bottom: 0.5rem; }
+        
+        .countdown-box {
+            background: rgba(255, 255, 255, 0.1);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+        }
+        
+        .countdown-number {
+            font-family: 'Roboto', sans-serif;
+            font-weight: 900;
+        }
+        
+        /* Carousel Styles */
+        .carousel-container {
+            position: relative;
+            width: 100%;
+            height: 320px;
+            overflow: hidden;
+            background: rgba(31, 41, 55, 0.9);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+        }
+        
+        .carousel-slide {
+            display: none;
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            transition: opacity 1s ease-in-out;
+            opacity: 0;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .carousel-slide.active {
+            display: flex;
+            opacity: 1;
+        }
+        
+        .carousel-content {
+            text-align: center;
+            padding: 2rem;
+            color: white;
+        }
+        
+        .carousel-graphic {
+            font-size: 3rem;
+            line-height: 1;
+            margin-bottom: 1rem;
+        }
+        
+        .carousel-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 0.5rem;
+            font-family: 'Roboto', sans-serif;
+        }
+        
+        .carousel-desc {
+            font-size: 1rem;
+            margin-bottom: 1.5rem;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+            opacity: 0.9;
+        }
+        
+        .carousel-quote {
+            font-size: 1.25rem;
+            font-style: italic;
+            margin-bottom: 1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .carousel-source {
+            font-size: 0.875rem;
+            font-weight: 600;
+            opacity: 0.8;
+            margin-bottom: 1rem;
+        }
+        
+        .carousel-link {
+            display: inline-block;
+            background: rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 9999px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: background 0.3s ease;
+        }
+        
+        .carousel-link:hover {
+            background: rgba(255, 255, 255, 0.3);
+        }
+        
+        /* Main content adjustments */
+        .main-content {
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .content-wrapper {
+            width: 100%;
+            max-width: 4rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        /* Responsive adjustments */
+        @media (max-width: 768px) {
+            .carousel-container {
+                height: 280px;
+            }
+            
+            .carousel-content {
+                padding: 1.5rem;
+            }
+            
+            .carousel-graphic {
+                font-size: 2.5rem;
+            }
+            
+            .carousel-title {
+                font-size: 1.25rem;
+            }
+            
+            .countdown-number {
+                font-size: 1.5rem;
+            }
+        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
     <div class="main-container flex">
         <!-- Standardized Sidebar -->
         <div id="sidebar-placeholder"></div>
-
+        
         <!-- Main Content Area -->
         <main class="main-content flex-1 p-6 flex justify-center items-center min-h-screen">
-            <div class="relative w-full max-w-4xl flex flex-col items-center space-y-8">
-                <div class="absolute inset-0 bg-cover bg-center bg-fixed" style="background-image: url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3'); z-index: -1;"></div>
-                <div class="absolute inset-0 bg-black/60" style="z-index: -1;"></div>
-
-                <!-- Countdown Timer Box -->
-                <div id="countdown-container" class="content-box p-6 rounded-lg shadow-md text-center z-10">
-                    <h2 class="text-xl md:text-2xl font-bold text-orange-400 font-roboto mb-4">Official Platform Launch Countdown</h2>
-                    <div id="countdown" class="grid grid-cols-4 gap-2 md:gap-4 text-white">
-                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="days" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Days</div></div>
-                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="hours" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Hours</div></div>
-                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="minutes" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Minutes</div></div>
-                        <div class="countdown-box p-2 md:p-4 rounded-lg text-center"><div id="seconds" class="text-3xl md:text-4xl countdown-number">0</div><div class="text-xs md:text-sm uppercase">Seconds</div></div>
+            <div class="content-wrapper">
+                <!-- Countdown Timer -->
+                <div class="countdown-container p-6 rounded-lg shadow-md text-center w-full max-w-2xl">
+                    <h3 class="text-xl font-bold text-orange-400 mb-4">Platform Launch Countdown</h3>
+                    <div id="countdown" class="grid grid-cols-4 gap-4">
+                        <div class="countdown-box p-3 rounded-lg text-center">
+                            <div id="days" class="text-2xl md:text-3xl countdown-number text-white">0</div>
+                            <div class="text-xs uppercase text-gray-300">Days</div>
+                        </div>
+                        <div class="countdown-box p-3 rounded-lg text-center">
+                            <div id="hours" class="text-2xl md:text-3xl countdown-number text-white">0</div>
+                            <div class="text-xs uppercase text-gray-300">Hours</div>
+                        </div>
+                        <div class="countdown-box p-3 rounded-lg text-center">
+                            <div id="minutes" class="text-2xl md:text-3xl countdown-number text-white">0</div>
+                            <div class="text-xs uppercase text-gray-300">Minutes</div>
+                        </div>
+                        <div class="countdown-box p-3 rounded-lg text-center">
+                            <div id="seconds" class="text-2xl md:text-3xl countdown-number text-white">0</div>
+                            <div class="text-xs uppercase text-gray-300">Seconds</div>
+                        </div>
                     </div>
                 </div>
 
-                <!-- Home Panel -->
-                <div id="home" class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md text-center z-10">
-                    <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4 text-white text-shadow">FATHERS. LEADERS. LEGACY.</h2>
+                <!-- Main Panel -->
+                <div id="home" class="content-panel active text-box bg-gray-800 p-6 rounded-lg shadow-md text-center w-full max-w-4xl">
+                    <h2 class="text-5xl md:text-7xl font-bold font-roboto mb-4">FATHERS. LEADERS. LEGACY.</h2>
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Empowering South African fathers to reclaim their role.</p>
                 </div>
 
-                <!-- Carousel Box -->
-                <div class="carousel-container content-box rounded-lg shadow-md z-10">
-                    <!-- Slides will be injected here -->
+                <!-- Carousel -->
+                <div class="carousel-container w-full max-w-4xl mt-8">
+                    <!-- Carousel slides will be dynamically generated -->
                 </div>
             </div>
         </main>
     </div>
-
+    
     <!-- Footer -->
     <footer class="text-center p-4 bg-gray-900 text-gray-400">
         <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
     </footer>
-
+    
     <!-- Scripts -->
     <script>
         document.addEventListener('DOMContentLoaded', function() {
             document.getElementById('currentYear').textContent = new Date().getFullYear();
+            
+            // Initialize countdown and carousel
+            initializeCountdown();
+            initializeCarousel();
+        });
 
-            // Countdown Logic
+        function initializeCountdown() {
             const daysEl = document.getElementById('days');
             const hoursEl = document.getElementById('hours');
             const minutesEl = document.getElementById('minutes');
@@ -81,60 +224,166 @@
             function updateCountdown() {
                 const now = new Date().getTime();
                 const distance = launchDate - now;
+
                 if (distance < 0) {
-                    document.getElementById('countdown').innerHTML = `<div class="col-span-4 text-xl md:text-3xl font-bold text-green-400">The Flamea Platform is Officially Live!</div>`;
-                    clearInterval(interval);
+                    document.getElementById('countdown').innerHTML = 
+                        '<div class="col-span-4 text-xl font-bold text-green-400">The FLAMEA Platform is Live!</div>';
                     return;
                 }
+
                 daysEl.innerText = Math.floor(distance / (1000 * 60 * 60 * 24));
                 hoursEl.innerText = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
                 minutesEl.innerText = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
                 secondsEl.innerText = Math.floor((distance % (1000 * 60)) / 1000);
             }
-            const interval = setInterval(updateCountdown, 1000);
-            updateCountdown();
 
-            // Carousel Logic
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        }
+
+        function initializeCarousel() {
             const carouselContainer = document.querySelector('.carousel-container');
             if (!carouselContainer) return;
+
             const weeklyContent = [
+                // Week 1
                 [
-                    { type: 'tool', title: 'Parenting Plan Builder', desc: 'Create a comprehensive parenting plan step-by-step.', link: 'parenting-plan.html', graphic: '<i class="fas fa-file-signature text-blue-400"></i>' },
-                    { type: 'resource', title: 'Publications Library', desc: 'Access a rich library of books and guides on fatherhood and law.', link: 'publications.html', graphic: '<i class="fas fa-book-open text-yellow-400"></i>' },
-                    { type: 'quote', text: '"The best interests of the child must be the paramount consideration in every matter concerning the child."', source: 'SA Constitution, Sec 28(2)', link: 'constitution.html' }
+                    {
+                        type: 'tool',
+                        title: 'Parenting Plan Builder',
+                        desc: 'Create a comprehensive parenting plan step-by-step.',
+                        link: 'parenting-plan.html',
+                        graphic: '<i class="fas fa-file-signature text-blue-400"></i>'
+                    },
+                    {
+                        type: 'resource',
+                        title: 'Publications Library',
+                        desc: 'Access a rich library of books and guides on fatherhood and law.',
+                        link: 'publications.html',
+                        graphic: '<i class="fas fa-book-open text-yellow-400"></i>'
+                    },
+                    {
+                        type: 'quote',
+                        text: 'The best interests of the child must be the paramount consideration in every matter concerning the child.',
+                        source: 'SA Constitution, Sec 28(2)',
+                        link: 'constitution.html'
+                    },
+                    {
+                        type: 'tool',
+                        title: 'AI Chat Assistant',
+                        desc: 'Get answers to your family law questions 24/7.',
+                        link: 'chatbot.html',
+                        graphic: '<i class="fas fa-robot text-purple-400"></i>'
+                    },
+                    {
+                        type: 'resource',
+                        title: 'Podcast: FLAMEA Voice',
+                        desc: 'Listen to expert insights and personal stories.',
+                        link: 'podcast-player.html',
+                        graphic: '<i class="fas fa-podcast text-red-400"></i>'
+                    },
+                    {
+                        type: 'quote',
+                        text: 'True equality means that a father is not a visitor in his child\'s life, but a pillar.',
+                        source: 'Beyond Redress',
+                        link: 'publications.html'
+                    }
                 ],
+                // Week 2
                 [
-                    { type: 'tool', title: 'Resource Locator', desc: 'Find legal aid and social services near you.', link: 'locator.html', graphic: '<i class="fas fa-map-marker-alt text-green-400"></i>' },
-                    { type: 'resource', title: 'Training Courses', desc: 'Enroll in courses on co-parenting, law, and more.', link: 'training.html', graphic: '<i class="fas fa-graduation-cap text-indigo-400"></i>' },
-                    { type: 'quote', text: '"A man who does not know himself cannot know his children."', source: 'Know Yourself', link: 'publications.html' }
+                    {
+                        type: 'tool',
+                        title: 'Resource Locator',
+                        desc: 'Find legal aid and social services near you.',
+                        link: 'locator.html',
+                        graphic: '<i class="fas fa-map-marker-alt text-green-400"></i>'
+                    },
+                    {
+                        type: 'resource',
+                        title: 'Training Courses',
+                        desc: 'Enroll in courses on co-parenting, law, and more.',
+                        link: 'training.html',
+                        graphic: '<i class="fas fa-graduation-cap text-indigo-400"></i>'
+                    },
+                    {
+                        type: 'quote',
+                        text: 'A man who does not know himself cannot know his children.',
+                        source: 'Know Yourself',
+                        link: 'publications.html'
+                    },
+                    {
+                        type: 'tool',
+                        title: 'Legal Forms & Templates',
+                        desc: 'Download ready-to-use affidavits and legal letters.',
+                        link: 'forms.html',
+                        graphic: '<i class="fas fa-folder-open text-teal-400"></i>'
+                    },
+                    {
+                        type: 'resource',
+                        title: 'Join the Movement',
+                        desc: 'Become an ambassador for change in your community.',
+                        link: 'join-the-movement.html',
+                        graphic: '<i class="fas fa-bullhorn text-orange-400"></i>'
+                    },
+                    {
+                        type: 'quote',
+                        text: 'The absence of a father is a wound that shapes a lifetime.',
+                        source: 'Goliath\'s Reckoning',
+                        link: 'publications.html'
+                    }
                 ]
             ];
+
+            // Determine current week content
             const currentWeekIndex = Math.floor((new Date() - new Date(new Date().getFullYear(), 0, 1)) / (1000 * 60 * 60 * 24 * 7)) % weeklyContent.length;
             const contentForThisWeek = weeklyContent[currentWeekIndex] || weeklyContent[0];
+
             let currentSlide = 0;
 
+            // Create carousel slides
             contentForThisWeek.forEach((item, index) => {
                 const slide = document.createElement('div');
                 slide.className = 'carousel-slide';
                 if (index === 0) slide.classList.add('active');
+
                 let innerHTML = '';
                 if (item.type === 'quote') {
-                    innerHTML = `<div class="carousel-content p-6 text-white"><div class="carousel-graphic"><i class="fas fa-quote-left text-gray-400"></i></div><p class="text-xl md:text-2xl italic">"${item.text}"</p><p class="text-md mt-4 font-semibold">- ${item.source}</p><a href="${item.link}" class="mt-4 inline-block text-blue-300 hover:text-blue-200 text-sm">Read More →</a></div>`;
+                    innerHTML = `
+                        <div class="carousel-content">
+                            <div class="carousel-graphic">
+                                <i class="fas fa-quote-left text-gray-400"></i>
+                            </div>
+                            <p class="carousel-quote">"${item.text}"</p>
+                            <p class="carousel-source">- ${item.source}</p>
+                            <a href="${item.link}" class="carousel-link text-sm">Read More →</a>
+                        </div>
+                    `;
                 } else {
-                    innerHTML = `<div class="carousel-content p-6 text-white"><div class="carousel-graphic">${item.graphic}</div><h3 class="text-2xl md:text-3xl font-bold font-roboto">${item.title}</h3><p class="text-md mt-2 max-w-md mx-auto">${item.desc}</p><a href="${item.link}" class="mt-6 inline-block bg-white/20 hover:bg-white/30 text-white font-bold py-2 px-6 rounded-full transition">Explore</a></div>`;
+                    innerHTML = `
+                        <div class="carousel-content">
+                            <div class="carousel-graphic">${item.graphic}</div>
+                            <h3 class="carousel-title">${item.title}</h3>
+                            <p class="carousel-desc">${item.desc}</p>
+                            <a href="${item.link}" class="carousel-link">Explore Tool</a>
+                        </div>
+                    `;
                 }
+
                 slide.innerHTML = innerHTML;
                 carouselContainer.appendChild(slide);
             });
 
             const slides = document.querySelectorAll('.carousel-slide');
+
+            // Auto-advance carousel
             function nextSlide() {
                 currentSlide = (currentSlide + 1) % slides.length;
-                slides.forEach(s => s.classList.remove('active'));
+                slides.forEach(slide => slide.classList.remove('active'));
                 slides[currentSlide].classList.add('active');
             }
+
             setInterval(nextSlide, 7000);
-        });
+        }
     </script>
     <script type="module" src="assets/js/main.js"></script>
     <script type="module" src="assets/js/auth.js"></script>
