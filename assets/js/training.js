@@ -1,70 +1,110 @@
-// I have reverted to your original, functional script structure and
-// have only updated the content within the trainingData array as you instructed.
-// This fixes all rendering issues.
+// /assets/js/training.js
+// This script dynamically builds the course catalogue on the training.html page.
+// It automatically categorizes courses based on keywords in their filenames.
 
 document.addEventListener('DOMContentLoaded', () => {
     const catalogueContainer = document.getElementById('course-catalogue');
     if (!catalogueContainer) return;
 
     // --- Course Data ---
-    // All course information is now managed here for easy updates.
+    // This list now contains ALL your course files.
+    // The script will automatically sort them into the correct age-appropriate categories.
+    const allCourses = [
+        { url: "training/course-constitution.html", title: "The SA Constitution", description: "Understand your foundational rights as a father and a citizen." },
+        { url: "training/course-childrens-act.html", title: "The Children's Act", description: "A deep dive into parental rights, responsibilities, care, and contact." },
+        { url: "training/course-family-law.html", title: "Family Law Overview", description: "Navigate the Marriage, Divorce, and Maintenance Acts with confidence." },
+        { url: "training/course-coparenting.html", title: "Co-Parenting 101", description: "Master communication, conflict resolution, and building effective parenting plans." },
+        { url: "training/course-newborn-daily-care.html", title: "Newborn & Daily Care", description: "From changing nappies to installing car seats, gain confidence in daily tasks." },
+        { url: "training/course-build-curriculum.html", title: "Building Your Own Curriculum", description: "A guide for the homeschooling father to create a practical, values-based education." },
+        { url: "training/course-unbroken-chain.html", title: "The Unbroken Chain", description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty." },
+        { url: "training/course-ancestors-within.html", title: "Finding Your Ancestors Within", description: "A guide to modern spirituality, blending science with tradition." },
+        { url: "training/course-extended-family.html", title: "The Power of the Extended Family", description: "Champion the resilient household. Learn how your family structure is a core strength." },
+        { url: "training/course-fathers-shield.html", title: "A Father's Shield", description: "Use the 'Best Interests of the Child' principle to challenge discriminatory policies." },
+        { url: "training/course-risk-management.html", title: "Risk Management for Fathers", description: "Apply OHS principles to family life to identify and mitigate risks." },
+        // Khulu Courses
+        { url: "training/courses_khulu-the_constitution_your_ultimate_shield.html", title: "The Constitution: Your Ultimate Shield", description: "A grandparent's guide to the supreme law of the land." },
+        { url: "training/course-khulu-senior-crusaders.html", title: "Senior Crusaders", description: "Advanced strategies for protecting family and legacy." },
+        // Kids Courses
+        { url: "training/course_kids-rights_shield.html", title: "My Rights, My Shield", description: "Learn about your special rights that keep you safe." },
+        { url: "training/course-kids-big_rule_book.html", title: "The Big Rule Book", description: "Why the Constitution is the most important rule book for everyone." },
+        { url: "training/course-kids-whos_in_charge.html", title: "Who's In Charge?", description: "Understanding rules at home, at school, and in our country." },
+        { url: "training/course-kids-the_best_nest.html", title: "The Best Nest", description: "A story about why safe and happy homes are important." }
+    ];
+
+    function getCategory(course) {
+        const url = course.url.toLowerCase();
+        if (url.includes('khulu')) {
+            return 'khulu';
+        }
+        if (url.includes('kids')) {
+            return 'kids';
+        }
+        return 'foundational';
+    }
+
     const trainingData = [
         {
+            id: 'foundational',
             category: "Foundational Courses (For Fathers & Parents)",
             color: "blue-500",
             icon: "fas fa-user-shield",
-            courses: [
-                { title: "The SA Constitution", icon: "fas fa-landmark", description: "Understand your foundational rights as a father and a citizen.", url: "training/course-constitution.html" },
-                { title: "The Children's Act", icon: "fas fa-child", description: "A deep dive into parental rights, responsibilities, care, and contact.", url: "training/course-childrens-act.html" },
-                { title: "Family Law Overview", icon: "fas fa-balance-scale", description: "Navigate the Marriage, Divorce, and Maintenance Acts with confidence.", url: "training/course-family-law.html" },
-                { title: "Co-Parenting 101", icon: "fas fa-comments", description: "Master communication, conflict resolution, and building effective parenting plans.", url: "training/course-coparenting.html" },
-                { title: "Newborn & Daily Care", icon: "fas fa-baby-carriage", description: "From changing nappies to installing car seats, gain confidence in daily tasks.", url: "training/course-newborn-daily-care.html" },
-                { title: "Building Your Own Curriculum", icon: "fas fa-pencil-ruler", description: "A guide for the homeschooling father to create a practical, values-based education.", url: "training/course-build-curriculum.html" },
-                { title: "The Unbroken Chain", icon: "fas fa-link", description: "Successor vs. Heir in Xhosa Tradition. Understand your profound duty.", url: "training/course-unbroken-chain.html" },
-                { title: "Finding Your Ancestors Within", icon: "fas fa-dna", description: "A guide to modern spirituality, blending science with tradition.", url: "training/course-ancestors-within.html" },
-                { title: "The Power of the Extended Family", icon: "fas fa-users", description: "Champion the resilient household. Learn how your family structure is a core strength.", url: "training/course-extended-family.html" },
-                { title: "A Father's Shield", icon: "fas fa-shield-alt", description: "Use the 'Best Interests of the Child' principle to challenge discriminatory policies.", url: "training/course-fathers-shield.html" },
-                { title: "Risk Management for Fathers", icon: "fas fa-exclamation-triangle", description: "Apply OHS principles to family life to identify and mitigate risks.", url: "training/course-risk-management.html" }
-            ]
+            courses: []
         },
         {
+            id: 'khulu',
             category: "Khulu Courses (For Grandparents & Elders)",
             color: "yellow-500",
             icon: "fas fa-book-reader",
-            courses: [
-                { title: "The Constitution: Your Ultimate Shield", icon: "fas fa-landmark", description: "A grandparent's guide to the supreme law of the land.", url: "training/courses_khulu-the_constitution_your_ultimate_shield.html" },
-                { title: "Senior Crusaders", icon: "fas fa-shield-virus", description: "Advanced strategies for protecting family and legacy.", url: "training/course-khulu-senior-crusaders.html" }
-            ]
+            courses: []
         },
         {
+            id: 'kids',
             category: "FLAMEA Kids (Ages 4-13)",
             color: "green-500",
             icon: "fas fa-child-reaching",
-            courses: [
-                { title: "My Rights, My Shield", icon: "fas fa-user-shield", description: "Learn about your special rights that keep you safe.", url: "training/course_kids-rights_shield.html" },
-                { title: "The Big Rule Book", icon: "fas fa-book-open", description: "Why the Constitution is the most important rule book for everyone.", url: "training/course-kids-big_rule_book.html" },
-                { title: "Who's In Charge?", icon: "fas fa-gavel", description: "Understanding rules at home, at school, and in our country.", url: "training/course-kids-whos_in_charge.html" },
-                { title: "The Best Nest", icon: "fas fa-home", description: "A story about why safe and happy homes are important.", url: "training/course-kids-the_best_nest.html" }
-            ]
+            courses: []
         }
     ];
+
+    // Automatically sort all courses into the correct category
+    allCourses.forEach(course => {
+        const categoryId = getCategory(course);
+        const category = trainingData.find(c => c.id === categoryId);
+        if (category) {
+            category.courses.push(course);
+        }
+    });
 
     function renderTrainingCatalogue() {
         catalogueContainer.innerHTML = '';
         trainingData.forEach(category => {
+            if (category.courses.length === 0) return; // Don't render empty categories
+
             const section = document.createElement('div');
             section.className = 'accordion-item bg-gray-800/70 rounded-lg shadow-lg';
             
-            const coursesHtml = category.courses.map(course => `
+            const coursesHtml = category.courses.map(course => {
+                // Determine icon based on keywords
+                let iconClass = 'fa-graduation-cap'; // default icon
+                if (course.title.toLowerCase().includes('constitution')) iconClass = 'fa-landmark';
+                if (course.title.toLowerCase().includes('children')) iconClass = 'fa-child';
+                if (course.title.toLowerCase().includes('law')) iconClass = 'fa-balance-scale';
+                if (course.title.toLowerCase().includes('parenting')) iconClass = 'fa-comments';
+                if (course.title.toLowerCase().includes('newborn')) iconClass = 'fa-baby-carriage';
+                if (course.title.toLowerCase().includes('shield')) iconClass = 'fa-user-shield';
+                 if (course.title.toLowerCase().includes('nest')) iconClass = 'fa-home';
+
+
+                return `
                 <a href="${course.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-md p-6 border border-gray-700 hover:border-blue-500 transition-all duration-300 flex flex-col h-full">
                     <div class="flex items-center mb-4">
-                        <i class="${course.icon} text-xl text-${category.color} mr-4"></i>
+                        <i class="fas ${iconClass} text-xl text-${category.color} mr-4"></i>
                         <h4 class="text-lg font-bold text-white">${course.title}</h4>
                     </div>
                     <p class="text-gray-400 flex-grow text-sm mb-4">${course.description}</p>
                     <span class="bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg transition-colors block text-center mt-auto text-sm hover:bg-blue-500">Start Module</span>
                 </a>
-            `).join('');
+            `}).join('');
 
             section.innerHTML = `
                 <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 rounded-t-lg">
@@ -87,9 +127,19 @@ document.addEventListener('DOMContentLoaded', () => {
         catalogueContainer.querySelectorAll('.accordion-toggle').forEach(button => {
             button.addEventListener('click', () => {
                 const item = button.closest('.accordion-item');
+                // Automatically open the first category
+                if (catalogueContainer.children[0] && !catalogueContainer.children[0].classList.contains('active')) {
+                     catalogueContainer.children[0].classList.add('active');
+                }
                 item.classList.toggle('active');
             });
         });
+
+        // Automatically open the first category on page load
+        if (catalogueContainer.children[0]) {
+            catalogueContainer.children[0].classList.add('active');
+        }
     }
+    
     renderTrainingCatalogue();
 });
