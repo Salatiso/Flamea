@@ -4,24 +4,41 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Family Law Overview</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); border-color: #60a5fa; }
-        .module-card.selected { border-color: #60a5fa; background-color: rgba(96, 165, 250, 0.1); }
-        .prose h2 { color: #93c5fd; } .prose h3 { color: #bfdbfe; } .prose strong { color: #bfdbfe; }
-        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-content { overflow-y: auto; }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #3B82F6; padding-bottom: 0.5rem; color: #60A5FA;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #93C5FD;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #93C5FD; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #3B82F6; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(59, 130, 246, 0.2); border: 1px solid #3B82F6; color: white; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+<body class="dark text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar Container -->
+        <div id="sidebar-container"></div>
             
             <div id="course-hub" class="max-w-4xl mx-auto text-center">
                 <header class="mb-12">t-4xl md:text-5xl font-bold font-roboto-slab text-white">Family Law Overview</h1>t-4xl md:text-5xl font-bold font-roboto-slab text-white">Family Law Overview</h1>
@@ -130,117 +147,16 @@
                 questions: [
                     { q: "Who has a legal duty to financially support a child?", a: "Both parents, according to their means", o: ["Only the father", "Only the parent the child lives with"] },
                     { q: "What Act provides protection for victims of domestic abuse?", a: "The Domestic Violence Act", o: ["The Divorce Act", "The Maintenance Act"] }
-                ]
-            }
-        };
-
-        let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
-
-        function displayModule(moduleNum) {
-            currentModuleData = courseContent[moduleNum];
-            courseHub.classList.add('hidden');
-            contentArea.classList.remove('hidden');
-            quizSection.classList.add('hidden');
-            endScreen.classList.add('hidden');
-            startQuizBtn.classList.remove('hidden');
-            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
-        }
-        
-        function setupQuiz() {
-            startQuizBtn.classList.add('hidden');
-            quizSection.classList.remove('hidden');
-            currentQuestionIndex = 0;
-            score = 0;
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const questionData = currentModuleData.questions[currentQuestionIndex];
-            let optionsHTML = shuffleArray([...questionData.o, questionData.a]).map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700 cursor-pointer" data-answer="${opt === questionData.a}">${opt}</div>`).join('');
-            quizSection.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p><div class="space-y-3">${optionsHTML}</div><div class="feedback mt-4 text-sm p-3 rounded-lg"></div>`;
-        }
-
-        function handleAnswerClick(e) {
-            if (!e.target.classList.contains('quiz-option')) return;
-            const selectedOption = e.target;
-            const isCorrect = selectedOption.dataset.answer === 'true';
-            const feedbackDiv = quizSection.querySelector('.feedback');
-            
-            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
-
-            if (isCorrect) {
-                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
-                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! Knowledge is power.</p>';
-                score++;
-            } else {
-                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
-                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Review the module content to strengthen your understanding.</p>';
-            }
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < currentModuleData.questions.length) {
-                    loadQuestion();
-                } else {
-                    showEndScreen();
-                }
-            }, 2500);
-        }
-
-        function showEndScreen() {
-            quizSection.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            endScreen.innerHTML = `<h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2><p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p><p class="mt-4">You have a solid foundation in Family Law.</p>`;
-        }
-        
-        function goBackToHub() {
-            contentArea.classList.add('hidden');
-            courseHub.classList.remove('hidden');
-            moduleCards.forEach(c => c.classList.remove('selected'));
-        }
-
-        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
-
-        moduleCards.forEach(card => card.addEventListener('click', () => {
-            selectCard(card, 'module');
-            displayModule(parseInt(card.dataset.module));
-        }));
-        startQuizBtn.addEventListener('click', setupQuiz);
-        quizSection.addEventListener('click', handleAnswerClick);
-        backToHubBtn.addEventListener('click', goBackToHub);
-        
-        function selectCard(card, cardType) {
-            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-        }
-    });
-    </script>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Fetch the sidebar from the root directory. This works from any page.
-        fetch('training-sidebar.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
-                }
-                return response.text();
-            })
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching training sidebar:', error);
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    // Display an error message if the sidebar fails to load
-                    placeholder.innerHTML = '<div class="p-4"><p class="text-red-500">Error loading sidebar.</p></div>';
-                }
-            });
-    });
-</script>
+              </div>
+                     <!-- Other modules and quizzes follow -->
+                </div>
+            </div>
+        </main>
+    </div>
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
+    <!-- Added scripts for unified sidebar and background -->
+    <script src="../assets/js/sidebar-loader.js"></script>
+    <script src="../assets/js/ma
 </body>
 </html>
