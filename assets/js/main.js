@@ -1,6 +1,6 @@
 /**
  * Flamea.org - Final Unified Main Script
- * Version: 8.0
+ * Version: 8.1 (Updated Training Data)
  * Description:
  * This single script manages all core interactive functionalities for Flamea.org.
  * - Dynamically loads the sidebar from sidebar.html.
@@ -136,6 +136,8 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 
     // --- 4. DYNAMIC CONTENT DATA & RENDERERS ---
+
+    // ** UPDATED AND COMPLETE TRAINING DATA **
     const trainingData = [{
         title: "🎓 Legal & Constitutional Foundations",
         color: "green-500",
@@ -162,12 +164,12 @@ document.addEventListener('DOMContentLoaded', () => {
         icon: "fas fa-hands-helping",
         courses: [{
             title: "Co-Parenting 101",
-            icon: "fas fa-hands-helping",
+            icon: "fas fa-handshake",
             description: "Master communication, conflict resolution, and building effective parenting plans.",
             url: "training/course-coparenting.html"
         }, {
             title: "Newborn & Daily Care",
-            icon: "fas fa-baby-carriage",
+            icon: "fas fa-baby",
             description: "From changing diapers to installing car seats, gain confidence in daily tasks.",
             url: "training/course-newborn-daily-care.html"
         }, {
@@ -202,14 +204,49 @@ document.addEventListener('DOMContentLoaded', () => {
         icon: "fas fa-gavel",
         courses: [{
             title: "A Father's Shield",
-            icon: "fas fa-gavel",
+            icon: "fas fa-shield-alt",
             description: "Use the 'Best Interests of the Child' principle to challenge discriminatory policies.",
             url: "training/course-fathers-shield.html"
         }, {
             title: "Risk Management for Fathers",
-            icon: "fas fa-shield-alt",
+            icon: "fas fa-chart-line",
             description: "Apply OHS principles to family life to identify and mitigate risks.",
             url: "training/course-risk-management.html"
+        }, {
+            title: "Khulu: The Constitution, Your Ultimate Shield",
+            icon: "fas fa-star-of-life",
+            description: "Advanced constitutional principles for family elders to champion and protect their kin.",
+            url: "training/courses_khulu-the_constitution_your_ultimate_shield.html"
+        }, {
+            title: "Khulu: Senior Crusaders",
+            icon: "fas fa-user-shield",
+            description: "Specialized training for elders on their rights and their role as pillars of the family.",
+            url: "training/course-khulu-senior-crusaders.html"
+        }]
+    }, {
+        title: "🧒 For Kids: Know Your Rights",
+        color: "purple-500",
+        icon: "fas fa-child-reaching",
+        courses: [{
+            title: "The Big Rule Book",
+            icon: "fas fa-book-open",
+            description: "An interactive guide to understand rules, rights, and responsibilities in a fun way.",
+            url: "training/course-kids-big_rule_book.html"
+        }, {
+            title: "The Best Nest",
+            icon: "fas fa-home",
+            description: "Helping children understand family changes and co-parenting through storytelling.",
+            url: "training/course-kids-the_best_nest.html"
+        }, {
+            title: "Who's In Charge?",
+            icon: "fas fa-user-friends",
+            description: "A course about respecting authority and understanding family structures.",
+            url: "training/course-kids-whos_in_charge.html"
+        }, {
+            title: "My Rights Shield",
+            icon: "fas fa-shield-virus",
+            description: "Empowering children with knowledge about their constitutional rights in an accessible format.",
+            url: "training/course_kids-rights_shield.html"
         }]
     }];
 
@@ -471,7 +508,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const section = document.createElement('div');
             section.className = 'accordion-item mb-8';
             section.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                     <div class="flex items-center">
                         <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
                         <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
@@ -482,9 +519,9 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="pt-6 pl-4 border-l-4 border-${category.color}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                             ${category.courses.map(course => `
-                                <a href="${course.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300">
+                                <a href="${course.url}" class="course-card block bg-gray-900/80 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300 flex flex-col">
                                     <div class="flex items-center mb-4"><i class="${course.icon} text-3xl text-${category.color} mr-4"></i><h4 class="text-xl font-bold">${course.title}</h4></div>
-                                    <p class="text-gray-400 mb-4 h-24">${course.description}</p>
+                                    <p class="text-gray-400 flex-grow mb-4">${course.description}</p>
                                     <span class="bg-${category.color} text-white font-bold py-2 px-4 rounded-lg transition-colors block text-center mt-auto">Start Module</span>
                                 </a>
                             `).join('')}
@@ -503,7 +540,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const section = document.createElement('div');
             section.className = 'accordion-item mb-6';
             section.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                     <div class="flex items-center">
                         <i class="${category.icon} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
                         <div><span class="text-xl md:text-2xl font-bold">${category.title}</span></div>
@@ -536,7 +573,7 @@ document.addEventListener('DOMContentLoaded', () => {
             const section = document.createElement('div');
             section.className = 'accordion-item mb-8';
             section.innerHTML = `
-                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800 rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
+                <button class="accordion-toggle w-full flex justify-between items-center text-left p-4 bg-gray-800/70 backdrop-blur-sm rounded-lg shadow-lg hover:bg-gray-700 transition-colors">
                     <div class="flex items-center">
                         <i class="${category.icon || 'fas fa-gamepad'} text-3xl text-${category.color} mr-4 w-8 text-center"></i>
                         <div>
@@ -550,7 +587,7 @@ document.addEventListener('DOMContentLoaded', () => {
                     <div class="pt-6 pl-4 border-l-4 border-${category.color}">
                         <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
                             ${category.games.map(game => `
-                                <a href="${game.url}" class="course-card block bg-gray-900 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300 flex flex-col text-left">
+                                <a href="${game.url}" class="course-card block bg-gray-900/80 rounded-lg overflow-hidden shadow-lg p-6 border border-gray-700 hover:border-${category.color.split('-')[0]}-500 transition-all duration-300 flex flex-col text-left">
                                     <div class="flex items-start mb-4">
                                         <i class="${game.icon} text-3xl mr-4 w-8 text-center"></i>
                                         <h4 class="text-xl font-bold flex-1">${game.title}</h4>
@@ -591,7 +628,7 @@ document.addEventListener('DOMContentLoaded', () => {
         resultsGrid.className = 'grid grid-cols-1 md:grid-cols-2 gap-6';
         results.forEach(custom => {
             const card = document.createElement('div');
-            card.className = 'bg-gray-800 p-6 rounded-lg border border-gray-700 flex flex-col';
+            card.className = 'bg-gray-800/70 backdrop-blur-sm p-6 rounded-lg border border-gray-700 flex flex-col';
             card.innerHTML = `
                 <h3 class="text-2xl font-bold text-purple-400 mb-2">${custom.name}</h3>
                 <p class="text-sm uppercase text-gray-400 mb-4">${custom.cultures.join(', ')} - ${custom.stage}</p>
@@ -630,7 +667,7 @@ document.addEventListener('DOMContentLoaded', () => {
                 <h1 class="text-5xl font-bold font-roboto text-white">South African Traditional Customs</h1>
                 <p class="text-xl text-gray-400 mt-3 max-w-3xl mx-auto">An interactive guide to the rich tapestry of cultural practices, especially as a Xhosa man from the Transkei would know them.</p>
             </div>
-            <div class="bg-gray-800 p-6 rounded-lg mb-12 sticky top-4 z-10 shadow-lg border border-gray-700">
+            <div class="bg-gray-800/70 backdrop-blur-sm p-6 rounded-lg mb-12 sticky top-4 z-10 shadow-lg border border-gray-700">
                 <div class="grid grid-cols-1 md:grid-cols-5 gap-4 items-end">
                     <div class="md:col-span-2">
                         <label for="custom-search-input" class="block text-sm font-medium text-gray-300 mb-1">Search by Keyword</label>
