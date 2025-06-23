@@ -9,6 +9,9 @@
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
+        /* This ensures the main container layout is correct, allowing the background to show */
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
         .wizard-step {
             display: none;
             animation: fadeIn 0.5s ease-in-out;
@@ -40,40 +43,22 @@
             border-color: #4ade80;
             background-color: #1f2937;
         }
-        .content-wrapper {
-    display: grid;
-    grid-template-columns: 1fr;
-    overflow: hidden;
-    height: 100vh;
-}
-.main-scroll-content {
-    overflow-y: auto;
-    padding: 2rem 1.5rem;
-}
-
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
-    <div class="main-container flex min-h-screen">
+    <div class="main-container">
         <div id="sidebar-placeholder"></div>
 
-        <main class="main-content">
-    <div class="content-wrapper">
-        <div class="main-scroll-content w-full">
+        <main class="main-content flex-grow p-4 sm:p-8 md:p-12">
             <div class="max-w-4xl mx-auto">
-                <!-- Your assessment content goes here -->
 
-
-                <!-- Header -->
                 <div id="assessment-header" class="text-center mb-10">
                     <h1 class="text-4xl md:text-5xl font-bold text-white font-roboto-slab">iSazisi sikaTata</h1>
                     <p class="text-lg md:text-xl text-green-400 mt-2">The Father's Compass</p>
                 </div>
 
-                <!-- Main Assessment Container -->
                 <div id="assessment-container" class="bg-gray-800 p-6 sm:p-10 rounded-2xl shadow-2xl border border-gray-700">
                     
-                    <!-- Start Screen -->
                     <div id="start-screen" class="wizard-step active text-center">
                         <h2 class="text-3xl font-bold mb-4 text-white">Discover Your Path.</h2>
                         <p class="text-gray-400 mb-6 max-w-2xl mx-auto">This tool will help you understand your situation and empower you with the right resources. Select the issue that best describes what's on your mind, and let's begin.</p>
@@ -94,7 +79,6 @@
                         </button>
                     </div>
 
-                    <!-- Question Area -->
                     <div id="question-screen" class="wizard-step">
                         <div class="flex justify-between items-start mb-6">
                              <div>
@@ -108,12 +92,9 @@
                             <div id="progress-bar-inner" class="bg-green-500 h-2.5 rounded-full" style="width: 0%"></div>
                         </div>
 
-                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <!-- Options will be dynamically inserted here -->
-                        </div>
+                        <div id="options-container" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
                     </div>
 
-                    <!-- Results Screen -->
                     <div id="results-screen" class="wizard-step text-center">
                         <h2 class="text-3xl font-bold mb-4 text-green-400">Your Compass Reading is Complete</h2>
                         <div id="results-summary" class="mb-8 text-gray-300"></div>
@@ -124,7 +105,6 @@
                         </div>
                     </div>
 
-                    <!-- Navigation -->
                     <div id="navigation-controls" class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center" style="display: none;">
                         <button id="back-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white">Back</button>
                         <button id="next-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-700 font-semibold text-white">Next</button>
@@ -134,23 +114,35 @@
         </main>
     </div>
 
-    <script type="module">
-        // Embed main.js functionality if needed or ensure it's loaded.
-        // For simplicity, we assume sidebar loading is handled separately.
-        const placeholder = document.getElementById('sidebar-placeholder');
-        if(placeholder) {
-            fetch('sidebar.html')
-                .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found.'))
-                .then(data => {
-                    const tempDiv = document.createElement('div');
-                    tempDiv.innerHTML = data;
-                    placeholder.replaceWith(tempDiv.firstChild);
-                }).catch(error => console.error('Error loading sidebar:', error));
-        }
-    </script>
     <script>
     // --- SELF-CONTAINED ASSESSMENT LOGIC ---
     document.addEventListener('DOMContentLoaded', () => {
+
+        // --- 1. SIDEBAR LOADER (FIXED) ---
+        const placeholder = document.getElementById('sidebar-placeholder');
+        if(placeholder) {
+            // The path 'sidebar.html' is relative to the root, which is correct for this page.
+            fetch('sidebar.html')
+                .then(response => {
+                    if (!response.ok) throw new Error(`Sidebar not found at path: sidebar.html`);
+                    return response.text();
+                })
+                .then(data => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data;
+                    const sidebarElement = tempDiv.querySelector('aside');
+                    if(sidebarElement) {
+                       placeholder.replaceWith(sidebarElement);
+                    } else {
+                       throw new Error("Could not find the <aside> element in the fetched sidebar.html.");
+                    }
+                }).catch(error => {
+                    console.error('Error loading sidebar:', error);
+                    placeholder.innerHTML = `<div class="p-4 text-red-500 bg-gray-800">Sidebar could not be loaded.</div>`;
+                });
+        }
+
+        // --- 2. ASSESSMENT TOOL LOGIC (PRESERVED) ---
         const startScreen = document.getElementById('start-screen');
         const questionScreen = document.getElementById('question-screen');
         const resultsScreen = document.getElementById('results-screen');
@@ -165,7 +157,6 @@
         let userAnswers = {};
         let questionFlow = [];
 
-        // --- DATABASE ---
         const questionDatabase = {
             'Access': [
                 { id: 'contact_status', text: 'What is the current status of your contact with your child?', options: ['No contact at all', 'Limited/supervised contact', 'Regular contact, but inconsistent'], tags: ['access', 'conflict'] },
@@ -201,23 +192,12 @@
             'childrens_act_training': { title: "Children's Act Course", description: 'Understand the key law governing your rights and responsibilities.', link: 'training/course-childrens-act.html', icon: 'fa-gavel', tags: ['legal', 'rights', 'plan'] },
         };
 
-        // --- Event Listeners ---
-        startBtn.addEventListener('click', startAssessment);
-        nextBtn.addEventListener('click', nextQuestion);
-        backBtn.addEventListener('click', prevQuestion);
-        restartBtn.addEventListener('click', restartAssessment);
-
-        // --- Functions ---
         function startAssessment() {
             const initialIssue = document.getElementById('initial-issue').value;
-            if (!initialIssue) {
-                alert("Please select your main issue to begin.");
-                return;
-            }
+            if (!initialIssue) { alert("Please select your main issue to begin."); return; }
             userAnswers = { initialIssue };
             questionFlow = questionDatabase[initialIssue] || [];
             currentQuestionIndex = 0;
-            
             startScreen.classList.remove('active');
             resultsScreen.classList.remove('active');
             questionScreen.classList.add('active');
@@ -230,31 +210,23 @@
             document.getElementById('question-title').textContent = `Step ${currentQuestionIndex + 1}`;
             document.getElementById('question-text').textContent = question.text;
             document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1} / ${questionFlow.length}`;
-            
             const optionsContainer = document.getElementById('options-container');
             optionsContainer.innerHTML = '';
             question.options.forEach(optionText => {
                 const button = document.createElement('button');
                 button.className = 'option-button w-full text-left p-4 bg-gray-700 border-2 border-gray-600 rounded-lg hover:border-green-500';
                 button.textContent = optionText;
-                button.dataset.answer = optionText; // Store answer value
-
-                if (userAnswers[question.id] === optionText) {
-                    button.classList.add('selected');
-                }
-
+                button.dataset.answer = optionText;
+                if (userAnswers[question.id] === optionText) { button.classList.add('selected'); }
                 button.onclick = () => {
                     userAnswers[question.id] = optionText;
-                    // Add all tags from the selected question to user's tag list for later analysis
                     userAnswers.tags = [...(userAnswers.tags || []), ...question.tags];
-                    
                     document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
                     button.classList.add('selected');
                     nextBtn.disabled = false;
                 };
                 optionsContainer.appendChild(button);
             });
-
             nextBtn.disabled = !userAnswers[question.id];
             backBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
             const progress = ((currentQuestionIndex + 1) / questionFlow.length) * 100;
@@ -281,41 +253,31 @@
             questionScreen.classList.remove('active');
             navigationControls.style.display = 'none';
             resultsScreen.classList.add('active');
-
             const summary = document.getElementById('results-summary');
             const recommendationsContainer = document.getElementById('recommendations-container');
-            
             summary.innerHTML = `<p>Based on your answers, here are some recommended resources to start with:</p>`;
             recommendationsContainer.innerHTML = '';
-
-            const recommendedKeys = new Set();
-            // Always recommend constitution training
-            recommendedKeys.add('constitution_training');
-
+            const recommendedKeys = new Set(['constitution_training']);
             const answerTags = new Set(userAnswers.tags || []);
-            // Add tags from the initial selected issue
             const initialQuestion = questionDatabase[userAnswers.initialIssue];
             if(initialQuestion) initialQuestion.forEach(q => q.tags.forEach(t => answerTags.add(t)));
-            
             Object.entries(resourceDatabase).forEach(([key, resource]) => {
                 if (resource.tags.some(tag => answerTags.has(tag))) {
                     recommendedKeys.add(key);
                 }
             });
-
             recommendedKeys.forEach(key => {
                 const resource = resourceDatabase[key];
                 const card = document.createElement('a');
                 card.href = resource.link;
-                card.target = "_blank"; // Open in new tab
+                card.target = "_blank";
                 card.className = "recommendation-card block bg-gray-700 p-4 rounded-lg border-2 border-transparent hover:border-green-400 transition-all duration-300 flex items-start gap-4";
                 card.innerHTML = `
                     <i class="fas ${resource.icon} text-2xl text-green-400 mt-1 w-8 text-center"></i>
                     <div>
                         <h4 class="font-bold text-lg text-white">${resource.title}</h4>
                         <p class="text-gray-400 text-sm">${resource.description}</p>
-                    </div>
-                `;
+                    </div>`;
                 recommendationsContainer.appendChild(card);
             });
         }
@@ -327,6 +289,11 @@
             resultsScreen.classList.remove('active');
             startScreen.classList.add('active');
         }
+
+        startBtn.addEventListener('click', startAssessment);
+        nextBtn.addEventListener('click', nextQuestion);
+        backBtn.addEventListener('click', prevQuestion);
+        restartBtn.addEventListener('click', restartAssessment);
     });
     </script>
 </body>
