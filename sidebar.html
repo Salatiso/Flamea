@@ -151,10 +151,8 @@
     </div>
 </aside>
 
-<audio id="flamea-audio-player" crossOrigin="anonymous"></audio>
-
 <!-- IMPORTANT: The main page that loads this sidebar must have this audio tag in its body -->
-<audio id="flamea-audio-player" crossOrigin="anonymous"></audio>
+<audio id="flamea-audio-player" preload="metadata"></audio>
 
 <script>
 document.addEventListener('DOMContentLoaded', () => {
@@ -199,34 +197,43 @@ document.addEventListener('DOMContentLoaded', () => {
     let currentEpisodeIndex = 0;
     let isPlaying = false;
 
-    // Using a CORS proxy to fetch the RSS feed from Anchor.fm
+    // Using RSS2JSON service which is more reliable for RSS feeds
     const RSS_URL = "https://anchor.fm/s/10357aacc/podcast/rss";
-    const CORS_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`;
+    const RSS_API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
 
-    fetch(CORS_PROXY_URL)
+    fetch(RSS_API_URL)
         .then(response => {
             if (!response.ok) throw new Error('Network response was not ok.');
-            return response.text();
+            return response.json();
         })
-        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
         .then(data => {
-            const items = data.querySelectorAll("item");
-            if (items.length === 0) throw new Error("No episodes found in RSS feed.");
+            if (!data.items || data.items.length === 0) {
+                throw new Error("No episodes found in RSS feed.");
+            }
 
-            items.forEach(item => {
-                episodes.push({
-                    title: item.querySelector("title").textContent,
-                    audioSrc: item.querySelector("enclosure")?.getAttribute('url'),
-                    artworkUrl: item.querySelector("image")?.getAttribute('href') || 'https://placehold.co/100x100/111827/4ade80?text=F'
-                });
-            });
+            episodes = data.items.map(item => ({
+                title: item.title,
+                audioSrc: item.enclosure?.link || null,
+                artworkUrl: data.feed?.image || 'https://placehold.co/100x100/111827/4ade80?text=F',
+                description: item.description
+            })).filter(ep => ep.audioSrc); // Only include episodes with audio
+
+            if (episodes.length === 0) {
+                throw new Error("No playable episodes found.");
+            }
 
             renderPlayer();
             loadEpisode(0);
         })
         .catch(err => {
             console.error("Error loading podcast feed:", err);
-            playerContainer.innerHTML = `<p class="p-2 text-xs text-center text-red-400">Could not load podcast feed.</p>`;
+            playerContainer.innerHTML = `
+                <div class="p-4 text-center">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-lg mb-2"></i>
+                    <p class="text-xs text-red-400">Could not load podcast feed.</p>
+                    <p class="text-xs text-gray-500 mt-1">Please try again later.</p>
+                </div>
+            `;
         });
 
     function renderPlayer() {
@@ -257,11 +264,13 @@ document.addEventListener('DOMContentLoaded', () => {
         episodes.forEach((ep, index) => {
             const itemEl = document.createElement('div');
             itemEl.className = 'podcast-playlist-item p-2 flex items-center gap-2 rounded-md';
-            itemEl.innerHTML = `<img src="${ep.artworkUrl}" class="w-8 h-8 rounded-sm object-cover"><p class="flex-grow truncate text-xs">${ep.title}</p>`;
+            itemEl.innerHTML = `
+                <img src="${ep.artworkUrl}" class="w-8 h-8 rounded-sm object-cover">
+                <p class="flex-grow truncate text-xs">${ep.title}</p>
+            `;
             itemEl.addEventListener('click', () => {
                 currentEpisodeIndex = index;
                 loadEpisode(index);
-                playEpisode();
             });
             playlistEl.appendChild(itemEl);
         });
@@ -277,11 +286,24 @@ document.addEventListener('DOMContentLoaded', () => {
         const episode = episodes[index];
         if (!episode || !episode.audioSrc) return;
         
+        // Stop current playback
+        if (isPlaying) {
+            pauseEpisode();
+        }
+        
         document.getElementById('podcast-art').src = episode.artworkUrl;
         document.getElementById('podcast-title').textContent = episode.title;
-        // Use proxy for audio source to avoid CORS issues
+        
+        // Set audio source directly without proxy
         audioPlayer.src = episode.audioSrc;
+        audioPlayer.load(); // Force reload of the audio element
+        
+        // Reset progress
+        document.getElementById('podcast-progress-bar').style.width = '0%';
+        document.getElementById('podcast-current-time').textContent = '0:00';
+        document.getElementById('podcast-total-duration').textContent = '0:00';
 
+        // Update playlist active state
         document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
             item.classList.toggle('active', idx === index);
         });
@@ -289,10 +311,18 @@ document.addEventListener('DOMContentLoaded', () => {
 
     function playEpisode() {
         if (!audioPlayer.src) return;
-        audioPlayer.play().then(() => {
-            isPlaying = true;
-            document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
-        }).catch(e => console.error("Playback Error:", e));
+        
+        const playPromise = audioPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(e => {
+                console.error("Playback Error:", e);
+                // Show user-friendly error
+                alert("Unable to play this episode. Please try another one.");
+            });
+        }
     }
 
     function pauseEpisode() {
@@ -301,47 +331,74 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
     }
 
-    function togglePlayPause() { isPlaying ? pauseEpisode() : playEpisode(); }
+    function togglePlayPause() { 
+        if (isPlaying) {
+            pauseEpisode();
+        } else {
+            playEpisode();
+        }
+    }
     
     function playNext() {
         currentEpisodeIndex = (currentEpisodeIndex + 1) % episodes.length;
         loadEpisode(currentEpisodeIndex);
-        playEpisode();
+        setTimeout(() => playEpisode(), 100); // Small delay to ensure loading
     }
     
     function playPrev() {
         currentEpisodeIndex = (currentEpisodeIndex - 1 + episodes.length) % episodes.length;
         loadEpisode(currentEpisodeIndex);
-        playEpisode();
+        setTimeout(() => playEpisode(), 100); // Small delay to ensure loading
     }
 
     function setProgress(e) {
         const width = e.currentTarget.clientWidth;
         const clickX = e.offsetX;
-        if(audioPlayer.duration) {
+        if(audioPlayer.duration && !isNaN(audioPlayer.duration)) {
             audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
         }
     }
 
     // --- Audio Player Event Listeners ---
+    audioPlayer.addEventListener('loadstart', () => {
+        console.log('Started loading audio');
+    });
+
+    audioPlayer.addEventListener('canplay', () => {
+        console.log('Audio can start playing');
+    });
+
+    audioPlayer.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        pauseEpisode();
+    });
+
     audioPlayer.addEventListener('timeupdate', () => {
         const { currentTime, duration } = audioPlayer;
-        if(duration) {
-            document.getElementById('podcast-progress-bar').style.width = `${(currentTime / duration) * 100}%`;
+        if(duration && !isNaN(duration) && !isNaN(currentTime)) {
+            const progressPercent = (currentTime / duration) * 100;
+            document.getElementById('podcast-progress-bar').style.width = `${progressPercent}%`;
             document.getElementById('podcast-current-time').textContent = formatTime(currentTime);
         }
     });
 
     audioPlayer.addEventListener('loadedmetadata', () => {
-         document.getElementById('podcast-total-duration').textContent = formatTime(audioPlayer.duration);
+        if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+            document.getElementById('podcast-total-duration').textContent = formatTime(audioPlayer.duration);
+        }
     });
     
-    audioPlayer.addEventListener('ended', playNext);
+    audioPlayer.addEventListener('ended', () => {
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+        playNext();
+    });
 
     function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "0:00";
         const mins = Math.floor(seconds / 60);
         const secs = Math.floor(seconds % 60);
-        return isNaN(mins) ? "0:00" : `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
     }
 });
 </script>
