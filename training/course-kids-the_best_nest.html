@@ -4,115 +4,194 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Best Nest - A Flamea Kids Course</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <style>
-        body { font-family: 'Mali', cursive; background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); }
+        body { font-family: 'Mali', cursive; }
+        .main-container { display: flex; min-height: 100vh; }
+        /* The main.js script will apply the dynamic background here */
+        .main-content { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            background: linear-gradient(135deg, #fef3c7 0%, #fcd34d 100%); 
+            background-size: cover; 
+            background-position: center center;
+        }
         .game-title { font-family: 'Fredoka One', cursive; }
-        .story-container { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.6); }
-        .btn { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
-        .choice-btn:hover { transform: scale(1.05); }
+        .btn-game { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
+        .btn-game:hover { transform: scale(1.05); }
+        .story-container { 
+            background: rgba(255, 255, 255, 0.4); 
+            backdrop-filter: blur(10px); 
+            border: 2px solid rgba(255, 255, 255, 0.6); 
+        }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4">
-    <div id="story-container" class="story-container w-full max-w-2xl mx-auto rounded-2xl shadow-lg p-8 text-center text-amber-800">
-        <!-- Story content managed by JS -->
-    </div>
-<script>
-document.addEventListener('DOMContentLoaded', () => {
-    const storyContainer = document.getElementById('story-container');
-    const synth = new Tone.Synth().toDestination();
+<body class="bg-gray-900 text-gray-800">
+    <div class="main-container">
+        <div id="sidebar-placeholder"></div>
 
-    const story = {
-        start: {
-            text: "Papa Bird and Mama Bird want to build the BEST nest for their baby, Sunny. What is the most important thing for Sunny?",
-            image: "https://placehold.co/150x150/F59E0B/FFFFFF?text=Family",
-            choices: [
-                { text: "A nest that is safe and warm", next: "safe_nest" },
-                { text: "A nest with lots of shiny toys", next: "shiny_nest" }
-            ]
-        },
-        shiny_nest: {
-            text: "The shiny toys look fun, but a big wind blows them away! A safe nest is more important for Sunny's well-being. Let's try again!",
-            image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Oh+No!",
-            choices: [
-                { text: "Focus on safety", next: "safe_nest" }
-            ]
-        },
-        safe_nest: {
-            text: "Great choice! A safe nest is what's best for Sunny. Now, who should help build it?",
-            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Safe!",
-            choices: [
-                { text: "Only Mama Bird", next: "mama_only" },
-                { text: "Both Mama and Papa Bird together", next: "both_parents" }
-            ]
-        },
-        mama_only: {
-            text: "Mama Bird gets very tired building alone. When both parents help, the nest is built faster and stronger! That's in Sunny's best interest.",
-             image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Tired",
-            choices: [
-                { text: "Let Papa Bird help!", next: "both_parents" }
-            ]
-        },
-        both_parents: {
-            text: "Yes! With both parents working together, the nest is perfect! Now, a little worm tells Sunny the best berries are on the other side of the river. What should the parent birds do?",
-            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Teamwork!",
-            choices: [
-                { text: "Ignore Sunny's idea", next: "ignore_sunny" },
-                { text: "Listen to Sunny and check if it's safe", next: "listen_sunny" }
-            ]
-        },
-        ignore_sunny: {
-            text: "Oh no! Sunny feels sad because no one listened. It's important to hear a child's thoughts. Let's listen this time.",
-            image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Sad",
-            choices: [
-                { text: "Listen to Sunny's idea", next: "listen_sunny" }
-            ]
-        },
-        listen_sunny: {
-            text: "You're a great listener! The parents checked, and the berries were the juiciest ever! They all had a wonderful feast together.",
-            image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Yummy!",
-            choices: [
-                { text: "Hooray!", next: "end" }
-            ]
-        },
-        end: {
-            text: "You helped build the BEST nest by making sure Sunny was safe, had both parents, and was listened to. That's putting the child's best interests first! You're a Justice Junior!",
-            image: "https://placehold.co/150x150/FDE047/FFFFFF?text=WIN!",
-            choices: [
-                { text: "Play Again", next: "start" }
-            ]
-        }
-    };
-
-    function renderScene(sceneKey) {
-        const scene = story[sceneKey];
-        const choicesHTML = scene.choices.map(choice => 
-            `<button class="btn choice-btn bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-full shadow-md" data-next="${choice.next}">${choice.text}</button>`
-        ).join('');
-
-        storyContainer.innerHTML = `
-            <h1 class="game-title text-4xl text-amber-900 mb-4">Building the Best Nest</h1>
-            <img src="${scene.image}" alt="Story image" class="mx-auto rounded-lg mb-4 w-36 h-36">
-            <p class="text-xl mb-6">${scene.text}</p>
-            <div class="flex flex-col md:flex-row gap-4 justify-center">
-                ${choicesHTML}
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <!-- Game Hub (Start Screen) -->
+            <div id="course-hub" class="max-w-3xl mx-auto text-center">
+                <header class="mb-8">
+                    <div class="flex justify-center items-center gap-4 mb-4">
+                        <!-- SVG Icon for "Nest" -->
+                        <svg class="h-20 w-20 text-yellow-600" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8zm-1-13h2v6h-2zm0 8h2v2h-2z" fill-opacity="0"/>
+                            <path d="M12,2C6.48,2,2,6.48,2,12s4.48,10,10,10s10-4.48,10-10S17.52,2,12,2z M13,17h-2v-6h2V17z M13,9h-2V7h2V9z"/>
+                            <text x="50%" y="50%" dominant-baseline="middle" text-anchor="middle" font-family="Verdana" font-size="10" fill="#fff">
+                                <tspan x="12" y="14" font-family="'Fredoka One', cursive" font-size="12" fill="#854d0e">Nest</tspan>
+                            </text>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-amber-900">Building the Best Nest</h1>
+                    </div>
+                    <p class="text-lg text-amber-800">A story about teamwork, listening, and putting your child's best interests first.</p>
+                </header>
+                <div class="bg-amber-100/50 backdrop-blur-sm p-6 rounded-2xl border-2 border-white/50">
+                    <img src="https://placehold.co/150x150/F59E0B/FFFFFF?text=Family" alt="Bird Family" class="mx-auto rounded-full mb-6 border-4 border-amber-500">
+                    <button id="start-btn" class="btn-game bg-yellow-500 hover:bg-yellow-600 text-white py-3 px-8 rounded-full text-xl shadow-lg">Start the Story!</button>
+                </div>
             </div>
-        `;
 
-        document.querySelectorAll('.choice-btn').forEach(btn => {
-            btn.addEventListener('click', (e) => {
-                const nextScene = e.target.dataset.next;
-                synth.triggerAttackRelease("C4", "8n");
-                renderScene(nextScene);
+            <!-- Game Area (Initially Hidden) -->
+            <div id="story-container" class="story-container w-full max-w-2xl mx-auto rounded-2xl shadow-lg p-8 text-center text-amber-800 hidden">
+                <!-- Story content managed by JS -->
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Sidebar Loader Script -->
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const placeholder = document.getElementById('sidebar-placeholder');
+        if(placeholder) {
+            fetch('../training-sidebar.html')
+                .then(res => res.ok ? res.text() : Promise.reject('Sidebar not found'))
+                .then(data => placeholder.outerHTML = data)
+                .catch(err => console.error('Sidebar load error:', err));
+        }
+    });
+    </script>
+
+    <!-- Game Logic -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const courseHub = document.getElementById('course-hub');
+        const storyContainer = document.getElementById('story-container');
+        const startBtn = document.getElementById('start-btn');
+        if (!storyContainer || !startBtn) return;
+
+        const synth = new Tone.Synth().toDestination();
+
+        const story = {
+            start: {
+                text: "Papa Bird and Mama Bird want to build the BEST nest for their baby, Sunny. What is the most important thing for Sunny?",
+                image: "https://placehold.co/150x150/F59E0B/FFFFFF?text=Family",
+                choices: [
+                    { text: "A nest that is safe and warm", next: "safe_nest" },
+                    { text: "A nest with lots of shiny toys", next: "shiny_nest" }
+                ]
+            },
+            shiny_nest: {
+                text: "The shiny toys look fun, but a big wind blows them away! A safe nest is more important for Sunny's well-being. Let's try again!",
+                image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Oh+No!",
+                choices: [
+                    { text: "Focus on safety", next: "safe_nest" }
+                ]
+            },
+            safe_nest: {
+                text: "Great choice! A safe nest is what's best for Sunny. Now, who should help build it?",
+                image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Safe!",
+                choices: [
+                    { text: "Only Mama Bird", next: "mama_only" },
+                    { text: "Both Mama and Papa Bird together", next: "both_parents" }
+                ]
+            },
+            mama_only: {
+                text: "Mama Bird gets very tired building alone. When both parents help, the nest is built faster and stronger! That's in Sunny's best interest.",
+                 image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Tired",
+                choices: [
+                    { text: "Let Papa Bird help!", next: "both_parents" }
+                ]
+            },
+            both_parents: {
+                text: "Yes! With both parents working together, the nest is perfect! Now, a little worm tells Sunny the best berries are on the other side of the river. What should the parent birds do?",
+                image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Teamwork!",
+                choices: [
+                    { text: "Ignore Sunny's idea", next: "ignore_sunny" },
+                    { text: "Listen to Sunny and check if it's safe", next: "listen_sunny" }
+                ]
+            },
+            ignore_sunny: {
+                text: "Oh no! Sunny feels sad because no one listened. It's important to hear a child's thoughts. Let's listen this time.",
+                image: "https://placehold.co/150x150/FCA5A5/FFFFFF?text=Sad",
+                choices: [
+                    { text: "Listen to Sunny's idea", next: "listen_sunny" }
+                ]
+            },
+            listen_sunny: {
+                text: "You're a great listener! The parents checked, and the berries were the juiciest ever! They all had a wonderful feast together.",
+                image: "https://placehold.co/150x150/86EFAC/FFFFFF?text=Yummy!",
+                choices: [
+                    { text: "Hooray!", next: "end" }
+                ]
+            },
+            end: {
+                text: "You helped build the BEST nest by making sure Sunny was safe, had both parents, and was listened to. That's putting the child's best interests first! You're a Justice Junior!",
+                image: "https://placehold.co/150x150/FDE047/FFFFFF?text=WIN!",
+                choices: [
+                    { text: "Play Again", next: "start" }
+                ]
+            }
+        };
+
+        function renderScene(sceneKey) {
+            const scene = story[sceneKey];
+            const choicesHTML = scene.choices.map(choice => 
+                `<button class="btn-game bg-yellow-500 hover:bg-yellow-600 text-white py-2 px-6 rounded-full shadow-md" data-next="${choice.next}">${choice.text}</button>`
+            ).join('');
+
+            storyContainer.innerHTML = `
+                <h1 class="game-title text-3xl text-amber-900 mb-4">Building the Best Nest</h1>
+                <img src="${scene.image}" alt="Story image" class="mx-auto rounded-lg mb-4 w-36 h-36 border-2 border-white">
+                <p class="text-xl mb-6">${scene.text}</p>
+                <div class="flex flex-col md:flex-row gap-4 justify-center">
+                    ${choicesHTML}
+                </div>
+                ${sceneKey !== 'start' ? '<button id="back-to-hub" class="btn-game bg-gray-500 text-white py-2 px-4 rounded-full mt-8 text-sm">Back to Menu</button>' : ''}
+            `;
+            
+            if(sceneKey === 'start') {
+                 // Reset and start the game fresh
+                 courseHub.classList.add('hidden');
+                 storyContainer.classList.remove('hidden');
+            }
+
+            document.querySelectorAll('[data-next]').forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    const nextScene = e.target.dataset.next;
+                    synth.triggerAttackRelease("C4", "8n");
+                    renderScene(nextScene);
+                });
             });
-        });
-    }
+            
+            const backBtn = document.getElementById('back-to-hub');
+            if(backBtn) {
+                backBtn.addEventListener('click', () => {
+                    storyContainer.classList.add('hidden');
+                    courseHub.classList.remove('hidden');
+                });
+            }
+        }
 
-    renderScene('start');
-});
-</script>
+        startBtn.addEventListener('click', () => renderScene('start'));
+    });
+    </script>
+
 </body>
 </html>
