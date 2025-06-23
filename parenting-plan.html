@@ -1,425 +1,123 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan - Flamea</title>
-    <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+    <title>Parenting Plan Builder - Coming Soon | Flamea</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
-            background: linear-gradient(to bottom, #1f2937, #111827);
-            min-height: 100vh;
-        }
-        .sidebar {
-            background: #111827;
-            border-right: 1px solid #1f2937;
-        }
-        .sidebar a {
-            @apply block px-4 py-2 text-gray-300 hover:bg-gray-700 hover:text-white;
-        }
-        .hidden {
-            display: none;
-        }
-        input, select, textarea {
-            @apply bg-gray-700 text-white p-2 rounded w-full mb-2 border border-gray-600;
-        }
-        button {
-            @apply rounded transition;
-        }
-        .step {
-            @apply bg-gray-800 p-6 rounded-lg shadow-md;
-        }
-        .slider {
-            @apply w-full h-2 bg-gray-600 rounded-full appearance-none;
-        }
-        .slider::-webkit-slider-thumb {
-            @apply w-4 h-4 bg-blue-600 rounded-full cursor-pointer;
-        }
-        .wizard-step {
-            @apply bg-gray-800 p-6 rounded-lg shadow-md;
-        }
+        /* This ensures consistency with other pages like about.html and training.html */
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
     </style>
 </head>
-<body class="text-white">
-    <div class="flex min-h-screen">
-        <!-- Sidebar -->
-        <aside class="sidebar w-64 p-4 fixed h-full">
-            <h2 class="text-xl font-bold mb-4">Flamea</h2>
-            <nav>
-                <a href="/about.html">About</a>
-                <a href="/training.html">Training</a>
-                <a href="/parenting-plan.html" class="bg-gray-700 text-white">Parenting Plan</a>
-            </nav>
-        </aside>
-        <main class="flex-1 p-8 ml-64">
-            <header class="mb-8">
-                <h1 class="text-3xl font-bold">The Co-Parenting Compass</h1>
-                <p class="text-gray-400">Navigate your parenting journey with clarity and confidence.</p>
-            </header>
+<body class="bg-gray-900 text-gray-200">
+    <div class="main-container">
+        <!-- Sidebar will be loaded here by script -->
+        <div id="sidebar-placeholder"></div>
 
-            <!-- Hub Section -->
-            <div id="hub" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="wizard">
-                    <h2 class="text-xl font-semibold">Automated Wizard</h2>
-                    <p class="text-gray-300">Start here. Let us guide you.</p>
+        <main class="main-content p-8 md:p-12">
+            <div class="max-w-4xl mx-auto text-center">
+                <!-- Coming Soon Header -->
+                <div class="mb-12">
+                    <i class="fas fa-drafting-compass text-6xl text-teal-400 mb-4 animate-pulse"></i>
+                    <h1 class="text-5xl font-bold font-roboto-slab text-white">The Co-Parenting Compass</h1>
+                    <p class="text-2xl text-teal-300 mt-2">Parenting Plan Builder: Coming Soon</p>
+                    <p class="text-gray-400 mt-4 max-w-2xl mx-auto">
+                        We are forging a powerful new tool to help you build a comprehensive, legally-sound parenting plan with confidence and clarity. The automated builder is under construction, but the foundation of your child's future can be laid today.
+                    </p>
                 </div>
-                <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="builder">
-                    <h2 class="text-xl font-semibold">Manual Builder</h2>
-                    <p class="text-gray-300">Go straight to the full plan.</p>
-                </div>
-                <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="featured">
-                    <h2 class="text-xl font-semibold">Featured Forms</h2>
-                    <p class="text-gray-300">Access templates like Affidavits or School Letters.</p>
-                </div>
-            </div>
 
-            <!-- Wizard Modal -->
-            <div id="wizard-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-                <div class="wizard-step w-full max-w-lg">
-                    <h2 class="text-2xl font-bold mb-4">Automated Wizard</h2>
-                    <div id="wizard-step-1" class="space-y-4">
-                        <p class="text-gray-300">Step 1: Select your goal</p>
-                        <label class="flex items-center">
-                            <input type="radio" name="goal" value="simulation" class="mr-2" checked> Simulation/Practice
-                        </label>
-                        <label class="flex items-center">
-                            <input type="radio" name="goal" value="actual" class="mr-2"> Actual Document
-                        </label>
-                        <button id="wizard-next-1" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4">Next</button>
-                    </div>
-                    <div id="wizard-step-2" class="hidden space-y-4">
-                        <p class="text-gray-300">Step 2: Select sections</p>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="sections" value="parties" checked class="mr-2"> Parties & Children
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="sections" value="schedule" checked class="mr-2"> Custody & Activity Schedule
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="sections" value="finances" checked class="mr-2"> Expense & Benefit Tracker
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="sections" value="communication" checked class="mr-2"> Communication Plan
-                        </label>
-                        <button id="begin-builder" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4">Begin</button>
+                <!-- Upcoming Features Section -->
+                <div class="mb-16">
+                    <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-gray-700 pb-2 inline-block">What to Expect</h2>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 text-left">
+                        <div class="bg-gray-800 p-6 rounded-lg flex items-start gap-4 border-l-4 border-blue-500">
+                            <i class="fas fa-magic text-3xl text-blue-400 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-semibold text-white">Guided Wizard</h3>
+                                <p class="text-gray-400">Answer step-by-step questions to generate a plan tailored to your family's needs.</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg flex items-start gap-4 border-l-4 border-red-500">
+                            <i class="fas fa-gavel text-3xl text-red-400 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-semibold text-white">Legal Framework</h3>
+                                <p class="text-gray-400">Incorporate clauses and principles from the Children's Act to ensure your plan is robust.</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg flex items-start gap-4 border-l-4 border-green-500">
+                            <i class="fas fa-calendar-alt text-3xl text-green-400 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-semibold text-white">Dynamic Schedules</h3>
+                                <p class="text-gray-400">Easily create and manage custody, visitation, and activity calendars.</p>
+                            </div>
+                        </div>
+                        <div class="bg-gray-800 p-6 rounded-lg flex items-start gap-4 border-l-4 border-yellow-500">
+                            <i class="fas fa-file-pdf text-3xl text-yellow-400 mt-1"></i>
+                            <div>
+                                <h3 class="text-xl font-semibold text-white">Secure Export</h3>
+                                <p class="text-gray-400">Generate a professional, court-ready PDF of your completed parenting plan.</p>
+                            </div>
+                        </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Builder Container -->
-            <div id="builder" class="hidden space-y-6">
-                <div id="step-navigation" class="flex justify-between mb-4">
-                    <button id="prev-step" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 disabled:opacity-50" disabled>Previous</button>
-                    <button id="next-step" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4">Next</button>
-                </div>
-                <div id="step-parties" class="step hidden">
-                    <h2 class="text-2xl font-bold mb-4">Parties & Children</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Parent A</h3>
-                            <div id="parent-a-list" class="space-y-4"></div>
-                            <button class="add-parent-a bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Parent A</button>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Parent B</h3>
-                            <div id="parent-b-list" class="space-y-4"></div>
-                            <button class="add-parent-b bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Parent B</button>
-                        </div>
-                    </div>
-                    <div class="mt-6">
-                        <h3 class="text-lg font-semibold mb-2">Children</h3>
-                        <div id="children-list" class="space-y-4"></div>
-                        <button class="add-child bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Child</button>
-                    </div>
-                    <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
-                </div>
-                <div id="step-schedule" class="step hidden">
-                    <h2 class="text-2xl font-bold mb-4">Custody & Activity Schedule</h2>
-                    <div id="time-dashboard" class="bg-gray-800 p-4 rounded-lg mb-4">
-                        <h3 class="text-lg font-semibold">Time Dashboard</h3>
-                        <div id="time-stats" class="text-gray-300"></div>
-                    </div>
-                    <div class="space-y-4">
-                        <label class="block">Who has custody?
-                            <select id="custody-holder" class="mt-1">
-                                <option value="">Select</option>
-                                <option value="parent-a">Parent A</option>
-                                <option value="parent-b">Parent B</option>
-                                <option value="other">Other</option>
-                            </select>
-                        </label>
-                        <div id="custody-other" class="hidden space-y-2">
-                            <input type="text" id="custody-other-name" placeholder="Name">
-                            <input type="text" id="custody-other-relationship" placeholder="Relationship to Child">
-                        </div>
-                        <label class="block">How was this decided?
-                            <select id="custody-decision" class="mt-1">
-                                <option value="mutual">Mutual Agreement</option>
-                                <option value="court">Court Order</option>
-                                <option value="dispute">Under Dispute</option>
-                            </select>
-                        </label>
-                        <textarea id="custody-notes" placeholder="Details/Notes" class="w-full"></textarea>
-                    </div>
-                    <div id="events-list" class="space-y-4 mt-4"></div>
-                    <button class="add-event bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Event</button>
-                    <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
-                </div>
-                <div id="step-finances" class="step hidden">
-                    <h2 class="text-2xl font-bold mb-4">Expense & Benefit Tracker</h2>
-                    <div id="finance-dashboard" class="bg-gray-800 p-4 rounded-lg mb-4">
-                        <h3 class="text-lg font-semibold">Financial Dashboard</h3>
-                        <div id="finance-stats" class="text-gray-300"></div>
-                    </div>
-                    <label class="block">Who determined this budget?
-                        <select id="budget-origin" class="mt-1">
-                            <option value="mutual">Mutual Agreement</option>
-                        </select>
-                    </label>
-                    <div class="mb-4">
-                        <select id="common-expense-select" class="bg-gray-700 text-white p-2 rounded">
-                            <option value="">Select a common expense</option>
-                            <option value='{"category":"Living Expenses","description":"Rent"}'>Rent</option>
-                            <option value='{"category":"Living Expenses","description":"Utilities"}'>Utilities</option>
-                            <option value='{"category":"Living Expenses","description":"Groceries"}'>Groceries</option>
-                            <option value='{"category":"Education","description":"Tuition"}'>Tuition</option>
-                            <option value='{"category":"Education","description":"Books"}'>Books</option>
-                            <option value='{"category":"Healthcare","description":"Insurance"}'>Insurance</option>
-                            <option value='{"category":"Healthcare","description":"Doctor Visits"}'>Doctor Visits</option>
-                            <option value='{"category":"Cultural Obligations","description":"Ceremonies"}'>Ceremonies</option>
-                        </select>
-                        <button id="add-common-expense" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 ml-2">Add</button>
-                    </div>
-                    <div id="expenses-list" class="space-y-4 mt-4"></div>
-                    <button class="add-expense bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Custom Expense</button>
-                    <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
-                </div>
-                <div id="step-communication" class="step hidden">
-                    <h2 class="text-2xl font-bold mb-4">Communication Plan</h2>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Parent A</h3>
-                            <div id="communication-a-list" class="space-y-4"></div>
-                            <button class="add-communication-a bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Method</button>
-                        </div>
-                        <div>
-                            <h3 class="text-lg font-semibold mb-2">Parent B</h3>
-                            <div id="communication-b-list" class="space-y-4"></div>
-                            <button class="add-communication-b bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Method</button>
-                        </div>
-                    </div>
-                    <textarea id="communication-notes" placeholder="General Communication Notes (e.g., call times)" class="w-full mt-4"></textarea>
-                    <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
-                </div>
-                <div id="step-summary" class="step hidden">
-                    <h2 class="text-2xl font-bold mb-4">Summary & Finalize</h2>
-                    <div id="summary-content" class="space-y-4"></div>
-                    <div class="mt-4">
-                        <h3 class="text-lg font-semibold">Select Sections to Include</h3>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="summary-sections" value="parties" checked class="mr-2"> Parties & Children
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="summary-sections" value="schedule" checked class="mr-2"> Custody & Activity Schedule
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="summary-sections" value="finances" checked class="mr-2"> Expense & Benefit Tracker
-                        </label>
-                        <label class="flex items-center">
-                            <input type="checkbox" name="summary-sections" value="communication" checked class="mr-2"> Communication Plan
-                        </label>
-                    </div>
-                    <button id="preview-document" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4">Preview & Generate</button>
-                </div>
-            </div>
-
-            <!-- Disclaimer Modal -->
-            <div id="disclaimer-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
-                <div class="bg-gray-800 p-8 rounded-lg w-full max-w-lg">
-                    <h2 class="text-2xl font-bold mb-4">Disclaimer</h2>
-                    <p class="text-gray-300">You are about to generate a document based on the information you provided. Flamea provides tools to help you organize your information, but this is not legal advice. You are solely responsible for the content and its application. For legal advice, consult a qualified professional or visit our free resources on the LegalHelp page.</p>
-                    <label class="flex items-center mt-4">
-                        <input type="checkbox" id="disclaimer-agree" class="mr-2"> I Understand and Agree
-                    </label>
-                    <div class="flex space-x-4 mt-4">
-                        <button id="disclaimer-cancel" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4">Cancel</button>
-                        <button id="disclaimer-proceed" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 disabled:opacity-50" disabled>Proceed</button>
+                <!-- Manual Forms Section -->
+                <div>
+                    <h2 class="text-3xl font-bold text-white mb-6 border-b-2 border-gray-700 pb-2 inline-block">Start Building Today: Manual Templates</h2>
+                    <p class="text-gray-400 mb-8 max-w-3xl mx-auto">
+                        While our automated tool is being perfected, you can begin structuring your co-parenting agreement immediately. Use these comprehensive, editable templates to lay the groundwork.
+                    </p>
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                        <a href="Parenting_Plan_Template.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                            <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-file-alt"></i>Parenting Plan Template</h3>
+                            <p class="text-gray-400 mt-2">The foundational document for outlining all aspects of your co-parenting arrangement.</p>
+                        </a>
+                        <a href="Affirmation_Parental_Rights_and_Responsibilities_final.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                            <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-fist-raised"></i>Affirmation of Rights</h3>
+                            <p class="text-gray-400 mt-2">A formal letter to assert your constitutional rights and responsibilities as a parent.</p>
+                        </a>
+                        <a href="Pre_Birth_Planning_Guide.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                            <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-baby"></i>Pre-Birth Planning Guide</h3>
+                            <p class="text-gray-400 mt-2">For expectant parents to proactively agree on roles, finances, and support.</p>
+                        </a>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Templates -->
-    <template id="parent-entry-template">
-        <div class="parent-entry space-y-2 border-b border-gray-700 pb-4">
-            <input type="text" placeholder="Full Name" class="name">
-            <input type="text" placeholder="ID Number (Optional)" class="id">
-            <select class="relationship">
-                <option value="Father">Father</option>
-                <option value="Mother">Mother</option>
-                <option value="Grandparent">Grandparent</option>
-                <option value="Other">Other</option>
-            </select>
-            <div class="contact-list space-y-2"></div>
-            <button class="add-contact bg-blue-600 hover:bg-blue-700 text-white py-1 px-2">Add Contact</button>
-            <div class="address-list space-y-2"></div>
-            <button class="add-address bg-blue-600 hover:bg-blue-700 text-white py-1 px-2">Add Address</button>
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="contact-entry-template">
-        <div class="contact-entry flex space-x-2">
-            <select class="type">
-                <option value="Primary Cell">Primary Cell</option>
-                <option value="Work Phone">Work Phone</option>
-                <option value="Email">Email</option>
-                <option value="WhatsApp">WhatsApp</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" placeholder="Detail/Username" class="detail">
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="address-entry-template">
-        <div class="address-entry flex space-x-2">
-            <select class="type">
-                <option value="Home">Home</option>
-                <option value="Work">Work</option>
-                <option value="Postal">Postal</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" placeholder="Street Address" class="street">
-            <input type="text" placeholder="City" class="city">
-            <input type="text" placeholder="Postal Code" class="postal">
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="child-entry-template">
-        <div class="child-entry space-y-2 border-b border-gray-700 pb-4">
-            <input type="text" placeholder="Child's Full Name" class="name">
-            <input type="date" placeholder="Date of Birth" class="dob">
-            <input type="text" placeholder="ID Number (Optional)" class="id">
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="event-entry-template">
-        <div class="event-entry space-y-2 border-b border-gray-700 pb-4">
-            <input type="text" placeholder="Event Title" class="title">
-            <input type="datetime-local" placeholder="Start Date/Time" class="start">
-            <input type="datetime-local" placeholder="End Date/Time" class="end">
-            <select class="assigned-to">
-                <option value="">Assign To</option>
-            </select>
-            <select class="type">
-                <option value="contact">Contact Schedule</option>
-                <option value="visitation">Visitation</option>
-                <option value="holiday">Holiday</option>
-                <option value="emergency">Emergency</option>
-                <option value="school">School Activity</option>
-                <option value="cultural">Cultural Event</option>
-                <option value="custom">Custom</option>
-            </select>
-            <label><input type="checkbox" class="recurring"> Recurring Event</label>
-            <div class="recurring-options hidden space-y-2">
-                <select class="frequency">
-                    <option value="daily">Daily</option>
-                    <option value="weekly">Weekly</option>
-                    <option value="monthly">Monthly</option>
-                </select>
-                <input type="text" placeholder="Details (e.g., Every Weekend)" class="recurring-details">
-            </div>
-            <textarea placeholder="Details/Notes" class="notes"></textarea>
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="expense-entry-template">
-        <div class="expense-entry space-y-2 border-b border-gray-700 pb-4">
-            <select class="category">
-                <option value="Living Expenses">Living Expenses</option>
-                <option value="Education">Education</option>
-                <option value="Healthcare">Healthcare</option>
-                <option value="Cultural Obligations">Cultural Obligations</option>
-            </select>
-            <input type="text" placeholder="Description" class="description">
-            <input type="number" placeholder="Budgeted Cost" class="budgeted-cost" step="0.01">
-            <div class="contribution-slider flex items-center space-x-4">
-                <input type="range" min="0" max="100" value="50" class="parent-a-contribution slider">
-                <span class="parent-a-percentage">50%</span>
-                <span>|</span>
-                <span class="parent-b-percentage">50%</span>
-            </div>
-            <input type="number" placeholder="Final Cost" class="final-cost" step="0.01">
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-    <template id="communication-entry-template">
-        <div class="communication-entry space-y-2 border-b border-gray-700 pb-4">
-            <select class="contact-detail">
-                <option value="">Select Contact Detail</option>
-            </select>
-            <select class="classification">
-                <option value="Urgent">For Urgent Matters</option>
-                <option value="Formal">For Formal Communication</option>
-                <option value="Daily">For Daily Updates</option>
-            </select>
-            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
-        </div>
-    </template>
-
     <script>
-        const ParentingPlanApp = {
-            planData: {},
-            currentStep: 0,
-            steps: ['parties', 'schedule', 'finances', 'communication', 'summary'],
-            selectedSections: [],
-
-            init() {
-                this.loadData();
-                this.attachEventListeners();
-            },
-
-            loadData() {
-                const savedPlan = localStorage.getItem('parentingPlan');
-                if (savedPlan) {
-                    this.planData = JSON.parse(savedPlan);
-                } else {
-                    this.planData = this.getDefaultPlanData();
-                }
-            },
-
-            saveData() {
-                this.planData.metadata.lastModified = new Date().toISOString();
-                localStorage.setItem('parentingPlan', JSON.stringify(this.planData));
-            },
-
-            getDefaultPlanData() {
-                return {
-                    metadata: { lastModified: new Date().toISOString() },
-                    parties: { parentA: [], parentB: [], children: [] },
-                    schedule: { custody: {}, events: [] },
-                    finances: { budgetOrigin: '', expenses: [] },
-                    communication: { parentA: [], parentB: [], notes: '' }
-                };
-            },
-
-            attachEventListeners() {
-                document.querySelectorAll('.hub-card').forEach(card => {
-                    card.addEventListener('click', () => {
-                        const section = card.dataset.section;
-                        if (section === 'wizard') this.openWizard();
-                        else if (section === 'builder') this.startBuilder(['parties', 'schedule', 'finances', 'communication']);
-                        else if (section === 'featured') alert('Featured forms coming soon!');
+        // Standard Sidebar Loader Script
+        document.addEventListener('DOMContentLoaded', function () {
+            const placeholder = document.getElementById('sidebar-placeholder');
+            if(placeholder) {
+                fetch('sidebar.html')
+                    .then(response => {
+                        if (response.ok) {
+                            return response.text();
+                        }
+                        throw new Error('Sidebar not found.');
+                    })
+                    .then(data => {
+                        // Replace placeholder with sidebar content
+                        const sidebarWrapper = document.createElement('div');
+                        sidebarWrapper.innerHTML = data;
+                        placeholder.replaceWith(sidebarWrapper.firstChild);
+                        
+                        // Re-initialize any scripts that might be needed by the sidebar itself
+                        // This is a placeholder for any such scripts.
+                    })
+                    .catch(error => {
+                        console.error('Error loading sidebar:', error);
+                        placeholder.innerHTML = '<div class="p-4 text-red-500">Sidebar could not be loaded.</div>';
                     });
-                });
-
-                document.getElementById('wizard-next-1').addEventListener('click', () => {
-                    document.getElementById('wizard-step-1').classList.add('hidden');
-                    document.getElementById('wizard-step-2').classList.remove('hidden');
-                });
-
-                document.getElementById('begin-builder').addEventListener('click', () => {
-                    const form = document.getElementById('wizard-step-2');
-                    this.selectedSections = Array.from(form.querySelectorAll('input[name="sections"]:checked')).map
+            }
+        });
+    </script>
+</body>
+</html>
