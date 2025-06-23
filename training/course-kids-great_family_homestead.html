@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Flamea Kids - The Great Family Homestead</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
+    <style>
+        body { font-family: 'Mali', cursive; overflow: hidden; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%);
+            background-size: cover; 
+            background-position: center center;
+        }
+        .game-title { font-family: 'Fredoka One', cursive; }
+        .btn-game { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
+        .btn-game:hover { transform: scale(1.05); }
+
+        /* Game Specific Styles */
+        .game-area {
+            display: grid;
+            grid-template-columns: 1fr 300px;
+            gap: 1.5rem;
+            height: calc(100vh - 100px);
+        }
+        .homestead-view {
+            background-color: rgba(255, 255, 255, 0.4);
+            backdrop-filter: blur(10px);
+            border: 2px solid rgba(255, 255, 255, 0.6);
+            position: relative;
+        }
+        .player-panel, .question-panel {
+            background-color: rgba(255, 255, 255, 0.6);
+            backdrop-filter: blur(5px);
+        }
+        .avatar-card { border: 4px solid transparent; cursor: pointer; }
+        .avatar-card.selected { border-color: #f59e0b; }
+        .homestead-item { position: absolute; transition: transform 0.3s; }
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-800">
+    <div class="main-container">
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-4 md:p-6">
+            
+            <!-- Avatar Selection Screen -->
+            <div id="avatar-selection-screen" class="max-w-4xl mx-auto text-center">
+                <h1 class="game-title text-4xl md:text-5xl text-emerald-800 mb-4">Welcome to the Great Family Homestead!</h1>
+                <p class="mb-6 text-lg text-emerald-700">First, choose your character!</p>
+                <div id="player-setup-area">
+                    <!-- Player 1 Setup -->
+                    <div class="player-join-card bg-white/50 p-4 rounded-lg mb-4">
+                        <h3 class="font-bold text-xl">Player 1</h3>
+                        <div class="flex justify-center gap-4 my-4">
+                            <div class="avatar-card p-2 rounded-lg" data-player="1" data-avatar="BuggZ"><img src="https://placehold.co/80x80/f97316/FFFFFF?text=BuggZ" class="rounded-full"><p class="text-sm font-bold">BuggZ</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="1" data-avatar="Sga"><img src="https://placehold.co/80x80/60a5fa/FFFFFF?text=Sga" class="rounded-full"><p class="text-sm font-bold">Sga</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="1" data-avatar="Oros"><img src="https://placehold.co/80x80/9ca3af/FFFFFF?text=Oros" class="rounded-full"><p class="text-sm font-bold">Oros</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="1" data-avatar="Monkey"><img src="https://placehold.co/80x80/a16207/FFFFFF?text=Monkey" class="rounded-full"><p class="text-sm font-bold">Monkey</p></div>
+                        </div>
+                    </div>
+                </div>
+                <button id="add-player-btn" class="btn-game bg-blue-500 text-white py-2 px-6 rounded-full mb-4">Add Another Player (Max 4)</button>
+                <button id="start-game-btn" class="btn-game bg-green-500 text-white py-3 px-8 rounded-full text-xl shadow-lg">Start Building!</button>
+            </div>
+
+            <!-- Main Game Area (Initially Hidden) -->
+            <div id="game-area" class="game-area hidden">
+                <!-- Homestead View -->
+                <div class="homestead-view rounded-lg p-4">
+                    <h2 class="game-title text-2xl text-emerald-900">Our Homestead</h2>
+                    <div id="homestead-items"></div>
+                </div>
+                <!-- Right Panel -->
+                <div class="flex flex-col gap-4">
+                    <div id="players-panel" class="player-panel rounded-lg p-4 space-y-3"></div>
+                    <div id="question-panel" class="question-panel rounded-lg p-4 flex-grow"></div>
+                </div>
+            </div>
+
+        </main>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="../assets/js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const avatarScreen = document.getElementById('avatar-selection-screen');
+        const gameArea = document.getElementById('game-area');
+        const addPlayerBtn = document.getElementById('add-player-btn');
+        const startGameBtn = document.getElementById('start-game-btn');
+        const playerSetupArea = document.getElementById('player-setup-area');
+        const playersPanel = document.getElementById('players-panel');
+        const questionPanel = document.getElementById('question-panel');
+        const homesteadItemsEl = document.getElementById('homestead-items');
+
+        let players = [];
+        let activePlayerIndex = 0;
+        let turnCounter = 0;
+        const correctSound = new Tone.Synth().toDestination();
+        const wrongSound = new Tone.Synth({ oscillator: { type: "square" } }).toDestination();
+
+        const questions = [
+            { q: "You need to fix a broken chair. What tool is best?", a: "Hammer and nails", o: ["A book", "A watering can"], type: "skill", reward: { type: 'wood', amount: 2 } },
+            { q: "The garden is very dry. What does it need?", a: "Water", o: ["More sun", "A blanket"], type: "skill", reward: { type: 'food', amount: 1 } },
+            { q: "A friend is sad. What is the kindest thing to do?", a: "Ask them what's wrong and listen", o: ["Laugh at them", "Ignore them"], type: "value", reward: { type: 'heart', amount: 1 } },
+            { q: "Who should help clean up after playing?", a: "Everyone who played", o: ["Only the oldest child", "Nobody"], type: "value", reward: { type: 'heart', amount: 1 } },
+            { q: "To build a strong wall, what do you need most?", a: "Strong foundation", o: ["Pretty paint", "A flag"], type: "skill", reward: { type: 'wood', amount: 3 } }
+        ];
+
+        let gameState = {
+            resources: { wood: 5, food: 2, heart: 2 },
+            homestead: []
+        };
+        
+        function updatePlayerSetup() {
+            const playerCount = playerSetupArea.children.length;
+            if (playerCount >= 4) addPlayerBtn.classList.add('hidden');
+            else addPlayerBtn.classList.remove('hidden');
+        }
+
+        addPlayerBtn.addEventListener('click', () => {
+            const playerCount = playerSetupArea.children.length;
+            if (playerCount < 4) {
+                const newPlayerNum = playerCount + 1;
+                const newPlayerHTML = `
+                    <div class="player-join-card bg-white/50 p-4 rounded-lg mb-4">
+                        <h3 class="font-bold text-xl">Player ${newPlayerNum}</h3>
+                        <div class="flex justify-center gap-4 my-4">
+                            <div class="avatar-card p-2 rounded-lg" data-player="${newPlayerNum}" data-avatar="BuggZ"><img src="https://placehold.co/80x80/f97316/FFFFFF?text=BuggZ" class="rounded-full"><p class="text-sm font-bold">BuggZ</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="${newPlayerNum}" data-avatar="Sga"><img src="https://placehold.co/80x80/60a5fa/FFFFFF?text=Sga" class="rounded-full"><p class="text-sm font-bold">Sga</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="${newPlayerNum}" data-avatar="Oros"><img src="https://placehold.co/80x80/9ca3af/FFFFFF?text=Oros" class="rounded-full"><p class="text-sm font-bold">Oros</p></div>
+                            <div class="avatar-card p-2 rounded-lg" data-player="${newPlayerNum}" data-avatar="Monkey"><img src="https://placehold.co/80x80/a16207/FFFFFF?text=Monkey" class="rounded-full"><p class="text-sm font-bold">Monkey</p></div>
+                        </div>
+                    </div>`;
+                playerSetupArea.insertAdjacentHTML('beforeend', newPlayerHTML);
+                updatePlayerSetup();
+            }
+        });
+
+        playerSetupArea.addEventListener('click', (e) => {
+            const card = e.target.closest('.avatar-card');
+            if (!card) return;
+            const playerNum = card.dataset.player;
+            document.querySelectorAll(`.avatar-card[data-player="${playerNum}"]`).forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        });
+
+        startGameBtn.addEventListener('click', () => {
+            players = [];
+            const playerJoinCards = document.querySelectorAll('.player-join-card');
+            for (let i = 0; i < playerJoinCards.length; i++) {
+                const selectedCard = playerJoinCards[i].querySelector('.avatar-card.selected');
+                if (selectedCard) {
+                    players.push({ id: i, name: `Player ${i+1}`, avatar: selectedCard.dataset.avatar });
+                }
+            }
+            if(players.length > 0) {
+                avatarScreen.classList.add('hidden');
+                gameArea.classList.remove('hidden');
+                initGame();
+            } else {
+                alert("Please select an avatar for Player 1.");
+            }
+        });
+
+        function initGame() {
+            updatePlayersPanel();
+            nextTurn();
+        }
+
+        function updatePlayersPanel() {
+            playersPanel.innerHTML = '<h3 class="font-bold text-lg mb-2">Players & Resources</h3>';
+            players.forEach((p, index) => {
+                playersPanel.innerHTML += `<div class="p-2 rounded ${index === activePlayerIndex ? 'bg-yellow-200' : ''}">${p.avatar}</div>`;
+            });
+            playersPanel.innerHTML += `
+                <div class="mt-4 text-sm">
+                    <p><i class="fas fa-tree text-green-700"></i> Wood: ${gameState.resources.wood}</p>
+                    <p><i class="fas fa-carrot text-orange-600"></i> Food: ${gameState.resources.food}</p>
+                    <p><i class="fas fa-heart text-red-500"></i> Hearts: ${gameState.resources.heart}</p>
+                </div>`;
+        }
+
+        function nextTurn() {
+            activePlayerIndex = turnCounter % players.length;
+            updatePlayersPanel();
+            presentQuestion();
+        }
+        
+        function presentQuestion() {
+            const question = questions[Math.floor(Math.random() * questions.length)];
+            const options = shuffleArray([...question.o, question.a]);
+            questionPanel.innerHTML = `
+                <h3 class="font-bold text-md mb-2">${players[activePlayerIndex].avatar}'s Turn!</h3>
+                <p class="text-sm mb-4">${question.q}</p>
+                <div class="space-y-2">
+                    ${options.map(opt => `<button class="btn-game w-full p-2 text-sm bg-white/80 rounded" data-correct="${opt === question.a}">${opt}</button>`).join('')}
+                </div>`;
+            
+            questionPanel.querySelectorAll('button').forEach(btn => {
+                btn.addEventListener('click', handleAnswer);
+            });
+        }
+
+        function handleAnswer(e) {
+            const isCorrect = e.target.dataset.correct === 'true';
+            const questionData = questions.find(q => q.q === questionPanel.querySelector('p').textContent);
+            
+            if(isCorrect) {
+                correctSound.triggerAttackRelease("C5", "8n");
+                gameState.resources[questionData.reward.type] += questionData.reward.amount;
+                questionPanel.innerHTML = `<p class="text-green-700 font-bold">Correct!</p>`;
+                buildHomestead();
+            } else {
+                wrongSound.triggerAttackRelease("E3", "8n");
+                questionPanel.innerHTML = `<p class="text-red-600 font-bold">Oops, try next time!</p>`;
+            }
+            
+            turnCounter++;
+            setTimeout(nextTurn, 2000);
+        }
+
+        function buildHomestead() {
+            let itemBuilt = null;
+            if(gameState.resources.wood >= 5 && gameState.homestead.filter(i => i.type === 'house').length === 0) {
+                itemBuilt = { type: 'house', left: '40%', top: '50%' };
+                gameState.homestead.push(itemBuilt);
+                gameState.resources.wood -= 5;
+            } else if (gameState.resources.food >= 2 && gameState.homestead.filter(i => i.type === 'garden').length === 0) {
+                 itemBuilt = { type: 'garden', left: '10%', top: '60%' };
+                 gameState.homestead.push(itemBuilt);
+                 gameState.resources.food -= 2;
+            }
+            updateHomesteadView();
+        }
+
+        function updateHomesteadView() {
+            homesteadItemsEl.innerHTML = '';
+            gameState.homestead.forEach(item => {
+                let iconClass = '';
+                if(item.type === 'house') iconClass = 'fas fa-home text-6xl text-amber-800';
+                if(item.type === 'garden') iconClass = 'fas fa-seedling text-5xl text-green-600';
+                
+                homesteadItemsEl.innerHTML += `<div class="homestead-item" style="left: ${item.left}; top: ${item.top};"><i class="${iconClass}"></i></div>`;
+            });
+        }
+
+        function shuffleArray(array) {
+            return [...array].sort(() => Math.random() - 0.5);
+        }
+        
+    });
+    </script>
+</body>
+</html>
