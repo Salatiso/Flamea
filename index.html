@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome to Flamea</title>
+    <script>
+        // This script checks the user's screen width to determine if they are on a mobile device.
+        // It then redirects them to the appropriate version of the site.
+
+        // You can adjust the 768px breakpoint if needed.
+        const isMobile = window.matchMedia("only screen and (max-width: 768px)").matches;
+
+        // Get the base path for the URL to ensure it works correctly on GitHub Pages.
+        // For example, it will construct a path like "/Flamea/desktop-index.html".
+        const basePath = window.location.pathname.endsWith('/') 
+            ? window.location.pathname.slice(0, -1) 
+            : window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/'));
+
+        if (isMobile) {
+            // If the screen is narrow, redirect to the mobile index page.
+            window.location.href = basePath + '/flamea-mobile/index.html';
+        } else {
+            // Otherwise, redirect to the main desktop index page.
+            window.location.href = basePath + '/desktop-index.html';
+        }
+    </script>
+</head>
+<body>
+    <p>Loading Flamea... If you are not redirected automatically, please enable JavaScript.</p>
+</body>
+</html>

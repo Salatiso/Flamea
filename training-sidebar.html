@@ -1,0 +1,82 @@
+<!-- training-sidebar.html -->
+<!-- This file contains the HTML structure for the interactive training course sidebar. -->
+<aside class="w-64 bg-gray-800 bg-opacity-90 backdrop-blur-lg text-white h-screen flex flex-col p-4 shadow-2xl">
+    <div class="text-center border-b border-gray-700 pb-4 mb-4">
+        <a href="/desktop-index.html" class="text-2xl font-bold text-orange-400 hover:text-orange-300">Flamea</a>
+        <p class="text-sm text-gray-400">Training Centre</p>
+    </div>
+
+    <nav class="flex-grow space-y-4">
+        <a href="/desktop-index.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
+            <i class="fas fa-home w-6 text-center"></i>
+            <span class="ml-3 font-semibold">Home</span>
+        </a>
+        <a href="/training.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
+            <i class="fas fa-graduation-cap w-6 text-center"></i>
+            <span class="ml-3 font-semibold">All Training</span>
+        </a>
+        <a href="/assessment.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
+            <i class="fas fa-tasks w-6 text-center"></i>
+            <span class="ml-3 font-semibold">Assessment</span>
+        </a>
+    </nav>
+
+    <div class="border-t border-gray-700 pt-4">
+        <h3 class="text-lg font-semibold mb-2 text-center text-gray-300">Course Progress</h3>
+        
+        <!-- Progress Bar -->
+        <div>
+            <div class="flex justify-between text-sm font-medium text-gray-400 mb-1">
+                <span>Completion</span>
+                <span id="progress-percentage">0%</span>
+            </div>
+            <div class="w-full bg-gray-600 rounded-full h-2.5">
+                <div id="progress-bar" class="bg-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navigation Controls -->
+    <div class="flex justify-between mt-6">
+        <button id="back-btn" title="Previous Module" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">
+            <i class="fas fa-arrow-left"></i> Back
+        </button>
+        <button id="next-btn" title="Next Module" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
+            Next <i class="fas fa-arrow-right"></i>
+        </button>
+    </div>
+</aside>
+
+<!-- Sidebar logic -->
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const backBtn = document.getElementById('back-btn');
+    const nextBtn = document.getElementById('next-btn');
+
+    if (backBtn) {
+        backBtn.addEventListener('click', () => history.back());
+    }
+    if (nextBtn) {
+        nextBtn.addEventListener('click', () => history.forward());
+    }
+
+    // --- Progress Logic ---
+    function updateSidebarProgress() {
+        const progress = localStorage.getItem('flameaTrainingProgress') || '0';
+        const progressPercentageEl = document.getElementById('progress-percentage');
+        const progressBarEl = document.getElementById('progress-bar');
+
+        if (progressPercentageEl) progressPercentageEl.textContent = `${progress}%`;
+        if (progressBarEl) progressBarEl.style.width = `${progress}%`;
+    }
+
+    updateSidebarProgress();
+    window.addEventListener('update-progress', updateSidebarProgress);
+
+    window.setTrainingProgress = function(percentage) {
+        let progress = Math.max(0, Math.min(100, percentage)); // clamp between 0-100
+        localStorage.setItem('flameaTrainingProgress', progress);
+        window.dispatchEvent(new CustomEvent('update-progress'));
+    }
+});
+</script>
