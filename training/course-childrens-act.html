@@ -12,15 +12,13 @@
         .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
         .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); border-color: #34d399; }
-        .module-card.selected { border-color: #34d399; background-color: rgba(16, 185, 129, 0.1); }
-        .prose h2 { color: #6ee7b7; font-family: 'Roboto Slab', serif;} 
-        .prose h3 { color: #a7f3d0; font-family: 'Roboto Slab', serif;} 
-        .prose strong { color: #a7f3d0; }
+        .module-card:hover { transform: translateY(-5px); border-color: #818cf8; }
+        .module-card.selected { border-color: #818cf8; background-color: rgba(99, 102, 241, 0.1); }
+        .prose h2 { color: #a5b4fc; } .prose h3 { color: #c7d2fe; } .prose strong { color: #c7d2fe; }
         .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-100 dark:bg-gray-900 font-sans flex">
     <div class="main-container">
         <div id="sidebar-placeholder"></div>
         <main class="main-content p-4 md:p-8 flex items-center justify-center">
@@ -160,6 +158,106 @@
             }
         };
 
+        /**
+ * Flamea.org - Final Unified Main Script
+ * Version: 9.1
+ * Description:
+ * This script manages all core site-wide functionalities.
+ * - Dynamically loads the sidebar with robust path handling.
+ * - Handles all modals.
+ * - Manages accordions and submenus.
+ * - Renders dynamic catalogues for Tools, Games, and Customs.
+ * - Implements the dynamic time-of-day background.
+ * NOTE: Training catalogue logic is in training.js.
+ */
+document.addEventListener('DOMContentLoaded', () => {
+
+    // --- 1. CORE INITIALIZATION ---
+    function initializeSiteFeatures() {
+        loadSidebar(); // This now contains the corrected logic
+        setDynamicBackground();
+        initializeModals();
+        initializeAccordionsAndSubmenus();
+        renderToolsCatalogue();
+        renderGamesCatalogue();
+        renderCustomsPage();
+    }
+
+    /**
+     * --- CORRECTED SIDEBAR LOADER ---
+     * This new function automatically calculates the correct path to the sidebar
+     * from any page, whether it's in the root folder or a subfolder like /training/.
+     */
+    function loadSidebar() {
+        const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
+        if (!sidebarPlaceholder) return;
+
+        // Determine the relative path to the root directory
+        const pathSegments = window.location.pathname.split('/').filter(Boolean);
+        // The depth is the number of subdirectories, minus the filename
+        const depth = pathSegments.length > 1 ? pathSegments.length - 1 : 0;
+        const pathPrefix = '../'.repeat(depth);
+
+        fetch(`${pathPrefix}sidebar.html`)
+            .then(response => {
+                if (!response.ok) throw new Error(`Could not load sidebar.html from path: ${pathPrefix}`);
+                return response.text();
+            })
+            .then(html => {
+                sidebarPlaceholder.outerHTML = html;
+                // Run functions that depend on the sidebar *after* it's loaded
+                setActiveSidebarLink(pathPrefix);
+            })
+            .catch(error => {
+                console.error('Sidebar load error:', error);
+                sidebarPlaceholder.innerHTML = '<p class="p-4 text-red-400">Navigation could not be loaded.</p>';
+            });
+    }
+
+    // --- [Dynamic Background, Modals, Accordions, etc. remain here] ---
+
+    // Updated to accept pathPrefix to build correct link URLs
+    function setActiveSidebarLink(pathPrefix = '') {
+        const currentPage = window.location.pathname.split("/").pop() || "index.html";
+        const navLinks = document.querySelectorAll('#main-sidebar a'); // Target new sidebar ID
+        
+        navLinks.forEach(link => {
+            const linkPage = link.getAttribute('href').split("/").pop();
+            if (linkPage === currentPage) {
+                link.classList.add('active');
+                const parentSubmenu = link.closest('.submenu-container');
+                if (parentSubmenu) {
+                    parentSubmenu.style.display = 'block';
+                    const parentToggle = parentSubmenu.closest('[data-menu-item]').querySelector('.submenu-toggle');
+                    if (parentToggle) {
+                        const icon = parentToggle.querySelector('i.fa-chevron-down');
+                        if (icon) icon.classList.add('rotate-180');
+                    }
+                }
+            }
+        });
+    }
+
+    // [ The rest of the main.js code (modals, accordions, other catalogues) is unchanged ]
+    // ...
+    // Note: I have omitted the rest of the file for brevity as only the loadSidebar function was changed.
+    // ...
+
+    function setDynamicBackground() { /* ... function code ... */ }
+    function initializeModals() { /* ... function code ... */ }
+    function initializeAccordionsAndSubmenus() { /* ... function code ... */ }
+    const toolData = [/* ... all tool data ... */];
+    const gameData = [/* ... all game data ... */];
+    const customsDatabase = [/* ... all customs data ... */];
+    function renderToolsCatalogue() { /* ... function code ... */ }
+    function renderGamesCatalogue() { /* ... function code ... */ }
+    function renderCustomsPage() { /* ... function code ... */ }
+    
+    // --- 5. INITIALIZE ---
+    initializeSiteFeatures();
+});
+
+        
         let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
 
         function displayModule(moduleNum) {
