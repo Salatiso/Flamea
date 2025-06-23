@@ -19,6 +19,8 @@ import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gsta
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 */
 
+import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
 const ParentingPlanApp = {
     // State and properties remain as you defined them.
     db: null, auth: null, userId: null, planId: null, planData: null,
@@ -232,22 +234,20 @@ const ParentingPlanApp = {
     },
 
     addChild(childData = {}) {
-        const childrenList = document.getElementById('children-list');
-        const childEntry = document.createElement('div');
         childEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-2 items-center';
-        
-        // **THE FIX for the date format error is here:**
+        const childEntry = document.createElement('div');
+        // **THE FIX for the date format error is here:**s-1 md:grid-cols-3 gap-2 items-center';
         // We ensure that `childData.dob` is either a valid date string or an empty string `''`.
-        const dobValue = childData.dob || '';
-
-        childEntry.innerHTML = `
+        const dobValue = childData.dob || '';r is here:**
+        // We ensure that `childData.dob` is either a valid date string or an empty string `''`.
+        childEntry.innerHTML = `ta.dob || '';
             <input type="text" placeholder="Child's Full Name" data-type="name" class="input-field" value="${childData.name || ''}">
             <input type="date" data-type="dob" class="input-field" value="${dobValue}">
-            <button class="remove-child-btn bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>
-        `;
+            <button class="remove-child-btn bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>| ''}">
+        `;  <input type="date" data-type="dob" class="input-field" value="${dobValue}">
+        childrenList.appendChild(childEntry);g-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>
+    },  `;
         childrenList.appendChild(childEntry);
-    },
-    
     initCalendar() {
         const calendarEl = document.getElementById('calendar');
         if (calendarEl) {
@@ -255,22 +255,24 @@ const ParentingPlanApp = {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
                 events: this.planData.schedule.events || []
-            });
-            this.calendar.render();
+            }); headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
+            this.calendar.render();ta.schedule.events || []
+        }   });
+    },      this.calendar.render();
         }
-    },
-
     getDefaultPlanData() {
         return {
             metadata: { ownerId: this.userId, authorizedUsers: [this.userId] },
             parties: { parentA: { name: '' }, parentB: { name: '' }, children: [] },
-            schedule: { custodyDetails: '', events: [] },
-            communication: { methods: '' },
-            finances: { details: '' },
+            schedule: { custodyDetails: '', events: [] },sers: [this.userId] },
+            communication: { methods: '' },}, parentB: { name: '' }, children: [] },
+            finances: { details: '' },: '', events: [] },
             decision_making: { details: '' },
-        };
+        };  finances: { details: '' },
+    }       decision_making: { details: '' },
+};      };
     }
-};
-
+// Expose the app to the global window object so the module script in HTML can access it.
+window.ParentingPlanApp = ParentingPlanApp;
 // Expose the app to the global window object so the module script in HTML can access it.
 window.ParentingPlanApp = ParentingPlanApp;
