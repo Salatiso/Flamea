@@ -83,4 +83,259 @@
         </div>
     </div>
 </aside>
-<!-- Note: The script from the previous turn for the podcast is omitted for clarity, but would be here -->
+
+<!-- IMPORTANT: The main page that loads this sidebar must have this audio tag in its body -->
+<audio id="flamea-audio-player" preload="metadata"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Standard Sidebar Accordion Logic (from your file)
+    const menuItems = document.querySelectorAll('[data-menu-item]');
+    menuItems.forEach(item => {
+        const toggle = item.querySelector('.submenu-toggle');
+        const submenu = item.querySelector('.submenu-container');
+        if (toggle && submenu) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                const wasActive = item.classList.contains('active');
+                // Close all other menu items
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.submenu-container').style.display = 'none';
+                    }
+                });
+                // Toggle the clicked item
+                if (wasActive) {
+                    item.classList.remove('active');
+                    submenu.style.display = 'none';
+                } else {
+                    item.classList.add('active');
+                    submenu.style.display = 'block';
+                }
+            });
+        }
+    });
+    
+    // --- NEW: Podcast Player Logic ---
+    const playerContainer = document.getElementById('podcast-player-container');
+    // Important: The audio player element should exist on the main page.
+    const audioPlayer = document.getElementById('flamea-audio-player');
+    if (!audioPlayer) {
+        console.error("Critical Error: Audio element with id 'flamea-audio-player' not found on the main page.");
+        return;
+    }
+
+    let episodes = [];
+    let currentEpisodeIndex = 0;
+    let isPlaying = false;
+
+    // Using RSS2JSON service which is more reliable for RSS feeds
+    const RSS_URL = "https://anchor.fm/s/10357aacc/podcast/rss";
+    const RSS_API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+    fetch(RSS_API_URL)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok.');
+            return response.json();
+        })
+        .then(data => {
+            if (!data.items || data.items.length === 0) {
+                throw new Error("No episodes found in RSS feed.");
+            }
+
+            episodes = data.items.map(item => ({
+                title: item.title,
+                audioSrc: item.enclosure?.link || null,
+                artworkUrl: data.feed?.image || 'https://placehold.co/100x100/111827/4ade80?text=F',
+                description: item.description
+            })).filter(ep => ep.audioSrc); // Only include episodes with audio
+
+            if (episodes.length === 0) {
+                throw new Error("No playable episodes found.");
+            }
+
+            renderPlayer();
+            loadEpisode(0);
+        })
+        .catch(err => {
+            console.error("Error loading podcast feed:", err);
+            playerContainer.innerHTML = `
+                <div class="p-4 text-center">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-lg mb-2"></i>
+                    <p class="text-xs text-red-400">Could not load podcast feed.</p>
+                    <p class="text-xs text-gray-500 mt-1">Please try again later.</p>
+                </div>
+            `;
+        });
+
+    function renderPlayer() {
+        // Build the player UI inside the container
+        playerContainer.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <img id="podcast-art" class="w-14 h-14 rounded-md object-cover" src="https://placehold.co/100x100/111827/4ade80?text=F">
+                <div class="flex-grow overflow-hidden">
+                    <p id="podcast-title" class="font-semibold text-white truncate">Select an Episode</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                         <span id="podcast-current-time">0:00</span>
+                         <span id="podcast-total-duration">0:00</span>
+                    </div>
+                </div>
+            </div>
+            <div id="podcast-progress-container" class="h-1.5 rounded-full w-full bg-gray-600 mb-3">
+                <div id="podcast-progress-bar" class="h-full rounded-full" style="width: 0%;"></div>
+            </div>
+            <div class="flex items-center justify-around">
+                <button id="podcast-prev-btn" class="p-2 hover:text-white"><i class="fas fa-backward-step"></i></button>
+                <button id="podcast-play-pause-btn" class="p-2 text-xl hover:text-white"><i class="fas fa-play"></i></button>
+                <button id="podcast-next-btn" class="p-2 hover:text-white"><i class="fas fa-forward-step"></i></button>
+            </div>
+            <div id="podcast-playlist" class="mt-3"></div>
+        `;
+
+        const playlistEl = document.getElementById('podcast-playlist');
+        episodes.forEach((ep, index) => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'podcast-playlist-item p-2 flex items-center gap-2 rounded-md';
+            itemEl.innerHTML = `
+                <img src="${ep.artworkUrl}" class="w-8 h-8 rounded-sm object-cover">
+                <p class="flex-grow truncate text-xs">${ep.title}</p>
+            `;
+            itemEl.addEventListener('click', () => {
+                currentEpisodeIndex = index;
+                loadEpisode(index);
+            });
+            playlistEl.appendChild(itemEl);
+        });
+        
+        // Add event listeners to the newly created player controls
+        document.getElementById('podcast-play-pause-btn').addEventListener('click', togglePlayPause);
+        document.getElementById('podcast-next-btn').addEventListener('click', playNext);
+        document.getElementById('podcast-prev-btn').addEventListener('click', playPrev);
+        document.getElementById('podcast-progress-container').addEventListener('click', setProgress);
+    }
+    
+    function loadEpisode(index) {
+        const episode = episodes[index];
+        if (!episode || !episode.audioSrc) return;
+        
+        // Stop current playback
+        if (isPlaying) {
+            pauseEpisode();
+        }
+        
+        document.getElementById('podcast-art').src = episode.artworkUrl;
+        document.getElementById('podcast-title').textContent = episode.title;
+        
+        // Set audio source directly without proxy
+        audioPlayer.src = episode.audioSrc;
+        audioPlayer.load(); // Force reload of the audio element
+        
+        // Reset progress
+        document.getElementById('podcast-progress-bar').style.width = '0%';
+        document.getElementById('podcast-current-time').textContent = '0:00';
+        document.getElementById('podcast-total-duration').textContent = '0:00';
+
+        // Update playlist active state
+        document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
+        });
+
+        // Automatically play the episode after loading
+        audioPlayer.addEventListener('canplay', playEpisode, { once: true });
+    }
+
+    function playEpisode() {
+        if (!audioPlayer.src) return;
+        
+        const playPromise = audioPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(e => {
+                console.error("Playback Error:", e);
+                // Show user-friendly error
+                alert("Unable to play this episode. Please try another one.");
+            });
+        }
+    }
+
+    function pauseEpisode() {
+        audioPlayer.pause();
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    function togglePlayPause() { 
+        if (isPlaying) {
+            pauseEpisode();
+        } else {
+            playEpisode();
+        }
+    }
+    
+    function playNext() {
+        currentEpisodeIndex = (currentEpisodeIndex + 1) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+    }
+    
+    function playPrev() {
+        currentEpisodeIndex = (currentEpisodeIndex - 1 + episodes.length) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+    }
+
+    function setProgress(e) {
+        const width = e.currentTarget.clientWidth;
+        const clickX = e.offsetX;
+        if(audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+            audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
+        }
+    }
+
+    // --- Audio Player Event Listeners ---
+    audioPlayer.addEventListener('loadstart', () => {
+        console.log('Started loading audio');
+    });
+
+    audioPlayer.addEventListener('canplay', () => {
+        console.log('Audio can start playing');
+    });
+
+    audioPlayer.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        pauseEpisode();
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        const { currentTime, duration } = audioPlayer;
+        if(duration && !isNaN(duration) && !isNaN(currentTime)) {
+            const progressPercent = (currentTime / duration) * 100;
+            document.getElementById('podcast-progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('podcast-current-time').textContent = formatTime(currentTime);
+        }
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+            document.getElementById('podcast-total-duration').textContent = formatTime(audioPlayer.duration);
+        }
+    });
+    
+    audioPlayer.addEventListener('ended', () => {
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+        playNext();
+    });
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+});
+</script>
+
+</body>
+</html>
