@@ -19,9 +19,6 @@ import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gsta
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 */
 
-import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-
 const ParentingPlanApp = {
     // State and properties remain as you defined them.
     db: null, auth: null, userId: null, planId: null, planData: null,
@@ -36,43 +33,12 @@ const ParentingPlanApp = {
         this.mapDOMElements();
         this.handleAuthentication();
         this.attachEventListeners();
-
-        // Render dashboard after initialization
-        this.renderDashboard();
-    },
-
-    renderDashboard() {
-        const main = document.querySelector('.main-container');
-        if (!main) return;
-        main.innerHTML = `
-            <div class="parenting-plan-dashboard">
-                <h1 class="text-3xl font-bold mb-4">Parenting Plan Builder</h1>
-                <div class="sections">
-                    <div class="section" data-section="parties">Parties</div>
-                    <div class="section" data-section="schedule">Schedule</div>
-                    <div class="section" data-section="communication">Communication</div>
-                    <div class="section" data-section="finances">Finances</div>
-                    <div class="section" data-section="decision_making">Decision Making</div>
-                    <div class="section" data-section="finalize">Finalize</div>
-                </div>
-            </div>
-        `;
-        // Attach click listeners to sections
-        main.querySelectorAll('.section').forEach(section => {
-            section.addEventListener('click', (e) => {
-                const sectionName = e.currentTarget.getAttribute('data-section');
-                this.openSectionModal(sectionName);
-            });
-        });
     },
 
     handleAuthentication() {
-        const auth = this.auth;
-
-        // Import these from firebase-auth if not already imported at the top
-        // import { onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-
-        onAuthStateChanged(auth, async (user) => {
+        const { onAuthStateChanged, signInAnonymously, signInWithCustomToken } = this.auth;
+        
+        onAuthStateChanged(getAuth(this.app), async (user) => {
             if (user) {
                 this.userId = user.uid;
                 this.elements.userIdDisplay.textContent = this.userId;
@@ -83,9 +49,9 @@ const ParentingPlanApp = {
                 try {
                     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                     if (initialAuthToken) {
-                        await signInWithCustomToken(auth, initialAuthToken);
+                        await signInWithCustomToken(getAuth(this.app), initialAuthToken);
                     } else {
-                        await signInAnonymously(auth);
+                        await signInAnonymously(getAuth(this.app));
                     }
                 } catch (error) {
                     console.error("Sign-in failed:", error);
@@ -239,10 +205,13 @@ const ParentingPlanApp = {
 
     addChild(childData = {}) {
         const childrenList = document.getElementById('children-list');
-        if (!childrenList) return;
         const childEntry = document.createElement('div');
         childEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-2 items-center';
+        
+        // **THE FIX for the date format error is here:**
+        // We ensure that `childData.dob` is either a valid date string or an empty string `''`.
         const dobValue = childData.dob || '';
+
         childEntry.innerHTML = `
             <input type="text" placeholder="Child's Full Name" data-type="name" class="input-field" value="${childData.name || ''}">
             <input type="date" data-type="dob" class="input-field" value="${dobValue}">
@@ -250,13 +219,10 @@ const ParentingPlanApp = {
         `;
         childrenList.appendChild(childEntry);
     },
-
+    
     initCalendar() {
         const calendarEl = document.getElementById('calendar');
         if (calendarEl) {
-            if (this.calendar) {
-                this.calendar.destroy();
-            }
             this.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
@@ -265,46 +231,18 @@ const ParentingPlanApp = {
             this.calendar.render();
         }
     },
+
     getDefaultPlanData() {
         return {
-            metadata: { ownerId: this.userId, authorizedUsers: [this.userId], lastModified: '', lastModifiedBy: '' },
+            metadata: { ownerId: this.userId, authorizedUsers: [this.userId] },
             parties: { parentA: { name: '' }, parentB: { name: '' }, children: [] },
             schedule: { custodyDetails: '', events: [] },
             communication: { methods: '' },
             finances: { details: '' },
-            decision_making: { details: '' }
+            decision_making: { details: '' },
         };
     }
 };
+
 // Expose the app to the global window object so the module script in HTML can access it.
 window.ParentingPlanApp = ParentingPlanApp;
-
-/**
- * parenting-plan.html
- * This file works in tandem with the parenting-plan-builder.js script.
- * It provides the HTML structure and imports the necessary Firebase scripts.
- */
-
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan Builder</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
-    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css" rel="stylesheet">
-    <style>
-        /* Custom styles here */
-    </style>
-</head>
-<body class="bg-gray-900 text-gray-200">
-  <div class="main-container flex">
-    <!-- Content will be rendered here -->
-  </div>
-  <!-- ...rest of your HTML... -->
-</body>
-</html>
