@@ -209,7 +209,7 @@
     <script>
     document.addEventListener('DOMContentLoaded', function () {
         // Fetch the sidebar from the root directory. This works from any page.
-        fetch('/training-sidebar.html')
+        fetch('training-sidebar.html')
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Network response was not ok: ' + response.statusText);

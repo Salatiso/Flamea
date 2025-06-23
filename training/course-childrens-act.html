@@ -7,27 +7,58 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.min.css">
+    <script src="https://cdn.tailwindcss.com"></script>
     <style>
+        /* Original styles preserved for game elements */
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .main-content { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            background-size: cover; 
+            background-position: center center; 
+        }
         .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
         .module-card:hover { transform: translateY(-5px); border-color: #818cf8; }
         .module-card.selected { border-color: #818cf8; background-color: rgba(99, 102, 241, 0.1); }
         .prose h2 { color: #a5b4fc; } .prose h3 { color: #c7d2fe; } .prose strong { color: #c7d2fe; }
         .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
+        .btn {
+            padding: 0.75rem 1.5rem;
+            border-radius: 0.5rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            transition: all 0.2s ease;
+        }
+        .btn-primary {
+            background-color: #4f46e5;
+            color: white;
+        }
+        .btn-primary:hover {
+            background-color: #4338ca;
+        }
+        .btn-secondary {
+            background-color: #64748b;
+            color: white;
+        }
+        .btn-secondary:hover {
+            background-color: #475569;
+        }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans flex">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<body class="dark text-white">
+    <div class="flex h-screen">
+        <!-- Sidebar container that will be populated by sidebar-loader.js -->
+        <div id="sidebar-container"></div>
+        
+        <!-- Main game content area -->
         <main class="main-content p-4 md:p-8 flex items-center justify-center">
             
+            <!-- This is the main hub for the game, preserved from your code -->
             <div id="course-hub" class="max-w-4xl mx-auto text-center">
                 <header class="mb-12">
-                     <div class="flex justify-center items-center gap-4 mb-4">
+                    <div class="flex justify-center items-center gap-4 mb-4">
                         <svg class="h-20 w-20 text-green-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                            <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
                         </svg>
                         <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Father's Armoury: The Children's Act</h1>
                     </div>
@@ -53,6 +84,7 @@
                 </section>
             </div>
             
+            <!-- This is the content/quiz area, preserved from your code -->
             <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
                 <div id="module-content" class="prose max-w-none prose-invert mb-8 bg-slate-800/70 p-6 rounded-lg"></div>
                 <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Knowledge</button>
@@ -63,7 +95,7 @@
         </main>
     </div>
 
-    <script type="module" src="../assets/js/main.js"></script>
+    <!-- The original game logic script, preserved exactly -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
         const courseHub = document.getElementById('course-hub');
@@ -113,12 +145,12 @@
                     <h3>The Unmarried Father (Section 21) - Your Most Important Tool</h3>
                     <p>This section is revolutionary. An unmarried biological father <strong>automatically</strong> acquires full PR&R if he meets specific, common-sense conditions. You DO NOT need a court to grant you these rights if you qualify. You have them. The conditions are:</p>
                     <ul>
-                        <li>If you were living with the mother in a permanent life-partnership at the time of birth.</li>
+                        <li>If you were living with the mother in a permanent life-partnership at the time of the child's birth.</li>
                         <li><strong>OR</strong>, if you (regardless of your relationship with the mother):</li>
                         <ol>
-                           <li>Consent to be identified as the father; <strong>AND</strong></li>
-                           <li>Contribute or attempt in good faith to contribute to the child's upbringing; <strong>AND</strong></li>
-                           <li>Contribute or attempt in good faith to contribute to the child's maintenance.</li>
+                            <li>Consent to be identified as the father; <strong>AND</strong></li>
+                            <li>Contribute or attempt in good faith to contribute to the child's upbringing; <strong>AND</strong></li>
+                            <li>Contribute or attempt in good faith to contribute to the child's maintenance.</li>
                         </ol>
                     </ul>
                 `,
@@ -157,106 +189,6 @@
                 ]
             }
         };
-
-        /**
- * Flamea.org - Final Unified Main Script
- * Version: 9.1
- * Description:
- * This script manages all core site-wide functionalities.
- * - Dynamically loads the sidebar with robust path handling.
- * - Handles all modals.
- * - Manages accordions and submenus.
- * - Renders dynamic catalogues for Tools, Games, and Customs.
- * - Implements the dynamic time-of-day background.
- * NOTE: Training catalogue logic is in training.js.
- */
-document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 1. CORE INITIALIZATION ---
-    function initializeSiteFeatures() {
-        loadSidebar(); // This now contains the corrected logic
-        setDynamicBackground();
-        initializeModals();
-        initializeAccordionsAndSubmenus();
-        renderToolsCatalogue();
-        renderGamesCatalogue();
-        renderCustomsPage();
-    }
-
-    /**
-     * --- CORRECTED SIDEBAR LOADER ---
-     * This new function automatically calculates the correct path to the sidebar
-     * from any page, whether it's in the root folder or a subfolder like /training/.
-     */
-    function loadSidebar() {
-        const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
-        if (!sidebarPlaceholder) return;
-
-        // Determine the relative path to the root directory
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
-        // The depth is the number of subdirectories, minus the filename
-        const depth = pathSegments.length > 1 ? pathSegments.length - 1 : 0;
-        const pathPrefix = '../'.repeat(depth);
-
-        fetch(`${pathPrefix}sidebar.html`)
-            .then(response => {
-                if (!response.ok) throw new Error(`Could not load sidebar.html from path: ${pathPrefix}`);
-                return response.text();
-            })
-            .then(html => {
-                sidebarPlaceholder.outerHTML = html;
-                // Run functions that depend on the sidebar *after* it's loaded
-                setActiveSidebarLink(pathPrefix);
-            })
-            .catch(error => {
-                console.error('Sidebar load error:', error);
-                sidebarPlaceholder.innerHTML = '<p class="p-4 text-red-400">Navigation could not be loaded.</p>';
-            });
-    }
-
-    // --- [Dynamic Background, Modals, Accordions, etc. remain here] ---
-
-    // Updated to accept pathPrefix to build correct link URLs
-    function setActiveSidebarLink(pathPrefix = '') {
-        const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        const navLinks = document.querySelectorAll('#main-sidebar a'); // Target new sidebar ID
-        
-        navLinks.forEach(link => {
-            const linkPage = link.getAttribute('href').split("/").pop();
-            if (linkPage === currentPage) {
-                link.classList.add('active');
-                const parentSubmenu = link.closest('.submenu-container');
-                if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block';
-                    const parentToggle = parentSubmenu.closest('[data-menu-item]').querySelector('.submenu-toggle');
-                    if (parentToggle) {
-                        const icon = parentToggle.querySelector('i.fa-chevron-down');
-                        if (icon) icon.classList.add('rotate-180');
-                    }
-                }
-            }
-        });
-    }
-
-    // [ The rest of the main.js code (modals, accordions, other catalogues) is unchanged ]
-    // ...
-    // Note: I have omitted the rest of the file for brevity as only the loadSidebar function was changed.
-    // ...
-
-    function setDynamicBackground() { /* ... function code ... */ }
-    function initializeModals() { /* ... function code ... */ }
-    function initializeAccordionsAndSubmenus() { /* ... function code ... */ }
-    const toolData = [/* ... all tool data ... */];
-    const gameData = [/* ... all game data ... */];
-    const customsDatabase = [/* ... all customs data ... */];
-    function renderToolsCatalogue() { /* ... function code ... */ }
-    function renderGamesCatalogue() { /* ... function code ... */ }
-    function renderCustomsPage() { /* ... function code ... */ }
-    
-    // --- 5. INITIALIZE ---
-    initializeSiteFeatures();
-});
-
         
         let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
 
@@ -339,5 +271,9 @@ document.addEventListener('DOMContentLoaded', () => {
         }
     });
     </script>
+    
+    <!-- Scripts to load the sidebar and dynamic background -->
+    <script src="../assets/js/sidebar-loader.js"></script>
+    <script type="module" src="../assets/js/main.js"></script>
 </body>
 </html>
