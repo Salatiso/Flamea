@@ -250,15 +250,17 @@ const ParentingPlanApp = {
     initCalendar() {
         const calendarEl = document.getElementById('calendar');
         if (calendarEl) {
+            if (this.calendar) {
+                this.calendar.destroy();
+            }
             this.calendar = new FullCalendar.Calendar(calendarEl, {
                 initialView: 'dayGridMonth',
                 headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
                 events: this.planData.schedule.events || []
-            }); headerToolbar: { left: 'prev,next today', center: 'title', right: 'dayGridMonth,timeGridWeek' },
-            this.calendar.render();ta.schedule.events || []
-        }   });
-    },      this.calendar.render();
+            });
+            this.calendar.render();
         }
+    },
     getDefaultPlanData() {
         return {
             metadata: { ownerId: this.userId, authorizedUsers: [this.userId], lastModified: '', lastModifiedBy: '' },
@@ -267,9 +269,8 @@ const ParentingPlanApp = {
             communication: { methods: '' },
             finances: { details: '' },
             decision_making: { details: '' }
-        };  finances: { details: '' },
-    }       decision_making: { details: '' },
-};      };
+        };
     }
+};
 // Expose the app to the global window object so the module script in HTML can access it.
 window.ParentingPlanApp = ParentingPlanApp;
