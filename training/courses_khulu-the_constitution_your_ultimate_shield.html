@@ -320,6 +320,32 @@
             // ... 14 more questions
         ];
     </script>
+    <!-- Sidebar Loader Snippet -->
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const placeholder = document.getElementById('sidebar-placeholder');
+        if(placeholder) {
+            // The '../' is important because the course files are in the /training/ folder
+            fetch('../training-sidebar.html')
+                .then(response => {
+                    if (response.ok) {
+                        return response.text();
+                    }
+                    throw new Error('Sidebar not found.');
+                })
+                .then(data => {
+                    // Replace the placeholder div with the actual sidebar HTML
+                    placeholder.outerHTML = data;
+                })
+                .catch(error => {
+                    console.error('Error loading sidebar:', error);
+                    if(placeholder) {
+                        placeholder.innerHTML = '<p class="p-4 text-red-500">Sidebar could not be loaded.</p>';
+                    }
+                });
+        }
+    });
+</script>
 </body>
 </html>
 

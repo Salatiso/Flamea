@@ -62,6 +62,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     // --- Progress Logic ---
     function updateSidebarProgress() {
+        // This function will need to be connected to your course logic to be effective
         const progress = localStorage.getItem('flameaTrainingProgress') || '0';
         const progressPercentageEl = document.getElementById('progress-percentage');
         const progressBarEl = document.getElementById('progress-bar');
