@@ -1,242 +1,106 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - A Father's Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .prose h2 { color: #67e8f9; font-family: 'Roboto Slab', serif;} 
-        .prose h3 { color: #a5f3fc; font-family: 'Roboto Slab', serif;} 
-        .prose strong { color: #a5f3fc; }
-        .quiz-container, #end-screen { background-color: rgba(30, 41, 59, 0.9); backdrop-filter: blur(8px); }
-        .quiz-option { cursor: pointer; border: 2px solid #4b5563; transition: all 0.2s ease; }
-        .quiz-option:hover { background-color: #374151; border-color: #9ca3af; }
-        .quiz-option.selected { border-color: #f59e0b; background-color: #78350f; }
-        .quiz-option.correct { border-color: #22c55e; background-color: #166534; }
-        .quiz-option.incorrect { border-color: #ef4444; background-color: #991b1b; }
-        .achievement-unlocked { animation: pop-in 0.5s ease-out; }
-        @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Re-using the same styles from the master course template with a new color scheme */
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #0891B2; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #22D3EE; padding-bottom: 0.5rem; color: #67E8F9;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #A5F3FC;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #A5F3FC; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #155E75; border-color: #0E7490; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #06B6D4; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(6, 182, 212, 0.2); border: 1px solid #22D3EE; color: white; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans flex">
-
-    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
-
-    <div class="flex-1 flex flex-col">
-        <main class="main-content p-4 md:p-8 flex items-center justify-center">
-            
-            <div id="course-hub" class="max-w-4xl mx-auto text-center">
-                <header class="mb-12">
-                     <div class="flex justify-center items-center gap-4 mb-4">
-                        <svg class="h-20 w-20 text-cyan-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
-                           <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4z"/>
-                        </svg>
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">A Father's Shield</h1>
-                    </div>
-                    <p class="text-lg text-gray-300">Using the 'Best Interests of the Child' Principle to Challenge Discrimination.</p>
-                </header>
-                <div class="bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl">
-                    <p class="mb-6">This comprehensive course will teach you how to use the most powerful principle in the Constitution as your shield against unfairness. Complete the 15-question challenge to forge your armour.</p>
-                    <button id="start-course-btn" class="btn btn-primary text-xl">Begin Your Training</button>
-                </div>
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-cyan-400">A</span></a>
+             <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Beyond Redress</a>
+                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: Framing Your Argument</a>
+                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Practical Application</a>
+            </nav>
+            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
+                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
             </div>
-            
-            <div id="quiz-area" class="w-full max-w-4xl mx-auto hidden">
-                <div class="quiz-container p-8 rounded-xl shadow-2xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold font-roboto-slab text-slate-300">The Shield Challenge</h2>
-                        <div id="achievements-bar" class="flex gap-3 text-2xl text-yellow-400"></div>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-4 mb-6">
-                        <div id="progress-bar" class="bg-cyan-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <div id="question-area"></div>
-                    <div id="feedback-area" class="mt-4 min-h-[50px] text-center font-semibold"></div>
-                    <button id="next-question-btn" class="btn btn-secondary w-full mt-4 hidden">Next Question</button>
-                </div>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
+        </aside>
 
-            <div id="end-screen" class="w-full max-w-2xl mx-auto hidden text-center quiz-container p-8 rounded-xl">
-                 <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Challenge Complete!</h2>
-                 <p class="text-xl mt-4">You have forged your armour.</p>
-                 <p class="text-2xl mt-2">Final Score: <span id="final-score" class="font-bold"></span></p>
-                 <div id="final-achievements" class="text-6xl my-6 flex justify-center gap-4"></div>
-                 <p class="text-lg">You are now equipped to be your child's ultimate protector.</p>
-                 <button id="restart-btn" class="btn btn-primary text-xl mt-6">Train Again</button>
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+             <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-cyan-400">A Father's Shield</h1>
+                    <p class="text-lg text-gray-400 mt-2">Using the 'Best Interests of the Child' Principle to Challenge Discrimination.</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #06B6D4;"></div>
+                </div>
+
+                 <!-- Course Content Area -->
+                <div class="prose max-w-none prose-invert">
+                    <!-- Module 1 -->
+                    <div id="module1" class="module active">
+                        <section>
+                            <h2>Module 1: Beyond Redress - The Power of Section 28</h2>
+                            <p>South Africa's legal landscape is dominated by the idea of redress for past injustices, often through policies like BEE and Affirmative Action. While the intention may be noble, the outcome, as argued in *Beyond Redress*, often harms the very people it's meant to help by creating new forms of discrimination. For a father, there is a more powerful, more fundamental principle to wield: <strong>the best interests of the child.</strong></p>
+                            
+                            <h3>A. Why Section 28 Trumps Redress Policies</h3>
+                            <p>Section 28 of the Constitution states that a child's best interests are of <strong>paramount importance in every matter concerning the child</strong>. "Every matter" is the key. This includes matters affected by other laws and policies. An argument can be made that any policy that unfairly harms a parent's ability to provide for their child is, by definition, not in that child's best interests.</p>
+                            <ul>
+                                <li>If a father is denied a job or a tender because of his race, it harms his ability to provide maintenance, stability, and opportunities for his child. This is a direct impact on the child's best interests.</li>
+                                <li>If family law courts show bias towards mothers, it denies the child the full benefit of their father's love, guidance, and support. This is also against their best interests.</li>
+                            </ul>
+                            
+                            <h3>B. Shifting the Focus from Adult Politics to Child Welfare</h3>
+                            <p>By using the "best interests" principle, you shift the legal argument away from the divisive politics of race and gender and place it squarely on the well-being of the child. It is a universally understood and constitutionally protected principle that is difficult for any court to ignore. You are no longer arguing for your own rights, but for the rights of your child to have a loving, capable, and present father.</p>
+                        </section>
+                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+                    </div>
+                    <!-- Other modules and quizzes would be added here -->
+                </div>
             </div>
         </main>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('training-sidebar.html')
-            .then(response => response.text())
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                    const scriptEl = placeholder.querySelector('script');
-                    if (scriptEl) eval(scriptEl.innerHTML);
-                }
-            }).catch(error => console.error('Error fetching training sidebar:', error));
-            
-        const courseHub = document.getElementById('course-hub');
-        const quizArea = document.getElementById('quiz-area');
-        const startCourseBtn = document.getElementById('start-course-btn');
-        const questionArea = document.getElementById('question-area');
-        const nextQuestionBtn = document.getElementById('next-question-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const feedbackArea = document.getElementById('feedback-area');
-        const achievementsBar = document.getElementById('achievements-bar');
-        const endScreen = document.getElementById('end-screen');
-        const finalScoreEl = document.getElementById('final-score');
-        const finalAchievementsEl = document.getElementById('final-achievements');
-        const restartBtn = document.getElementById('restart-btn');
-
-        const questions = [
-            { q: "What is the most powerful principle a father can use to challenge unfairness?", a: "The best interests of the child", o: ["The right to be heard", "The principle of redress"] },
-            { q: "Section 28 of the Constitution states that a child's best interests are...", a: "of paramount importance.", o: ["a secondary consideration.", "only important in divorce cases."] },
-            { q: "Why can Section 28 be more powerful than redress policies like BEE?", a: "Because it focuses on the individual child's welfare, not group politics.", o: ["Because it is a newer law.", "Because it only applies to fathers."] },
-            { q: "The phrase 'in every matter concerning the child' means the principle applies to...", a: "Workplace, school, and court matters.", o: ["Only matters in the Children's Court.", "Only financial matters."] },
-            { q: "True or False: An argument based on the child's best interests is often more effective than an argument based on personal unfairness.", a: "True", o: ["False"] },
-            { q: "When you argue from the 'best interests' principle, you are primarily arguing for...", a: "Your child's rights.", o: ["Your own rights.", "The mother's rights."] },
-            { q: "How should you frame an argument about a discriminatory policy?", a: "This policy harms my child by limiting my ability to provide for them.", o: ["This policy is unfair to me as a man.", "This policy is unconstitutional."] },
-            { q: "This approach shifts the focus away from divisive politics and towards...", a: "Universal child welfare.", o: ["Racial debates.", "Gender arguments."] },
-            { q: "A court is more likely to be sympathetic to an argument based on...", a: "A child's right to have a capable and present father.", o: ["A father's personal frustration.", "A desire for revenge against an ex-partner."] },
-            { q: "Using the 'best interests' principle makes your argument less about you and more about your...", a: "Duty as a parent.", o: ["Financial status.", "Personal feelings."] },
-            { q: "If a biased court ruling harms a child's relationship with their father, it is...", a: "Against the child's best interests.", o: ["Legally final and cannot be challenged.", "The mother's fault."] },
-            { q: "If a father is denied a promotion due to his race, how can he argue this affects his child?", a: "It impacts his ability to provide maintenance and opportunities.", o: ["It doesn't affect his child.", "He should just find another job."] },
-            { q: "This principle can be used to challenge biased recommendations from...", a: "Social workers and Family Advocates.", o: ["Teachers and school principals only.", "Police officers only."] },
-            { q: "The 'Father's Shield' is essentially using what as a tool for justice?", a: "The Constitution.", o: ["Public opinion.", "Personal wealth."] },
-            { q: "Sudden Death Scenario: A school's admission policy gives preference to children of single mothers, and your child is denied a place despite qualifying. What is your strongest legal argument?", a: "The policy discriminates against my child and is not in their best interests.", o: ["The school is being unfair to me as a father.", "The school has broken the rules of admission."], category: "sudden-death" }
-        ];
-
-        const achievements = {
-            5: { icon: 'fa-shield-alt', title: 'The Shield' },
-            10: { icon: 'fa-fist-raised', title: 'The Gauntlets' },
-            15: { icon: 'fa-hard-hat', title: 'The Helmet of Justice' }
-        };
-
-        let currentQuestionIndex = 0;
-        let score = 0;
-
-        function startGame() {
-            courseHub.classList.add('hidden');
-            quizArea.classList.remove('hidden');
-            endScreen.classList.add('hidden');
-            currentQuestionIndex = 0;
-            score = 0;
-            achievementsBar.innerHTML = '';
-            updateProgressBar();
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            feedbackArea.innerHTML = '';
-            nextQuestionBtn.classList.add('hidden');
-            const qData = questions[currentQuestionIndex];
-            
-            let optionsHTML = shuffleArray([...qData.o, qData.a]).map(opt => `<div class="quiz-option p-4 rounded-lg" data-answer="${opt === qData.a}">${opt}</div>`).join('');
-            
-            questionArea.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${qData.q}</p><div class="space-y-3">${optionsHTML}</div>`;
-            
-            questionArea.querySelectorAll('.quiz-option').forEach(opt => opt.addEventListener('click', handleAnswerClick));
-        }
-        
-        function handleAnswerClick(e) {
-            const selectedOption = e.target;
-            const isCorrect = selectedOption.dataset.answer === 'true';
-            
-            questionArea.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.style.pointerEvents = 'none';
-                if(opt.dataset.answer === 'true') opt.classList.add('correct');
-                else if (opt === selectedOption) opt.classList.add('incorrect');
-            });
-
-            if (isCorrect) {
-                feedbackArea.innerHTML = '<p class="text-green-400 font-bold">Correct! You are wielding your shield effectively.</p>';
-                score++;
-                checkAchievement();
-            } else {
-                feedbackArea.innerHTML = '<p class="text-red-400 font-bold">Not quite. Remember, always anchor your argument in the child\'s best interests.</p>';
-            }
-            nextQuestionBtn.classList.remove('hidden');
-        }
-
-        function checkAchievement() {
-            if (achievements[score]) {
-                const achievement = achievements[score];
-                const iconEl = document.createElement('i');
-                iconEl.className = `fas ${achievement.icon} achievement-unlocked`;
-                iconEl.title = achievement.title;
-                achievementsBar.appendChild(iconEl);
-            }
-        }
-        
-        function handleNextQuestion() {
-            currentQuestionIndex++;
-            updateProgressBar();
-            if (currentQuestionIndex < questions.length) {
-                loadQuestion();
-            } else {
-                showEndScreen();
-            }
-        }
-
-        function showEndScreen() {
-            quizArea.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            finalScoreEl.textContent = `${score} / ${questions.length}`;
-            finalAchievementsEl.innerHTML = achievementsBar.innerHTML;
-        }
-        
-        function updateProgressBar() {
-            const progress = (currentQuestionIndex / questions.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
-
-        function resetGame() {
-            endScreen.classList.add('hidden');
-            courseHub.classList.remove('hidden');
-        }
-
-        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
-
-        startCourseBtn.addEventListener('click', startGame);
-        nextQuestionBtn.addEventListener('click', handleNextQuestion);
-        restartBtn.addEventListener('click', resetGame);
-    });
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Fetch the sidebar from the root directory. This works from any page.
-        fetch('/training-sidebar.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
-                }
-                return response.text();
-            })
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching training sidebar:', error);
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    // Display an error message if the sidebar fails to load
-                    placeholder.innerHTML = '<div class="p-4"><p class="text-red-500">Error loading sidebar.</p></div>';
-                }
-            });
-    });
-</script>
+    <!-- Modal and Scripts -->
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
 </body>
 </html>

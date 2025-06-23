@@ -4,195 +4,153 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>The Big Rule Book - A Flamea Kids Course</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Fredoka+One&family=Mali:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/tone/14.7.77/Tone.js"></script>
     <style>
-        body { font-family: 'Mali', cursive; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        body { font-family: 'Mali', cursive; background: linear-gradient(135deg, #a7f3d0 0%, #6ee7b7 100%); }
         .game-title { font-family: 'Fredoka One', cursive; }
-        .btn-game { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
-        .btn-game:hover { transform: scale(1.05); }
         .wizard-container { background: rgba(255, 255, 255, 0.4); backdrop-filter: blur(10px); border: 2px solid rgba(255, 255, 255, 0.6); }
+        .btn { font-family: 'Fredoka One', cursive; transition: all 0.2s ease-in-out; }
+        .btn:hover { transform: scale(1.05); }
         .option-select { width: 100%; font-size: 1.1rem; padding: 0.75rem; border-radius: 0.5rem; border: 2px solid #34d399; background-color: white; color: #065f46; cursor: pointer; }
         .feedback-correct { color: #059669; }
         .feedback-incorrect { color: #dc2626; }
         .map-container { position: relative; max-width: 500px; }
-        .map-location { position: absolute; transition: transform 0.3s; cursor: pointer; }
+        .map-location { position: absolute; transition: transform 0.3s; }
         .map-location:hover { transform: scale(1.2); }
-        .map-location.completed .fa-stack-2x { color: #34d399; }
+        .map-location.completed .fa-stack-2x { color: #34d399; } /* Green-500 */
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-
-        <main class="main-content p-4 md:p-8 flex items-center justify-center">
-            
-            <!-- Game Hub (Start Screen) -->
-            <div id="course-hub" class="max-w-3xl mx-auto text-center">
-                <header class="mb-8">
-                    <div class="flex justify-center items-center gap-4 mb-4">
-                        <svg class="h-20 w-20 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5">
-                           <path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20v2H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2H20v15H6.5A2.5 2.5 0 0 1 4 17.5v-13zM14 8h-4v2h4V8zm-4 4h4v2h-4v-2z" fill="#34d399"/>
-                        </svg>
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Big Rule Book Quest</h1>
-                    </div>
-                    <p class="text-lg text-gray-300">A very important book, the Constitution, needs to be delivered to everyone in town to remind them of the rules! Can you help?</p>
-                </header>
-                <div class="bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl">
-                    <img src="https://placehold.co/150x150/34D399/FFFFFF?text=Hero" alt="Hero Character" class="mx-auto rounded-full mb-6 border-4 border-emerald-400">
-                    <button id="start-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl shadow-lg">Start Quest!</button>
-                </div>
-            </div>
-
-            <!-- Game Area (Initially Hidden) -->
-            <div id="game-container" class="wizard-container w-full max-w-3xl mx-auto rounded-2xl shadow-lg p-8 text-center text-gray-800 hidden">
-                <!-- Content changes dynamically with JS -->
-            </div>
-
-        </main>
+<body class="flex items-center justify-center min-h-screen p-4">
+    <div id="game-container" class="wizard-container w-full max-w-3xl mx-auto rounded-2xl shadow-lg p-8 text-center text-gray-800">
+        <!-- Content changes dynamically with JS -->
     </div>
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    const gameContainer = document.getElementById('game-container');
+    const questions = [
+        { location: 'School', q: 'The school principal makes a new rule: "Only kids with blue shoes can play on the swings." Is this a fair rule?', options: ['Yes, rules are rules', 'No, rules must be fair for everyone'], correctAnswer: 'No, rules must be fair for everyone', explanation: 'Correct! The Big Rule Book says everyone should be treated equally. The rule isn\'t fair!', icon: 'fa-school', top: '20%', left: '15%' },
+        { location: 'Police Station', q: 'A police officer sees someone being a bully. What should the officer do?', options: ['Join in the bullying', 'Protect the person being bullied'], correctAnswer: 'Protect the person being bullied', explanation: 'That\'s right! The Big Rule Book gives everyone the right to be safe, and it\'s the police\'s job to help protect that right.', icon: 'fa-building-shield', top: '45%', left: '75%' },
+        { location: 'Mayor\'s Office', q: 'The Mayor wants to build a new park. Where should it be built?', options: ['In the Mayor\'s backyard', 'In a place where all kids can play'], correctAnswer: 'In a place where all kids can play', explanation: 'Exactly! Leaders must use the Big Rule Book to make choices that are good for everybody, not just themselves.', icon: 'fa-landmark', top: '70%', left: '40%' }
+    ];
 
-    <!-- Sidebar Loader Script -->
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const placeholder = document.getElementById('sidebar-placeholder');
-        if(placeholder) {
-            fetch('../training-sidebar.html')
-                .then(res => res.ok ? res.text() : Promise.reject('Sidebar not found'))
-                .then(data => placeholder.outerHTML = data)
-                .catch(err => console.error('Sidebar load error:', err));
-        }
-    });
-    </script>
-    
-    <!-- Game Logic -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const courseHub = document.getElementById('course-hub');
-        const gameContainer = document.getElementById('game-container');
-        const startBtn = document.getElementById('start-btn');
-        if (!gameContainer || !startBtn) return;
+    let gameState = {
+        currentStep: 0,
+        score: 0,
+        locationsVisited: []
+    };
+     const correctSound = new Tone.Synth().toDestination();
+     const wrongSound = new Tone.Synth({ oscillator: { type: "square" } }).toDestination();
 
-        const questions = [
-            { location: 'School', q: 'The school principal makes a new rule: "Only kids with blue shoes can play on the swings." Is this a fair rule?', options: ['Yes, rules are rules', 'No, rules must be fair for everyone'], correctAnswer: 'No, rules must be fair for everyone', explanation: 'Correct! The Big Rule Book says everyone should be treated equally. The rule isn\'t fair!', icon: 'fa-school', top: '20%', left: '15%' },
-            { location: 'Police Station', q: 'A police officer sees someone being a bully. What should the officer do?', options: ['Join in the bullying', 'Protect the person being bullied'], correctAnswer: 'Protect the person being bullied', explanation: 'That\'s right! The Big Rule Book gives everyone the right to be safe, and it\'s the police\'s job to help protect that right.', icon: 'fa-building-shield', top: '45%', left: '75%' },
-            { location: 'Mayor\'s Office', q: 'The Mayor wants to build a new park. Where should it be built?', options: ['In the Mayor\'s backyard', 'In a place where all kids can play'], correctAnswer: 'In a place where all kids can play', explanation: 'Exactly! Leaders must use the Big Rule Book to make choices that are good for everybody, not just themselves.', icon: 'fa-landmark', top: '70%', left: '40%' }
-        ];
+    function renderStartScreen() {
+        gameContainer.innerHTML = `
+            <h1 class="game-title text-4xl md:text-5xl text-emerald-800 mb-4">The Big Rule Book Quest</h1>
+            <p class="mb-6">A very important book, the Constitution, needs to be delivered to everyone in town to remind them of the rules! Can you help?</p>
+            <img src="https://placehold.co/150x150/34D399/FFFFFF?text=Hero" alt="Hero Character" class="mx-auto rounded-full mb-6">
+            <button id="start-btn" class="btn bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl shadow-lg">Start Quest!</button>
+        `;
+        document.getElementById('start-btn').addEventListener('click', renderMapScreen);
+    }
 
-        let gameState = { currentStep: 0, score: 0, locationsVisited: [] };
-        const correctSound = new Tone.Synth().toDestination();
-        const wrongSound = new Tone.Synth({ oscillator: { type: "square" } }).toDestination();
-
-        function startGame() {
-            courseHub.classList.add('hidden');
-            gameContainer.classList.remove('hidden');
-            gameState = { currentStep: 0, score: 0, locationsVisited: [] }; // Reset game state
-            renderMapScreen();
-        }
-
-        function renderMapScreen() {
-            const locationsHTML = questions.map((q, index) => {
-                const isCompleted = gameState.locationsVisited.includes(index);
-                return `
-                    <div class="map-location ${isCompleted ? 'completed' : ''}" style="top: ${q.top}; left: ${q.left};" data-index="${index}">
-                        <span class="fa-stack fa-2x">
-                            <i class="fas fa-circle fa-stack-2x ${isCompleted ? 'text-green-500' : 'text-blue-500'}"></i>
-                            <i class="fas ${q.icon} fa-stack-1x fa-inverse"></i>
-                        </span>
-                    </div>`;
-            }).join('');
-
-            gameContainer.innerHTML = `
-                <h2 class="game-title text-3xl text-emerald-800 mb-4">Deliver the Big Rule Book!</h2>
-                <p class="mb-4">Click on a location to visit it.</p>
-                <div class="map-container mx-auto bg-blue-100 rounded-lg">
-                    <img src="https://placehold.co/500x300/A7F3D0/A7F3D0?text= " alt="Town Map" class="w-full h-auto rounded-lg">
-                    ${locationsHTML}
+    function renderMapScreen() {
+        const locationsHTML = questions.map((q, index) => {
+            const isCompleted = gameState.locationsVisited.includes(index);
+            return `
+                <div class="map-location" style="top: ${q.top}; left: ${q.left};" data-index="${index}">
+                    <span class="fa-stack fa-2x">
+                        <i class="fas fa-circle fa-stack-2x ${isCompleted ? 'text-green-500' : 'text-blue-500'}"></i>
+                        <i class="fas ${q.icon} fa-stack-1x fa-inverse"></i>
+                    </span>
                 </div>
-                <button id="back-to-hub" class="btn-game bg-gray-500 text-white py-2 px-4 rounded-full mt-6 text-sm">Back to Menu</button>
             `;
-            document.querySelectorAll('.map-location:not(.completed)').forEach(loc => {
+        }).join('');
+
+        gameContainer.innerHTML = `
+            <h2 class="game-title text-3xl text-emerald-800 mb-4">Deliver the Big Rule Book!</h2>
+            <p class="mb-4">Click on a location to visit it.</p>
+            <div class="map-container mx-auto bg-blue-100 rounded-lg">
+                <img src="https://placehold.co/500x300/A7F3D0/A7F3D0?text= " alt="Town Map" class="w-full h-auto rounded-lg">
+                ${locationsHTML}
+            </div>
+        `;
+        document.querySelectorAll('.map-location').forEach(loc => {
+            if (!gameState.locationsVisited.includes(parseInt(loc.dataset.index))) {
                 loc.addEventListener('click', (e) => {
                     const index = parseInt(e.currentTarget.dataset.index);
                     renderQuestionScreen(index);
                 });
-            });
-            document.getElementById('back-to-hub').addEventListener('click', () => {
-                gameContainer.classList.add('hidden');
-                courseHub.classList.remove('hidden');
-            });
-        }
-
-        function renderQuestionScreen(index) {
-            const questionData = questions[index];
-            const optionsHTML = shuffleArray([...questionData.options]).map(opt => `<option value="${opt}">${opt}</option>`).join('');
-            
-            gameContainer.innerHTML = `
-                <div class="text-left">
-                    <h2 class="game-title text-3xl mb-4">At the ${questionData.location}...</h2>
-                    <p class="text-xl font-semibold mb-4">${questionData.q}</p>
-                    <select id="answer-select" class="option-select">
-                        <option value="" disabled selected>Choose the best answer...</option>
-                        ${optionsHTML}
-                    </select>
-                    <div id="feedback-area" class="mt-4 min-h-[80px]"></div>
-                </div>`;
-
-            document.getElementById('answer-select').addEventListener('change', (e) => {
-                const selected = e.target.value;
-                const feedbackEl = document.getElementById('feedback-area');
-                e.target.disabled = true;
-
-                if (selected === questionData.correctAnswer) {
-                    correctSound.triggerAttackRelease("C5", "8n");
-                    feedbackEl.innerHTML = `<p class="feedback-correct font-bold text-lg">${questionData.explanation}</p>`;
-                    gameState.score += 10;
-                    gameState.locationsVisited.push(index);
-                } else {
-                    wrongSound.triggerAttackRelease("E3", "8n");
-                    feedbackEl.innerHTML = `<p class="feedback-incorrect font-bold text-lg">Oops! The correct answer is: "${questionData.correctAnswer}"</p>`;
-                }
-                
-                const nextButton = document.createElement('button');
-                if (gameState.locationsVisited.length === questions.length) {
-                    nextButton.textContent = 'Finish Quest!';
-                    nextButton.onclick = renderEndScreen;
-                } else {
-                    nextButton.textContent = 'Back to Map';
-                    nextButton.onclick = renderMapScreen;
-                }
-                nextButton.className = 'btn-game bg-blue-500 text-white py-2 px-6 rounded-full mt-4';
-                feedbackEl.appendChild(nextButton);
-            });
-        }
-        
-        function renderEndScreen() {
-            const designation = (score) => score >= questions.length * 10 ? (Math.random() > 0.5 ? 'Justice Junior' : 'Constitution Kid') : 'Brave Helper';
-            gameContainer.innerHTML = `
-                <h1 class="game-title text-4xl text-green-600 mb-4">Quest Complete!</h1>
-                <p class="mb-4 text-xl">You delivered the Big Rule Book to everyone! You scored ${gameState.score} points.</p>
-                <p class="text-2xl font-bold text-yellow-500 mb-6">You've earned the title: ${designation(gameState.score)}!</p>
-                <div class="text-6xl mb-6">🏆</div>
-                <button id="play-again-btn" class="btn-game bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl">Play Again</button>
-            `;
-            document.getElementById('play-again-btn').addEventListener('click', startGame);
-        }
-        
-        function shuffleArray(array) {
-            for (let i = array.length - 1; i > 0; i--) {
-                const j = Math.floor(Math.random() * (i + 1));
-                [array[i], array[j]] = [array[j], array[i]];
             }
-            return array;
+        });
+    }
+
+    function renderQuestionScreen(index) {
+        const questionData = questions[index];
+        const optionsHTML = shuffleArray([...questionData.options]).map(opt => `<option value="${opt}">${opt}</option>`).join('');
+        
+        gameContainer.innerHTML = `
+            <div class="text-left">
+                <h2 class="game-title text-3xl mb-4">At the ${questionData.location}...</h2>
+                <p class="text-xl font-semibold mb-4">${questionData.q}</p>
+                <select id="answer-select" class="option-select">
+                    <option value="" disabled selected>Choose the best answer...</option>
+                    ${optionsHTML}
+                </select>
+                <div id="feedback-area" class="mt-4 min-h-[80px]"></div>
+            </div>
+        `;
+
+        document.getElementById('answer-select').addEventListener('change', (e) => {
+            const selected = e.target.value;
+            const feedbackEl = document.getElementById('feedback-area');
+            document.getElementById('answer-select').disabled = true;
+
+            if (selected === questionData.correctAnswer) {
+                correctSound.triggerAttackRelease("C5", "8n");
+                feedbackEl.innerHTML = `<p class="feedback-correct font-bold text-lg">${questionData.explanation}</p>`;
+                gameState.score += 10;
+                gameState.locationsVisited.push(index);
+            } else {
+                wrongSound.triggerAttackRelease("E3", "8n");
+                feedbackEl.innerHTML = `<p class="feedback-incorrect font-bold text-lg">Oops! That's not quite right. The correct answer is: "${questionData.correctAnswer}"</p>`;
+            }
+            
+            const nextButton = document.createElement('button');
+            if (gameState.locationsVisited.length === questions.length) {
+                nextButton.textContent = 'Finish Quest!';
+                nextButton.onclick = renderEndScreen;
+            } else {
+                nextButton.textContent = 'Back to Map';
+                nextButton.onclick = renderMapScreen;
+            }
+            nextButton.className = 'btn bg-blue-500 text-white py-2 px-6 rounded-full mt-4';
+            feedbackEl.appendChild(nextButton);
+        });
+    }
+    
+    function renderEndScreen() {
+        const designation = (score) => score >= questions.length * 10 ? (Math.random() > 0.5 ? 'Justice Junior' : 'Constitution Kid') : 'Brave Helper';
+        gameContainer.innerHTML = `
+            <h1 class="game-title text-4xl text-green-600 mb-4">Quest Complete!</h1>
+            <p class="mb-4 text-xl">You delivered the Big Rule Book to everyone! You scored ${gameState.score} points.</p>
+            <p class="text-2xl font-bold text-yellow-500 mb-6">You've earned the title: ${designation(gameState.score)}!</p>
+            <div class="text-6xl mb-6">🏆</div>
+            <button id="play-again-btn" class="btn bg-green-500 hover:bg-green-600 text-white py-3 px-8 rounded-full text-xl">Play Again</button>
+        `;
+        document.getElementById('play-again-btn').addEventListener('click', renderStartScreen);
+    }
+    
+    function shuffleArray(array) {
+        for (let i = array.length - 1; i > 0; i--) {
+            const j = Math.floor(Math.random() * (i + 1));
+            [array[i], array[j]] = [array[j], array[i]];
         }
+        return array;
+    }
 
-        startBtn.addEventListener('click', startGame);
-    });
-    </script>
-
+    renderStartScreen();
+});
+</script>
 </body>
 </html>

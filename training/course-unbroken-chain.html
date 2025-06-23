@@ -1,224 +1,107 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - The Unbroken Chain</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); border-color: #f59e0b; }
-        .module-card.selected { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
-        .prose h2 { color: #fcd34d; } .prose h3 { color: #fde68a; } .prose strong { color: #fde68a; }
-        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
+        /* Re-using the same styles from the master course template with a new color scheme */
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #D97706; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #F59E0B; padding-bottom: 0.5rem; color: #FBBF24;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #FCD34D;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #FCD34D; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #B45309; border-color: #D97706; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #F59E0B; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(245, 158, 11, 0.2); border: 1px solid #F59E0B; color: white; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
+<body class="bg-gray-800 text-white">
     <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-        <main class="main-content p-4 md:p-8 flex items-center justify-center">
-            
-            <div id="course-hub" class="max-w-4xl mx-auto text-center">
-                <header class="mb-12">
-                    <div class="flex justify-center items-center gap-4 mb-4">
-                        <!-- SVG Icon for Unbroken Chain -->
-                        <svg class="h-20 w-20 text-yellow-500" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="2">
-                            <path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.72"></path>
-                            <path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.72-1.72"></path>
-                        </svg>
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Unbroken Chain</h1>
-                    </div>
-                    <p class="text-lg text-gray-300">Inspired by "Beyond the Grave," this course explores the profound isiXhosa concept of legacy, duty, and the difference between a Successor and an Heir.</p>
-                </header>
-
-                <section id="module-selection-section">
-                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Explore the Modules</h2>
-                    <div id="module-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="1">
-                            <h3 class="text-xl font-bold text-white mb-2">Defining the Roles</h3>
-                            <p class="text-gray-400 text-sm">Learn the critical difference between a Western 'Heir' and an isiXhosa 'Successor' (Indlalifa).</p>
-                        </div>
-                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="2">
-                            <h3 class="text-xl font-bold text-white mb-2">The Successor's Duties</h3>
-                            <p class="text-gray-400 text-sm">Understand the responsibilities of carrying the family name and managing its legacy.</p>
-                        </div>
-                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="3">
-                            <h3 class="text-xl font-bold text-white mb-2">Legacy in the Modern World</h3>
-                            <p class="text-gray-400 text-sm">How to apply these traditional duties with wisdom in today's society.</p>
-                        </div>
-                    </div>
-                </section>
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-yellow-500">A</span></a>
+             <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Defining the Roles</a>
+                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Successor's Duties</a>
+                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Legacy in the Modern World</a>
+            </nav>
+            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
+                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
             </div>
-            
-            <!-- Course Content & Quiz Area (Initially Hidden) -->
-            <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
-                <div id="module-content" class="prose max-w-none prose-invert mb-8 bg-slate-800/70 p-6 rounded-lg"></div>
-                <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Wisdom</button>
-                <section id="quiz-section" class="quiz-section mt-8 p-8 rounded-lg hidden"></section>
-                <div id="end-screen" class="end-screen mt-8 p-8 rounded-lg hidden text-center"></div>
-                <button id="back-to-hub-btn" class="btn btn-secondary mt-4">Back to Modules</button>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
             </div>
+        </aside>
 
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+             <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-yellow-500">The Unbroken Chain: Successor vs. Heir</h1>
+                    <p class="text-lg text-gray-400 mt-2">Inspired by "Beyond the Grave," this course explores the profound Xhosa concept of legacy and duty.</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #F59E0B;"></div>
+                </div>
+
+                 <!-- Course Content Area -->
+                <div class="prose max-w-none prose-invert">
+                    <!-- Module 1: Defining the Roles -->
+                    <div id="module1" class="module active">
+                        <section>
+                            <h2>Module 1: Defining the Roles - Successor (Indlalifa) vs. Heir</h2>
+                            <p>In the modern world, influenced by Western law, the terms "successor" and "heir" are often used interchangeably. However, in traditional isiXhosa culture, their meanings are profoundly different. Understanding this distinction is key to grasping the deep sense of responsibility and legacy that defines the role of a firstborn son.</p>
+                            
+                            <h3>A. The Western Concept: The Heir</h3>
+                            <p>In Western legal systems, an <strong>heir</strong> is primarily someone who <strong>inherits assets</strong>—money, property, and possessions. Their role is largely passive; they receive what is left to them. While there may be an emotional connection to the deceased, the legal duty is transactional and focuses on the transfer of wealth.</p>
+                             <!-- SVG: Simple scales of justice with money on one side -->
+                            <div class="bg-gray-900 p-6 rounded-lg my-6 flex justify-center">
+                               <svg width="200" height="150" viewBox="0 0 200 150" xmlns="http://www.w3.org/2000/svg"><style>.svg-text{font-family: 'Open Sans', sans-serif; fill: white; font-size: 12px; text-anchor: middle;}</style><path d="M 10 130 H 190" stroke="#FBBF24" stroke-width="3"/><path d="M 100 130 V 20" stroke="#FBBF24" stroke-width="3"/><path d="M 40 20 H 160" stroke="#FBBF24" stroke-width="3"/><circle cx="50" cy="50" r="25" fill="none" stroke="#FBBF24" stroke-width="2"/><text x="50" y="55" class="svg-text" font-size="20">$</text><path d="M 100 20 L 50 40" stroke="#FBBF24" stroke-width="2"/><circle cx="150" cy="50" r="25" fill="none" stroke="#FBBF24" stroke-width="2"/><text x="150" y="55" class="svg-text">Assets</text><path d="M 100 20 L 150 40" stroke="#FBBF24" stroke-width="2"/></svg>
+                            </div>
+
+                            <h3>B. The isiXhosa Concept: The Successor (Indlalifa)</h3>
+                            <p>In isiXhosa culture, the firstborn son is the <strong>Indlalifa</strong>, which means "the one who eats the inheritance," but its true meaning is far deeper. He is the <strong>successor</strong> to his father's role. He does not just inherit assets; he inherits <strong>responsibility</strong> for the entire family. He becomes the custodian of the family's name, its spiritual well-being, and its future. The assets he manages are not his to spend, but are for the benefit of the entire family, present and future.</p>
+                            <p>This is a fundamental concept for South African fathers. While you must navigate the legalities of Western inheritance law, understanding your cultural role as an Indlalifa provides a powerful moral and spiritual compass. It is a call to leadership, service, and the preservation of your family's unbroken chain.</p>
+                        </section>
+                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+                    </div>
+                     <!-- Other modules and quizzes follow -->
+                </div>
+            </div>
         </main>
     </div>
-
-    <!-- Sidebar Loader Script -->
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            const placeholder = document.getElementById('sidebar-placeholder');
-            if(placeholder) {
-                fetch('../training-sidebar.html')
-                    .then(res => res.ok ? res.text() : Promise.reject('Sidebar not found'))
-                    .then(data => placeholder.outerHTML = data)
-                    .catch(err => console.error('Sidebar load error:', err));
-            }
-        });
-    </script>
-    
-    <!-- Game Logic -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const courseHub = document.getElementById('course-hub');
-        const contentArea = document.getElementById('content-area');
-        const moduleContentEl = document.getElementById('module-content');
-        const quizSection = document.getElementById('quiz-section');
-        const startQuizBtn = document.getElementById('start-quiz-btn');
-        const backToHubBtn = document.getElementById('back-to-hub-btn');
-        const endScreen = document.getElementById('end-screen');
-        const moduleCards = document.querySelectorAll('.module-card');
-
-        const courseContent = {
-            1: {
-                title: 'Module 1: Defining the Roles - Successor (Indlalifa) vs. Heir',
-                content: `
-                    <p>In the modern world, influenced by Western law, the terms "successor" and "heir" are often used interchangeably. However, in traditional isiXhosa culture, their meanings are profoundly different. Understanding this distinction is key to grasping the deep sense of responsibility and legacy that defines the role of a firstborn son.</p>
-                    <h3>The Western Concept: The Heir</h3>
-                    <p>In Western legal systems, an <strong>heir</strong> is primarily someone who <strong>inherits assets</strong>—money, property, and possessions. Their role is largely passive; they receive what is left to them. While there may be an emotional connection to the deceased, the legal duty is transactional and focuses on the transfer of wealth.</p>
-                    <h3>The isiXhosa Concept: The Successor (Indlalifa)</h3>
-                    <p>In isiXhosa culture, the firstborn son is the <strong>Indlalifa</strong>, which means "the one who eats the inheritance," but its true meaning is far deeper. He is the <strong>successor</strong> to his father's role. He does not just inherit assets; he inherits <strong>responsibility</strong> for the entire family. He becomes the custodian of the family's name, its spiritual well-being, and its future. The assets he manages are not his to spend, but are for the benefit of the entire family, present and future.</p>
-                `,
-                questions: [
-                    { q: "In Western law, what does an 'heir' primarily inherit?", a: "Assets like money and property", o: ["Responsibilities and duties", "A title with no assets"] },
-                    { q: "What is the deeper meaning of 'Indlalifa' in isiXhosa culture?", a: "One who inherits responsibility for the family", o: ["The wealthiest member of the family", "The one who gets all the money"] }
-                ]
-            },
-            2: {
-                title: "Module 2: The Successor's Duties",
-                content: `
-                    <h3>A Duty of Stewardship</h3>
-                    <p>The Indlalifa is a steward, not an owner in the Western sense. He must manage the family's resources wisely to ensure the well-being of his mother, his siblings, and future generations. This includes providing support, resolving disputes, and making decisions that benefit the collective, not just himself.</p>
-                    <h3>A Spiritual Responsibility</h3>
-                    <p>The successor is also the primary link to the ancestors. It is his duty to ensure that traditions are respected and that the family remains connected to its spiritual roots. This is not about power, but about service to the family, both living and deceased.</p>
-                `,
-                questions: [
-                    { q: "What is the primary role of an Indlalifa regarding family assets?", a: "To manage them for the benefit of the whole family", o: ["To spend them as he wishes", "To sell them immediately"] },
-                    { q: "The successor's spiritual duty involves connecting the family to what?", a: "The ancestors", o: ["The government", "Financial institutions"] }
-                ]
-            },
-            3: {
-                title: "Module 3: Legacy in the Modern World",
-                content: `
-                    <h3>Balancing Two Worlds</h3>
-                    <p>As a modern South African father, you must navigate both Western law (e.g., creating a will) and your cultural duties. You can do both. Your will can reflect your role as a steward, ensuring assets are structured to support the family, not just be divided and consumed.</p>
-                    <h3>The Power of Your Role</h3>
-                    <p>Understanding your role as an Indlalifa is a source of immense strength. It provides a moral compass that guides you to be a leader, a provider, and a protector. It frames fatherhood not as a burden, but as a noble calling to continue an unbroken chain of legacy and responsibility.</p>
-                `,
-                questions: [
-                    { q: "Can a modern father fulfill his role as Indlalifa while also following Western law?", a: "Yes, by structuring legal documents to reflect his duties.", o: ["No, the two systems are incompatible.", "Only if he gives away all assets."] },
-                    { q: "Viewing yourself as a successor provides a...?", a: "Moral and spiritual compass", o: ["Reason to ignore modern law", "Way to claim all property for yourself"] }
-                ]
-            }
-        };
-
-        let currentModuleData = {};
-        let currentQuestionIndex = 0;
-        let score = 0;
-        
-        function displayModule(moduleNum) {
-            currentModuleData = courseContent[moduleNum];
-            courseHub.classList.add('hidden');
-            contentArea.classList.remove('hidden');
-            quizSection.classList.add('hidden');
-            endScreen.classList.add('hidden');
-            startQuizBtn.classList.remove('hidden');
-            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
-        }
-        
-        function setupQuiz() {
-            startQuizBtn.classList.add('hidden');
-            quizSection.classList.remove('hidden');
-            currentQuestionIndex = 0;
-            score = 0;
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            const questionData = currentModuleData.questions[currentQuestionIndex];
-            let optionsHTML = shuffleArray([...questionData.o, questionData.a])
-                .map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700 cursor-pointer" data-answer="${opt === questionData.a}">${opt}</div>`)
-                .join('');
-            quizSection.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p><div class="space-y-3">${optionsHTML}</div><div class="feedback mt-4 text-sm p-3 rounded-lg"></div>`;
-        }
-
-        function handleAnswerClick(e) {
-            if (!e.target.classList.contains('quiz-option')) return;
-            const selectedOption = e.target;
-            const isCorrect = selectedOption.dataset.answer === 'true';
-            const feedbackDiv = quizSection.querySelector('.feedback');
-            
-            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
-
-            if (isCorrect) {
-                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
-                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! You carry the wisdom of your lineage.</p>';
-                score++;
-            } else {
-                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
-                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Reflect on the module content.</p>';
-            }
-
-            setTimeout(() => {
-                currentQuestionIndex++;
-                if (currentQuestionIndex < currentModuleData.questions.length) {
-                    loadQuestion();
-                } else {
-                    showEndScreen();
-                }
-            }, 2000);
-        }
-
-        function showEndScreen() {
-            quizSection.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            endScreen.innerHTML = `<h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2><p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p><p class="mt-4">You have honored the unbroken chain.</p>`;
-        }
-        
-        function goBackToHub() {
-            contentArea.classList.add('hidden');
-            courseHub.classList.remove('hidden');
-            moduleCards.forEach(c => c.classList.remove('selected'));
-        }
-
-        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
-
-        moduleCards.forEach(card => card.addEventListener('click', () => {
-            selectCard(card, 'module');
-            displayModule(parseInt(card.dataset.module));
-        }));
-        startQuizBtn.addEventListener('click', setupQuiz);
-        quizSection.addEventListener('click', handleAnswerClick);
-        backToHubBtn.addEventListener('click', goBackToHub);
-        
-        function selectCard(card, cardType) {
-            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-        }
-    });
-    </script>
+    <!-- Modal and Scripts would be identical to the master template -->
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
 </body>
 </html>

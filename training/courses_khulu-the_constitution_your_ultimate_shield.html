@@ -1,18 +1,16 @@
+<!-- courses_khulu-the_constitution_your_ultimate_shield.html -->
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khulu Courses: The Constitution, Your Ultimate Shield</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .topic-card, .level-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .topic-card:hover, .level-card:hover { transform: translateY(-5px); border-color: #f59e0b; }
-        .topic-card.selected, .level-card.selected { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
+        body { font-family: 'Open Sans', sans-serif; background-color: #1a202c; }
+        .course-container { background-color: #1f2937; border: 1px solid #4b5563; }
         .ndebele-border { border: 10px solid; border-image-slice: 1; border-width: 10px; border-image-source: linear-gradient(to left, #f59e0b, #ef4444, #3b82f6, #10b981); }
         .progress-bar-bg { background-color: #374151; }
         .progress-bar-fill { background-color: #f59e0b; transition: width 0.5s ease-in-out; }
@@ -22,104 +20,43 @@
         .modal-backdrop { background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
     </style>
 </head>
-<body class="bg-gray-100 dark:bg-gray-900 font-sans flex">
-    
-    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
-    
-    <div class="flex-1 flex flex-col">
-        <main class="main-content p-8 md:p-12">
-            <div id="course-hub" class="max-w-4xl mx-auto">
-                <header class="text-center mb-12">
-                    <div class="flex justify-center items-center gap-4 mb-4">
-                        <svg class="h-16 w-16 text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2L4 5v6.09c0 4.97 3.58 9.38 8 10.91c4.42-1.53 8-5.94 8-10.91V5L12 2z" />
-                        </svg>
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Constitution: Your Ultimate Shield</h1>
-                    </div>
-                    <p class="text-lg text-gray-300">As a Khulu, a father, an elder—your wisdom is the shield that protects your family. This course sharpens that shield with the supreme law of the land.</p>
-                </header>
+<body class="text-gray-200 min-h-screen flex items-center justify-center p-4">
 
-                <section class="mb-12">
-                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Step 1: Choose Your Area of Knowledge</h2>
-                    <div id="topic-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="bill_of_rights">
-                             <i class="fas fa-users text-4xl text-blue-400 mb-3"></i>
-                            <h3 class="text-xl font-bold text-white mb-2">The Bill of Rights</h3>
-                            <p class="text-gray-400 text-sm">Understand the fundamental rights that protect you and your children, from equality to dignity.</p>
-                        </div>
-                        <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="branches">
-                             <i class="fas fa-sitemap text-4xl text-green-400 mb-3"></i>
-                            <h3 class="text-xl font-bold text-white mb-2">Structure of State</h3>
-                            <p class="text-gray-400 text-sm">Learn how power is balanced between the Legislature, Executive, and Judiciary.</p>
-                        </div>
-                        <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="customary_law">
-                             <i class="fas fa-feather-alt text-4xl text-yellow-400 mb-3"></i>
-                            <h3 class="text-xl font-bold text-white mb-2">Customary Law & The Constitution</h3>
-                            <p class="text-gray-400 text-sm">Explore how traditional law interacts with and is subject to the supreme law of the land.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <section class="mb-12 hidden" id="level-selection-section">
-                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Step 2: Choose Your Level of Wisdom</h2>
-                    <div id="level-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <div class="level-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-level="1">
-                            <i class="fas fa-star text-3xl text-yellow-500 mb-3"></i>
-                            <h3 class="text-xl font-bold text-white">Beginner</h3>
-                            <p class="text-gray-400 text-sm">Learn the fundamentals.</p>
-                        </div>
-                        <div class="level-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-level="2">
-                           <div class="flex justify-center mb-3"><i class="fas fa-star text-3xl text-yellow-500"></i><i class="fas fa-star text-3xl text-yellow-500"></i></div>
-                            <h3 class="text-xl font-bold text-white">Intermediate</h3>
-                            <p class="text-gray-400 text-sm">Test your growing knowledge.</p>
-                        </div>
-                        <div class="level-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-level="3">
-                            <div class="flex justify-center mb-3"><i class="fas fa-star text-3xl text-yellow-500"></i><i class="fas fa-star text-3xl text-yellow-500"></i><i class="fas fa-star text-3xl text-yellow-500"></i></div>
-                            <h3 class="text-xl font-bold text-white">Elder's Wisdom</h3>
-                            <p class="text-gray-400 text-sm">Master the law like a Khulu.</p>
-                        </div>
-                    </div>
-                </section>
-
-                <div class="text-center">
-                    <button id="start-course-btn" class="hidden bg-green-600 hover:bg-green-700 text-white font-bold py-3 px-12 rounded-lg text-lg">Begin Lesson</button>
-                </div>
+    <div class="course-container ndebele-border w-full max-w-3xl rounded-2xl shadow-2xl p-8">
+        <div id="quiz-area">
+            <div class="mb-6 text-center">
+                <h1 class="text-3xl font-bold font-roboto-slab text-yellow-400">The Constitution: Your Ultimate Shield</h1>
+                <p class="text-indigo-300">Level <span id="level-display">1</span> of 3</p>
             </div>
+            
+            <!-- Progress Bar -->
+            <div class="progress-bar-bg w-full rounded-full h-2.5 mb-4"><div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%"></div></div>
 
-            <div id="quiz-area" class="course-container ndebele-border w-full max-w-3xl rounded-2xl shadow-2xl p-8 mx-auto hidden">
-                <div class="mb-6 text-center">
-                    <h2 class="text-2xl font-bold font-roboto-slab text-yellow-400" id="quiz-title">Quiz Title</h2>
-                    <p class="text-indigo-300">Level <span id="level-display">1</span></p>
-                </div>
-                
-                <div class="progress-bar-bg w-full rounded-full h-2.5 mb-4"><div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%"></div></div>
-
-                <div id="question-container" class="bg-gray-800/70 backdrop-blur-sm p-6 rounded-lg">
-                    <h3 id="question-text" class="text-xl font-semibold mb-4 min-h-[60px]"></h3>
-                    <select id="answer-options" class="option-select bg-gray-200 text-gray-800 p-3 rounded-lg w-full text-lg">
-                        <option value="" disabled selected>Select your answer</option>
-                    </select>
-                </div>
-                
-                <div id="feedback-container" class="mt-4 min-h-[120px]"></div>
-
-                <div class="flex justify-between items-center mt-4">
-                     <button id="back-to-hub-btn" class="bg-gray-600 hover:bg-gray-700 text-white font-bold py-2 px-6 rounded-lg">Change Topic</button>
-                     <button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-8 rounded-lg hidden">Next</button>
-                </div>
+            <div id="question-container" class="bg-gray-800 p-6 rounded-lg">
+                <h2 id="question-text" class="text-xl font-semibold mb-4 min-h-[60px]"></h2>
+                <select id="answer-options" class="option-select bg-gray-200 text-gray-800 p-3 rounded-lg w-full text-lg">
+                    <option value="" disabled selected>Select your answer</option>
+                </select>
             </div>
+            
+            <div id="feedback-container" class="mt-4 min-h-[120px]"></div>
 
-            <div id="end-screen" class="text-center hidden bg-slate-800/80 backdrop-blur-sm p-8 rounded-xl">
-                 <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Course Complete!</h2>
-                 <p class="text-xl mt-4">You have mastered the foundations of your rights. Your wisdom is a shield for your family.</p>
-                 <p class="text-2xl mt-2">Final Score: <span id="final-score" class="font-bold"></span></p>
-                 <i class="fas fa-award text-8xl text-yellow-400 my-6"></i>
-                 <button id="restart-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-10 rounded-lg text-xl">Start Over</button>
+            <div class="flex justify-end mt-4">
+                 <button id="next-btn" class="bg-indigo-600 hover:bg-indigo-700 text-white font-bold py-2 px-8 rounded-lg hidden">Next</button>
             </div>
-        </main>
+        </div>
+
+        <div id="end-screen" class="text-center hidden">
+             <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Course Complete!</h2>
+             <p class="text-xl mt-4">You have mastered the foundations of your rights. Your wisdom is a shield for your family.</p>
+             <p class="text-2xl mt-2">Final Score: <span id="final-score" class="font-bold"></span></p>
+             <i class="fas fa-award text-8xl text-yellow-400 my-6"></i>
+             <button id="restart-btn" class="bg-yellow-500 hover:bg-yellow-600 text-black font-bold py-3 px-10 rounded-lg text-xl">Start Over</button>
+        </div>
     </div>
 
-    <div id="award-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden z-50">
+    <!-- Award Modal -->
+    <div id="award-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden">
         <div class="bg-gray-800 p-8 rounded-lg text-center border-4 ndebele-border">
             <i class="fas fa-trophy text-7xl text-yellow-400 mb-4"></i>
             <h2 id="award-title" class="text-3xl font-bold font-roboto-slab"></h2>
@@ -129,56 +66,31 @@
     </div>
     
     <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('training-sidebar.html')
-            .then(response => response.text())
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                    const scriptEl = placeholder.querySelector('script');
-                    if (scriptEl) eval(scriptEl.innerHTML);
-                }
-            }).catch(error => console.error('Error fetching training sidebar:', error));
-
-        const courseHub = document.getElementById('course-hub');
+        // JS for Course 1: The Constitution: Your Ultimate Shield
+        const courseData1 = [
+            // Level 1: Easy
+            { q: "What is the highest, most powerful law in all of South Africa?", a: "The Constitution", o: ["The President's rules", "The Police's rules"], exp: "Correct. The Constitution is the 'Big Rule Book'. All other laws and all people, including the President, must follow it." },
+            { q: "A new local rule says only people who own a car can use the public park. Does this sound fair according to the Constitution?", a: "No, it's unfair discrimination", o: ["Yes, if the mayor says so"], exp: "Exactly. The Constitution's Bill of Rights protects everyone's right to be treated equally and use public places." },
+            { q: "What does the 'Right to Dignity' mean?", a: "It means everyone must be treated with respect", o: ["It means you must be rich", "It means you can do whatever you want"], exp: "Yes! Everyone, young and old, deserves to be treated with respect. It's a core value that protects your worth as a person." },
+            { q: "If the government wants to take your land for a new road, what must they do according to the Constitution?", a: "Pay you a fair price for it", o: ["Just take it", "Ask you to move for free"], exp: "That's right. While the government can buy land for public use, it must pay a fair and just amount. Your rights are protected." },
+            { q: "Who does the Bill of Rights protect?", a: "Everyone in South Africa", o: ["Only the leaders", "Only children"], exp: "Correct! The Bill of Rights is a shield for every single person in the country, ensuring their basic freedoms and protections." },
+            // Level 2: Medium
+            { q: "A new law is passed that says people from the Eastern Cape cannot move to Johannesburg. What is this law?", a: "Unconstitutional", o: ["A good idea", "A provincial rule"], exp: "Exactly. The Constitution guarantees freedom of movement for all citizens. That law would be struck down by the courts." },
+            { q: "You hear a story on the news that sounds untrue. What right allows newspapers to report news but also requires them to be truthful?", a: "Freedom of Expression", o: ["Right to Information", "Right to Privacy"], exp: "Correct. Freedom of Expression is vital, but it comes with the responsibility not to spread lies or cause harm." },
+            { q: "As a grandparent raising a grandchild, do you have rights to seek help from the government?", a: "Yes, you can apply for social grants like the Child Support Grant", o: ["No, it's only for parents"], exp: "Yes! The Constitution provides for social assistance. As a primary caregiver, you have the right to apply for grants to help raise your grandchild." },
+            { q: "If a police officer wants to search your home, what do they usually need?", a: "A warrant from a court", o: ["To just ask nicely", "Your neighbour's permission"], exp: "Correct. Your right to privacy means officials can't just enter your home. They need a legal document called a warrant, unless in very specific emergency situations." },
+            { q: "The government is divided into three branches to keep power balanced. What are they?", a: "Legislative, Executive, Judicial", o: ["Police, Army, Doctors", "President, Mayor, Chief"], exp: "Excellent. This 'separation of powers' ensures no single part of government becomes too powerful." },
+            // Level 3: Hard
+            { q: "What does it mean that the Constitution has 'vertical' and 'horizontal' application?", a: "It protects you from the state (vertical) and from other people (horizontal)", o: ["It's written up and down", "Some parts are more important than others"], exp: "Precisely. It's a powerful shield that works in all directions, protecting your rights from government overreach and from being violated by other citizens or private companies." },
+            { q: "If a customary law, like an inheritance rule, treats women unfairly, what happens?", a: "The Constitution's equality clause overrides the customary law", o: ["The customary law must be followed", "You have to choose which one to follow"], exp: "Correct. While customary law is respected, it cannot violate the fundamental rights in the Constitution, especially the right to equality." },
+            { q: "What is the 'Best Interests of the Child' principle?", a: "In any matter concerning a child, their well-being is the most important consideration", o: ["It means the child always gets what they want", "It's a rule for schools only"], exp: "You've got it. This is a golden rule in our law. It ensures children's safety and development are prioritized in all decisions, from family disputes to government policy." },
+            { q: "You want to know why your pension application was denied. Which law helps you get this information from the government?", a: "Promotion of Access to Information Act (PAIA)", o: ["The Secrets Act", "The Pension Act"], exp: "Exactly right. PAIA is a tool that empowers you to demand transparency and hold government departments accountable by requesting records and reasons for their decisions." },
+            { q: "If a municipality is failing to provide clean water, what right is being violated?", a: "The right to an environment not harmful to health and the right to access to water", o: ["The right to complain", "The right to free services"], exp: "Correct. These are fundamental socio-economic rights. You and your community can use the law to challenge the municipality to fulfil its constitutional duty." }
+        ];
+        
+        // This script can be reused for all Khulu courses by changing the courseData variable.
         const quizArea = document.getElementById('quiz-area');
         const endScreen = document.getElementById('end-screen');
-        
-        const topicCards = document.querySelectorAll('.topic-card');
-        const levelCards = document.querySelectorAll('.level-card');
-        const levelSelectionSection = document.getElementById('level-selection-section');
-        const startCourseBtn = document.getElementById('start-course-btn');
-        const backToHubBtn = document.getElementById('back-to-hub-btn');
-
-        let selectedTopic = null;
-        let selectedLevel = null;
-        let questions = [];
-
-        const courseData = {
-            bill_of_rights: [
-                { q: "What is the highest law in South Africa?", a: "The Constitution", o: ["The President's rules", "Police regulations"], exp: "The Constitution is the 'Big Rule Book' that everyone, including the President, must follow." },
-                { q: "What does the 'Right to Dignity' mean for a child?", a: "To be treated with respect and not be humiliated.", o: ["To get new toys every day.", "To never be told 'no'." ], exp: "Dignity means everyone deserves to be treated with respect and feel valued, which is a core constitutional right." },
-                { q: "If a school rule says only boys can play soccer, what right might be affected?", a: "The Right to Equality", o: ["The Right to Play", "The Right to Education"], exp: "Correct. Section 9 ensures no one is unfairly discriminated against based on gender." },
-                { q: "What is the 'Best Interests of the Child' principle?", a: "In any matter concerning a child, their well-being is the most important consideration", o: ["The child always gets what they want", "It's a rule for schools only"], exp: "This is a golden rule in our law. It ensures children's safety and development are prioritized." },
-                { q: "If a parent is denied a job unfairly, how could this affect their child's rights?", a: "It can affect the child's right to basic nutrition and shelter.", o: ["It doesn't affect the child.", "The child can get the job instead."], exp: "A parent's ability to provide is directly linked to the child's basic rights. Unfairness to a parent harms the child." }
-            ],
-            branches: [
-                 { q: "Which branch of government MAKES the laws?", a: "Legislature (Parliament)", o: ["Executive (The President)", "Judiciary (The Courts)"], exp: "Parliament's main job is to create, amend, and repeal laws for the country." },
-                 { q: "Who is the head of the Executive branch?", a: "The President", o: ["The Chief Justice", "The Speaker of Parliament"], exp: "The President, along with the Cabinet, is responsible for implementing and enforcing the laws." },
-                 { q: "What is the main role of the Judiciary?", a: "To interpret laws and ensure they are applied fairly.", o: ["To arrest criminals.", "To write new laws."], exp: "The courts and judges make up the Judiciary. Their job is to settle disputes and act as guardians of the Constitution." },
-                 { q: "Why is it important to have three separate branches of government?", a: "To prevent any one branch from becoming too powerful.", o: ["To make government more complicated.", "To create more jobs for politicians."], exp: "This 'separation of powers' is a key check and balance in our democracy, protecting citizens from abuse of power." },
-                 { q: "If Parliament passes a law that contradicts the Bill of Rights, which branch can declare it invalid?", a: "The Judiciary (specifically the Constitutional Court)", o: ["The Executive", "The Police"], exp: "The courts have the power of judicial review to ensure all laws are constitutional." }
-            ],
-            customary_law: [
-                { q: "Is customary law recognized by the South African Constitution?", a: "Yes, as long as it is consistent with the Constitution.", o: ["No, only Western law is recognized.", "Yes, it is superior to the Constitution."], exp: "The Constitution respects customary law but holds that it, like all law, must align with the Bill of Rights." },
-                { q: "If a customary inheritance rule states that only sons can inherit property, what constitutional right does this challenge?", a: "The Right to Equality", o: ["The Right to Property", "The Right to Culture"], exp: "The right to equality (Section 9) prevents unfair discrimination on the basis of gender, which would take precedence here." },
-                { q: "What is the role of traditional leaders in the modern legal system?", a: "They can preside over certain civil matters in traditional courts.", o: ["They can create national laws.", "They have no legal role."], exp: "The role of traditional leaders is recognized, but their authority is subject to the Constitution and national legislation." },
-                { q: "The concept of 'Ubuntu' is central to many African cultures. How does it relate to the Constitution?", a: "It reflects the constitutional values of human dignity, equality, and community.", o: ["It is not related to the Constitution.", "It is a political party."], exp: "Ubuntu's emphasis on interconnectedness and respect for others is a foundational value that underpins many of our constitutional rights." },
-                { q: "Can a person be forced to follow a customary practice that goes against their constitutional rights?", a: "No, constitutional rights are supreme.", o: ["Yes, tradition must always be followed.", "Only if the Chief says so."], exp: "An individual's constitutional rights, like the right to dignity and bodily integrity, cannot be violated by cultural or traditional practices." }
-            ]
-        };
-        
         const levelDisplay = document.getElementById('level-display');
         const progressBar = document.getElementById('progress-bar');
         const questionTextEl = document.getElementById('question-text');
@@ -187,59 +99,32 @@
         const nextBtn = document.getElementById('next-btn');
         const restartBtn = document.getElementById('restart-btn');
         const finalScoreEl = document.getElementById('final-score');
-        const quizTitleEl = document.getElementById('quiz-title');
 
         const awardModal = document.getElementById('award-modal');
         const awardTitle = document.getElementById('award-title');
         const awardMessage = document.getElementById('award-message');
         const awardContinueBtn = document.getElementById('award-continue-btn');
 
-        let currentQuestionIndex, score, incorrectAttempts;
+        let currentQuestionIndex, score, level, incorrectAttempts;
+        const questionsPerLevel = 5;
+
         const awardTitles = ["Pillar of the Home", "Keeper of Wisdom", "Community Elder"];
-
-        function selectCard(card, cardType) {
-            const container = document.getElementById(`${cardType}-selection`);
-            container.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
-            card.classList.add('selected');
-
-            if (cardType === 'topic') {
-                selectedTopic = card.dataset.topic;
-                levelSelectionSection.classList.remove('hidden');
-                quizTitleEl.textContent = card.querySelector('h3').textContent;
-            } else if (cardType === 'level') {
-                selectedLevel = parseInt(card.dataset.level);
-            }
-
-            if (selectedTopic && selectedLevel) {
-                startCourseBtn.classList.remove('hidden');
-            }
-        }
-
-        function startCourse() {
-            courseHub.classList.add('hidden');
-            quizArea.classList.remove('hidden');
-            const allQuestions = courseData[selectedTopic];
-            const questionsPerLevel = Math.ceil(allQuestions.length / 3);
-            const startIndex = (selectedLevel - 1) * questionsPerLevel;
-            const endIndex = Math.min(startIndex + questionsPerLevel, allQuestions.length);
-            questions = allQuestions.slice(startIndex, endIndex);
-            
-            initGame();
-        }
 
         function initGame() {
             currentQuestionIndex = 0;
             score = 0;
+            level = 1;
+            incorrectAttempts = 0;
             quizArea.classList.remove('hidden');
             endScreen.classList.add('hidden');
-            levelDisplay.textContent = selectedLevel;
             loadQuestion();
             updateProgress();
         }
 
         function loadQuestion() {
             resetUI();
-            const questionData = questions[currentQuestionIndex];
+            level = Math.floor(currentQuestionIndex / questionsPerLevel) + 1;
+            const questionData = courseData1[currentQuestionIndex];
             questionTextEl.textContent = questionData.q;
             
             const options = shuffleArray([...questionData.o, questionData.a]);
@@ -257,33 +142,63 @@
             const selectedAnswer = answerOptionsEl.value;
             if (!selectedAnswer) return;
 
-            const correctAnswer = questions[currentQuestionIndex].a;
+            const correctAnswer = courseData1[currentQuestionIndex].a;
             answerOptionsEl.disabled = true;
 
             if (selectedAnswer === correctAnswer) {
-                feedbackContainer.innerHTML = `<div class="p-4 bg-green-900/50 rounded-lg feedback-correct"><p class="font-bold">Correct!</p><p class="text-sm">${questions[currentQuestionIndex].exp}</p></div>`;
+                feedbackContainer.innerHTML = `<div class="p-4 bg-green-900/50 rounded-lg feedback-correct"><p class="font-bold">Correct!</p><p class="text-sm">${courseData1[currentQuestionIndex].exp}</p></div>`;
                 if(incorrectAttempts === 0) score += 10;
                 nextBtn.classList.remove('hidden');
             } else {
                 incorrectAttempts++;
-                feedbackContainer.innerHTML = `<div class="p-4 bg-red-900/50 rounded-lg feedback-incorrect"><p class="font-bold">Not quite.</p><p class="text-sm">That's not the correct answer. The correct answer is: <strong>${correctAnswer}</strong></p></div>`;
-                nextBtn.classList.remove('hidden');
+                feedbackContainer.innerHTML = `<div class="p-4 bg-red-900/50 rounded-lg feedback-incorrect"><p class="font-bold">Not quite.</p><p class="text-sm">That's not the correct answer. Please read the explanation and try again, or reveal the answer.</p></div>`;
+                const tryAgainBtn = document.createElement('button');
+                tryAgainBtn.textContent = 'Try Again';
+                tryAgainBtn.className = 'bg-yellow-500 text-black font-bold py-1 px-3 text-sm rounded mt-2 mr-2';
+                tryAgainBtn.onclick = () => {
+                    answerOptionsEl.disabled = false;
+                    feedbackContainer.innerHTML = '';
+                };
+                
+                const revealBtn = document.createElement('button');
+                revealBtn.textContent = 'Show Answer';
+                revealBtn.className = 'bg-gray-500 text-white font-bold py-1 px-3 text-sm rounded mt-2';
+                revealBtn.onclick = () => {
+                     feedbackContainer.innerHTML = `<div class="p-4 bg-blue-900/50 rounded-lg border-l-4 border-blue-500"><p class="font-bold">The correct answer is: ${correctAnswer}</p><p class="text-sm">${courseData1[currentQuestionIndex].exp}</p></div>`;
+                     nextBtn.classList.remove('hidden');
+                };
+                feedbackContainer.appendChild(document.createElement('div')).append(tryAgainBtn, revealBtn);
+            }
+        }
+
+        function handleNext() {
+            currentQuestionIndex++;
+             if (currentQuestionIndex % questionsPerLevel === 0 && currentQuestionIndex > 0 && currentQuestionIndex < courseData1.length) {
+                showAwardModal();
+            } else if (currentQuestionIndex >= courseData1.length) {
+                showEndScreen();
+            }
+            else {
+                loadQuestion();
             }
         }
         
-        function handleNext() {
-            currentQuestionIndex++;
-            if (currentQuestionIndex < questions.length) {
-                loadQuestion();
-            } else {
-                showEndScreen();
-            }
+        function showAwardModal(){
+             const awardIndex = level - 1;
+             awardTitle.textContent = `${awardTitles[awardIndex]} - Level ${level} Complete!`;
+             awardMessage.textContent = "Your wisdom grows! Keep going.";
+             awardModal.classList.remove('hidden');
+        }
+        
+        function continueGame() {
+            awardModal.classList.add('hidden');
+            loadQuestion();
         }
 
         function showEndScreen() {
             quizArea.classList.add('hidden');
             endScreen.classList.remove('hidden');
-            finalScoreEl.textContent = `${score} / ${questions.length * 10}`;
+            finalScoreEl.textContent = score;
         }
 
         function resetUI() {
@@ -295,8 +210,9 @@
         }
 
         function updateProgress() {
-            const progress = (currentQuestionIndex / questions.length) * 100;
+            const progress = (currentQuestionIndex / courseData1.length) * 100;
             progressBar.style.width = `${progress}%`;
+            levelDisplay.textContent = level;
         }
 
         function shuffleArray(array) {
@@ -307,27 +223,113 @@
             return array;
         }
 
-        function goBackToHub() {
-            quizArea.classList.add('hidden');
-            endScreen.classList.add('hidden');
-            courseHub.classList.remove('hidden');
-            levelSelectionSection.classList.add('hidden');
-            startCourseBtn.classList.add('hidden');
-            topicCards.forEach(c => c.classList.remove('selected'));
-            levelCards.forEach(c => c.classList.remove('selected'));
-            selectedTopic = null;
-            selectedLevel = null;
-        }
-
-        topicCards.forEach(card => card.addEventListener('click', () => selectCard(card, 'topic')));
-        levelCards.forEach(card => card.addEventListener('click', () => selectCard(card, 'level')));
-        startCourseBtn.addEventListener('click', startCourse);
-        backToHubBtn.addEventListener('click', goBackToHub);
         answerOptionsEl.addEventListener('change', checkAnswer);
         nextBtn.addEventListener('click', handleNext);
-        restartBtn.addEventListener('click', goBackToHub);
-    });
+        restartBtn.addEventListener('click', initGame);
+        awardContinueBtn.addEventListener('click', continueGame);
+
+        initGame();
     </script>
-    
 </body>
 </html>
+
+---
+
+<!-- courses_khulu-the_childrens_act.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khulu Courses: The Children's Act</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background-color: #0f172a; }
+        /* Xhosa-inspired Theme */
+        .course-container { background-color: #1e293b; border: 1px solid #334155; }
+        .xhosa-border { 
+            border: 10px solid #000;
+            padding: 5px;
+            background: repeating-linear-gradient(45deg, #00AEEF, #00AEEF 10px, #FFFFFF 10px, #FFFFFF 20px, #000000 20px, #000000 30px);
+        }
+        .progress-bar-fill { background-color: #00AEEF; }
+        /* Add other styles similar to the first course */
+    </style>
+</head>
+<body>
+    <!-- The HTML structure would be identical to the first course, but with the Xhosa theme class and a different title -->
+    <div class="course-container xhosa-border w-full max-w-3xl rounded-2xl shadow-2xl p-8">
+        <!-- JS would load questions specific to the Children's Act -->
+         <div class="mb-6 text-center text-white">
+            <h1 class="text-3xl font-bold font-roboto-slab text-cyan-400">The Children's Act</h1>
+            <p class="text-gray-300">This course will cover key aspects of the Children's Act 38 of 2005.</p>
+        </div>
+        <!-- ... rest of the quiz interface ... -->
+    </div>
+     <script>
+        // JS logic would be the same, but would reference `courseData2` for its questions.
+        const courseData2 = [
+            // 15 new questions related to the Children's Act
+            { q: "What is the main purpose of the Children's Act?", a: "To protect the best interests of children", o: ["To tell parents what to do"], exp: "Correct. The Act's primary goal is always to ensure a child's safety, well-being, and development are prioritized." },
+            // ... 14 more questions
+        ];
+    </script>
+</body>
+</html>
+
+---
+
+<!-- courses_khulu-the_equal_guardian.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Khulu Courses: The Equal Guardian</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background-color: #18181b; }
+        /* Zulu-inspired Theme */
+        .course-container { background-color: #27272a; border: 1px solid #52525b; }
+        .zulu-border {
+             border: 10px solid transparent;
+             border-image: url('data:image/svg+xml;utf8,<svg width="100" height="100" xmlns="http://www.w3.org/2000/svg"><path d="M0 0 L50 50 L0 100 Z" fill="%23dc2626" /><path d="M100 0 L50 50 L100 100 Z" fill="%23f59e0b" /></svg>') 30 round;
+        }
+        .progress-bar-fill { background-color: #ef4444; }
+        /* Add other styles similar to the first course */
+    </style>
+</head>
+<body>
+    <div class="course-container zulu-border w-full max-w-3xl rounded-2xl shadow-2xl p-8">
+        <!-- JS would load questions specific to Equal Parenting -->
+         <div class="mb-6 text-center text-white">
+            <h1 class="text-3xl font-bold font-roboto-slab text-red-400">The Equal Guardian</h1>
+            <p class="text-gray-300">This course explores the importance of both parents in a child's life.</p>
+        </div>
+        <!-- ... rest of the quiz interface ... -->
+    </div>
+     <script>
+        // JS logic would be the same, but would reference `courseData3` for its questions.
+        const courseData3 = [
+            // 15 new questions related to equal parenting
+            { q: "Does the law say mothers are better parents than fathers?", a: "No, the law treats both parents equally", o: ["Yes, mothers are always given custody"], exp: "That is the most important lesson. The Constitution says both parents are equal and must be treated with the same respect." },
+            // ... 14 more questions
+        ];
+    </script>
+</body>
+</html>
+
+<!-- Placeholder files for the remaining 9 courses -->
+<!-- courses_khulu-accessing_your_rights.html -->
+<!-- courses_khulu-the_homesteaders_resilience.html -->
+<!-- courses_khulu-when_trouble_comes_home.html -->
+<!-- courses_khulu-our_ways_their_laws.html -->
+<!-- courses_khulu-the_homeschooling_choice.html -->
+<!-- courses_khulu-the_unwritten_phd.html -->
+<!-- courses_khulu-from_birth_to_belonging.html -->
+<!-- courses_khulu-two_families_become_one.html -->
+<!-- courses_khulu-when_a_loved_one_departs.html -->

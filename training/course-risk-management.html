@@ -1,257 +1,106 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Risk Management for Fathers</title>
+    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); border-color: #64748b; }
-        .module-card.selected { border-color: #64748b; background-color: rgba(100, 116, 139, 0.1); }
-        .prose h2 { color: #94a3b8; font-family: 'Roboto Slab', serif;} 
-        .prose h3 { color: #cbd5e1; font-family: 'Roboto Slab', serif;} 
-        .prose strong { color: #cbd5e1; }
-        .quiz-container, #end-screen { background-color: rgba(30, 41, 59, 0.9); backdrop-filter: blur(8px); }
-        .quiz-option { cursor: pointer; border: 2px solid #4b5563; transition: all 0.2s ease; }
-        .quiz-option:hover { background-color: #334155; border-color: #64748b; }
-        .quiz-option.selected { border-color: #f59e0b; background-color: #78350f; }
-        .quiz-option.correct { border-color: #22c55e; background-color: #166534; }
-        .quiz-option.incorrect { border-color: #ef4444; background-color: #991b1b; }
-        .achievement-unlocked { animation: pop-in 0.5s ease-out; }
-        @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
+        /* Re-using the same styles from the master course template with a new color scheme */
+        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
+        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
+        .main-content { overflow-y: auto; }
+        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
+        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #475569; color: white; transform: translateX(10px); }
+        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #64748B; padding-bottom: 0.5rem; color: #94A3B8;}
+        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #CBD5E1;}
+        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
+        .prose strong { color: #CBD5E1; }
+        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
+        .prose a { color: #60A5FA; text-decoration: underline; }
+        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
+        .quiz-option:hover { background-color: #374151; }
+        .quiz-option.selected { background-color: #334155; border-color: #475569; }
+        .module { display: none; }
+        .module.active { display: block; }
+        .quiz-section { display: none; }
+        .quiz-section.active { display: block; }
+        .certificate-modal { display: none; }
+        .certificate-modal.active { display: flex; }
+        .progress-bar-container { background-color: #4B5563; }
+        .progress-bar-fill { background-color: #64748B; transition: width 0.5s ease-in-out; }
+        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
+        .feedback.correct { background-color: rgba(71, 85, 105, 0.2); border: 1px solid #64748B; color: white; }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200 font-sans flex">
+<body class="bg-gray-800 text-white">
+    <div class="main-container">
+        <!-- Sidebar -->
+        <aside class="bg-gray-900 p-6 flex flex-col">
+            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-slate-400">A</span></a>
+             <nav id="main-nav" class="flex flex-col space-y-2">
+                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
+                 <div class="border-t border-gray-700 my-2"></div>
+                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
+                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: The Father as Risk Manager</a>
+                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: Identifying Family Risks</a>
+                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: The Hierarchy of Controls</a>
+            </nav>
+            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
+                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
+            </div>
+            <div class="mt-4 text-center">
+                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
+            </div>
+        </aside>
 
-    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
-    
-    <div class="flex-1 flex flex-col">
-        <main class="main-content p-4 md:p-8 flex items-center justify-center">
-            
-            <div id="course-hub" class="max-w-4xl mx-auto text-center">
-                <header class="mb-12">
-                     <div class="flex justify-center items-center gap-4 mb-4">
-                        <svg class="h-20 w-20 text-slate-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5">
-                            <path d="M12 2L4 5v6.09c0 4.97 3.58 9.38 8 10.91c4.42-1.53 8-5.94 8-10.91V5L12 2z" stroke-width="2"/>
-                            <path d="M7 13l3 3l7-7" stroke-linecap="round" stroke-linejoin="round" />
-                        </svg>
-                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Risk Management for Fathers</h1>
+        <!-- Main Content -->
+        <main class="main-content p-8 md:p-12">
+             <div class="max-w-4xl mx-auto">
+                <!-- Course Header -->
+                <div class="mb-8">
+                    <h1 class="text-4xl font-bold font-roboto text-slate-400">Risk Management for Fathers</h1>
+                    <p class="text-lg text-gray-400 mt-2">Apply professional safety principles to protect your family's future.</p>
+                </div>
+                
+                <!-- Progress Bar -->
+                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
+                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #64748B;"></div>
+                </div>
+
+                 <!-- Course Content Area -->
+                <div class="prose max-w-none prose-invert">
+                    <!-- Module 1 -->
+                    <div id="module1" class="module active">
+                        <section>
+                            <h2>Module 1: The Father as the Ultimate Risk Manager</h2>
+                            <p>As a father, you are the Chief Risk Officer of your family. The principles used to keep workers safe in a factory or on a construction site can be powerfully applied to safeguard your family's physical, emotional, and financial well-being. This course, inspired by the book *Safety First*, will teach you how.</p>
+                            
+                            <h3>A. What is Risk Management?</h3>
+                            <p>At its core, risk management is a simple, proactive process:</p>
+                            <ol>
+                                <li><strong>Identify Hazards:</strong> What could possibly go wrong?</li>
+                                <li><strong>Assess the Risk:</strong> How likely is it to go wrong, and how bad would it be if it did?</li>
+                                <li><strong>Control the Risk:</strong> What can I do to stop it from happening, or lessen the impact?</li>
+                                <li><strong>Review:</strong> Did my controls work? What can I improve?</li>
+                            </ul>
+                            <p>This systematic way of thinking allows you to move from being reactive (dealing with problems as they happen) to being <strong>proactive</strong> (preventing problems before they start).</p>
+                        </section>
+                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
                     </div>
-                    <p class="text-lg text-gray-300">Apply professional OHS principles to proactively protect your family's future.</p>
-                </header>
-                <div class="bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl">
-                    <p class="mb-6">This comprehensive course will teach you to think like a professional risk manager. You will learn to identify hazards, assess risks, and implement effective controls to safeguard your family. Complete the 15-question challenge to earn your certificate.</p>
-                    <button id="start-course-btn" class="btn btn-primary text-xl">Begin Your Training</button>
+                    <!-- Other modules and quizzes would be added here -->
                 </div>
             </div>
-            
-            <div id="quiz-area" class="w-full max-w-4xl mx-auto hidden">
-                <div class="quiz-container p-8 rounded-xl shadow-2xl">
-                    <div class="flex justify-between items-center mb-4">
-                        <h2 class="text-2xl font-bold font-roboto-slab text-slate-300">Risk Management Challenge</h2>
-                        <div id="achievements-bar" class="flex gap-3 text-2xl">
-                        </div>
-                    </div>
-                    <div class="w-full bg-gray-700 rounded-full h-4 mb-6">
-                        <div id="progress-bar" class="bg-blue-600 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
-                    </div>
-                    <div id="question-area"></div>
-                    <div id="feedback-area" class="mt-4 min-h-[50px] text-center font-semibold"></div>
-                    <button id="next-question-btn" class="btn btn-secondary w-full mt-4 hidden">Next Question</button>
-                </div>
-            </div>
-
-            <div id="end-screen" class="w-full max-w-2xl mx-auto hidden text-center quiz-container p-8 rounded-xl">
-                 <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Challenge Complete!</h2>
-                 <p class="text-xl mt-4">You have mastered the principles of family risk management.</p>
-                 <p class="text-2xl mt-2">Final Score: <span id="final-score" class="font-bold"></span></p>
-                 <div class="text-6xl text-yellow-400 my-6 flex justify-center gap-4">
-                    <i class="fas fa-clipboard-check"></i> <i class="fas fa-search"></i> <i class="fas fa-hard-hat"></i>
-                 </div>
-                 <p class="text-lg">You are now the Chief Risk Officer of your household.</p>
-                 <button id="restart-btn" class="btn btn-primary text-xl mt-6">Train Again</button>
-            </div>
-
         </main>
     </div>
-
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-        fetch('/training-sidebar.html')
-            .then(response => response.text())
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                    const scriptEl = placeholder.querySelector('script');
-                    if (scriptEl) eval(scriptEl.innerHTML);
-                }
-            }).catch(error => console.error('Error fetching training sidebar:', error));
-
-        const courseHub = document.getElementById('course-hub');
-        const quizArea = document.getElementById('quiz-area');
-        const startCourseBtn = document.getElementById('start-course-btn');
-        const questionArea = document.getElementById('question-area');
-        const nextQuestionBtn = document.getElementById('next-question-btn');
-        const progressBar = document.getElementById('progress-bar');
-        const feedbackArea = document.getElementById('feedback-area');
-        const achievementsBar = document.getElementById('achievements-bar');
-        const endScreen = document.getElementById('end-screen');
-        const finalScoreEl = document.getElementById('final-score');
-        const restartBtn = document.getElementById('restart-btn');
-
-        const questions = [
-            { q: "What is the primary goal of a proactive risk management mindset?", a: "To prevent problems before they start.", o: ["To react quickly to problems.", "To document problems after they happen."] },
-            { q: "What is the FIRST step in the risk management process?", a: "Identify Hazards", o: ["Assess the Risk", "Control the Risk"] },
-            { q: "What is the LAST step in the risk management process?", a: "Review Controls", o: ["Assess the Risk", "Identify Hazards"] },
-            { q: "Risk assessment involves considering the likelihood of a hazard occurring and its potential...", a: "Severity", o: ["Cost", "Popularity"] },
-            { q: "Thinking like a risk manager primarily helps a father be more...", a: "Proactive", o: ["Authoritarian", "Lenient"] },
-            { q: "A frayed electrical cord is an example of what kind of risk?", a: "Physical Risk", o: ["Financial Risk", "Emotional Risk"] },
-            { q: "Having no emergency savings fund is what kind of risk?", a: "Financial Risk", o: ["Physical Risk", "Social Risk"] },
-            { q: "Cyberbullying and online safety fall under which risk category?", a: "Emotional & Social Risk", o: ["Physical Risk", "Financial Risk"] },
-            { q: "Which of these is NOT primarily a physical risk in a home?", a: "A child feeling excluded", o: ["An unfenced swimming pool", "Unsecured heavy furniture"] },
-            { q: "Identifying potential risks helps a family to...", a: "Prepare and prevent harm", o: ["Worry more often", "Ignore problems"] },
-            { q: "According to the Hierarchy of Controls, what is the MOST effective control measure?", a: "Elimination (removing the hazard)", o: ["Substitution", "Using PPE"] },
-            { q: "Installing a safety gate at the top of a staircase is an example of an...", a: "Engineering Control", o: ["Administrative Control", "Elimination"] },
-            { q: "Making a child wear a bicycle helmet is an example of which type of control?", a: "Personal Protective Equipment (PPE)", o: ["Substitution", "Elimination"] },
-            { q: "According to the hierarchy, PPE should be considered the...", a: "Last resort", o: ["First solution", "Only solution"] },
-            { q: "Your teenager wants to go to a party where you suspect there will be no adult supervision. What is the BEST FIRST step using the Hierarchy of Controls?", a: "Administrative Control (Set clear rules and consequences)", o: ["Elimination (Forbid them from ever going to parties)", "PPE (Give them a phone to call you)"] }
-        ];
-
-        const achievements = {
-            5: { icon: 'fa-clipboard-check', title: 'Risk Assessor Badge' },
-            10: { icon: 'fa-search', title: 'Hazard Hunter Badge' },
-            15: { icon: 'fa-hard-hat', title: 'Master Controller Badge' }
-        };
-
-        let currentQuestionIndex = 0;
-        let score = 0;
-
-        function startGame() {
-            courseHub.classList.add('hidden');
-            quizArea.classList.remove('hidden');
-            currentQuestionIndex = 0;
-            score = 0;
-            achievementsBar.innerHTML = '';
-            updateProgressBar();
-            loadQuestion();
-        }
-
-        function loadQuestion() {
-            feedbackArea.innerHTML = '';
-            nextQuestionBtn.classList.add('hidden');
-            const qData = questions[currentQuestionIndex];
-            
-            let optionsHTML = shuffleArray([...qData.o, qData.a])
-                .map(opt => `<div class="quiz-option p-4 rounded-lg" data-answer="${opt === qData.a}">${opt}</div>`)
-                .join('');
-            
-            questionArea.innerHTML = `
-                <p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${qData.q}</p>
-                <div class="space-y-3">${optionsHTML}</div>
-            `;
-            
-            questionArea.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.addEventListener('click', handleAnswerClick);
-            });
-        }
-        
-        function handleAnswerClick(e) {
-            const selectedOption = e.target;
-            const isCorrect = selectedOption.dataset.answer === 'true';
-            
-            questionArea.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.style.pointerEvents = 'none';
-                if(opt.dataset.answer === 'true') {
-                    opt.classList.add('correct');
-                } else if (opt === selectedOption) {
-                     opt.classList.add('incorrect');
-                }
-            });
-
-            if (isCorrect) {
-                feedbackArea.innerHTML = '<p class="text-green-400">Correct! Excellent insight.</p>';
-                score++;
-                checkAchievement();
-            } else {
-                feedbackArea.innerHTML = '<p class="text-red-400">Not quite. The best solution is often the most proactive one.</p>';
-            }
-            nextQuestionBtn.classList.remove('hidden');
-        }
-
-        function checkAchievement() {
-            if (achievements[score]) {
-                const achievement = achievements[score];
-                const iconEl = document.createElement('i');
-                iconEl.className = `fas ${achievement.icon} text-yellow-400 achievement-unlocked`;
-                iconEl.title = achievement.title;
-                achievementsBar.appendChild(iconEl);
-            }
-        }
-        
-        function handleNextQuestion() {
-            currentQuestionIndex++;
-            updateProgressBar();
-            if (currentQuestionIndex < questions.length) {
-                loadQuestion();
-            } else {
-                showEndScreen();
-            }
-        }
-
-        function showEndScreen() {
-            quizArea.classList.add('hidden');
-            endScreen.classList.remove('hidden');
-            finalScoreEl.textContent = `${score} / ${questions.length}`;
-        }
-        
-        function updateProgressBar() {
-            const progress = (currentQuestionIndex / questions.length) * 100;
-            progressBar.style.width = `${progress}%`;
-        }
-
-        function resetGame() {
-            endScreen.classList.add('hidden');
-            courseHub.classList.remove('hidden');
-        }
-
-        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
-
-        startCourseBtn.addEventListener('click', startGame);
-        nextQuestionBtn.addEventListener('click', handleNextQuestion);
-        restartBtn.addEventListener('click', resetGame);
-    });
-    </script>
-    <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        // Fetch the sidebar from the root directory. This works from any page.
-        fetch('/training-sidebar.html')
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
-                }
-                return response.text();
-            })
-            .then(html => {
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    placeholder.innerHTML = html;
-                }
-            })
-            .catch(error => {
-                console.error('Error fetching training sidebar:', error);
-                const placeholder = document.getElementById('training-sidebar-placeholder');
-                if (placeholder) {
-                    // Display an error message if the sidebar fails to load
-                    placeholder.innerHTML = '<div class="p-4"><p class="text-red-500">Error loading sidebar.</p></div>';
-                }
-            });
-    });
-</script>
+    <!-- Modal and Scripts -->
+    <script type="module" src="../assets/js/auth.js"></script>
+    <script type="module" src="../assets/js/course-logic.js"></script>
 </body>
 </html>
