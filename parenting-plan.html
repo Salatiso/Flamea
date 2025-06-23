@@ -8,13 +8,11 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        :root { --sidebar-width: 288px; }
         body { font-family: 'Open Sans', sans-serif; background-color: #111827; color: #d1d5db; }
         h1, h2, h3, h4, .font-roboto-slab { font-family: 'Roboto Slab', serif; }
         .main-container { display: flex; min-height: 100vh; }
-        #sidebar-placeholder { width: var(--sidebar-width); flex-shrink: 0; }
-        .main-content { flex-grow: 1; overflow-y: auto; width: calc(100% - var(--sidebar-width)); }
-        #main-content-bg { position: fixed; top: 0; left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        #main-content-bg { position: fixed; top: 0; left: 0; right:0; bottom:0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
         .content-wrapper { background-color: rgba(17, 24, 39, 0.9); backdrop-filter: blur(10px); }
         .view-container, .step-container { display: none; }
         .view-container.active, .step-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
@@ -22,7 +20,7 @@
         .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 1px solid #374151; }
         .option-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05); }
         .form-input, .form-select, .form-textarea { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; ring: 0; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; }
         .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
         .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; }
         .btn-primary:hover:not(:disabled) { background-color: #1d4ed8; }
@@ -37,32 +35,13 @@
         .dashboard-metric { background-color: #374151; padding: 1rem; border-radius: 0.5rem; text-align: center; }
         .dashboard-metric .value { font-size: 1.75rem; font-weight: 700; }
         .dashboard-metric .label { font-size: 0.875rem; color: #9ca3af; }
-        .sidebar-link{transition:background-color .2s ease-in-out}.sidebar-link:hover{background-color:#374151}
     </style>
 </head>
-<body>
+<body class="bg-gray-900">
+    <div id="main-content-bg"></div>
     <div class="main-container">
-        <aside id="sidebar-placeholder" class="p-6 flex-shrink-0 flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300">
-             <!-- Sidebar content is now embedded -->
-            <div class="sidebar-top">
-                <div class="mb-12 flex justify-center">
-                    <a href="#" class="flamea-logo dark">
-                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
-                            <text x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
-                            <g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g>
-                            <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
-                        </svg>
-                    </a>
-                </div>
-                <nav class="flex flex-col space-y-2">
-                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
-                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
-                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-700 text-white"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Parenting Plan Builder</a>
-                </nav>
-            </div>
-        </aside>
-
-        <div id="main-content-bg"></div>
+        <!-- Standard Sidebar Placeholder -->
+        <div id="sidebar-placeholder"></div>
         
         <main class="main-content">
             <div class="content-wrapper min-h-full p-6 sm:p-8">
@@ -80,16 +59,17 @@
     <div id="alert-modal" class="modal"><div class="modal-content text-center"><h3 id="alert-modal-title" class="text-2xl font-bold text-white mb-4"></h3><p id="alert-modal-message" class="text-gray-300 mb-6"></p><button id="alert-modal-close" class="btn-primary w-full">OK</button></div></div>
     <div id="disclaimer-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3><p class="text-gray-300 mb-6 text-sm">This is <strong>not legal advice</strong>. This tool helps organize your information. You are solely responsible for the content. For legal advice, consult a qualified professional. By proceeding, you acknowledge this disclaimer.</p><label class="flex items-center space-x-3 mb-6 cursor-pointer"><input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500"><span class="text-white">I Understand and Agree</span></label><div class="flex justify-end gap-4"><button id="disclaimer-cancel" class="btn-secondary">Cancel</button><button id="disclaimer-proceed" class="btn-primary" disabled>Proceed</button></div></div></div>
     
+    <!-- Standardized Main Script Loader -->
+    <script src="https://salatiso.github.io/Flamea/assets/js/main.js" type="module"></script>
+    
+    <!-- Self-Contained Page-Specific Logic -->
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
+        // Use a local scope to avoid conflicts
+        (() => {
             // ===================================================================
-            // SECTION 1: STATE, CONFIG & DOM REFERENCES (ORDER IS CRITICAL)
+            // SECTION 1: STATE, CONFIG & DOM REFERENCES
             // ===================================================================
-
-            const state = {
-                currentView: 'landing-view', wizardStep: 0, builderStep: 0, selectedSections: [],
-            };
-
+            const state = { currentView: 'landing-view', wizardStep: 0, builderStep: 0, selectedSections: [] };
             const dropdownOptions = {
                 relationship: ['Father', 'Mother', 'Grandfather', 'Grandmother', 'Legal Guardian', 'Other'],
                 addressType: ['Home', 'Work', 'Postal', 'Other'],
@@ -99,31 +79,40 @@
                 recurringSchedules: ['Week On, Week Off', '2-2-3 Schedule', 'Every Other Weekend', 'Custom'],
                 communicationClassification: ['Urgent Matters', 'Formal Communication', 'Daily Updates']
             };
-
             const views = { landing: document.getElementById('landing-view'), wizard: document.getElementById('wizard-view'), builder: document.getElementById('builder-view') };
-            const containers = { steps: null, navigation: null, bg: document.getElementById('main-content-bg') };
             const alertModal = { modal: document.getElementById('alert-modal'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), close: document.getElementById('alert-modal-close') };
             const disclaimerModal = { modal: document.getElementById('disclaimer-modal'), agree: document.getElementById('disclaimer-agree'), cancel: document.getElementById('disclaimer-cancel'), proceed: document.getElementById('disclaimer-proceed') };
             
+            // This is a list of all functions that need to exist before event listeners are added.
+            let switchView, showAlert, showDisclaimer, setDynamicBackground, generateOptions, getPartyNames, 
+                addGuardian, addAddress, addContact, addChild, addEventLog, addExpenseItem,
+                updateAllPartyDropdowns, updateTimeDashboard, updateExpenseDashboard, 
+                collectPartiesData, collectCustodyData, collectExpensesData, collectCommunicationData,
+                generatePartiesDoc, generateCustodyDoc, generateExpensesDoc, generateCommunicationDoc,
+                downloadScheduleCSV, generateDocument,
+                renderLandingView, renderWizardStep, renderBuilder, updateBuilderStep, renderNavigation,
+                renderPartiesSection, renderCustodySection, renderExpensesSection, renderCommunicationSection, renderSummarySection,
+                init;
+
             // ===================================================================
-            // SECTION 2: ALL FUNCTION DEFINITIONS
+            // SECTION 2: FUNCTION DEFINITIONS
             // ===================================================================
             
-            // --- CORE UI & LOGIC FUNCTIONS ---
-            const switchView = (viewId) => {
+            // --- CORE UI & LOGIC ---
+            switchView = (viewId) => {
                 state.currentView = viewId;
                 Object.values(views).forEach(v => v.classList.remove('active'));
                 if (views[viewId]) views[viewId].classList.add('active');
             };
 
-            const showAlert = (title, message) => {
+            showAlert = (title, message) => {
                 alertModal.title.textContent = title;
                 alertModal.message.textContent = message;
                 alertModal.modal.style.display = 'flex';
             };
             
-            const showDisclaimer = (sectionIds) => {
-                if (sectionIds.length === 0) {
+            showDisclaimer = (sectionIds) => {
+                if (!sectionIds || sectionIds.length === 0) {
                     showAlert('No Sections Selected', 'Please check at least one section in the summary to generate a document.');
                     return;
                 }
@@ -132,16 +121,17 @@
                 disclaimerModal.proceed.disabled = true;
                 disclaimerModal.modal.style.display = 'flex';
             };
-
-            const setDynamicBackground = () => {
-                const bgs = ['linear-gradient(135deg, #1e3a8a 0%, #111827 100%)', 'linear-gradient(135deg, #3730a3 0%, #111827 100%)', 'linear-gradient(135deg, #047857 0%, #111827 100%)', 'linear-gradient(135deg, #9f1239 0%, #111827 100%)'];
-                containers.bg.style.backgroundImage = bgs[Math.floor(Math.random() * bgs.length)];
-            };
-
-            // --- HELPER & DYNAMIC UI FUNCTIONS ---
-            const generateOptions = (arr, selected = '') => arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('');
             
-            const getPartyNames = () => {
+            setDynamicBackground = () => {
+                const bgElement = document.getElementById('main-content-bg');
+                if (!bgElement) return;
+                const bgs = ['linear-gradient(135deg, #1e3a8a 0%, #111827 100%)', 'linear-gradient(135deg, #3730a3 0%, #111827 100%)', 'linear-gradient(135deg, #047857 0%, #111827 100%)', 'linear-gradient(135deg, #9f1239 0%, #111827 100%)'];
+                bgElement.style.backgroundImage = bgs[Math.floor(Math.random() * bgs.length)];
+            };
+            
+            // --- HELPER & DYNAMIC UI ---
+            generateOptions = (arr, selected = '') => arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('');
+            getPartyNames = () => {
                 const names = [];
                 document.querySelectorAll('#parties-content .party-name').forEach(input => {
                     if (input.value.trim()) names.push(input.value.trim());
@@ -149,15 +139,18 @@
                 return names.length > 0 ? names : ['Parent A', 'Parent B'];
             };
             
-            const addGuardian = (side, name = '') => document.getElementById(`${side}-parties-container`)?.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Guardian/Party</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" value="${name}"></div><div><label class="form-label">Relationship to Child</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div></div><div class="addresses-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-address-btn mb-4 text-sm">Add Address</button><div class="contacts-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-contact-btn text-sm">Add Contact Info</button></div>`);
-            const addAddress = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.addressType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Full Address</label><input type="text" class="form-input text-sm p-2" placeholder="Street, City, Code"></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-            const addContact = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.contactType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Details</label><input type="text" class="form-input text-sm p-2" placeholder="Phone, email, etc."></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-            const addChild = () => { document.getElementById('children-container')?.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Child</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input"></div><div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div><div><label class="form-label">Primary Residence With</label><select class="form-select party-dropdown">${generateOptions(getPartyNames())}</select></div></div></div>`); updateAllPartyDropdowns(); };
-            const addEventLog = (container) => { container.insertAdjacentHTML('beforeend', `<div class="event-log-item"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"><div><label class="form-label">Start Date</label><input type="date" class="form-input event-start-date"></div><div><label class="form-label">End Date</label><input type="date" class="form-input event-end-date"></div><div><label class="form-label">Allocated To</label><select class="form-select event-allocated-to party-dropdown">${generateOptions(getPartyNames())}</select></div><div><label class="form-label">Event Type</label><select class="form-select">${generateOptions(dropdownOptions.eventType)}</select></div><div class="flex items-end"><button class="btn-danger remove-item-btn w-full">Remove</button></div></div><div class="mt-2"><label class="form-label">Notes</label><textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea></div></div>`); updateTimeDashboard(); };
-            const addExpenseItem = (container) => { container.insertAdjacentHTML('beforeend', `<div class="expense-item grid grid-cols-1 lg:grid-cols-5 gap-4 p-3 bg-gray-800 rounded relative"><div class="lg:col-span-2"><label class="form-label text-xs">Expense Description</label><input type="text" class="form-input expense-description text-sm p-2" placeholder="e.g., School Fees Term 2"></div><div><label class="form-label text-xs">Amount (R)</label><input type="number" class="form-input expense-amount text-sm p-2" placeholder="0.00" step="0.01"></div><div><label class="form-label text-xs">Paid By</label><select class="form-select expense-paid-by party-dropdown text-sm p-2">${generateOptions(getPartyNames())}</select></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`); updateExpenseDashboard(); };
+            addGuardian = (side, name = '') => {
+                const container = document.getElementById(`${side}-parties-container`);
+                if (container) container.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Guardian/Party</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" value="${name}"></div><div><label class="form-label">Relationship to Child</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div></div><div class="addresses-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-address-btn mb-4 text-sm">Add Address</button><div class="contacts-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-contact-btn text-sm">Add Contact Info</button></div>`);
+            };
+            addAddress = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.addressType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Full Address</label><input type="text" class="form-input text-sm p-2" placeholder="Street, City, Code"></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
+            addContact = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.contactType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Details</label><input type="text" class="form-input text-sm p-2" placeholder="Phone, email, etc."></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
+            addChild = () => { const c = document.getElementById('children-container'); if(c) c.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Child</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input"></div><div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div><div><label class="form-label">Primary Residence With</label><select class="form-select party-dropdown">${generateOptions(getPartyNames())}</select></div></div></div>`); updateAllPartyDropdowns(); };
+            addEventLog = (container) => { container.insertAdjacentHTML('beforeend', `<div class="event-log-item"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"><div><label class="form-label">Start Date</label><input type="date" class="form-input event-start-date"></div><div><label class="form-label">End Date</label><input type="date" class="form-input event-end-date"></div><div><label class="form-label">Allocated To</label><select class="form-select event-allocated-to party-dropdown">${generateOptions(getPartyNames())}</select></div><div><label class="form-label">Event Type</label><select class="form-select">${generateOptions(dropdownOptions.eventType)}</select></div><div class="flex items-end"><button class="btn-danger remove-item-btn w-full">Remove</button></div></div><div class="mt-2"><label class="form-label">Notes</label><textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea></div></div>`); updateTimeDashboard(); };
+            addExpenseItem = (container) => { container.insertAdjacentHTML('beforeend', `<div class="expense-item grid grid-cols-1 lg:grid-cols-5 gap-4 p-3 bg-gray-800 rounded relative"><div class="lg:col-span-2"><label class="form-label text-xs">Expense Description</label><input type="text" class="form-input expense-description text-sm p-2" placeholder="e.g., School Fees Term 2"></div><div><label class="form-label text-xs">Amount (R)</label><input type="number" class="form-input expense-amount text-sm p-2" placeholder="0.00" step="0.01"></div><div><label class="form-label text-xs">Paid By</label><select class="form-select expense-paid-by party-dropdown text-sm p-2">${generateOptions(getPartyNames())}</select></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`); updateExpenseDashboard(); };
 
-            // --- DASHBOARD & CALCULATION FUNCTIONS ---
-            const updateAllPartyDropdowns = () => {
+            // --- DASHBOARDS & CALCULATIONS ---
+            updateAllPartyDropdowns = () => {
                 const partyNames = getPartyNames();
                 const partyOptions = generateOptions(partyNames);
                 document.querySelectorAll('.party-dropdown').forEach(select => {
@@ -169,20 +162,20 @@
                 updateExpenseDashboard();
             };
 
-            const updateTimeDashboard = () => {
+            updateTimeDashboard = () => {
+                const dashboard = document.getElementById('time-allocation-dashboard');
+                if (!dashboard) return;
                 const partyNames = getPartyNames();
                 const parentA = partyNames[0] || 'Parent A';
                 const parentB = partyNames[1] || 'Parent B';
-                let daysA = 0;
-                let daysB = 0;
+                let daysA = 0, daysB = 0;
 
                 document.querySelectorAll('.event-log-item').forEach(item => {
                     const startDate = item.querySelector('.event-start-date')?.value;
-                    const endDate = item.querySelector('.event-end-date')?.value;
                     const allocatedTo = item.querySelector('.event-allocated-to')?.value;
                     if (startDate && allocatedTo) {
                         const start = new Date(startDate);
-                        const end = new Date(endDate || startDate);
+                        const end = new Date(item.querySelector('.event-end-date')?.value || startDate);
                         const diffTime = Math.abs(end - start);
                         const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
                         if (allocatedTo === parentA) daysA += diffDays;
@@ -192,20 +185,19 @@
                 
                 const totalDays = daysA + daysB;
                 const percentA = totalDays === 0 ? 50 : (daysA / totalDays * 100);
-                const percentB = totalDays === 0 ? 50 : (daysB / totalDays * 100);
-
-                const dashboard = document.getElementById('time-allocation-dashboard');
-                if (dashboard) {
-                    dashboard.querySelector('#time-parent-a-name').textContent = parentA;
-                    dashboard.querySelector('#time-parent-b-name').textContent = parentB;
-                    dashboard.querySelector('#time-parent-a-percent').textContent = `${percentA.toFixed(1)}%`;
-                    dashboard.querySelector('#time-parent-b-percent').textContent = `${percentB.toFixed(1)}%`;
-                    dashboard.querySelector('#time-split-bar-a').style.width = `${percentA}%`;
-                    dashboard.querySelector('#time-split-bar-b').style.width = `${percentB}%`;
-                }
+                const percentB = 100 - percentA; // Use 100- for precision
+                
+                dashboard.querySelector('#time-parent-a-name').textContent = parentA;
+                dashboard.querySelector('#time-parent-b-name').textContent = parentB;
+                dashboard.querySelector('#time-parent-a-percent').textContent = `${percentA.toFixed(1)}%`;
+                dashboard.querySelector('#time-parent-b-percent').textContent = `${percentB.toFixed(1)}%`;
+                dashboard.querySelector('#time-split-bar-a').style.width = `${percentA}%`;
+                dashboard.querySelector('#time-split-bar-b').style.width = `${percentB}%`;
             };
             
-            const updateExpenseDashboard = () => {
+            updateExpenseDashboard = () => {
+                const dashboard = document.getElementById('expense-dashboard');
+                if (!dashboard) return;
                 const partyNames = getPartyNames();
                 const parentA = partyNames[0] || 'Parent A';
                 const parentB = partyNames[1] || 'Parent B';
@@ -213,9 +205,8 @@
 
                 document.querySelectorAll('.expense-item').forEach(item => {
                     const amount = parseFloat(item.querySelector('.expense-amount')?.value) || 0;
-                    const paidBy = item.querySelector('.expense-paid-by')?.value;
-                    if (paidBy === parentA) totalPaidA += amount;
-                    if (paidBy === parentB) totalPaidB += amount;
+                    if (item.querySelector('.expense-paid-by')?.value === parentA) totalPaidA += amount;
+                    if (item.querySelector('.expense-paid-by')?.value === parentB) totalPaidB += amount;
                 });
 
                 const totalSpent = totalPaidA + totalPaidB;
@@ -231,142 +222,78 @@
                     equalizationMessage = `${parentA} owes ${parentB}`;
                 }
 
-                const dashboard = document.getElementById('expense-dashboard');
-                if (dashboard) {
-                    dashboard.querySelector('#total-spent').textContent = `R ${totalSpent.toFixed(2)}`;
-                    dashboard.querySelector('#parent-a-name').textContent = `${parentA} Paid`;
-                    dashboard.querySelector('#parent-a-paid').textContent = `R ${totalPaidA.toFixed(2)}`;
-                    dashboard.querySelector('#parent-b-name').textContent = `${parentB} Paid`;
-                    dashboard.querySelector('#parent-b-paid').textContent = `R ${totalPaidB.toFixed(2)}`;
-                    dashboard.querySelector('#equalization-amount').textContent = `R ${equalizationPayment.toFixed(2)}`;
-                    dashboard.querySelector('#equalization-message').textContent = equalizationMessage;
-                }
-            };
-            
-            // --- DATA COLLECTION FUNCTIONS ---
-            const collectPartiesData = () => {
-                const data = { parties: [], children: [] };
-                document.querySelectorAll('#parties-content .party-card').forEach(card => {
-                    const nameInput = card.querySelector('.party-name');
-                    if (nameInput) {
-                        if (!nameInput.value.trim()) return;
-                        const party = { name: nameInput.value.trim(), relationship: card.querySelector('select')?.value || '', addresses: [], contacts: [] };
-                        card.querySelectorAll('.addresses-sub-container > div').forEach(addr => party.addresses.push({ type: addr.querySelector('select')?.value, address: addr.querySelector('input')?.value }));
-                        card.querySelectorAll('.contacts-sub-container > div').forEach(cont => party.contacts.push({ type: cont.querySelector('select')?.value, contact: cont.querySelector('input')?.value }));
-                        data.parties.push(party);
-                    } else {
-                        const childNameInput = card.querySelector('input[type="text"]');
-                        if (!childNameInput.value.trim()) return;
-                        data.children.push({ name: childNameInput.value.trim(), dob: card.querySelector('input[type="date"]')?.value || '', primaryResidence: card.querySelector('select')?.value || '' });
-                    }
-                });
-                return data;
+                dashboard.querySelector('#total-spent').textContent = `R ${totalSpent.toFixed(2)}`;
+                dashboard.querySelector('#parent-a-name').textContent = `${parentA} Paid`;
+                dashboard.querySelector('#parent-a-paid').textContent = `R ${totalPaidA.toFixed(2)}`;
+                dashboard.querySelector('#parent-b-name').textContent = `${parentB} Paid`;
+                dashboard.querySelector('#parent-b-paid').textContent = `R ${totalPaidB.toFixed(2)}`;
+                dashboard.querySelector('#equalization-amount').textContent = `R ${equalizationPayment.toFixed(2)}`;
+                dashboard.querySelector('#equalization-message').textContent = equalizationMessage;
             };
 
-            const collectCustodyData = () => {
-                const events = [];
-                document.querySelectorAll('#events-log-container .event-log-item').forEach(item => {
-                    events.push({
-                        startDate: item.querySelector('.event-start-date')?.value,
-                        endDate: item.querySelector('.event-end-date')?.value,
-                        allocatedTo: item.querySelector('.event-allocated-to')?.value,
-                        type: item.querySelector('select:not(.event-allocated-to)')?.value,
-                        notes: item.querySelector('textarea')?.value
-                    });
-                });
-                return {
-                    recurringSchedule: document.getElementById('recurring-schedule-type')?.value || '',
-                    decisionBasis: document.getElementById('custody-decision')?.value || '',
-                    notes: document.getElementById('custody-notes')?.value || '',
-                    events: events
-                };
-            };
-            
-            const collectExpensesData = () => {
-                const expenses = [];
-                document.querySelectorAll('#expense-items-container .expense-item').forEach(item => {
-                    expenses.push({
-                        description: item.querySelector('.expense-description')?.value || 'N/A',
-                        amount: parseFloat(item.querySelector('.expense-amount')?.value) || 0,
-                        paidBy: item.querySelector('.expense-paid-by')?.value || 'N/A'
-                    });
-                });
-                return { expenses };
-            };
+            // --- DATA COLLECTION ---
+            collectPartiesData = () => { /* Unchanged from V3 */ const d = { parties: [], children: [] }; document.querySelectorAll('#parties-content .party-card').forEach(c => { const n = c.querySelector('.party-name'); if (n) { if (!n.value.trim()) return; const p = { name: n.value.trim(), relationship: c.querySelector('select')?.value || '', addresses: [], contacts: [] }; c.querySelectorAll('.addresses-sub-container > div').forEach(a => p.addresses.push({ type: a.querySelector('select')?.value, address: a.querySelector('input')?.value })); c.querySelectorAll('.contacts-sub-container > div').forEach(cn => p.contacts.push({ type: cn.querySelector('select')?.value, contact: cn.querySelector('input')?.value })); d.parties.push(p); } else { const cn = c.querySelector('input[type="text"]'); if (!cn.value.trim()) return; d.children.push({ name: cn.value.trim(), dob: c.querySelector('input[type="date"]')?.value || '', primaryResidence: c.querySelector('select')?.value || '' }); } }); return d; };
+            collectCustodyData = () => { /* Unchanged from V3 */ const e = []; document.querySelectorAll('#events-log-container .event-log-item').forEach(i => e.push({ startDate: i.querySelector('.event-start-date')?.value, endDate: i.querySelector('.event-end-date')?.value, allocatedTo: i.querySelector('.event-allocated-to')?.value, type: i.querySelector('select:not(.event-allocated-to)')?.value, notes: i.querySelector('textarea')?.value })); return { recurringSchedule: document.getElementById('recurring-schedule-type')?.value || '', decisionBasis: document.getElementById('custody-decision')?.value || '', notes: document.getElementById('custody-notes')?.value || '', events: e }; };
+            collectExpensesData = () => { /* Unchanged from V3 */ const e = []; document.querySelectorAll('#expense-items-container .expense-item').forEach(i => e.push({ description: i.querySelector('.expense-description')?.value || 'N/A', amount: parseFloat(i.querySelector('.expense-amount')?.value) || 0, paidBy: i.querySelector('.expense-paid-by')?.value || 'N/A' })); return { expenses: e }; };
+            collectCommunicationData = () => ({}); // Placeholder
 
-            const collectCommunicationData = () => ({}); // Placeholder
+            // --- DOC/CSV GENERATION ---
+            generatePartiesDoc = (data) => `<h2>Parties & Children</h2>...`;
+            generateCustodyDoc = (data) => `<h2>CUSTODY & SCHEDULE</h2><p><strong>Base Schedule:</strong> ${data.recurringSchedule}</p><p><strong>Details:</strong></p><pre>${data.notes || 'N/A'}</pre><h3>Activity Log</h3><ul>${data.events.map(e => `<li>${e.startDate} to ${e.endDate || e.startDate}: ${e.type} (${e.allocatedTo}) - ${e.notes}</li>`).join('')}</ul>`;
+            generateExpensesDoc = (data) => { let r = `<h2>EXPENSE & CONTRIBUTION TRACKER</h2><table width="100%" border="1" cellpadding="5" cellspacing="0"><thead><tr><th>Expense</th><th>Amount</th><th>Paid By</th></tr></thead><tbody>`; data.expenses.forEach(ex => { r += `<tr><td>${ex.description}</td><td>R ${ex.amount.toFixed(2)}</td><td>${ex.paidBy}</td></tr>`; }); r += `</tbody></table>`; const d = document.getElementById('expense-dashboard'); if (d) { r += `<h3>Summary</h3><p><strong>Total Spent:</strong> ${d.querySelector('#total-spent').textContent}</p><p><strong>${d.querySelector('#parent-a-name').textContent}:</strong> ${d.querySelector('#parent-a-paid').textContent}</p><p><strong>${d.querySelector('#parent-b-name').textContent}:</strong> ${d.querySelector('#parent-b-paid').textContent}</p><p><strong>Equalization:</strong> ${d.querySelector('#equalization-message').textContent} - ${d.querySelector('#equalization-amount').textContent}</p>`; } return r; };
+            generateCommunicationDoc = (data) => `<h2>Communication...</h2>`;
 
-            // --- DOCUMENT/CSV GENERATION FUNCTIONS ---
-            const generatePartiesDoc = (data) => `<h2>Parties & Children</h2>...`; // Implementation omitted for brevity
-            const generateCustodyDoc = (data) => `<h2>CUSTODY & SCHEDULE</h2><p><strong>Base Schedule:</strong> ${data.recurringSchedule}</p><p><strong>Decision Basis:</strong> ${data.decisionBasis}</p><p><strong>Details:</strong></p><pre>${data.notes || 'N/A'}</pre><h3>Activity Log</h3><ul>${data.events.map(e => `<li>${e.startDate} to ${e.endDate || e.startDate}: ${e.type} (${e.allocatedTo}) - ${e.notes}</li>`).join('')}</ul>`;
-            const generateExpensesDoc = (data) => {
-                let report = `<h2>EXPENSE & CONTRIBUTION TRACKER</h2><table width="100%" border="1" cellpadding="5" cellspacing="0"><thead><tr><th>Expense</th><th>Amount</th><th>Paid By</th></tr></thead><tbody>`;
-                data.expenses.forEach(ex => { report += `<tr><td>${ex.description}</td><td>R ${ex.amount.toFixed(2)}</td><td>${ex.paidBy}</td></tr>`; });
-                report += `</tbody></table>`;
-                const dashboard = document.getElementById('expense-dashboard');
-                if (dashboard) { report += `<h3>Summary</h3><p><strong>Total Spent:</strong> ${dashboard.querySelector('#total-spent').textContent}</p><p><strong>${dashboard.querySelector('#parent-a-name').textContent}:</strong> ${dashboard.querySelector('#parent-a-paid').textContent}</p><p><strong>${dashboard.querySelector('#parent-b-name').textContent}:</strong> ${dashboard.querySelector('#parent-b-paid').textContent}</p><p><strong>Equalization:</strong> ${dashboard.querySelector('#equalization-message').textContent} - ${dashboard.querySelector('#equalization-amount').textContent}</p>`; }
-                return report;
-            };
-            const generateCommunicationDoc = (data) => `<h2>Communication...</h2>`; // Implementation omitted for brevity
-
-            const downloadScheduleCSV = () => {
+            downloadScheduleCSV = () => {
                 const data = collectCustodyData();
-                let csvContent = "data:text/csv;charset=utf-8,Start Date,End Date,Allocated To,Event Type,Notes\n";
-                data.events.forEach(row => { csvContent += [row.startDate, row.endDate, row.allocatedTo, row.type, `"${(row.notes || '').replace(/"/g, '""')}"`].join(",") + "\n"; });
+                let csv = "Start Date,End Date,Allocated To,Event Type,Notes\n";
+                data.events.forEach(row => { csv += [row.startDate, row.endDate, row.allocatedTo, row.type, `"${(row.notes || '').replace(/"/g, '""')}"`].join(",") + "\n"; });
                 const link = document.createElement("a");
-                link.setAttribute("href", encodeURI(csvContent));
+                link.setAttribute("href", 'data:text/csv;charset=utf-8,' + encodeURI(csv));
                 link.setAttribute("download", "parenting_schedule_log.csv");
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
             };
 
-            const generateDocument = (sectionIds) => { 
-                const sectionMap = {
-                    parties: generatePartiesDoc(collectPartiesData()),
-                    custody: generateCustodyDoc(collectCustodyData()),
-                    expenses: generateExpensesDoc(collectExpensesData()),
-                    communication: generateCommunicationDoc(collectCommunicationData()),
-                };
-                let fullDocument = `<html><head><title>Parenting Plan</title><style>body{font-family:Arial,sans-serif;margin:40px;} h2{border-bottom:2px solid #333;padding-bottom:5px;} table{border-collapse:collapse;} pre{white-space:pre-wrap;font-family:inherit;background:#f4f4f4;padding:1em;}</style></head><body><h1>PARENTING PLAN</h1><p><em>Generated on ${new Date().toLocaleDateString()}</em></p><hr>`;
-                sectionIds.forEach(id => { if (sectionMap[id]) { fullDocument += sectionMap[id] + '<hr>'; }});
-                fullDocument += '</body></html>';
-                const blob = new Blob([fullDocument], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a'); a.href = url; a.download = 'parenting-plan.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
+            generateDocument = (sectionIds) => { 
+                const sectionMap = { parties: generatePartiesDoc(collectPartiesData()), custody: generateCustodyDoc(collectCustodyData()), expenses: generateExpensesDoc(collectExpensesData()), communication: generateCommunicationDoc(collectCommunicationData()) };
+                let doc = `<html><head><title>Parenting Plan</title><style>body{font-family:Arial,sans-serif;margin:40px;}h2{border-bottom:2px solid #333;padding-bottom:5px;}table{border-collapse:collapse;width:100%;}th,td{border:1px solid #ccc;padding:8px;text-align:left;}pre{white-space:pre-wrap;font-family:inherit;background:#f4f4f4;padding:1em;}</style></head><body><h1>PARENTING PLAN</h1><p><em>Generated on ${new Date().toLocaleDateString()}</em></p><hr>`;
+                sectionIds.forEach(id => { if (sectionMap[id]) doc += sectionMap[id] + '<hr>'; });
+                doc += '</body></html>';
+                const blob = new Blob([doc], { type: 'text/html' });
+                const a = document.createElement('a');
+                a.href = URL.createObjectURL(blob);
+                a.download = 'parenting-plan.html';
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(a.href);
             };
             
-            // --- VIEW RENDER FUNCTIONS ---
-            const renderLandingView = () => {
-                views.landing.innerHTML = `<header class="text-center mb-12"><div class="inline-block p-6 md:p-8"><h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">The Co-Parenting Compass</h1><p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence.</p></div></header><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-magic text-5xl text-blue-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Automated Wizard</h4><p class="text-gray-400">Answer questions to find the right path.</p></div><div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Manual Builder</h4><p class="text-gray-400">Go straight to the full plan builder.</p></div><div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-star text-5xl text-amber-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Featured Forms</h4><p class="text-gray-400">Access other useful templates.</p></div></div>`;
-            };
-
-            const renderWizardStep = (step) => {
-                state.wizardStep = step; let content = '';
-                switch(step) {
-                    case 0: content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3></button><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3></button></div>`; break;
-                    case 1: content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections</h2></div><div class="space-y-3 mt-8" id="wizard-section-list"></div><div class="mt-8 flex justify-between"><button class="btn-secondary wizard-back" data-prev="0">Back</button><button class="btn-primary" id="wizard-finish-btn">Build My Plan</button></div>`; break;
-                }
-                views.wizard.innerHTML = content;
+            // --- VIEW RENDERERS ---
+            renderLandingView = () => { views.landing.innerHTML = `<header class="text-center mb-12"><div class="inline-block p-6 md:p-8"><h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">The Co-Parenting Compass</h1><p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence.</p></div></header><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-magic text-5xl text-blue-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Automated Wizard</h4><p class="text-gray-400">Answer questions to find the right path.</p></div><div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Manual Builder</h4><p class="text-gray-400">Go straight to the full plan builder.</p></div><div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-star text-5xl text-amber-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Featured Forms</h4><p class="text-gray-400">Access other useful templates.</p></div></div>`; };
+            renderWizardStep = (step) => {
+                state.wizardStep = step; let c = '';
+                if(step === 0) c = `<div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3></button><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3></button></div>`;
+                else if(step === 1) c = `<div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections</h2></div><div class="space-y-3 mt-8" id="wizard-section-list"></div><div class="mt-8 flex justify-between"><button class="btn-secondary wizard-back" data-prev="0">Back</button><button class="btn-primary" id="wizard-finish-btn">Build My Plan</button></div>`;
+                views.wizard.innerHTML = c;
                 if(step === 1) {
                     const list = document.getElementById('wizard-section-list');
-                    state.allSections.filter(s => s.id !== 'summary').forEach(s => list.innerHTML += `<label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600"><input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500" checked><span class="text-white">${s.title}</span></label>`);
+                    state.allSections.filter(s => s.id !== 'summary').forEach(s => list.innerHTML += `<label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600"><input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600" checked><span class="text-white">${s.title}</span></label>`);
                 }
             };
             
-            const renderBuilder = (sectionIds) => {
-                views.builder.innerHTML = `<div id="builder-header" class="flex justify-between items-center mb-6"><h2 class="text-3xl font-bold">Parenting Plan Builder</h2><div><button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button></div></div><div id="steps-container"></div><div id="navigation-container" class="flex justify-between items-center mt-8 pt-6 border-t border-gray-600"></div>`;
-                containers.steps = document.getElementById('steps-container');
-                containers.navigation = document.getElementById('navigation-container');
-
+            renderBuilder = (sectionIds) => {
+                views.builder.innerHTML = `<div class="flex justify-between items-center mb-6"><h2 class="text-3xl font-bold">Parenting Plan Builder</h2><div><button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button></div></div><div id="steps-container"></div><div id="navigation-container" class="flex justify-between items-center mt-8 pt-6 border-t border-gray-600"></div>`;
                 state.allSections = [ { id: 'parties', title: "Parties & Children", icon: 'fa-users', render: renderPartiesSection }, { id: 'custody', title: 'Custody & Schedule', icon: 'fa-calendar-days', render: renderCustodySection }, { id: 'expenses', title: 'Expense Tracker', icon: 'fa-hand-holding-dollar', render: renderExpensesSection }, { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: renderCommunicationSection }, { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: renderSummarySection } ];
                 state.selectedSections = state.allSections.filter(s => sectionIds.includes(s.id) || s.id === 'summary');
+                const stepsContainer = document.getElementById('steps-container');
+                stepsContainer.innerHTML = ''; // Clear previous steps
                 state.selectedSections.forEach((section, index) => {
-                    const stepContainer = document.createElement('div');
-                    stepContainer.className = 'step-container';
-                    stepContainer.id = `step-${index}`;
-                    stepContainer.innerHTML = `<div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700"><h3 class="text-2xl font-bold text-gray-200"><i class="fas ${section.icon} mr-3 text-blue-400"></i>${section.title}</h3>${section.id !== 'summary' ? `<button class="btn-secondary generate-section-btn" data-section-id="${section.id}"><i class="fas fa-print mr-2"></i>Print Section</button>` : ''}</div><div id="content-${section.id}"></div>`;
-                    containers.steps.appendChild(stepContainer);
+                    const stepEl = document.createElement('div');
+                    stepEl.className = 'step-container'; stepEl.id = `step-${index}`;
+                    stepEl.innerHTML = `<div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700"><h3 class="text-2xl font-bold text-gray-200"><i class="fas ${section.icon} mr-3 text-blue-400"></i>${section.title}</h3>${section.id !== 'summary' ? `<button class="btn-secondary generate-section-btn" data-section-id="${section.id}"><i class="fas fa-print mr-2"></i>Print Section</button>` : ''}</div><div id="content-${section.id}"></div>`;
+                    stepsContainer.appendChild(stepEl);
                     section.render(document.getElementById(`content-${section.id}`));
                 });
                 state.builderStep = 0;
@@ -374,78 +301,73 @@
                 switchView('builder-view');
             };
 
-            const updateBuilderStep = () => {
-                document.querySelectorAll('.step-container').forEach((step, index) => step.classList.toggle('active', index === state.builderStep));
-                renderNavigation();
-            };
-
-            const renderNavigation = () => {
+            updateBuilderStep = () => { document.querySelectorAll('.step-container').forEach((step, index) => step.classList.toggle('active', index === state.builderStep)); renderNavigation(); };
+            renderNavigation = () => {
+                const navContainer = document.getElementById('navigation-container');
+                if(!navContainer) return;
                 const isFirst = state.builderStep === 0;
                 const isLast = state.selectedSections.length - 1;
-                containers.navigation.innerHTML = `<button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button><div><button id="prev-step-btn" class="btn-secondary" ${isFirst ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Previous</button>${isLast ? `<button id="generate-final-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Document</button>` : `<button id="next-step-btn" class="btn-primary ml-4">Next<i class="fas fa-chevron-right ml-2"></i></button>`}</div>`;
+                navContainer.innerHTML = `<button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button><div><button id="prev-step-btn" class="btn-secondary" ${isFirst ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Previous</button>${isLast ? `<button id="generate-final-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Document</button>` : `<button id="next-step-btn" class="btn-primary ml-4">Next<i class="fas fa-chevron-right ml-2"></i></button>`}</div>`;
             };
             
-            renderPartiesSection = (container) => { container.innerHTML = `<div id="parties-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian A's Side</h4><div id="a-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="a">Add Party</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian B's Side</h4><div id="b-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="b">Add Party</button></div></div><div class="mt-8 pt-6 border-t border-gray-700"><h4 class="text-xl font-semibold mb-4 text-white">Children</h4><div id="children-container" class="space-y-4"></div><button id="add-child-btn" class="btn-secondary mt-4">Add Child</button></div>`; addGuardian('a', 'Parent A'); addGuardian('b', 'Parent B'); };
-            renderCustodySection = (container) => { container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Time Allocation Dashboard</h4><div id="time-allocation-dashboard" class="bg-gray-800 p-4 rounded-lg"><div class="flex justify-between items-center text-lg font-bold mb-2"><span id="time-parent-a-name" class="text-green-400">Parent A</span><span id="time-parent-b-name" class="text-purple-400">Parent B</span></div><div class="flex w-full h-8 bg-gray-600 rounded-full overflow-hidden mb-2"><div id="time-split-bar-a" class="bg-green-500" style="width: 50%;"></div><div id="time-split-bar-b" class="bg-purple-500" style="width: 50%;"></div></div><div class="flex justify-between items-center text-lg font-bold"><span id="time-parent-a-percent">50.0%</span><span id="time-parent-b-percent">50.0%</span></div></div></div><div><h4 class="text-xl font-semibold mb-4 text-white">Recurring Schedule</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="form-label">Base Schedule</label><select id="recurring-schedule-type" class="form-select">${generateOptions(dropdownOptions.recurringSchedules)}</select></div><div><label class="form-label">Decision Basis</label><select id="custody-decision" class="form-select">${generateOptions(dropdownOptions.custodyDecision)}</select></div></div><div class="mt-4"><label class="form-label">Notes</label><textarea id="custody-notes" class="form-textarea" rows="4" placeholder="Describe schedule..."></textarea></div></div><div class="pt-8 border-t border-gray-700"><div class="flex justify-between items-center mb-4"><h4 class="text-xl font-semibold text-white">Specific Events Log</h4><div><button class="btn-secondary add-event-btn"><i class="fas fa-plus mr-2"></i>Log Event</button><button class="btn-secondary download-csv-btn"><i class="fas fa-download mr-2"></i>CSV</button></div></div><div id="events-log-container" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div></div></div>`; updateTimeDashboard();};
-            renderExpensesSection = (container) => { container.innerHTML = `<div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="lg:col-span-2"><h4 class="text-xl font-semibold mb-4 text-white">Expense Items</h4><div id="expense-items-container" class="space-y-2 mb-4"></div><button class="btn-secondary add-expense-item-btn">Add Expense</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Contribution Dashboard</h4><div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg space-y-4"><div class="dashboard-metric"><div class="value text-blue-400" id="total-spent">R 0.00</div><div class="label">Total Expenses</div></div><div class="grid grid-cols-2 gap-4"><div class="dashboard-metric"><div class="value text-green-400" id="parent-a-paid">R 0.00</div><div class="label" id="parent-a-name">Parent A Paid</div></div><div class="dashboard-metric"><div class="value text-purple-400" id="parent-b-paid">R 0.00</div><div class="label" id="parent-b-name">Parent B Paid</div></div></div><div class="dashboard-metric"><div class="value text-amber-400" id="equalization-amount">R 0.00</div><div class="label" id="equalization-message">Contributions balanced.</div></div></div></div></div>`; addExpenseItem(container.querySelector('#expense-items-container')); };
-            renderCommunicationSection = (container) => { container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Methods</h4><div id="communication-methods-container" class="space-y-2"></div><button class="btn-secondary add-comm-method-btn mt-4">Add Method</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Guidelines</h4><div id="communication-guidelines" class="space-y-4">${dropdownOptions.communicationClassification.map(type => `<div class="bg-gray-800 p-4 rounded-lg"><h5 class="font-semibold mb-2 text-white">${type}</h5><textarea class="form-textarea" rows="3" data-guideline-type="${type}" placeholder="Guidelines..."></textarea></div>`).join('')}</div></div></div>`; };
-            renderSummarySection = (container) => { container.innerHTML = `<div class="text-center"><h2 class="text-3xl font-bold text-white">Final Step: Generate Document</h2></div><div class="max-w-2xl mx-auto mt-8 space-y-6"><div id="summary-section-list" class="space-y-3">${state.selectedSections.filter(s => s.id !== 'summary').map(s => `<label class="flex items-center space-x-3 p-4 bg-gray-800 rounded-md cursor-pointer"><input type="checkbox" value="${s.id}" class="h-5 w-5 rounded bg-gray-600" checked><i class="fas ${s.icon} text-gray-400 w-5 text-center"></i><span class="text-white font-semibold">${s.title}</span></label>`).join('')}</div></div>`; };
+            renderPartiesSection = (c) => { c.innerHTML = `<div id="parties-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian A's Side</h4><div id="a-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="a">Add Party</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian B's Side</h4><div id="b-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="b">Add Party</button></div></div><div class="mt-8 pt-6 border-t border-gray-700"><h4 class="text-xl font-semibold mb-4 text-white">Children</h4><div id="children-container" class="space-y-4"></div><button id="add-child-btn" class="btn-secondary mt-4">Add Child</button></div>`; addGuardian('a', 'Parent A'); addGuardian('b', 'Parent B'); };
+            renderCustodySection = (c) => { c.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Time Allocation Dashboard</h4><div id="time-allocation-dashboard" class="bg-gray-800 p-4 rounded-lg"><div class="flex justify-between items-center text-lg font-bold mb-2"><span id="time-parent-a-name" class="text-green-400">Parent A</span><span id="time-parent-b-name" class="text-purple-400">Parent B</span></div><div class="flex w-full h-8 bg-gray-600 rounded-full overflow-hidden mb-2"><div id="time-split-bar-a" class="bg-green-500 transition-all duration-500" style="width: 50%;"></div><div id="time-split-bar-b" class="bg-purple-500 transition-all duration-500" style="width: 50%;"></div></div><div class="flex justify-between items-center text-lg font-bold"><span id="time-parent-a-percent">50.0%</span><span id="time-parent-b-percent">50.0%</span></div></div></div><div><h4 class="text-xl font-semibold mb-4 text-white">Recurring Schedule</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="form-label">Base Schedule</label><select id="recurring-schedule-type" class="form-select">${generateOptions(dropdownOptions.recurringSchedules)}</select></div><div><label class="form-label">Decision Basis</label><select id="custody-decision" class="form-select">${generateOptions(dropdownOptions.custodyDecision)}</select></div></div><div class="mt-4"><label class="form-label">Notes</label><textarea id="custody-notes" class="form-textarea" rows="4" placeholder="Describe schedule..."></textarea></div></div><div class="pt-8 border-t border-gray-700"><div class="flex justify-between items-center mb-4"><h4 class="text-xl font-semibold text-white">Specific Events Log</h4><div><button class="btn-secondary add-event-btn"><i class="fas fa-plus mr-2"></i>Log Event</button><button class="btn-secondary download-csv-btn"><i class="fas fa-download mr-2"></i>CSV</button></div></div><div id="events-log-container" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div></div></div>`; updateTimeDashboard();};
+            renderExpensesSection = (c) => { c.innerHTML = `<div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="lg:col-span-2"><h4 class="text-xl font-semibold mb-4 text-white">Expense Items</h4><div id="expense-items-container" class="space-y-2 mb-4"></div><button class="btn-secondary add-expense-item-btn">Add Expense</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Contribution Dashboard</h4><div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg space-y-4"><div class="dashboard-metric"><div class="value text-blue-400" id="total-spent">R 0.00</div><div class="label">Total Expenses</div></div><div class="grid grid-cols-2 gap-4"><div class="dashboard-metric"><div class="value text-green-400" id="parent-a-paid">R 0.00</div><div class="label" id="parent-a-name">Parent A Paid</div></div><div class="dashboard-metric"><div class="value text-purple-400" id="parent-b-paid">R 0.00</div><div class="label" id="parent-b-name">Parent B Paid</div></div></div><div class="dashboard-metric"><div class="value text-amber-400" id="equalization-amount">R 0.00</div><div class="label" id="equalization-message">Contributions balanced.</div></div></div></div></div>`; addExpenseItem(c.querySelector('#expense-items-container')); };
+            renderCommunicationSection = (c) => { c.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Methods</h4><div id="communication-methods-container" class="space-y-2"></div><button class="btn-secondary add-comm-method-btn mt-4">Add Method</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Guidelines</h4><div class="space-y-4">${dropdownOptions.communicationClassification.map(type => `<div class="bg-gray-800 p-4 rounded-lg"><h5 class="font-semibold mb-2 text-white">${type}</h5><textarea class="form-textarea" rows="3" data-guideline-type="${type}" placeholder="Guidelines..."></textarea></div>`).join('')}</div></div></div>`; };
+            renderSummarySection = (c) => { c.innerHTML = `<div class="text-center"><h2 class="text-3xl font-bold text-white">Final Step: Generate Document</h2></div><div class="max-w-2xl mx-auto mt-8 space-y-6"><div id="summary-section-list" class="space-y-3">${state.selectedSections.filter(s => s.id !== 'summary').map(s => `<label class="flex items-center space-x-3 p-4 bg-gray-800 rounded-md cursor-pointer"><input type="checkbox" value="${s.id}" class="h-5 w-5 rounded bg-gray-600" checked><i class="fas ${s.icon} text-gray-400 w-5 text-center"></i><span class="text-white font-semibold">${s.title}</span></label>`).join('')}</div></div>`; };
 
             // ===================================================================
-            // SECTION 3: EVENT LISTENERS
+            // SECTION 3: EVENT LISTENERS & INITIALIZATION
             // ===================================================================
 
-            document.body.addEventListener('click', (e) => {
-                const target = e.target.closest('button, div.option-card');
-                if (!target) return;
-                
-                // --- View Navigation ---
-                if (target.id === 'start-wizard-btn') { renderWizardStep(0); switchView('wizard-view'); }
-                else if (target.id === 'start-manual-btn') { renderBuilder(state.allSections.filter(s => s.id !== 'summary').map(s => s.id)); }
-                else if (target.id === 'back-to-landing') { renderLandingView(); switchView('landing-view'); }
-                else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
-                else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
-                else if (target.id === 'wizard-finish-btn') { const ids = Array.from(document.querySelectorAll('#wizard-section-list input:checked')).map(cb => cb.value); renderBuilder(ids.length > 0 ? ids : []); }
-                
-                // --- Builder Navigation & Actions ---
-                else if (target.id === 'next-step-btn') { state.builderStep++; updateBuilderStep(); }
-                else if (target.id === 'prev-step-btn') { state.builderStep--; updateBuilderStep(); }
-                else if (target.id === 'generate-final-doc-btn') { showDisclaimer(Array.from(document.querySelectorAll('#summary-section-list input:checked')).map(cb => cb.value)); }
-                else if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
-                else if (target.matches('.download-csv-btn')) { downloadScheduleCSV(); }
-                else if (target.id === 'save-plan-btn') { showAlert('Feature Coming Soon!', 'Online saving and collaboration will be available for registered users soon.'); }
-                
-                // --- Dynamic Item Add/Remove ---
-                else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
-                else if (target.matches('.add-address-btn')) { addAddress(target.closest('.party-card').querySelector('.addresses-sub-container')); }
-                else if (target.matches('.add-contact-btn')) { addContact(target.closest('.party-card').querySelector('.contacts-sub-container')); }
-                else if (target.id === 'add-child-btn') { addChild(); }
-                else if (target.matches('.add-expense-item-btn')) { addExpenseItem(document.getElementById('expense-items-container')); }
-                else if (target.matches('.add-event-btn')) { addEventLog(document.getElementById('events-log-container')); }
-                else if (target.matches('.remove-item-btn')) { target.closest('.party-card, .event-log-item, .expense-item, .grid[class*="grid-cols-1"]').remove(); updateAllPartyDropdowns(); }
-            });
+            init = () => {
+                // Attach all event listeners
+                document.body.addEventListener('click', (e) => {
+                    const target = e.target.closest('button, div.option-card');
+                    if (!target) return;
+                    
+                    if (target.id === 'start-wizard-btn') { renderWizardStep(0); switchView('wizard-view'); }
+                    else if (target.id === 'start-manual-btn') { renderBuilder(state.allSections.filter(s => s.id !== 'summary').map(s => s.id)); }
+                    else if (target.id === 'back-to-landing') { renderLandingView(); switchView('landing-view'); }
+                    else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
+                    else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
+                    else if (target.id === 'wizard-finish-btn') { const ids = Array.from(document.querySelectorAll('#wizard-section-list input:checked')).map(cb => cb.value); renderBuilder(ids.length > 0 ? ids : []); }
+                    else if (target.id === 'next-step-btn') { state.builderStep++; updateBuilderStep(); }
+                    else if (target.id === 'prev-step-btn') { state.builderStep--; updateBuilderStep(); }
+                    else if (target.id === 'generate-final-doc-btn') { showDisclaimer(Array.from(document.querySelectorAll('#summary-section-list input:checked')).map(cb => cb.value)); }
+                    else if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
+                    else if (target.matches('.download-csv-btn')) { downloadScheduleCSV(); }
+                    else if (target.id === 'save-plan-btn') { showAlert('Feature Coming Soon!', 'Online saving will be available for registered users soon.'); }
+                    else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
+                    else if (target.matches('.add-address-btn')) { addAddress(target.closest('.party-card').querySelector('.addresses-sub-container')); }
+                    else if (target.matches('.add-contact-btn')) { addContact(target.closest('.party-card').querySelector('.contacts-sub-container')); }
+                    else if (target.id === 'add-child-btn') { addChild(); }
+                    else if (target.matches('.add-expense-item-btn')) { addExpenseItem(document.getElementById('expense-items-container')); }
+                    else if (target.matches('.add-event-btn')) { addEventLog(document.getElementById('events-log-container')); }
+                    else if (target.matches('.remove-item-btn')) { target.closest('.party-card, .event-log-item, .expense-item, .grid[class*="grid-cols-1"]').remove(); updateAllPartyDropdowns(); }
+                });
 
-            document.body.addEventListener('input', e => {
-                const target = e.target;
-                if (target.matches('.expense-amount, .expense-paid-by')) { updateExpenseDashboard(); } 
-                else if (target.matches('.party-name')) { updateAllPartyDropdowns(); }
-                else if (target.matches('.event-start-date, .event-end-date, .event-allocated-to')) { updateTimeDashboard(); }
-            });
+                document.body.addEventListener('input', e => {
+                    const target = e.target;
+                    if (target.matches('.expense-amount, .expense-paid-by')) { updateExpenseDashboard(); } 
+                    else if (target.matches('.party-name')) { updateAllPartyDropdowns(); }
+                    else if (target.matches('.event-start-date, .event-end-date, .event-allocated-to')) { updateTimeDashboard(); }
+                });
+                
+                alertModal.close.addEventListener('click', () => alertModal.modal.style.display = 'none');
+                disclaimerModal.cancel.addEventListener('click', () => disclaimerModal.modal.style.display = 'none');
+                disclaimerModal.agree.addEventListener('change', () => disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked);
+                disclaimerModal.proceed.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; generateDocument(disclaimerModal.proceed.dataset.sections.split(',')); });
+
+                // Initial App Load
+                renderLandingView();
+                switchView('landing-view');
+                setDynamicBackground();
+            };
             
-            // --- Modal Controls ---
-            alertModal.close.addEventListener('click', () => { alertModal.modal.style.display = 'none'; });
-            disclaimerModal.cancel.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; });
-            disclaimerModal.agree.addEventListener('change', () => { disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked; });
-            disclaimerModal.proceed.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; generateDocument(disclaimerModal.proceed.dataset.sections.split(',')); });
-
-            // ===================================================================
-            // SECTION 4: INITIALIZATION
-            // ===================================================================
-            
-            renderLandingView();
-            switchView('landing-view');
-            setDynamicBackground();
-        });
+            // Run the app
+            init();
+        })();
     </script>
 </body>
 </html>
