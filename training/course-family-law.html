@@ -215,5 +215,32 @@
         }
     });
     </script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', function () {
+        // Fetch the sidebar from the root directory. This works from any page.
+        fetch('/training-sidebar.html')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Network response was not ok: ' + response.statusText);
+                }
+                return response.text();
+            })
+            .then(html => {
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
+                }
+            })
+            .catch(error => {
+                console.error('Error fetching training sidebar:', error);
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    // Display an error message if the sidebar fails to load
+                    placeholder.innerHTML = '<div class="p-4"><p class="text-red-500">Error loading sidebar.</p></div>';
+                }
+            });
+    });
+</script>
 </body>
 </html>
