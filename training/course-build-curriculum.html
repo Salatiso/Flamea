@@ -1,108 +1,210 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Building Your Own Curriculum</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        /* Re-using the same styles from the master course template with a new color scheme */
-        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #10B981; color: white; transform: translateX(10px); }
-        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #34D399; padding-bottom: 0.5rem; color: #6EE7B7;}
-        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #A7F3D0;}
-        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
-        .prose strong { color: #A7F3D0; }
-        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
-        .quiz-option:hover { background-color: #374151; }
-        .quiz-option.selected { background-color: #059669; border-color: #10B981; }
-        .module { display: none; }
-        .module.active { display: block; }
-        .quiz-section { display: none; }
-        .quiz-section.active { display: block; }
-        .certificate-modal { display: none; }
-        .certificate-modal.active { display: flex; }
-        .progress-bar-container { background-color: #4B5563; }
-        .progress-bar-fill { background-color: #10B981; transition: width 0.5s ease-in-out; }
-        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: white; }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .prose h2 { color: #6ee7b7; font-family: 'Roboto Slab', serif;} 
+        .prose h3 { color: #a7f3d0; font-family: 'Roboto Slab', serif;} 
+        .prose strong { color: #a7f3d0; }
+        .quiz-container, #end-screen { background-color: rgba(30, 41, 59, 0.9); backdrop-filter: blur(8px); }
+        .quiz-option { cursor: pointer; border: 2px solid #4b5563; transition: all 0.2s ease; }
+        .quiz-option:hover { background-color: #374151; border-color: #9ca3af; }
+        .quiz-option.selected { border-color: #f59e0b; background-color: #78350f; }
+        .quiz-option.correct { border-color: #22c55e; background-color: #166534; }
+        .quiz-option.incorrect { border-color: #ef4444; background-color: #991b1b; }
+        .achievement-unlocked { animation: pop-in 0.5s ease-out; }
+        @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-emerald-400">A</span></a>
-             <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Why Create Your Own?</a>
-                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Core Components</a>
-                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Learning Through Life</a>
-            </nav>
-            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
-                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
-            </div>
-            <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-             <div class="max-w-4xl mx-auto">
-                <!-- Course Header -->
-                <div class="mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-emerald-400">Building Your Own Curriculum</h1>
-                    <p class="text-lg text-gray-400 mt-2">A father's guide to practical, values-based education, inspired by "The Homeschooling Father."</p>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #10B981;"></div>
-                </div>
-
-                 <!-- Course Content Area -->
-                <div class="prose max-w-none prose-invert">
-                    <!-- Module 1 -->
-                    <div id="module1" class="module active">
-                        <section>
-                            <h2>Module 1: Why Create Your Own Curriculum?</h2>
-                            <p>The formal schooling system often fails our children. As highlighted in *The Homeschooling Father*, it prioritizes memorization over critical thinking and standardized tests over practical skills. By creating your own curriculum, you take back control and provide an education that is truly tailored to your child and your family's values.</p>
-                            
-                            <h3>A. The Failure of the "One-Size-Fits-All" Model</h3>
-                            <p>Every child learns differently. One child may thrive with hands-on projects, while another may excel with reading and research. The formal school system cannot cater to these individual differences. The result? Children are either bored or overwhelmed, and their natural curiosity is often extinguished. You, as a father, know your child best. You are uniquely positioned to create a learning environment where they can flourish.</p>
-                            
-                            <h3>B. Education Rooted in Reality and Culture</h3>
-                            <p>Building your own curriculum allows you to integrate lessons that matter. This is your chance to pass on your cultural heritage, whether you are Xhosa, Zulu, Venda, or Afrikaans. Teach your child about their ancestors, their traditions, and their history. Furthermore, you can focus on practical, real-world skills:</p>
-                            <ul>
-                                <li><strong>Financial Literacy:</strong> How to budget, save, and invest.</li>
-                                <li><strong>Practical Skills:</strong> Basic carpentry, car maintenance, gardening, and cooking.</li>
-                                <li><strong>Entrepreneurship:</strong> How to identify a need in the community and build something to meet it.</li>
-                            </ul>
-                            <p>This is an education for self-reliance, not just for employment.</p>
-                        </section>
-                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <div id="course-hub" class="max-w-4xl mx-auto text-center">
+                <header class="mb-12">
+                     <div class="flex justify-center items-center gap-4 mb-4">
+                        <!-- SVG Icon for Building/Planning -->
+                        <svg class="h-20 w-20 text-emerald-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor">
+                            <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Building Your Own Curriculum</h1>
                     </div>
-                    <!-- Other modules and quizzes would be added here -->
+                    <p class="text-lg text-gray-300">A father's guide to practical, values-based education, inspired by "The Homeschooling Father."</p>
+                </header>
+                <div class="bg-slate-800/80 backdrop-blur-sm p-6 rounded-2xl">
+                    <p class="mb-6">Move beyond the limits of formal schooling. This course will teach you how to design a personalized curriculum that instills practical skills, cultural values, and a love for lifelong learning. Complete the 15-question challenge to earn your certificate.</p>
+                    <button id="start-course-btn" class="btn btn-primary text-xl">Begin Your Training</button>
                 </div>
+            </div>
+            
+            <div id="quiz-area" class="w-full max-w-4xl mx-auto hidden">
+                <div class="quiz-container p-8 rounded-xl shadow-2xl">
+                    <div class="flex justify-between items-center mb-4">
+                        <h2 class="text-2xl font-bold font-roboto-slab text-slate-300">Curriculum Builder Challenge</h2>
+                        <div id="achievements-bar" class="flex gap-3 text-2xl text-yellow-400"></div>
+                    </div>
+                    <div class="w-full bg-gray-700 rounded-full h-4 mb-6">
+                        <div id="progress-bar" class="bg-emerald-500 h-4 rounded-full transition-all duration-500" style="width: 0%"></div>
+                    </div>
+                    <div id="question-area"></div>
+                    <div id="feedback-area" class="mt-4 min-h-[50px] text-center font-semibold"></div>
+                    <button id="next-question-btn" class="btn btn-secondary w-full mt-4 hidden">Next Question</button>
+                </div>
+            </div>
+
+            <div id="end-screen" class="w-full max-w-2xl mx-auto hidden text-center quiz-container p-8 rounded-xl">
+                 <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Challenge Complete!</h2>
+                 <p class="text-xl mt-4">You have mastered the art of curriculum design.</p>
+                 <p class="text-2xl mt-2">Final Score: <span id="final-score" class="font-bold"></span></p>
+                 <div id="final-achievements" class="text-6xl my-6 flex justify-center gap-4"></div>
+                 <p class="text-lg">You are the architect of your child's education.</p>
+                 <button id="restart-btn" class="btn btn-primary text-xl mt-6">Train Again</button>
             </div>
         </main>
     </div>
-    <!-- Modal and Scripts -->
-    <script type="module" src="../assets/js/auth.js"></script>
-    <script type="module" src="../assets/js/course-logic.js"></script>
+
+    <script type="module" src="../assets/js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // UI Elements
+        const courseHub = document.getElementById('course-hub');
+        const quizArea = document.getElementById('quiz-area');
+        const startCourseBtn = document.getElementById('start-course-btn');
+        const questionArea = document.getElementById('question-area');
+        const nextQuestionBtn = document.getElementById('next-question-btn');
+        const progressBar = document.getElementById('progress-bar');
+        const feedbackArea = document.getElementById('feedback-area');
+        const achievementsBar = document.getElementById('achievements-bar');
+        const endScreen = document.getElementById('end-screen');
+        const finalScoreEl = document.getElementById('final-score');
+        const finalAchievementsEl = document.getElementById('final-achievements');
+        const restartBtn = document.getElementById('restart-btn');
+
+        const questions = [
+            // Module 1 (5 questions)
+            { q: "Why does the 'one-size-fits-all' formal schooling model often fail?", a: "It cannot cater to the individual learning styles of each child.", o: ["It doesn't have enough holidays.", "The buildings are too old."] },
+            { q: "Who is in the best position to create a learning environment where a child can flourish?", a: "The child's parents and family.", o: ["Government education departments.", "Standardized testing companies."] },
+            { q: "Building your own curriculum allows you to pass on your...", a: "Cultural heritage and family values.", o: ["Favorite TV shows.", "Old school reports."] },
+            { q: "An education focused on self-reliance teaches practical skills and...", a: "Entrepreneurship.", o: ["Advanced theoretical physics.", "Memorizing dates."] },
+            { q: "The book 'The Homeschooling Father' argues that formal schooling often prioritizes memorization over...", a: "Critical thinking.", o: ["Following rules.", "Sitting quietly."] },
+            // Module 2 (5 questions)
+            { q: "What is the first step in designing a curriculum?", a: "Identifying your core values and educational goals.", o: ["Buying a lot of textbooks.", "Setting a strict daily schedule."] },
+            { q: "Why is it important to use a mix of learning resources (books, online, hands-on)?", a: "To cater to different learning styles and keep the child engaged.", o: ["To make the curriculum more expensive.", "To confuse the child."] },
+            { q: "The 'eclectic curriculum' approach means:", a: "Combining different methods and resources to suit the child.", o: ["Only using one specific curriculum provider.", "Avoiding all online resources."] },
+            { q: "What is a key component of a values-based education?", a: "Teaching responsibility, respect, and integrity.", o: ["Focusing only on achieving high test scores.", "Ensuring the child never fails at anything."] },
+            { q: "Integrating daily chores and home maintenance into learning is an example of:", a: "Practical, project-based learning.", o: ["Punishment for bad grades.", "Wasting time that could be spent on books."] },
+            // Module 3 (5 questions)
+            { q: "What is a major benefit of learning through real-world projects?", a: "It teaches problem-solving and makes learning relevant.", o: ["It is always faster than reading a book.", "It avoids the need for any kind of assessment."] },
+            { q: "How can a family garden be a powerful educational tool?", a: "It teaches biology, patience, and the value of hard work.", o: ["It's a good way to get free vegetables.", "It's only useful for learning about plants."] },
+            { q: "When a child learns by watching and helping a parent with a task, they are learning through...", a: "Mentorship and practical experience.", o: ["A formal examination.", "A waste of time."] },
+            { q: "Why is it important for a child's education to connect to their cultural identity?", a: "It builds self-esteem and a strong sense of belonging.", o: ["It is a legal requirement by the government.", "It helps them get a job overseas."] },
+            { q: "Sudden Death: Your child shows a great talent for drawing but struggles with math. The formal school system would likely push them to focus on math. What does a custom curriculum allow you to do?", a: "Nurture their artistic talent while finding creative ways to make math relevant and less stressful.", o: ["Force them to stop drawing until their math improves.", "Ignore math completely because they are not good at it."], category: "sudden-death" }
+        ];
+
+        const achievements = {
+            5: { icon: 'fa-ruler-combined', title: 'The Architect' },
+            10: { icon: 'fa-compass-drafting', title: 'The Navigator' },
+            15: { icon: 'fa-award', title: 'The Master Builder' }
+        };
+
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function startGame() {
+            courseHub.classList.add('hidden');
+            quizArea.classList.remove('hidden');
+            endScreen.classList.add('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            achievementsBar.innerHTML = '';
+            updateProgressBar();
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            feedbackArea.innerHTML = '';
+            nextQuestionBtn.classList.add('hidden');
+            const qData = questions[currentQuestionIndex];
+            
+            let optionsHTML = shuffleArray([...qData.o, qData.a]).map(opt => `<div class="quiz-option p-4 rounded-lg" data-answer="${opt === qData.a}">${opt}</div>`).join('');
+            
+            questionArea.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${qData.q}</p><div class="space-y-3">${optionsHTML}</div>`;
+            
+            questionArea.querySelectorAll('.quiz-option').forEach(opt => opt.addEventListener('click', handleAnswerClick));
+        }
+        
+        function handleAnswerClick(e) {
+            const selectedOption = e.target;
+            const isCorrect = selectedOption.dataset.answer === 'true';
+            
+            questionArea.querySelectorAll('.quiz-option').forEach(opt => {
+                opt.style.pointerEvents = 'none';
+                if(opt.dataset.answer === 'true') opt.classList.add('correct');
+                else if (opt === selectedOption) opt.classList.add('incorrect');
+            });
+
+            if (isCorrect) {
+                feedbackArea.innerHTML = '<p class="text-green-400 font-bold">Correct! You are thinking like a true architect of education.</p>';
+                score++;
+                checkAchievement();
+            } else {
+                feedbackArea.innerHTML = '<p class="text-red-400 font-bold">Not quite. Remember to focus on the child\'s unique needs.</p>';
+            }
+            nextQuestionBtn.classList.remove('hidden');
+        }
+
+        function checkAchievement() {
+            if (achievements[score]) {
+                const achievement = achievements[score];
+                const iconEl = document.createElement('i');
+                iconEl.className = `fas ${achievement.icon} achievement-unlocked`;
+                iconEl.title = achievement.title;
+                achievementsBar.appendChild(iconEl);
+            }
+        }
+        
+        function handleNextQuestion() {
+            currentQuestionIndex++;
+            updateProgressBar();
+            if (currentQuestionIndex < questions.length) {
+                loadQuestion();
+            } else {
+                showEndScreen();
+            }
+        }
+
+        function showEndScreen() {
+            quizArea.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            finalScoreEl.textContent = `${score} / ${questions.length}`;
+            finalAchievementsEl.innerHTML = achievementsBar.innerHTML;
+        }
+        
+        function updateProgressBar() {
+            const progress = (currentQuestionIndex / questions.length) * 100;
+            progressBar.style.width = `${progress}%`;
+        }
+
+        function resetGame() {
+            endScreen.classList.add('hidden');
+            courseHub.classList.remove('hidden');
+        }
+
+        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        startCourseBtn.addEventListener('click', startGame);
+        nextQuestionBtn.addEventListener('click', handleNextQuestion);
+        restartBtn.addEventListener('click', resetGame);
+    });
+    </script>
 </body>
 </html>
