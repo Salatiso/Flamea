@@ -10,6 +10,7 @@
     <style>
         body { font-family: 'Open Sans', sans-serif; }
         .main-container { display: flex; min-height: 100vh; }
+        /* FIXED: Removed the explicit background-color from this rule */
         .main-content { flex-grow: 1; overflow-y: auto; }
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; padding: 0 1.5rem; }
         .accordion-item.active .accordion-content { max-height: 2000px; /* Increased max-height */ padding: 1.5rem; }
