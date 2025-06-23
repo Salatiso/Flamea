@@ -1,83 +1,77 @@
-<!-- training-sidebar.html -->
-<!-- This file contains the HTML structure for the interactive training course sidebar. -->
-<aside class="w-64 bg-gray-800 bg-opacity-90 backdrop-blur-lg text-white h-screen flex flex-col p-4 shadow-2xl">
-    <div class="text-center border-b border-gray-700 pb-4 mb-4">
-        <a href="/training.html" class="text-2xl font-bold text-orange-400 hover:text-orange-300">Flamea</a>
-        <p class="text-sm text-gray-400">Training Centre</p>
+<!--
+  This is the corrected sidebar for the training section.
+  - Links have been updated to be root-relative (e.g., href="/training/course-name.html").
+  - This ensures they work correctly whether the sidebar is loaded on the main training page or a specific course page.
+-->
+<aside class="w-64 h-screen sticky top-0 overflow-y-auto bg-white dark:bg-gray-800 shadow-md">
+    <div class="p-6">
+        <h2 class="text-2xl font-semibold text-gray-800 dark:text-white">Training Modules</h2>
+        <p class="mt-2 text-sm text-gray-600 dark:text-gray-400">Navigate your learning journey.</p>
     </div>
+    <nav class="mt-4">
+        <a href="/training.html" class="flex items-center px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <span class="mx-3">Training Home</span>
+        </a>
 
-    <nav class="flex-grow space-y-4">
-        <a href="../index.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
-            <i class="fas fa-home w-6 text-center"></i>
-            <span class="ml-3 font-semibold">Home</span>
-        </a>
-        <a href="../training.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
-            <i class="fas fa-graduation-cap w-6 text-center"></i>
-            <span class="ml-3 font-semibold">All Training</span>
-        </a>
-        <a href="../games.html" class="flex items-center p-3 rounded-lg hover:bg-orange-500 hover:bg-opacity-50 transition-colors duration-200">
-            <i class="fas fa-tasks w-6 text-center"></i>
-            <span class="ml-3 font-semibold">Interactive Games</span>
-        </a>
-    </nav>
-
-    <div class="border-t border-gray-700 pt-4">
-        <h3 class="text-lg font-semibold mb-2 text-center text-gray-300">Course Progress</h3>
-        
-        <!-- Progress Bar -->
+        <!-- Fathers Category -->
         <div>
-            <div class="flex justify-between text-sm font-medium text-gray-400 mb-1">
-                <span>Completion</span>
-                <span id="progress-percentage">0%</span>
-            </div>
-            <div class="w-full bg-gray-600 rounded-full h-2.5">
-                <div id="progress-bar" class="bg-orange-500 h-2.5 rounded-full" style="width: 0%"></div>
+            <button onclick="toggleAccordion('fathers')" class="flex items-center justify-between w-full px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                <span class="mx-3 font-semibold">For Fathers</span>
+                <svg id="fathers-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="fathers" class="hidden pl-8">
+                <a href="/training/course-childrens-act.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Children's Act</a>
+                <a href="/training/course-family-law.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Family Law</a>
+                <a href="/training/course-coparenting.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Co-Parenting</a>
+                <a href="/training/course-newborn-daily-care.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Newborn Daily Care</a>
+                <a href="/training/course-build-curriculum.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Build a Curriculum</a>
+                <a href="/training/course-extended-family.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Extended Family</a>
+                <a href="/training/course-fathers-shield.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Father's Shield</a>
+                <a href="/training/course-risk-management.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Risk Management</a>
+                <a href="/training/course-constitution.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Constitution</a>
             </div>
         </div>
-    </div>
 
-    <!-- Navigation Controls -->
-    <div class="flex justify-between mt-6">
-        <button id="back-btn" title="Previous Module" class="bg-gray-700 hover:bg-gray-600 text-white font-bold py-2 px-4 rounded-lg transition">
-            <i class="fas fa-arrow-left"></i> Back
-        </button>
-        <button id="next-btn" title="Next Module" class="bg-orange-500 hover:bg-orange-600 text-white font-bold py-2 px-4 rounded-lg transition">
-            Next <i class="fas fa-arrow-right"></i>
-        </button>
-    </div>
+        <!-- Khulu Category -->
+        <div>
+            <button onclick="toggleAccordion('khulu')" class="flex items-center justify-between w-full px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                <span class="mx-3 font-semibold">For Khulu</span>
+                <svg id="khulu-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="khulu" class="hidden pl-8">
+                <a href="/training/course-ancestors-within.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Ancestors Within</a>
+                <a href="/training/course-unbroken-chain.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Unbroken Chain</a>
+                <a href="/training/courses_khulu-the_constitution_your_ultimate_shield.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Constitution Shield</a>
+                <a href="/training/course-khulu-senior-crusaders.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Senior Crusaders</a>
+            </div>
+        </div>
+
+        <!-- Kids Category -->
+        <div>
+            <button onclick="toggleAccordion('kids')" class="flex items-center justify-between w-full px-6 py-3 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700 focus:outline-none">
+                <span class="mx-3 font-semibold">For Kids</span>
+                <svg id="kids-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+            </button>
+            <div id="kids" class="hidden pl-8">
+                <a href="/training/course_kids-rights_shield.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Rights Shield</a>
+                <a href="/training/course-kids-big_rule_book.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Big Rule Book</a>
+                <a href="/training/course-kids-whos_in_charge.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Who's In Charge?</a>
+                <a href="/training/course-kids-great_family_homestead.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">Great Family Homestead</a>
+                <a href="/training/course-kids-the_best_nest.html" class="block py-2 px-4 text-sm text-gray-700 hover:bg-gray-200 dark:text-gray-300 dark:hover:bg-gray-600">The Best Nest</a>
+            </div>
+        </div>
+
+        <a href="/games.html" class="flex items-center px-6 py-3 mt-4 text-gray-700 dark:text-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+            <span class="mx-3 font-semibold">Interactive Games</span>
+        </a>
+    </nav>
+    <script>
+        // Javascript to control the accordion menu
+        function toggleAccordion(sectionId) {
+            const section = document.getElementById(sectionId);
+            const arrow = document.getElementById(sectionId + '-arrow');
+            section.classList.toggle('hidden');
+            arrow.classList.toggle('rotate-180');
+        }
+    </script>
 </aside>
-
-<!-- Sidebar logic -->
-<script>
-document.addEventListener('DOMContentLoaded', function() {
-    const backBtn = document.getElementById('back-btn');
-    const nextBtn = document.getElementById('next-btn');
-
-    if (backBtn) {
-        backBtn.addEventListener('click', () => history.back());
-    }
-    if (nextBtn) {
-        nextBtn.addEventListener('click', () => history.forward());
-    }
-
-    // --- Progress Logic ---
-    function updateSidebarProgress() {
-        // This function will need to be connected to your course logic to be effective
-        const progress = localStorage.getItem('flameaTrainingProgress') || '0';
-        const progressPercentageEl = document.getElementById('progress-percentage');
-        const progressBarEl = document.getElementById('progress-bar');
-
-        if (progressPercentageEl) progressPercentageEl.textContent = `${progress}%`;
-        if (progressBarEl) progressBarEl.style.width = `${progress}%`;
-    }
-
-    updateSidebarProgress();
-    window.addEventListener('update-progress', updateSidebarProgress);
-
-    window.setTrainingProgress = function(percentage) {
-        let progress = Math.max(0, Math.min(100, percentage)); // clamp between 0-100
-        localStorage.setItem('flameaTrainingProgress', progress);
-        window.dispatchEvent(new CustomEvent('update-progress'));
-    }
-});
-</script>
