@@ -1,8 +1,71 @@
-<aside class="p-6 flex flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300" style="width: 288px;">
-    <!-- Top Section: Logo & Navigation -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <!-- Note: This is a component file. Head content is for standalone viewing. -->
+    <title>Flamea Sidebar</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        /* --- Styles from original sidebar.html --- */
+        .sidebar-link {
+            transition: background-color 0.2s, color 0.2s;
+        }
+        .sidebar-link:hover, .sidebar-link-main:hover {
+            background-color: #1f2937;
+            color: white;
+        }
+        .submenu-container {
+            display: none; /* Kept from original for accordion logic */
+        }
+        /* Active state for accordion arrow */
+        [data-menu-item].active > .submenu-toggle .fa-chevron-down,
+        [data-menu-item].active > button .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* --- NEW Styles for Podcast Player --- */
+        #podcast-player-container {
+            background-color: #111827; /* Darker for depth */
+            color: #d1d5db;
+        }
+        #podcast-playlist {
+            max-height: 200px; /* Limits the height of the playlist */
+            overflow-y: auto; /* Adds scrollbar when needed */
+            border-top: 1px solid #374151;
+        }
+        .podcast-playlist-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .podcast-playlist-item:hover {
+            background-color: #374151;
+        }
+        .podcast-playlist-item.active {
+            background-color: rgba(74, 222, 128, 0.1); /* Green highlight to match logo */
+            border-left-color: #4ade80; /* Green highlight */
+        }
+        #podcast-progress-container {
+            background-color: #4b5563;
+            cursor: pointer;
+        }
+        #podcast-progress-bar {
+            background-color: #4ade80; /* Green progress bar */
+        }
+        #podcast-playlist::-webkit-scrollbar { width: 5px; }
+        #podcast-playlist::-webkit-scrollbar-track { background: #1f2937; }
+        #podcast-playlist::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 3px; }
+    </style>
+</head>
+<body class="bg-gray-800"> <!-- Example body for viewing component -->
+
+<aside class="p-6 flex flex-col justify-between h-full bg-gray-900 text-gray-300" style="width: 288px;">
+    <!-- Top Section: Logo & Navigation (Preserved from your file) -->
     <div class="sidebar-top">
         <div class="mb-12 flex justify-center">
-            <!-- Corrected link to point to the new desktop index -->
             <a href="desktop-index.html" class="flamea-logo dark">
                 <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
                     <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
@@ -14,9 +77,7 @@
             </a>
         </div>
         
-        <!-- Main Navigation Categories -->
         <nav id="main-nav" class="flex flex-col space-y-2">
-            <!-- Corrected link to point to the new desktop index -->
             <a href="desktop-index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
             <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> About</a>
             <div class="relative" data-menu-item="tools-hub">
@@ -45,12 +106,29 @@
             <div class="border-t border-gray-700 my-4"></div>
             
             <a href="publications.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book w-6 text-center mr-4 text-blue-400"></i> Publications</a>
-            <a href="podcast-player.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i> Podcast</a>
+            
+            <!-- --- START: Podcast Player Integration --- -->
+            <div class="relative" data-menu-item="podcast-player">
+                <button class="submenu-toggle flex items-center p-3 rounded-lg w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i>
+                    <span class="flex-grow">Podcast</span>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                </button>
+                <div id="podcast-player-container" class="submenu-container text-sm p-3 bg-gray-800/30">
+                    <!-- Player interface will be injected here by the script -->
+                    <div id="podcast-loader" class="text-center p-4">
+                        <i class="fas fa-spinner fa-spin text-yellow-400"></i>
+                        <p class="text-xs mt-2">Loading Player...</p>
+                    </div>
+                </div>
+            </div>
+            <!-- --- END: Podcast Player Integration --- -->
+
             <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: The Fatherhood Guide</button>
         </nav>
     </div>
     
-    <!-- Bottom Section: Join, Auth & Copyright -->
+    <!-- Bottom Section (Preserved from your file) -->
     <div class="sidebar-bottom text-center">
         <div class="mb-4" data-menu-item="join-movement">
             <button class="submenu-toggle flex items-center p-3 rounded-lg w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white">
@@ -72,3 +150,199 @@
         </div>
     </div>
 </aside>
+
+<!-- IMPORTANT: The main page that loads this sidebar must have this audio tag in its body -->
+<audio id="flamea-audio-player" crossOrigin="anonymous"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Standard Sidebar Accordion Logic (from your file)
+    const menuItems = document.querySelectorAll('[data-menu-item]');
+    menuItems.forEach(item => {
+        const toggle = item.querySelector('.submenu-toggle');
+        const submenu = item.querySelector('.submenu-container');
+        if (toggle && submenu) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                const wasActive = item.classList.contains('active');
+                // Close all other menu items
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.submenu-container').style.display = 'none';
+                    }
+                });
+                // Toggle the clicked item
+                if (wasActive) {
+                    item.classList.remove('active');
+                    submenu.style.display = 'none';
+                } else {
+                    item.classList.add('active');
+                    submenu.style.display = 'block';
+                }
+            });
+        }
+    });
+    
+    // --- NEW: Podcast Player Logic ---
+    const playerContainer = document.getElementById('podcast-player-container');
+    // Important: The audio player element should exist on the main page.
+    const audioPlayer = document.getElementById('flamea-audio-player');
+    if (!audioPlayer) {
+        console.error("Critical Error: Audio element with id 'flamea-audio-player' not found on the main page.");
+        return;
+    }
+
+    let episodes = [];
+    let currentEpisodeIndex = 0;
+    let isPlaying = false;
+
+    // Using a CORS proxy to fetch the RSS feed from Anchor.fm
+    const RSS_URL = "https://anchor.fm/s/10357aacc/podcast/rss";
+    const CORS_PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`;
+
+    fetch(CORS_PROXY_URL)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok.');
+            return response.text();
+        })
+        .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+        .then(data => {
+            const items = data.querySelectorAll("item");
+            if (items.length === 0) throw new Error("No episodes found in RSS feed.");
+
+            items.forEach(item => {
+                episodes.push({
+                    title: item.querySelector("title").textContent,
+                    audioSrc: item.querySelector("enclosure")?.getAttribute('url'),
+                    artworkUrl: item.querySelector("image")?.getAttribute('href') || 'https://placehold.co/100x100/111827/4ade80?text=F'
+                });
+            });
+
+            renderPlayer();
+            loadEpisode(0);
+        })
+        .catch(err => {
+            console.error("Error loading podcast feed:", err);
+            playerContainer.innerHTML = `<p class="p-2 text-xs text-center text-red-400">Could not load podcast feed.</p>`;
+        });
+
+    function renderPlayer() {
+        // Build the player UI inside the container
+        playerContainer.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <img id="podcast-art" class="w-14 h-14 rounded-md object-cover" src="https://placehold.co/100x100/111827/4ade80?text=F">
+                <div class="flex-grow overflow-hidden">
+                    <p id="podcast-title" class="font-semibold text-white truncate">Select an Episode</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                         <span id="podcast-current-time">0:00</span>
+                         <span id="podcast-total-duration">0:00</span>
+                    </div>
+                </div>
+            </div>
+            <div id="podcast-progress-container" class="h-1.5 rounded-full w-full bg-gray-600 mb-3">
+                <div id="podcast-progress-bar" class="h-full rounded-full" style="width: 0%;"></div>
+            </div>
+            <div class="flex items-center justify-around">
+                <button id="podcast-prev-btn" class="p-2 hover:text-white"><i class="fas fa-backward-step"></i></button>
+                <button id="podcast-play-pause-btn" class="p-2 text-xl hover:text-white"><i class="fas fa-play"></i></button>
+                <button id="podcast-next-btn" class="p-2 hover:text-white"><i class="fas fa-forward-step"></i></button>
+            </div>
+            <div id="podcast-playlist" class="mt-3"></div>
+        `;
+
+        const playlistEl = document.getElementById('podcast-playlist');
+        episodes.forEach((ep, index) => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'podcast-playlist-item p-2 flex items-center gap-2 rounded-md';
+            itemEl.innerHTML = `<img src="${ep.artworkUrl}" class="w-8 h-8 rounded-sm object-cover"><p class="flex-grow truncate text-xs">${ep.title}</p>`;
+            itemEl.addEventListener('click', () => {
+                currentEpisodeIndex = index;
+                loadEpisode(index);
+                playEpisode();
+            });
+            playlistEl.appendChild(itemEl);
+        });
+        
+        // Add event listeners to the newly created player controls
+        document.getElementById('podcast-play-pause-btn').addEventListener('click', togglePlayPause);
+        document.getElementById('podcast-next-btn').addEventListener('click', playNext);
+        document.getElementById('podcast-prev-btn').addEventListener('click', playPrev);
+        document.getElementById('podcast-progress-container').addEventListener('click', setProgress);
+    }
+    
+    function loadEpisode(index) {
+        const episode = episodes[index];
+        if (!episode || !episode.audioSrc) return;
+        
+        document.getElementById('podcast-art').src = episode.artworkUrl;
+        document.getElementById('podcast-title').textContent = episode.title;
+        // Use proxy for audio source to avoid CORS issues
+        audioPlayer.src = `https://api.allorigins.win/raw?url=${encodeURIComponent(episode.audioSrc)}`;
+
+        document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
+        });
+    }
+
+    function playEpisode() {
+        if (!audioPlayer.src) return;
+        audioPlayer.play().then(() => {
+            isPlaying = true;
+            document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+        }).catch(e => console.error("Playback Error:", e));
+    }
+
+    function pauseEpisode() {
+        audioPlayer.pause();
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    function togglePlayPause() { isPlaying ? pauseEpisode() : playEpisode(); }
+    
+    function playNext() {
+        currentEpisodeIndex = (currentEpisodeIndex + 1) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+        playEpisode();
+    }
+    
+    function playPrev() {
+        currentEpisodeIndex = (currentEpisodeIndex - 1 + episodes.length) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+        playEpisode();
+    }
+
+    function setProgress(e) {
+        const width = e.currentTarget.clientWidth;
+        const clickX = e.offsetX;
+        if(audioPlayer.duration) {
+            audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
+        }
+    }
+
+    // --- Audio Player Event Listeners ---
+    audioPlayer.addEventListener('timeupdate', () => {
+        const { currentTime, duration } = audioPlayer;
+        if(duration) {
+            document.getElementById('podcast-progress-bar').style.width = `${(currentTime / duration) * 100}%`;
+            document.getElementById('podcast-current-time').textContent = formatTime(currentTime);
+        }
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+         document.getElementById('podcast-total-duration').textContent = formatTime(audioPlayer.duration);
+    });
+    
+    audioPlayer.addEventListener('ended', playNext);
+
+    function formatTime(seconds) {
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return isNaN(mins) ? "0:00" : `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+});
+</script>
+
+</body>
+</html>
