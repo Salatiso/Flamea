@@ -20,6 +20,7 @@ import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/f
 */
 
 import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
 const ParentingPlanApp = {
     // State and properties remain as you defined them.
@@ -277,3 +278,33 @@ const ParentingPlanApp = {
 };
 // Expose the app to the global window object so the module script in HTML can access it.
 window.ParentingPlanApp = ParentingPlanApp;
+
+/**
+ * parenting-plan.html
+ * This file works in tandem with the parenting-plan-builder.js script.
+ * It provides the HTML structure and imports the necessary Firebase scripts.
+ */
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Parenting Plan Builder</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.js"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/5.10.1/main.min.css" rel="stylesheet">
+    <style>
+        /* Custom styles here */
+    </style>
+</head>
+<body class="bg-gray-900 text-gray-200">
+  <div class="main-container flex">
+    <!-- Content will be rendered here -->
+  </div>
+  <!-- ...rest of your HTML... -->
+</body>
+</html>
