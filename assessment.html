@@ -36,15 +36,9 @@
         #progress-bar-inner {
             transition: width 0.5s ease-in-out;
         }
-        .modal-content {
-            animation: zoomIn 0.3s ease-out;
-        }
-        @keyframes zoomIn {
-            from { transform: scale(0.8); opacity: 0; }
-            to { transform: scale(1); opacity: 1; }
-        }
-        .form-input, .form-select {
-             @apply w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white;
+        .recommendation-card:hover {
+            border-color: #4ade80;
+            background-color: #1f2937;
         }
     </style>
 </head>
@@ -67,17 +61,17 @@
                     <!-- Start Screen -->
                     <div id="start-screen" class="wizard-step active text-center">
                         <h2 class="text-3xl font-bold mb-4 text-white">Discover Your Path.</h2>
-                        <p class="text-gray-400 mb-6 max-w-2xl mx-auto">Welcome to your personal guide. This isn't a test. It's a tool to help you understand your current situation and empower you with the right resources. Select the issue that best describes what's on your mind, and let's begin this journey together.</p>
+                        <p class="text-gray-400 mb-6 max-w-2xl mx-auto">This tool will help you understand your situation and empower you with the right resources. Select the issue that best describes what's on your mind, and let's begin.</p>
                         <div class="mb-8">
                             <label for="initial-issue" class="form-label text-left font-semibold text-gray-300">What is the main issue you're facing?</label>
-                            <select id="initial-issue" class="form-select">
+                            <select id="initial-issue" class="w-full p-3 bg-gray-700 border border-gray-600 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 transition-all duration-300 text-white">
                                 <option value="" disabled selected>Select the issue that best describes yours...</option>
-                                <option value="Access to my child is being denied or limited.">Access to my child is being denied or limited.</option>
-                                <option value="We disagree on financial contributions for the child.">We disagree on financial contributions for the child.</option>
-                                <option value="I need to create a formal, legally sound Parenting Plan.">I need to create a formal, legally sound Parenting Plan.</option>
-                                <option value="I am dealing with a difficult legal system or unfair treatment.">I am dealing with a difficult legal system or unfair treatment.</option>
-                                <option value="I want to understand my Constitutional rights as a father.">I want to understand my Constitutional rights as a father.</option>
-                                <option value="I just want to learn more and become a better, more involved father.">I just want to learn more and become a better, more involved father.</option>
+                                <option value="Access">Access to my child is being denied or limited.</option>
+                                <option value="Finance">We disagree on financial contributions for the child.</option>
+                                <option value="Plan">I need to create a formal, legally sound Parenting Plan.</option>
+                                <option value="Legal">I am dealing with a difficult legal system or unfair treatment.</option>
+                                <option value="Rights">I want to understand my Constitutional rights as a father.</option>
+                                <option value="Learn">I just want to learn more and become a better, more involved father.</option>
                             </select>
                         </div>
                         <button id="start-assessment-btn" class="bg-green-600 text-white font-bold py-3 px-10 rounded-lg hover:bg-green-700 transition-colors text-lg">
@@ -92,7 +86,7 @@
                                 <h3 id="question-title" class="text-2xl font-bold text-white"></h3>
                                 <p id="question-text" class="text-gray-300 mt-1"></p>
                             </div>
-                            <span id="question-counter" class="text-sm font-semibold bg-gray-700 text-green-400 px-3 py-1 rounded-full"></span>
+                            <span id="question-counter" class="text-sm font-semibold bg-gray-700 text-green-400 px-3 py-1 rounded-full flex-shrink-0"></span>
                         </div>
                        
                         <div id="progress-bar" class="w-full bg-gray-700 rounded-full h-2.5 mb-8">
@@ -105,15 +99,18 @@
                     </div>
 
                     <!-- Results Screen -->
-                    <div id="results-screen" class="wizard-step">
-                        <h2 class="text-3xl font-bold mb-4 text-center text-green-400">Your Compass Reading is Complete</h2>
-                        <div id="results-summary" class="text-center mb-8"></div>
-                        <div id="recommendations-container" class="space-y-6"></div>
-                        <p class="text-center text-gray-400 mt-8">Remember to <a href="login.html" class="font-bold text-green-400 hover:underline">register for free</a> to save your results and track your journey.</p>
+                    <div id="results-screen" class="wizard-step text-center">
+                        <h2 class="text-3xl font-bold mb-4 text-green-400">Your Compass Reading is Complete</h2>
+                        <div id="results-summary" class="mb-8 text-gray-300"></div>
+                        <div id="recommendations-container" class="space-y-4 text-left"></div>
+                        <div class="mt-8 flex justify-center gap-4">
+                            <button id="restart-assessment-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white">Start Over</button>
+                            <a href="login.html" class="bg-green-600 text-white font-bold py-2 px-6 rounded-lg hover:bg-green-700 transition-colors">Save Results</a>
+                        </div>
                     </div>
 
                     <!-- Navigation -->
-                    <div id="navigation-controls" class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center hidden">
+                    <div id="navigation-controls" class="mt-10 pt-6 border-t border-gray-700 flex justify-between items-center" style="display: none;">
                         <button id="back-btn" class="bg-gray-600 py-2 px-6 rounded-lg hover:bg-gray-500 font-semibold text-white">Back</button>
                         <button id="next-btn" class="bg-green-600 py-2 px-6 rounded-lg hover:bg-green-700 font-semibold text-white">Next</button>
                     </div>
@@ -122,14 +119,200 @@
         </main>
     </div>
 
-    <!-- Certificate Modal -->
-    <div id="certificate-modal" class="fixed inset-0 bg-black bg-opacity-70 flex items-center justify-center p-4 z-50 hidden">
-        <div id="certificate-modal-content" class="modal-content bg-gray-800 rounded-lg shadow-2xl w-full max-w-3xl border-2 border-yellow-400 text-gray-200 relative">
-             <!-- Certificate content will be injected here -->
-        </div>
-    </div>
-    
-    <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/assessment.js"></script>
+    <script type="module">
+        // Embed main.js functionality if needed or ensure it's loaded.
+        // For simplicity, we assume sidebar loading is handled separately.
+        const placeholder = document.getElementById('sidebar-placeholder');
+        if(placeholder) {
+            fetch('sidebar.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found.'))
+                .then(data => {
+                    const tempDiv = document.createElement('div');
+                    tempDiv.innerHTML = data;
+                    placeholder.replaceWith(tempDiv.firstChild);
+                }).catch(error => console.error('Error loading sidebar:', error));
+        }
+    </script>
+    <script>
+    // --- SELF-CONTAINED ASSESSMENT LOGIC ---
+    document.addEventListener('DOMContentLoaded', () => {
+        const startScreen = document.getElementById('start-screen');
+        const questionScreen = document.getElementById('question-screen');
+        const resultsScreen = document.getElementById('results-screen');
+        const navigationControls = document.getElementById('navigation-controls');
+        
+        const startBtn = document.getElementById('start-assessment-btn');
+        const nextBtn = document.getElementById('next-btn');
+        const backBtn = document.getElementById('back-btn');
+        const restartBtn = document.getElementById('restart-assessment-btn');
+
+        let currentQuestionIndex = 0;
+        let userAnswers = {};
+        let questionFlow = [];
+
+        // --- DATABASE ---
+        const questionDatabase = {
+            'Access': [
+                { id: 'contact_status', text: 'What is the current status of your contact with your child?', options: ['No contact at all', 'Limited/supervised contact', 'Regular contact, but inconsistent'], tags: ['access', 'conflict'] },
+                { id: 'agreement_exists', text: 'Is there any existing verbal or written agreement about contact?', options: ['No agreement', 'Verbal agreement (not followed)', 'Written plan (not followed)', 'We have a working plan'], tags: ['agreement', 'plan'] },
+                { id: 'communication', text: 'How is communication with the other parent?', options: ['Hostile or blocked', 'Difficult but possible', 'Amicable'], tags: ['communication', 'conflict'] }
+            ],
+            'Finance': [
+                { id: 'finance_agreement', text: 'Is there a formal agreement on financial contributions?', options: ['No agreement', 'Verbal agreement', 'Court order/written plan'], tags: ['finance', 'agreement'] },
+                { id: 'contribution_dispute', text: 'What is the nature of the disagreement?', options: ['Amount of maintenance', 'What expenses are covered', 'Unwillingness to pay'], tags: ['finance', 'dispute'] },
+            ],
+            'Plan': [
+                { id: 'plan_reason', text: 'Why do you need to create a parenting plan?', options: ['To prevent future conflict', 'To resolve current conflict', 'To formalize our agreement for legal purposes'], tags: ['plan', 'agreement', 'conflict'] },
+                { id: 'knowledge_level', text: "How familiar are you with the Children's Act?", options: ['Not familiar', 'I know the basics', 'Well-informed'], tags: ['legal', 'rights'] }
+            ],
+            'Legal': [
+                { id: 'legal_issue', text: 'What part of the legal system are you struggling with?', options: ['Court proceedings', 'Police (SAPS) inaction', 'Unfair treatment by officials'], tags: ['legal', 'saps', 'court'] },
+                { id: 'have_represenation', text: 'Do you have legal representation?', options: ['Yes, a private lawyer', 'Yes, Legal Aid', 'No, I am representing myself'], tags: ['legal_aid', 'representation'] }
+            ],
+            'Rights': [
+                { id: 'rights_situation', text: 'In what area do you feel your rights are not being respected?', options: ['Access to my child', 'Making decisions about their life', 'Being recognized as a legal parent'], tags: ['rights', 'access', 'decision'] }
+            ],
+            'Learn': [
+                { id: 'learn_focus', text: 'What area are you most interested in learning about?', options: ['My legal rights and responsibilities', 'Practical co-parenting skills', 'Connecting with my child better'], tags: ['learn', 'rights', 'parenting'] }
+            ]
+        };
+
+        const resourceDatabase = {
+            'constitution_training': { title: 'The Constitution Course', description: 'The ultimate shield. Understand your supreme rights as a father.', link: 'training/course-constitution.html', icon: 'fa-shield-alt', tags: ['rights', 'legal', 'learn', 'access', 'plan', 'finance', 'conflict'] },
+            'parenting_plan_template': { title: 'Parenting Plan Template', description: 'A comprehensive, editable form to build a solid co-parenting agreement.', link: 'assets/templates/Parenting_Plan_Template.html', icon: 'fa-file-alt', tags: ['plan', 'agreement', 'access', 'finance', 'communication'] },
+            'affirmation_letter': { title: 'Affirmation of Rights Letter', description: 'A formal letter to assert your parental rights and request co-operation.', link: 'assets/templates/Affirmation_Parental_Rights_and_Responsibilities_final.html', icon: 'fa-fist-raised', tags: ['access', 'rights', 'conflict', 'communication'] },
+            'saps_complaint': { title: 'SAPS Complaint Affidavit', description: 'Use this to formally lodge a complaint if SAPS is not assisting you.', link: 'assets/templates/Affidavit-SAPS_Complaint_.html', icon: 'fa-exclamation-triangle', tags: ['saps', 'legal'] },
+            'coparenting_training': { title: 'Effective Co-Parenting Course', description: 'Learn strategies for better communication and conflict resolution.', link: 'training/course-coparenting.html', icon: 'fa-users', tags: ['communication', 'conflict', 'parenting', 'learn'] },
+            'childrens_act_training': { title: "Children's Act Course", description: 'Understand the key law governing your rights and responsibilities.', link: 'training/course-childrens-act.html', icon: 'fa-gavel', tags: ['legal', 'rights', 'plan'] },
+        };
+
+        // --- Event Listeners ---
+        startBtn.addEventListener('click', startAssessment);
+        nextBtn.addEventListener('click', nextQuestion);
+        backBtn.addEventListener('click', prevQuestion);
+        restartBtn.addEventListener('click', restartAssessment);
+
+        // --- Functions ---
+        function startAssessment() {
+            const initialIssue = document.getElementById('initial-issue').value;
+            if (!initialIssue) {
+                alert("Please select your main issue to begin.");
+                return;
+            }
+            userAnswers = { initialIssue };
+            questionFlow = questionDatabase[initialIssue] || [];
+            currentQuestionIndex = 0;
+            
+            startScreen.classList.remove('active');
+            resultsScreen.classList.remove('active');
+            questionScreen.classList.add('active');
+            navigationControls.style.display = 'flex';
+            displayQuestion();
+        }
+
+        function displayQuestion() {
+            const question = questionFlow[currentQuestionIndex];
+            document.getElementById('question-title').textContent = `Step ${currentQuestionIndex + 1}`;
+            document.getElementById('question-text').textContent = question.text;
+            document.getElementById('question-counter').textContent = `${currentQuestionIndex + 1} / ${questionFlow.length}`;
+            
+            const optionsContainer = document.getElementById('options-container');
+            optionsContainer.innerHTML = '';
+            question.options.forEach(optionText => {
+                const button = document.createElement('button');
+                button.className = 'option-button w-full text-left p-4 bg-gray-700 border-2 border-gray-600 rounded-lg hover:border-green-500';
+                button.textContent = optionText;
+                button.dataset.answer = optionText; // Store answer value
+
+                if (userAnswers[question.id] === optionText) {
+                    button.classList.add('selected');
+                }
+
+                button.onclick = () => {
+                    userAnswers[question.id] = optionText;
+                    // Add all tags from the selected question to user's tag list for later analysis
+                    userAnswers.tags = [...(userAnswers.tags || []), ...question.tags];
+                    
+                    document.querySelectorAll('.option-button').forEach(btn => btn.classList.remove('selected'));
+                    button.classList.add('selected');
+                    nextBtn.disabled = false;
+                };
+                optionsContainer.appendChild(button);
+            });
+
+            nextBtn.disabled = !userAnswers[question.id];
+            backBtn.style.visibility = currentQuestionIndex === 0 ? 'hidden' : 'visible';
+            const progress = ((currentQuestionIndex + 1) / questionFlow.length) * 100;
+            document.getElementById('progress-bar-inner').style.width = `${progress}%`;
+        }
+        
+        function nextQuestion() {
+            if (currentQuestionIndex < questionFlow.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+            } else {
+                showResults();
+            }
+        }
+
+        function prevQuestion() {
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+            }
+        }
+
+        function showResults() {
+            questionScreen.classList.remove('active');
+            navigationControls.style.display = 'none';
+            resultsScreen.classList.add('active');
+
+            const summary = document.getElementById('results-summary');
+            const recommendationsContainer = document.getElementById('recommendations-container');
+            
+            summary.innerHTML = `<p>Based on your answers, here are some recommended resources to start with:</p>`;
+            recommendationsContainer.innerHTML = '';
+
+            const recommendedKeys = new Set();
+            // Always recommend constitution training
+            recommendedKeys.add('constitution_training');
+
+            const answerTags = new Set(userAnswers.tags || []);
+            // Add tags from the initial selected issue
+            const initialQuestion = questionDatabase[userAnswers.initialIssue];
+            if(initialQuestion) initialQuestion.forEach(q => q.tags.forEach(t => answerTags.add(t)));
+            
+            Object.entries(resourceDatabase).forEach(([key, resource]) => {
+                if (resource.tags.some(tag => answerTags.has(tag))) {
+                    recommendedKeys.add(key);
+                }
+            });
+
+            recommendedKeys.forEach(key => {
+                const resource = resourceDatabase[key];
+                const card = document.createElement('a');
+                card.href = resource.link;
+                card.target = "_blank"; // Open in new tab
+                card.className = "recommendation-card block bg-gray-700 p-4 rounded-lg border-2 border-transparent hover:border-green-400 transition-all duration-300 flex items-start gap-4";
+                card.innerHTML = `
+                    <i class="fas ${resource.icon} text-2xl text-green-400 mt-1 w-8 text-center"></i>
+                    <div>
+                        <h4 class="font-bold text-lg text-white">${resource.title}</h4>
+                        <p class="text-gray-400 text-sm">${resource.description}</p>
+                    </div>
+                `;
+                recommendationsContainer.appendChild(card);
+            });
+        }
+
+        function restartAssessment() {
+            currentQuestionIndex = 0;
+            userAnswers = {};
+            questionFlow = [];
+            resultsScreen.classList.remove('active');
+            startScreen.classList.add('active');
+        }
+    });
+    </script>
 </body>
 </html>
