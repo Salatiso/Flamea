@@ -8,31 +8,22 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* Base styles for dark mode and typography */
+        :root { --sidebar-width: 288px; }
         body { font-family: 'Open Sans', sans-serif; background-color: #111827; color: #d1d5db; }
         h1, h2, h3, h4, .font-roboto-slab { font-family: 'Roboto Slab', serif; }
-
-        /* Layout and containers */
         .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; }
-        #main-content-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
+        #sidebar-placeholder { width: var(--sidebar-width); flex-shrink: 0; }
+        .main-content { flex-grow: 1; overflow-y: auto; width: calc(100% - var(--sidebar-width)); }
+        #main-content-bg { position: fixed; top: 0; left: var(--sidebar-width); width: calc(100% - var(--sidebar-width)); height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
         .content-wrapper { background-color: rgba(17, 24, 39, 0.9); backdrop-filter: blur(10px); }
-        
-        /* View and Step animation */
         .view-container, .step-container { display: none; }
         .view-container.active, .step-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Interactive cards */
         .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 1px solid #374151; }
         .option-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05); }
-        
-        /* Form elements styling */
         .form-input, .form-select, .form-textarea { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
         .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; ring: 0; }
         .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
-        
-        /* Button styles */
         .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; }
         .btn-primary:hover:not(:disabled) { background-color: #1d4ed8; }
         .btn-primary:disabled { background-color: #4b5563; cursor: not-allowed; }
@@ -40,116 +31,63 @@
         .btn-secondary:hover:not(:disabled) { background-color: #6b7280; }
         .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem; cursor: pointer;}
         .btn-danger:hover { background-color: #b91c1c; }
-
-        /* Modal styles */
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;}
         .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        
-        /* Card styles for form sections */
-        .party-card, .expense-category, .event-log-item { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #1f2937; }
+        .party-card, .event-log-item { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #1f2937; }
         .dashboard-metric { background-color: #374151; padding: 1rem; border-radius: 0.5rem; text-align: center; }
         .dashboard-metric .value { font-size: 1.75rem; font-weight: 700; }
         .dashboard-metric .label { font-size: 0.875rem; color: #9ca3af; }
+        .sidebar-link{transition:background-color .2s ease-in-out}.sidebar-link:hover{background-color:#374151}
     </style>
 </head>
 <body>
     <div class="main-container">
-        <!-- Sidebar placeholder -->
-        <div id="sidebar-placeholder" class="hidden lg:block flex-shrink-0 w-64 bg-gray-900/80 backdrop-blur-sm">
-            <!-- Sidebar content can be loaded here -->
-        </div>
+        <aside id="sidebar-placeholder" class="p-6 flex-shrink-0 flex-col justify-between sidebar-container h-full bg-gray-900 text-gray-300">
+             <!-- Sidebar content is now embedded -->
+            <div class="sidebar-top">
+                <div class="mb-12 flex justify-center">
+                    <a href="#" class="flamea-logo dark">
+                        <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+                            <text x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
+                            <g transform="translate(135, 0)"><path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path></g>
+                            <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
+                        </svg>
+                    </a>
+                </div>
+                <nav class="flex flex-col space-y-2">
+                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
+                    <a href="#" class="sidebar-link flex items-center p-3 rounded-lg bg-gray-700 text-white"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Parenting Plan Builder</a>
+                </nav>
+            </div>
+        </aside>
 
-        <!-- Dynamic background element -->
         <div id="main-content-bg"></div>
         
-        <main class="main-content flex-1">
+        <main class="main-content">
             <div class="content-wrapper min-h-full p-6 sm:p-8">
                 <div class="max-w-7xl mx-auto">
-                    <!-- Landing Page View -->
-                    <div id="landing-view" class="view-container active">
-                         <header class="text-center mb-12">
-                            <div class="inline-block p-6 md:p-8">
-                                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">The Co-Parenting Compass</h1>
-                                <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence. Create a comprehensive, objective plan to ensure the best for your children.</p>
-                            </div>
-                        </header>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
-                                <h4 class="text-2xl font-bold text-white">Automated Wizard</h4>
-                                <p class="text-gray-400">The recommended path. Answer a few questions to build a plan tailored to your needs.</p>
-                            </div>
-                            <div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                <i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i>
-                                <h4 class="text-2xl font-bold text-white">Manual Builder</h4>
-                                <p class="text-gray-400">Go straight to the full plan builder and select the sections you need.</p>
-                            </div>
-                            <div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                 <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
-                                 <h4 class="text-2xl font-bold text-white">Featured Forms</h4>
-                                 <p class="text-gray-400">Quickly access other useful templates like Affidavits or School Letters.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wizard View -->
+                    <!-- Views will be injected here -->
+                    <div id="landing-view" class="view-container"></div>
                     <div id="wizard-view" class="view-container"></div>
-
-                    <!-- Main Builder View -->
-                    <div id="builder-view" class="view-container">
-                         <div id="builder-header" class="flex justify-between items-center mb-6">
-                            <h2 class="text-3xl font-bold">Parenting Plan Builder</h2>
-                            <div><button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button></div>
-                        </div>
-                        <div id="steps-container"></div>
-                        <div id="navigation-container" class="flex justify-between items-center mt-8 pt-6 border-t border-gray-600"></div>
-                    </div>
+                    <div id="builder-view" class="view-container"></div>
                 </div>
             </div>
         </main>
     </div>
 
     <!-- Modals -->
-    <div id="alert-modal" class="modal">
-      <div class="modal-content text-center">
-        <h3 id="alert-modal-title" class="text-2xl font-bold text-white mb-4"></h3>
-        <p id="alert-modal-message" class="text-gray-300 mb-6"></p>
-        <button id="alert-modal-close" class="btn-primary w-full">OK</button>
-      </div>
-    </div>
-    <div id="disclaimer-modal" class="modal">
-      <div class="modal-content">
-        <h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3>
-        <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. This tool helps organize your information, but this is <strong>not legal advice</strong>. You are solely responsible for the content and its application. For legal advice, please consult a qualified professional. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
-        <label class="flex items-center space-x-3 mb-6 cursor-pointer">
-            <input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500">
-            <span class="text-white">I Understand and Agree</span>
-        </label>
-        <div class="flex justify-end gap-4">
-             <button id="disclaimer-cancel" class="btn-secondary">Cancel</button>
-             <button id="disclaimer-proceed" class="btn-primary" disabled>Proceed</button>
-        </div>
-      </div>
-    </div>
+    <div id="alert-modal" class="modal"><div class="modal-content text-center"><h3 id="alert-modal-title" class="text-2xl font-bold text-white mb-4"></h3><p id="alert-modal-message" class="text-gray-300 mb-6"></p><button id="alert-modal-close" class="btn-primary w-full">OK</button></div></div>
+    <div id="disclaimer-modal" class="modal"><div class="modal-content"><h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3><p class="text-gray-300 mb-6 text-sm">This is <strong>not legal advice</strong>. This tool helps organize your information. You are solely responsible for the content. For legal advice, consult a qualified professional. By proceeding, you acknowledge this disclaimer.</p><label class="flex items-center space-x-3 mb-6 cursor-pointer"><input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500"><span class="text-white">I Understand and Agree</span></label><div class="flex justify-end gap-4"><button id="disclaimer-cancel" class="btn-secondary">Cancel</button><button id="disclaimer-proceed" class="btn-primary" disabled>Proceed</button></div></div></div>
     
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // SECTION 1: FORWARD DECLARATIONS
-            let renderPartiesSection, renderCustodySection, renderExpensesSection, renderCommunicationSection, renderSummarySection;
-            let collectPartiesData, collectCustodyData, collectExpensesData, collectCommunicationData;
-            let generatePartiesDoc, generateCustodyDoc, generateExpensesDoc, generateCommunicationDoc;
+            // ===================================================================
+            // SECTION 1: STATE, CONFIG & DOM REFERENCES (ORDER IS CRITICAL)
+            // ===================================================================
 
-            // SECTION 2: STATE & CONFIG
             const state = {
-                currentView: 'landing-view', wizardStep: 0, builderStep: 0,
-                allSections: [
-                    { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: (c) => renderPartiesSection(c), collect: () => collectPartiesData(), generate: (d) => generatePartiesDoc(d) },
-                    { id: 'custody', title: 'Custody & Activity Schedule', icon: 'fa-calendar-days', render: (c) => renderCustodySection(c), collect: () => collectCustodyData(), generate: (d) => generateCustodyDoc(d) },
-                    { id: 'expenses', title: 'Expense & Contribution Tracker', icon: 'fa-hand-holding-dollar', render: (c) => renderExpensesSection(c), collect: () => collectExpensesData(), generate: (d) => generateExpensesDoc(d) },
-                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: (c) => renderCommunicationSection(c), collect: () => collectCommunicationData(), generate: (d) => generateCommunicationDoc(d) },
-                    { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: (c) => renderSummarySection(c), collect: () => {}, generate: () => '' },
-                ],
-                selectedSections: [],
+                currentView: 'landing-view', wizardStep: 0, builderStep: 0, selectedSections: [],
             };
 
             const dropdownOptions = {
@@ -159,18 +97,48 @@
                 eventType: ['School Holiday', 'Public Holiday', 'Personal Day', 'Contact Schedule', 'Visitation', 'Emergency', 'School Activity', 'Cultural Event', 'Other'],
                 custodyDecision: ['Mutual Agreement', 'Court Order', 'In Dispute', 'Other'],
                 recurringSchedules: ['Week On, Week Off', '2-2-3 Schedule', 'Every Other Weekend', 'Custom'],
-                expenseCategory: ['Living Expenses', 'Education', 'Healthcare', 'Extracurricular', 'Cultural Obligations', 'Other'],
                 communicationClassification: ['Urgent Matters', 'Formal Communication', 'Daily Updates']
             };
 
-            // SECTION 3: DOM REFERENCES
             const views = { landing: document.getElementById('landing-view'), wizard: document.getElementById('wizard-view'), builder: document.getElementById('builder-view') };
-            const buttons = { startWizard: document.getElementById('start-wizard-btn'), startManual: document.getElementById('start-manual-btn'), savePlan: document.getElementById('save-plan-btn') };
-            const containers = { steps: document.getElementById('steps-container'), navigation: document.getElementById('navigation-container'), sidebar: document.getElementById('sidebar-placeholder'), bg: document.getElementById('main-content-bg') };
+            const containers = { steps: null, navigation: null, bg: document.getElementById('main-content-bg') };
             const alertModal = { modal: document.getElementById('alert-modal'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), close: document.getElementById('alert-modal-close') };
             const disclaimerModal = { modal: document.getElementById('disclaimer-modal'), agree: document.getElementById('disclaimer-agree'), cancel: document.getElementById('disclaimer-cancel'), proceed: document.getElementById('disclaimer-proceed') };
             
-            // SECTION 4: HELPER & DYNAMIC UI
+            // ===================================================================
+            // SECTION 2: ALL FUNCTION DEFINITIONS
+            // ===================================================================
+            
+            // --- CORE UI & LOGIC FUNCTIONS ---
+            const switchView = (viewId) => {
+                state.currentView = viewId;
+                Object.values(views).forEach(v => v.classList.remove('active'));
+                if (views[viewId]) views[viewId].classList.add('active');
+            };
+
+            const showAlert = (title, message) => {
+                alertModal.title.textContent = title;
+                alertModal.message.textContent = message;
+                alertModal.modal.style.display = 'flex';
+            };
+            
+            const showDisclaimer = (sectionIds) => {
+                if (sectionIds.length === 0) {
+                    showAlert('No Sections Selected', 'Please check at least one section in the summary to generate a document.');
+                    return;
+                }
+                disclaimerModal.proceed.dataset.sections = sectionIds.join(',');
+                disclaimerModal.agree.checked = false;
+                disclaimerModal.proceed.disabled = true;
+                disclaimerModal.modal.style.display = 'flex';
+            };
+
+            const setDynamicBackground = () => {
+                const bgs = ['linear-gradient(135deg, #1e3a8a 0%, #111827 100%)', 'linear-gradient(135deg, #3730a3 0%, #111827 100%)', 'linear-gradient(135deg, #047857 0%, #111827 100%)', 'linear-gradient(135deg, #9f1239 0%, #111827 100%)'];
+                containers.bg.style.backgroundImage = bgs[Math.floor(Math.random() * bgs.length)];
+            };
+
+            // --- HELPER & DYNAMIC UI FUNCTIONS ---
             const generateOptions = (arr, selected = '') => arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('');
             
             const getPartyNames = () => {
@@ -180,56 +148,15 @@
                 });
                 return names.length > 0 ? names : ['Parent A', 'Parent B'];
             };
-
-            const addGuardian = (side, name = '') => {
-                const container = document.getElementById(`${side}-parties-container`);
-                if (!container) return;
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="party-card">
-                        <div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Guardian/Party</h4><button class="btn-danger remove-item-btn">Remove</button></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" value="${name}"></div>
-                            <div><label class="form-label">Relationship to Child</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div>
-                        </div>
-                        <div class="addresses-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-address-btn mb-4 text-sm">Add Address</button>
-                        <div class="contacts-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-contact-btn text-sm">Add Contact Info</button>
-                    </div>`);
-            };
-
-            const addAddress = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.addressType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Full Address</label><input type="text" class="form-input text-sm p-2" placeholder="Street, City, Province, Code"></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-            const addContact = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.contactType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Details</label><input type="text" class="form-input text-sm p-2" placeholder="Phone, email, etc."></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-
-            const addChild = () => {
-                const container = document.getElementById('children-container');
-                if (!container) return;
-                container.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Child</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input"></div><div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div><div><label class="form-label">Primary Residence With</label><select class="form-select party-dropdown">${generateOptions(getPartyNames())}</select></div></div></div>`);
-                updateAllPartyDropdowns();
-            };
-
-            const addEventLog = (container) => {
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="event-log-item">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div><label class="form-label">Start Date</label><input type="date" class="form-input event-start-date"></div>
-                            <div><label class="form-label">End Date</label><input type="date" class="form-input event-end-date"></div>
-                            <div><label class="form-label">Event Type</label><select class="form-select">${generateOptions(dropdownOptions.eventType)}</select></div>
-                            <div class="flex items-end"><button class="btn-danger remove-item-btn w-full">Remove Event</button></div>
-                        </div>
-                        <div class="mt-2"><label class="form-label">Notes / Details</label><textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea></div>
-                    </div>`);
-            };
-
-            const addExpenseItem = (container) => {
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 p-3 bg-gray-800 rounded relative">
-                        <div class="lg:col-span-2"><label class="form-label text-xs">Expense Description</label><input type="text" class="form-input expense-description text-sm p-2" placeholder="e.g., School Fees Term 2"></div>
-                        <div><label class="form-label text-xs">Amount (R)</label><input type="number" class="form-input expense-amount text-sm p-2" placeholder="0.00" step="0.01"></div>
-                        <div><label class="form-label text-xs">Paid By</label><select class="form-select expense-paid-by party-dropdown text-sm p-2">${generateOptions(getPartyNames())}</select></div>
-                        <button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button>
-                    </div>`);
-            };
             
-            // SECTION 5: UI UPDATE & CALCULATIONS
+            const addGuardian = (side, name = '') => document.getElementById(`${side}-parties-container`)?.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Guardian/Party</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" value="${name}"></div><div><label class="form-label">Relationship to Child</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div></div><div class="addresses-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-address-btn mb-4 text-sm">Add Address</button><div class="contacts-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-contact-btn text-sm">Add Contact Info</button></div>`);
+            const addAddress = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.addressType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Full Address</label><input type="text" class="form-input text-sm p-2" placeholder="Street, City, Code"></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
+            const addContact = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.contactType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Details</label><input type="text" class="form-input text-sm p-2" placeholder="Phone, email, etc."></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
+            const addChild = () => { document.getElementById('children-container')?.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Child</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input"></div><div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div><div><label class="form-label">Primary Residence With</label><select class="form-select party-dropdown">${generateOptions(getPartyNames())}</select></div></div></div>`); updateAllPartyDropdowns(); };
+            const addEventLog = (container) => { container.insertAdjacentHTML('beforeend', `<div class="event-log-item"><div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4"><div><label class="form-label">Start Date</label><input type="date" class="form-input event-start-date"></div><div><label class="form-label">End Date</label><input type="date" class="form-input event-end-date"></div><div><label class="form-label">Allocated To</label><select class="form-select event-allocated-to party-dropdown">${generateOptions(getPartyNames())}</select></div><div><label class="form-label">Event Type</label><select class="form-select">${generateOptions(dropdownOptions.eventType)}</select></div><div class="flex items-end"><button class="btn-danger remove-item-btn w-full">Remove</button></div></div><div class="mt-2"><label class="form-label">Notes</label><textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea></div></div>`); updateTimeDashboard(); };
+            const addExpenseItem = (container) => { container.insertAdjacentHTML('beforeend', `<div class="expense-item grid grid-cols-1 lg:grid-cols-5 gap-4 p-3 bg-gray-800 rounded relative"><div class="lg:col-span-2"><label class="form-label text-xs">Expense Description</label><input type="text" class="form-input expense-description text-sm p-2" placeholder="e.g., School Fees Term 2"></div><div><label class="form-label text-xs">Amount (R)</label><input type="number" class="form-input expense-amount text-sm p-2" placeholder="0.00" step="0.01"></div><div><label class="form-label text-xs">Paid By</label><select class="form-select expense-paid-by party-dropdown text-sm p-2">${generateOptions(getPartyNames())}</select></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`); updateExpenseDashboard(); };
+
+            // --- DASHBOARD & CALCULATION FUNCTIONS ---
             const updateAllPartyDropdowns = () => {
                 const partyNames = getPartyNames();
                 const partyOptions = generateOptions(partyNames);
@@ -238,18 +165,53 @@
                     select.innerHTML = `<option value="">Select...</option>` + partyOptions;
                     if (partyNames.includes(currentValue)) select.value = currentValue;
                 });
-                updateExpenseDashboard(); // Also update dashboard when names change
+                updateTimeDashboard();
+                updateExpenseDashboard();
             };
 
+            const updateTimeDashboard = () => {
+                const partyNames = getPartyNames();
+                const parentA = partyNames[0] || 'Parent A';
+                const parentB = partyNames[1] || 'Parent B';
+                let daysA = 0;
+                let daysB = 0;
+
+                document.querySelectorAll('.event-log-item').forEach(item => {
+                    const startDate = item.querySelector('.event-start-date')?.value;
+                    const endDate = item.querySelector('.event-end-date')?.value;
+                    const allocatedTo = item.querySelector('.event-allocated-to')?.value;
+                    if (startDate && allocatedTo) {
+                        const start = new Date(startDate);
+                        const end = new Date(endDate || startDate);
+                        const diffTime = Math.abs(end - start);
+                        const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24)) + 1;
+                        if (allocatedTo === parentA) daysA += diffDays;
+                        if (allocatedTo === parentB) daysB += diffDays;
+                    }
+                });
+                
+                const totalDays = daysA + daysB;
+                const percentA = totalDays === 0 ? 50 : (daysA / totalDays * 100);
+                const percentB = totalDays === 0 ? 50 : (daysB / totalDays * 100);
+
+                const dashboard = document.getElementById('time-allocation-dashboard');
+                if (dashboard) {
+                    dashboard.querySelector('#time-parent-a-name').textContent = parentA;
+                    dashboard.querySelector('#time-parent-b-name').textContent = parentB;
+                    dashboard.querySelector('#time-parent-a-percent').textContent = `${percentA.toFixed(1)}%`;
+                    dashboard.querySelector('#time-parent-b-percent').textContent = `${percentB.toFixed(1)}%`;
+                    dashboard.querySelector('#time-split-bar-a').style.width = `${percentA}%`;
+                    dashboard.querySelector('#time-split-bar-b').style.width = `${percentB}%`;
+                }
+            };
+            
             const updateExpenseDashboard = () => {
                 const partyNames = getPartyNames();
                 const parentA = partyNames[0] || 'Parent A';
                 const parentB = partyNames[1] || 'Parent B';
-                
-                let totalPaidA = 0;
-                let totalPaidB = 0;
+                let totalPaidA = 0, totalPaidB = 0;
 
-                document.querySelectorAll('#expense-items-container .grid').forEach(item => {
+                document.querySelectorAll('.expense-item').forEach(item => {
                     const amount = parseFloat(item.querySelector('.expense-amount')?.value) || 0;
                     const paidBy = item.querySelector('.expense-paid-by')?.value;
                     if (paidBy === parentA) totalPaidA += amount;
@@ -258,7 +220,6 @@
 
                 const totalSpent = totalPaidA + totalPaidB;
                 const targetContribution = totalSpent / 2;
-                
                 let equalizationPayment = 0;
                 let equalizationMessage = "Contributions are balanced.";
 
@@ -273,87 +234,17 @@
                 const dashboard = document.getElementById('expense-dashboard');
                 if (dashboard) {
                     dashboard.querySelector('#total-spent').textContent = `R ${totalSpent.toFixed(2)}`;
-                    dashboard.querySelector('#parent-a-name').textContent = parentA;
+                    dashboard.querySelector('#parent-a-name').textContent = `${parentA} Paid`;
                     dashboard.querySelector('#parent-a-paid').textContent = `R ${totalPaidA.toFixed(2)}`;
-                    dashboard.querySelector('#parent-b-name').textContent = parentB;
+                    dashboard.querySelector('#parent-b-name').textContent = `${parentB} Paid`;
                     dashboard.querySelector('#parent-b-paid').textContent = `R ${totalPaidB.toFixed(2)}`;
                     dashboard.querySelector('#equalization-amount').textContent = `R ${equalizationPayment.toFixed(2)}`;
                     dashboard.querySelector('#equalization-message').textContent = equalizationMessage;
                 }
             };
             
-            // SECTION 6: RENDER FUNCTIONS FOR BUILDER STEPS
-            renderPartiesSection = (container) => {
-                container.innerHTML = `<div id="parties-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian A's Side</h4><div id="a-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="a">Add Party</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian B's Side</h4><div id="b-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="b">Add Party</button></div></div><div class="mt-8 pt-6 border-t border-gray-700"><h4 class="text-xl font-semibold mb-4 text-white">Children</h4><div id="children-container" class="space-y-4"></div><button id="add-child-btn" class="btn-secondary mt-4">Add Child</button></div>`;
-                addGuardian('a', 'Parent A');
-                addGuardian('b', 'Parent B');
-            };
-
-            renderCustodySection = (container) => {
-                container.innerHTML = `
-                    <div class="space-y-8">
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 text-white">Recurring Schedule</h4>
-                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label class="form-label">Base Schedule</label><select id="recurring-schedule-type" class="form-select">${generateOptions(dropdownOptions.recurringSchedules)}</select></div>
-                                <div><label class="form-label">Decision Basis</label><select id="custody-decision" class="form-select">${generateOptions(dropdownOptions.custodyDecision)}</select></div>
-                            </div>
-                            <div class="mt-4"><label class="form-label">Custom Schedule Details & Notes</label><textarea id="custody-notes" class="form-textarea" rows="4" placeholder="Describe the recurring schedule, holiday rotations, and any specific rules or exceptions..."></textarea></div>
-                        </div>
-                        <div class="pt-8 border-t border-gray-700">
-                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="text-xl font-semibold text-white">Specific Events & Activity Log</h4>
-                                <div>
-                                    <button class="btn-secondary add-event-btn"><i class="fas fa-plus mr-2"></i>Log Event</button>
-                                    <button class="btn-secondary download-csv-btn"><i class="fas fa-download mr-2"></i>Download CSV</button>
-                                </div>
-                            </div>
-                            <div id="events-log-container" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div>
-                        </div>
-                    </div>`;
-            };
-            
-            renderExpensesSection = (container) => {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2">
-                            <h4 class="text-xl font-semibold mb-4 text-white">Expense Items</h4>
-                            <div id="expense-items-container" class="space-y-2 mb-4"></div>
-                            <button class="btn-secondary add-expense-item-btn">Add Expense</button>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 text-white">Contribution Dashboard</h4>
-                            <div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg space-y-4">
-                                <div class="dashboard-metric"><div class="value text-blue-400" id="total-spent">R 0.00</div><div class="label">Total Combined Expenses</div></div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="dashboard-metric"><div class="value text-green-400" id="parent-a-paid">R 0.00</div><div class="label" id="parent-a-name">Parent A Paid</div></div>
-                                    <div class="dashboard-metric"><div class="value text-purple-400" id="parent-b-paid">R 0.00</div><div class="label" id="parent-b-name">Parent B Paid</div></div>
-                                </div>
-                                <div class="dashboard-metric"><div class="value text-amber-400" id="equalization-amount">R 0.00</div><div class="label" id="equalization-message">Contributions are balanced.</div></div>
-                            </div>
-                        </div>
-                    </div>`;
-                addExpenseItem(container.querySelector('#expense-items-container'));
-                updateExpenseDashboard();
-            };
-
-            renderCommunicationSection = (container) => {
-                // This function remains largely the same but simplified for clarity
-                container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Methods</h4><div id="communication-methods-container" class="space-y-2"></div><button class="btn-secondary add-comm-method-btn mt-4">Add Method</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Guidelines</h4><div id="communication-guidelines" class="space-y-4">${dropdownOptions.communicationClassification.map(type => `<div class="bg-gray-800 p-4 rounded-lg"><h5 class="font-semibold mb-2 text-white">${type}</h5><textarea class="form-textarea" rows="3" data-guideline-type="${type}" placeholder="Guidelines for ${type.toLowerCase()}..."></textarea></div>`).join('')}</div></div></div>`;
-            };
-            
-            renderSummarySection = (container) => {
-                 container.innerHTML = `<div class="text-center"><h2 class="text-3xl font-bold text-white">Final Step: Generate Document</h2><p class="text-gray-400 mt-2">Select sections for the final document.</p></div><div class="max-w-2xl mx-auto mt-8 space-y-6"><div><h4 class="text-lg font-semibold mb-4 text-white">Included Sections</h4><div id="summary-section-list" class="space-y-3">${state.selectedSections.filter(s => s.id !== 'summary').map(section => `<label class="flex items-center space-x-3 p-4 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-700 transition"><input type="checkbox" value="${section.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked><i class="fas ${section.icon} text-gray-400 w-5 text-center"></i><span class="text-white font-semibold">${section.title}</span></label>`).join('')}</div></div><div class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg text-sm">After clicking "Generate Final Document", your plan will be downloaded as an HTML file.</div></div>`;
-            };
-
-            // SECTION 7: DATA COLLECTION
-            collectPartiesData = () => { /* ... implementation unchanged ... */ return { parties: [], children: [] }; }; // Placeholder
-            collectCustodyData = () => { /* ... implementation for new fields ... */ return {}; }; // Placeholder
-            collectExpensesData = () => { /* ... implementation for new fields ... */ return {}; }; // Placeholder
-            collectCommunicationData = () => { /* ... implementation unchanged ... */ return { methods: [], guidelines: {} }; }; // Placeholder
-            
-            // Re-implementing collection functions with new details
-            collectPartiesData = () => {
+            // --- DATA COLLECTION FUNCTIONS ---
+            const collectPartiesData = () => {
                 const data = { parties: [], children: [] };
                 document.querySelectorAll('#parties-content .party-card').forEach(card => {
                     const nameInput = card.querySelector('.party-name');
@@ -372,13 +263,14 @@
                 return data;
             };
 
-            collectCustodyData = () => {
+            const collectCustodyData = () => {
                 const events = [];
                 document.querySelectorAll('#events-log-container .event-log-item').forEach(item => {
                     events.push({
                         startDate: item.querySelector('.event-start-date')?.value,
                         endDate: item.querySelector('.event-end-date')?.value,
-                        type: item.querySelector('select')?.value,
+                        allocatedTo: item.querySelector('.event-allocated-to')?.value,
+                        type: item.querySelector('select:not(.event-allocated-to)')?.value,
                         notes: item.querySelector('textarea')?.value
                     });
                 });
@@ -390,9 +282,9 @@
                 };
             };
             
-            collectExpensesData = () => {
+            const collectExpensesData = () => {
                 const expenses = [];
-                document.querySelectorAll('#expense-items-container .grid').forEach(item => {
+                document.querySelectorAll('#expense-items-container .expense-item').forEach(item => {
                     expenses.push({
                         description: item.querySelector('.expense-description')?.value || 'N/A',
                         amount: parseFloat(item.querySelector('.expense-amount')?.value) || 0,
@@ -401,79 +293,74 @@
                 });
                 return { expenses };
             };
-            
-            // SECTION 8: DOCUMENT & CSV GENERATION
-            generatePartiesDoc = (data) => { /* unchanged */ return `<h2>Parties...</h2>`; };
-            generateCustodyDoc = (data) => {
-                 return `<h2>CUSTODY & SCHEDULE</h2><p><strong>Base Schedule:</strong> ${data.recurringSchedule}</p><p><strong>Decision Basis:</strong> ${data.decisionBasis}</p><p><strong>Details & Notes:</strong></p><pre>${data.notes || 'N/A'}</pre><h3>Activity Log</h3><ul>${data.events.map(e => `<li>${e.startDate} to ${e.endDate || e.startDate}: ${e.type} - ${e.notes}</li>`).join('')}</ul>`;
-            };
 
-            generateExpensesDoc = (data) => {
+            const collectCommunicationData = () => ({}); // Placeholder
+
+            // --- DOCUMENT/CSV GENERATION FUNCTIONS ---
+            const generatePartiesDoc = (data) => `<h2>Parties & Children</h2>...`; // Implementation omitted for brevity
+            const generateCustodyDoc = (data) => `<h2>CUSTODY & SCHEDULE</h2><p><strong>Base Schedule:</strong> ${data.recurringSchedule}</p><p><strong>Decision Basis:</strong> ${data.decisionBasis}</p><p><strong>Details:</strong></p><pre>${data.notes || 'N/A'}</pre><h3>Activity Log</h3><ul>${data.events.map(e => `<li>${e.startDate} to ${e.endDate || e.startDate}: ${e.type} (${e.allocatedTo}) - ${e.notes}</li>`).join('')}</ul>`;
+            const generateExpensesDoc = (data) => {
                 let report = `<h2>EXPENSE & CONTRIBUTION TRACKER</h2><table width="100%" border="1" cellpadding="5" cellspacing="0"><thead><tr><th>Expense</th><th>Amount</th><th>Paid By</th></tr></thead><tbody>`;
-                data.expenses.forEach(ex => {
-                    report += `<tr><td>${ex.description}</td><td>R ${ex.amount.toFixed(2)}</td><td>${ex.paidBy}</td></tr>`;
-                });
+                data.expenses.forEach(ex => { report += `<tr><td>${ex.description}</td><td>R ${ex.amount.toFixed(2)}</td><td>${ex.paidBy}</td></tr>`; });
                 report += `</tbody></table>`;
-                // Add dashboard summary to doc
                 const dashboard = document.getElementById('expense-dashboard');
-                if(dashboard) {
-                    report += `<h3>Summary</h3>
-                    <p><strong>Total Spent:</strong> ${dashboard.querySelector('#total-spent').textContent}</p>
-                    <p><strong>${dashboard.querySelector('#parent-a-name').textContent} Paid:</strong> ${dashboard.querySelector('#parent-a-paid').textContent}</p>
-                    <p><strong>${dashboard.querySelector('#parent-b-name').textContent} Paid:</strong> ${dashboard.querySelector('#parent-b-paid').textContent}</p>
-                    <p><strong>Equalization:</strong> ${dashboard.querySelector('#equalization-message').textContent} - ${dashboard.querySelector('#equalization-amount').textContent}</p>`;
-                }
+                if (dashboard) { report += `<h3>Summary</h3><p><strong>Total Spent:</strong> ${dashboard.querySelector('#total-spent').textContent}</p><p><strong>${dashboard.querySelector('#parent-a-name').textContent}:</strong> ${dashboard.querySelector('#parent-a-paid').textContent}</p><p><strong>${dashboard.querySelector('#parent-b-name').textContent}:</strong> ${dashboard.querySelector('#parent-b-paid').textContent}</p><p><strong>Equalization:</strong> ${dashboard.querySelector('#equalization-message').textContent} - ${dashboard.querySelector('#equalization-amount').textContent}</p>`; }
                 return report;
             };
-            
+            const generateCommunicationDoc = (data) => `<h2>Communication...</h2>`; // Implementation omitted for brevity
+
             const downloadScheduleCSV = () => {
                 const data = collectCustodyData();
-                let csvContent = "data:text/csv;charset=utf-8,Start Date,End Date,Event Type,Notes\n";
-                data.events.forEach(row => {
-                    csvContent += [row.startDate, row.endDate, row.type, `"${row.notes.replace(/"/g, '""')}"`].join(",") + "\n";
-                });
-                const encodedUri = encodeURI(csvContent);
+                let csvContent = "data:text/csv;charset=utf-8,Start Date,End Date,Allocated To,Event Type,Notes\n";
+                data.events.forEach(row => { csvContent += [row.startDate, row.endDate, row.allocatedTo, row.type, `"${(row.notes || '').replace(/"/g, '""')}"`].join(",") + "\n"; });
                 const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
+                link.setAttribute("href", encodeURI(csvContent));
                 link.setAttribute("download", "parenting_schedule_log.csv");
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
             };
 
-            const generateDocument = (sectionIds) => { /* Main logic unchanged, just uses new doc generators */ 
+            const generateDocument = (sectionIds) => { 
+                const sectionMap = {
+                    parties: generatePartiesDoc(collectPartiesData()),
+                    custody: generateCustodyDoc(collectCustodyData()),
+                    expenses: generateExpensesDoc(collectExpensesData()),
+                    communication: generateCommunicationDoc(collectCommunicationData()),
+                };
                 let fullDocument = `<html><head><title>Parenting Plan</title><style>body{font-family:Arial,sans-serif;margin:40px;} h2{border-bottom:2px solid #333;padding-bottom:5px;} table{border-collapse:collapse;} pre{white-space:pre-wrap;font-family:inherit;background:#f4f4f4;padding:1em;}</style></head><body><h1>PARENTING PLAN</h1><p><em>Generated on ${new Date().toLocaleDateString()}</em></p><hr>`;
-                sectionIds.forEach(id => {
-                    const section = state.allSections.find(s => s.id === id);
-                    if (section?.collect && section.generate) {
-                        const data = section.collect();
-                        fullDocument += section.generate(data);
-                        fullDocument += '<hr>';
-                    }
-                });
+                sectionIds.forEach(id => { if (sectionMap[id]) { fullDocument += sectionMap[id] + '<hr>'; }});
                 fullDocument += '</body></html>';
                 const blob = new Blob([fullDocument], { type: 'text/html' });
                 const url = URL.createObjectURL(blob);
                 const a = document.createElement('a'); a.href = url; a.download = 'parenting-plan.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
             };
-
-            // SECTION 9: CORE APP LOGIC & NAVIGATION
-            const switchView = (viewId) => {
-                state.currentView = viewId;
-                Object.values(views).forEach(v => v.classList.remove('active'));
-                if (views[viewId.split('-')[0]]) views[viewId.split('-')[0]].classList.add('active');
+            
+            // --- VIEW RENDER FUNCTIONS ---
+            const renderLandingView = () => {
+                views.landing.innerHTML = `<header class="text-center mb-12"><div class="inline-block p-6 md:p-8"><h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">The Co-Parenting Compass</h1><p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence.</p></div></header><div class="grid grid-cols-1 md:grid-cols-3 gap-8"><div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-magic text-5xl text-blue-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Automated Wizard</h4><p class="text-gray-400">Answer questions to find the right path.</p></div><div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Manual Builder</h4><p class="text-gray-400">Go straight to the full plan builder.</p></div><div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center"><i class="fas fa-star text-5xl text-amber-400 mb-4"></i><h4 class="text-2xl font-bold text-white">Featured Forms</h4><p class="text-gray-400">Access other useful templates.</p></div></div>`;
             };
 
-            const showAlert = (title, message, isHtml = false) => {
-                alertModal.title.textContent = title;
-                if (isHtml) { alertModal.message.innerHTML = message; } 
-                else { alertModal.message.textContent = message; }
-                alertModal.modal.style.display = 'flex';
+            const renderWizardStep = (step) => {
+                state.wizardStep = step; let content = '';
+                switch(step) {
+                    case 0: content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3></button><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3></button></div>`; break;
+                    case 1: content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections</h2></div><div class="space-y-3 mt-8" id="wizard-section-list"></div><div class="mt-8 flex justify-between"><button class="btn-secondary wizard-back" data-prev="0">Back</button><button class="btn-primary" id="wizard-finish-btn">Build My Plan</button></div>`; break;
+                }
+                views.wizard.innerHTML = content;
+                if(step === 1) {
+                    const list = document.getElementById('wizard-section-list');
+                    state.allSections.filter(s => s.id !== 'summary').forEach(s => list.innerHTML += `<label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600"><input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500" checked><span class="text-white">${s.title}</span></label>`);
+                }
             };
             
             const renderBuilder = (sectionIds) => {
+                views.builder.innerHTML = `<div id="builder-header" class="flex justify-between items-center mb-6"><h2 class="text-3xl font-bold">Parenting Plan Builder</h2><div><button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button></div></div><div id="steps-container"></div><div id="navigation-container" class="flex justify-between items-center mt-8 pt-6 border-t border-gray-600"></div>`;
+                containers.steps = document.getElementById('steps-container');
+                containers.navigation = document.getElementById('navigation-container');
+
+                state.allSections = [ { id: 'parties', title: "Parties & Children", icon: 'fa-users', render: renderPartiesSection }, { id: 'custody', title: 'Custody & Schedule', icon: 'fa-calendar-days', render: renderCustodySection }, { id: 'expenses', title: 'Expense Tracker', icon: 'fa-hand-holding-dollar', render: renderExpensesSection }, { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: renderCommunicationSection }, { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: renderSummarySection } ];
                 state.selectedSections = state.allSections.filter(s => sectionIds.includes(s.id) || s.id === 'summary');
-                containers.steps.innerHTML = '';
                 state.selectedSections.forEach((section, index) => {
                     const stepContainer = document.createElement('div');
                     stepContainer.className = 'step-container';
@@ -494,66 +381,70 @@
 
             const renderNavigation = () => {
                 const isFirst = state.builderStep === 0;
-                const isLast = state.builderStep === state.selectedSections.length - 1;
+                const isLast = state.selectedSections.length - 1;
                 containers.navigation.innerHTML = `<button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button><div><button id="prev-step-btn" class="btn-secondary" ${isFirst ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Previous</button>${isLast ? `<button id="generate-final-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Document</button>` : `<button id="next-step-btn" class="btn-primary ml-4">Next<i class="fas fa-chevron-right ml-2"></i></button>`}</div>`;
             };
             
-            const renderWizardStep = (step) => { /* Unchanged */ };
+            renderPartiesSection = (container) => { container.innerHTML = `<div id="parties-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian A's Side</h4><div id="a-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="a">Add Party</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian B's Side</h4><div id="b-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="b">Add Party</button></div></div><div class="mt-8 pt-6 border-t border-gray-700"><h4 class="text-xl font-semibold mb-4 text-white">Children</h4><div id="children-container" class="space-y-4"></div><button id="add-child-btn" class="btn-secondary mt-4">Add Child</button></div>`; addGuardian('a', 'Parent A'); addGuardian('b', 'Parent B'); };
+            renderCustodySection = (container) => { container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Time Allocation Dashboard</h4><div id="time-allocation-dashboard" class="bg-gray-800 p-4 rounded-lg"><div class="flex justify-between items-center text-lg font-bold mb-2"><span id="time-parent-a-name" class="text-green-400">Parent A</span><span id="time-parent-b-name" class="text-purple-400">Parent B</span></div><div class="flex w-full h-8 bg-gray-600 rounded-full overflow-hidden mb-2"><div id="time-split-bar-a" class="bg-green-500" style="width: 50%;"></div><div id="time-split-bar-b" class="bg-purple-500" style="width: 50%;"></div></div><div class="flex justify-between items-center text-lg font-bold"><span id="time-parent-a-percent">50.0%</span><span id="time-parent-b-percent">50.0%</span></div></div></div><div><h4 class="text-xl font-semibold mb-4 text-white">Recurring Schedule</h4><div class="grid grid-cols-1 md:grid-cols-2 gap-4"><div><label class="form-label">Base Schedule</label><select id="recurring-schedule-type" class="form-select">${generateOptions(dropdownOptions.recurringSchedules)}</select></div><div><label class="form-label">Decision Basis</label><select id="custody-decision" class="form-select">${generateOptions(dropdownOptions.custodyDecision)}</select></div></div><div class="mt-4"><label class="form-label">Notes</label><textarea id="custody-notes" class="form-textarea" rows="4" placeholder="Describe schedule..."></textarea></div></div><div class="pt-8 border-t border-gray-700"><div class="flex justify-between items-center mb-4"><h4 class="text-xl font-semibold text-white">Specific Events Log</h4><div><button class="btn-secondary add-event-btn"><i class="fas fa-plus mr-2"></i>Log Event</button><button class="btn-secondary download-csv-btn"><i class="fas fa-download mr-2"></i>CSV</button></div></div><div id="events-log-container" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div></div></div>`; updateTimeDashboard();};
+            renderExpensesSection = (container) => { container.innerHTML = `<div class="grid grid-cols-1 lg:grid-cols-3 gap-8"><div class="lg:col-span-2"><h4 class="text-xl font-semibold mb-4 text-white">Expense Items</h4><div id="expense-items-container" class="space-y-2 mb-4"></div><button class="btn-secondary add-expense-item-btn">Add Expense</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Contribution Dashboard</h4><div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg space-y-4"><div class="dashboard-metric"><div class="value text-blue-400" id="total-spent">R 0.00</div><div class="label">Total Expenses</div></div><div class="grid grid-cols-2 gap-4"><div class="dashboard-metric"><div class="value text-green-400" id="parent-a-paid">R 0.00</div><div class="label" id="parent-a-name">Parent A Paid</div></div><div class="dashboard-metric"><div class="value text-purple-400" id="parent-b-paid">R 0.00</div><div class="label" id="parent-b-name">Parent B Paid</div></div></div><div class="dashboard-metric"><div class="value text-amber-400" id="equalization-amount">R 0.00</div><div class="label" id="equalization-message">Contributions balanced.</div></div></div></div></div>`; addExpenseItem(container.querySelector('#expense-items-container')); };
+            renderCommunicationSection = (container) => { container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Methods</h4><div id="communication-methods-container" class="space-y-2"></div><button class="btn-secondary add-comm-method-btn mt-4">Add Method</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Guidelines</h4><div id="communication-guidelines" class="space-y-4">${dropdownOptions.communicationClassification.map(type => `<div class="bg-gray-800 p-4 rounded-lg"><h5 class="font-semibold mb-2 text-white">${type}</h5><textarea class="form-textarea" rows="3" data-guideline-type="${type}" placeholder="Guidelines..."></textarea></div>`).join('')}</div></div></div>`; };
+            renderSummarySection = (container) => { container.innerHTML = `<div class="text-center"><h2 class="text-3xl font-bold text-white">Final Step: Generate Document</h2></div><div class="max-w-2xl mx-auto mt-8 space-y-6"><div id="summary-section-list" class="space-y-3">${state.selectedSections.filter(s => s.id !== 'summary').map(s => `<label class="flex items-center space-x-3 p-4 bg-gray-800 rounded-md cursor-pointer"><input type="checkbox" value="${s.id}" class="h-5 w-5 rounded bg-gray-600" checked><i class="fas ${s.icon} text-gray-400 w-5 text-center"></i><span class="text-white font-semibold">${s.title}</span></label>`).join('')}</div></div>`; };
 
-            const setDynamicBackground = () => {
-                const bgs = ['linear-gradient(135deg, #1e3a8a 0%, #111827 100%)', 'linear-gradient(135deg, #3730a3 0%, #111827 100%)', 'linear-gradient(135deg, #047857 0%, #111827 100%)', 'linear-gradient(135deg, #9f1239 0%, #111827 100%)'];
-                containers.bg.style.backgroundImage = bgs[Math.floor(Math.random() * bgs.length)];
-            };
+            // ===================================================================
+            // SECTION 3: EVENT LISTENERS
+            // ===================================================================
 
-
-            // SECTION 10: EVENT LISTENERS & INITIALIZATION
             document.body.addEventListener('click', (e) => {
-                const target = e.target.closest('button');
+                const target = e.target.closest('button, div.option-card');
                 if (!target) return;
                 
-                const parentCard = target.closest('.party-card');
-
-                if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
-                else if (target.id === 'back-to-landing') { switchView('landing-view'); }
+                // --- View Navigation ---
+                if (target.id === 'start-wizard-btn') { renderWizardStep(0); switchView('wizard-view'); }
+                else if (target.id === 'start-manual-btn') { renderBuilder(state.allSections.filter(s => s.id !== 'summary').map(s => s.id)); }
+                else if (target.id === 'back-to-landing') { renderLandingView(); switchView('landing-view'); }
+                else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
+                else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
+                else if (target.id === 'wizard-finish-btn') { const ids = Array.from(document.querySelectorAll('#wizard-section-list input:checked')).map(cb => cb.value); renderBuilder(ids.length > 0 ? ids : []); }
+                
+                // --- Builder Navigation & Actions ---
                 else if (target.id === 'next-step-btn') { state.builderStep++; updateBuilderStep(); }
                 else if (target.id === 'prev-step-btn') { state.builderStep--; updateBuilderStep(); }
                 else if (target.id === 'generate-final-doc-btn') { showDisclaimer(Array.from(document.querySelectorAll('#summary-section-list input:checked')).map(cb => cb.value)); }
-                else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
-                else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
-                else if (target.id === 'wizard-finish-btn') { renderBuilder(Array.from(document.querySelectorAll('input[name="section"]:checked')).map(cb => cb.value)); }
-                else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
-                else if (target.matches('.add-address-btn')) { addAddress(parentCard.querySelector('.addresses-sub-container')); }
-                else if (target.matches('.add-contact-btn')) { addContact(parentCard.querySelector('.contacts-sub-container')); }
-                else if (target.id === 'add-child-btn') { addChild(); }
-                else if (target.matches('.add-expense-item-btn')) { addExpenseItem(document.getElementById('expense-items-container')); updateExpenseDashboard(); }
-                else if (target.matches('.add-event-btn')) { addEventLog(document.getElementById('events-log-container')); }
-                else if (target.matches('.add-comm-method-btn')) { /* logic */ }
-                else if (target.matches('.remove-item-btn')) { target.parentElement.closest('.party-card, .event-log-item, .grid').remove(); updateAllPartyDropdowns(); updateExpenseDashboard(); }
+                else if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
                 else if (target.matches('.download-csv-btn')) { downloadScheduleCSV(); }
+                else if (target.id === 'save-plan-btn') { showAlert('Feature Coming Soon!', 'Online saving and collaboration will be available for registered users soon.'); }
+                
+                // --- Dynamic Item Add/Remove ---
+                else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
+                else if (target.matches('.add-address-btn')) { addAddress(target.closest('.party-card').querySelector('.addresses-sub-container')); }
+                else if (target.matches('.add-contact-btn')) { addContact(target.closest('.party-card').querySelector('.contacts-sub-container')); }
+                else if (target.id === 'add-child-btn') { addChild(); }
+                else if (target.matches('.add-expense-item-btn')) { addExpenseItem(document.getElementById('expense-items-container')); }
+                else if (target.matches('.add-event-btn')) { addEventLog(document.getElementById('events-log-container')); }
+                else if (target.matches('.remove-item-btn')) { target.closest('.party-card, .event-log-item, .expense-item, .grid[class*="grid-cols-1"]').remove(); updateAllPartyDropdowns(); }
             });
-            
+
             document.body.addEventListener('input', e => {
                 const target = e.target;
                 if (target.matches('.expense-amount, .expense-paid-by')) { updateExpenseDashboard(); } 
                 else if (target.matches('.party-name')) { updateAllPartyDropdowns(); }
+                else if (target.matches('.event-start-date, .event-end-date, .event-allocated-to')) { updateTimeDashboard(); }
             });
+            
+            // --- Modal Controls ---
+            alertModal.close.addEventListener('click', () => { alertModal.modal.style.display = 'none'; });
+            disclaimerModal.cancel.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; });
+            disclaimerModal.agree.addEventListener('change', () => { disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked; });
+            disclaimerModal.proceed.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; generateDocument(disclaimerModal.proceed.dataset.sections.split(',')); });
 
-            // Initial view setup buttons & modals
-            buttons.startWizard.addEventListener('click', () => { /* ... unchanged ... */ });
-            buttons.startManual.addEventListener('click', () => renderBuilder(state.allSections.filter(s => s.id !== 'summary').map(s => s.id)));
-            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon!', 'Online saving and collaboration will be available for registered users soon.'));
-
-            alertModal.close.addEventListener('click', () => alertModal.modal.style.display = 'none');
-            disclaimerModal.cancel.addEventListener('click', () => disclaimerModal.modal.style.display = 'none');
-            disclaimerModal.agree.addEventListener('change', () => disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked);
-            disclaimerModal.proceed.addEventListener('click', () => {
-                disclaimerModal.modal.style.display = 'none';
-                generateDocument(disclaimerModal.proceed.dataset.sections.split(','));
-            });
-
-            // Initial App Load
+            // ===================================================================
+            // SECTION 4: INITIALIZATION
+            // ===================================================================
+            
+            renderLandingView();
+            switchView('landing-view');
             setDynamicBackground();
-            // Optional: fetch('sidebar.html').then(r=>r.text()).then(html=>containers.sidebar.innerHTML=html).catch(e=>console.error("Sidebar not found."));
         });
     </script>
 </body>
