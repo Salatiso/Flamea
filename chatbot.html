@@ -3,65 +3,406 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>iSazi Fatherhood Guide - Flamea</title>
+    <!-- Note: This is a component file. Head content is for standalone viewing. -->
+    <title>Flamea Sidebar</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body {
-            background-image: url('assets/images/background.jpg');
-            background-size: cover;
-            background-attachment: fixed;
+        /* --- Styles from original sidebar.html --- */
+        .sidebar-link {
+            transition: background-color 0.2s, color 0.2s;
         }
-        #chat-window {
-            height: 60vh;
+        .sidebar-link:hover, .sidebar-link-main:hover {
+            background-color: #1f2937;
+            color: white;
         }
+        .submenu-container {
+            display: none; /* Kept from original for accordion logic */
+        }
+        /* Active state for accordion arrow */
+        [data-menu-item].active > .submenu-toggle .fa-chevron-down,
+        [data-menu-item].active > button .fa-chevron-down {
+            transform: rotate(180deg);
+        }
+        
+        /* --- NEW Styles for Podcast Player --- */
+        #podcast-player-container {
+            background-color: #111827; /* Darker for depth */
+            color: #d1d5db;
+        }
+        #podcast-playlist {
+            max-height: 200px; /* Limits the height of the playlist */
+            overflow-y: auto; /* Adds scrollbar when needed */
+            border-top: 1px solid #374151;
+        }
+        .podcast-playlist-item {
+            cursor: pointer;
+            transition: background-color 0.2s;
+            border-left: 3px solid transparent;
+        }
+        .podcast-playlist-item:hover {
+            background-color: #374151;
+        }
+        .podcast-playlist-item.active {
+            background-color: rgba(74, 222, 128, 0.1); /* Green highlight to match logo */
+            border-left-color: #4ade80; /* Green highlight */
+        }
+        #podcast-progress-container {
+            background-color: #4b5563;
+            cursor: pointer;
+        }
+        #podcast-progress-bar {
+            background-color: #4ade80; /* Green progress bar */
+        }
+        #podcast-playlist::-webkit-scrollbar { width: 5px; }
+        #podcast-playlist::-webkit-scrollbar-track { background: #1f2937; }
+        #podcast-playlist::-webkit-scrollbar-thumb { background: #4ade80; border-radius: 3px; }
     </style>
 </head>
-<body class="bg-gray-100 font-sans">
+<body class="bg-gray-800"> <!-- Example body for viewing component -->
 
-    <!-- Sidebar Placeholder -->
-    <div id="sidebar-placeholder"></div>
-
-    <main class="ml-0 md:ml-64 p-8 transition-all duration-300">
-        <div class="container mx-auto">
-            <div class="max-w-3xl mx-auto bg-white/90 rounded-xl shadow-2xl flex flex-col">
-                <!-- Header -->
-                <div class="p-4 border-b flex items-center justify-between">
-                    <div>
-                        <h1 class="text-2xl font-bold text-gray-800">iSazi: The Fatherhood Guide</h1>
-                        <p class="text-sm text-gray-500">Your AI assistant for navigating fatherhood and family law.</p>
-                    </div>
-                     <i class="fas fa-robot text-3xl text-blue-600"></i>
+<aside class="p-6 flex flex-col justify-between h-full bg-gray-900 text-gray-300" style="width: 288px;">
+    <!-- Top Section: Logo & Navigation (Preserved from your file) -->
+    <div class="sidebar-top">
+        <div class="mb-12 flex justify-center">
+            <a href="desktop-index.html" class="flamea-logo dark">
+                <svg width="160" height="48" viewBox="0 0 200 60" xmlns="http://www.w3.org/2000/svg" aria-label="Flamea Home">
+                    <text class="logo-text" x="0" y="45" font-family="Inter, sans-serif" font-size="50" font-weight="400" fill="white">Flame</text>
+                    <g transform="translate(135, 0)">
+                        <path d="M18 5 L 0 50 L 8 50 C 12 42, 24 42, 28 50 L 36 50 Z" fill="#4ade80"></path>
+                    </g>
+                    <line x1="0" y1="58" x2="171" y2="58" stroke="#4ade80" stroke-width="2.5" stroke-linecap="round"></line>
+                </svg>
+            </a>
+        </div>
+        
+        <nav id="main-nav" class="flex flex-col space-y-2">
+            <a href="desktop-index.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-home w-6 text-center mr-4"></i> Home</a>
+            <a href="about.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-bullseye w-6 text-center mr-4"></i> About</a>
+            <div class="relative" data-menu-item="tools-hub">
+                <div class="flex items-center rounded-lg hover:bg-gray-800">
+                    <a href="tools.html" class="sidebar-link-main flex-grow flex items-center p-3"><i class="fas fa-tools w-6 text-center mr-4"></i> Tools Hub</a>
+                    <button class="submenu-toggle p-3 pr-4 text-gray-400 hover:text-white">
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
                 </div>
-
-                <!-- Chat Window -->
-                <div id="chat-window" class="p-6 overflow-y-auto flex-grow">
-                    <!-- Chat messages will be appended here -->
-                    <div class="flex items-start gap-3 mb-4">
-                        <div class="bg-blue-500 text-white p-3 rounded-lg rounded-bl-none max-w-md">
-                            <p>Molweni, tata. I am iSazi. I am here to assist with questions about fatherhood, your rights, and family matters. How can I help you today?</p>
-                        </div>
-                    </div>
+                <div class="submenu-container pl-11 py-2 ml-2 border-l-2 border-gray-700 bg-gray-800/30" style="display: none;">
+                    <a href="forms.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-file-alt w-6 text-center mr-3 text-blue-400"></i> Forms & Templates</a>
+                    <a href="customs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-globe w-6 text-center mr-3 text-green-400"></i> Traditional Customs</a>
+                    <a href="games.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gamepad w-6 text-center mr-3 text-purple-400"></i> Interactive Games</a>
+                    <a href="current-affairs.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-newspaper w-6 text-center mr-3 text-yellow-400"></i> Current Affairs</a>
+                    <a href="legalhelp.html" class="sidebar-link flex items-center p-2 rounded-lg text-sm"><i class="fas fa-gavel w-6 text-center mr-3 text-red-400"></i> LegalHelp</a>
                 </div>
-
-                <!-- Input Area -->
-                <div class="p-4 border-t bg-gray-50 rounded-b-xl">
-                    <div class="flex items-center gap-3">
-                        <input type="text" id="chat-input" placeholder="Ask your question here..." class="flex-grow rounded-full border-gray-300 shadow-sm p-3 focus:border-indigo-500 focus:ring-indigo-500" autocomplete="off">
-                        <button id="send-btn" class="bg-blue-600 hover:bg-blue-700 text-white rounded-full w-12 h-12 flex items-center justify-center shadow-lg">
-                            <i class="fas fa-paper-plane"></i>
-                        </button>
+            </div>
+            <a href="training.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book-reader w-6 text-center mr-4"></i> Training Hub</a>
+            <a href="community.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-users w-6 text-center mr-4"></i> Community</a>
+            
+            <div class="border-t border-gray-700 my-4"></div>
+            
+            <a href="parenting-plan.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Parenting Plan Builder</a>
+            <a href="assessment.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-clipboard-check w-6 text-center mr-4 text-teal-400"></i> Needs Assessment</a>
+            
+            <div class="border-t border-gray-700 my-4"></div>
+            
+            <a href="publications.html" class="sidebar-link flex items-center p-3 rounded-lg"><i class="fas fa-book w-6 text-center mr-4 text-blue-400"></i> Publications</a>
+            
+            <!-- --- START: Podcast Player Integration --- -->
+            <div class="relative" data-menu-item="podcast-player">
+                <button class="submenu-toggle flex items-center p-3 rounded-lg w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white">
+                    <i class="fas fa-podcast w-6 text-center mr-4 text-yellow-400"></i>
+                    <span class="flex-grow">Podcast</span>
+                    <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+                </button>
+                <div id="podcast-player-container" class="submenu-container text-sm p-3 bg-gray-800/30">
+                    <!-- Player interface will be injected here by the script -->
+                    <div id="podcast-loader" class="text-center p-4">
+                        <i class="fas fa-spinner fa-spin text-yellow-400"></i>
+                        <p class="text-xs mt-2">Loading Player...</p>
                     </div>
                 </div>
             </div>
-        </div>
-    </main>
+            <!-- --- END: Podcast Player Integration --- -->
 
-    <!-- App Scripts -->
-    <!-- IMPORTANT: The chatbot uses ITS OWN firebase config -->
-    <script src="assets/js/firebase-chatbot-config.js"></script>
-    <script src="assets/js/sidebar-loader.js"></script>
-    <script src="assets/js/chatbot.js"></script>
+            <button data-modal-target="chatbot-modal" class="sidebar-link flex items-center p-3 rounded-lg w-full text-left"><i class="fas fa-robot w-6 text-center mr-4 text-purple-400"></i> iSazi: The Fatherhood Guide</button>
+        </nav>
+    </div>
+    
+    <!-- Bottom Section (Preserved from your file) -->
+    <div class="sidebar-bottom text-center">
+        <div class="mb-4" data-menu-item="join-movement">
+            <button class="submenu-toggle flex items-center p-3 rounded-lg w-full text-left text-gray-300 hover:bg-gray-800 hover:text-white">
+                <i class="fas fa-hands-helping w-6 text-center mr-4 text-yellow-400"></i>
+                <span class="flex-grow font-semibold">Join the Movement</span>
+                <i class="fas fa-chevron-down text-xs transition-transform duration-300"></i>
+            </button>
+            <div class="submenu-container text-left text-sm p-4 bg-gray-800 rounded-b-lg" style="display: none;">
+                <p class="text-gray-400 mb-4">Flamea is built by the community, for the community. See how you can contribute.</p>
+                <a href="join-the-movement.html" class="font-bold text-yellow-400 hover:underline">Learn More →</a>
+            </div>
+        </div>
+        <div id="sidebar-auth-links" class="mb-4">
+            <!-- Auth state populated by auth.js -->
+        </div>
+        <div class="text-xs text-gray-500 leading-relaxed">
+            <span>© 2025 Flamea.Org</span><br>
+            <span>Powered by <a href="https://salatiso.com/" target="_blank" class="hover:underline text-gray-400">Salatiso</a></span>
+        </div>
+    </div>
+</aside>
+
+<!-- IMPORTANT: The main page that loads this sidebar must have this audio tag in its body -->
+<audio id="flamea-audio-player" preload="metadata"></audio>
+
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+    // Standard Sidebar Accordion Logic (from your file)
+    const menuItems = document.querySelectorAll('[data-menu-item]');
+    menuItems.forEach(item => {
+        const toggle = item.querySelector('.submenu-toggle');
+        const submenu = item.querySelector('.submenu-container');
+        if (toggle && submenu) {
+            toggle.addEventListener('click', (e) => {
+                e.stopPropagation(); // Prevent event bubbling
+                const wasActive = item.classList.contains('active');
+                // Close all other menu items
+                menuItems.forEach(otherItem => {
+                    if (otherItem !== item) {
+                        otherItem.classList.remove('active');
+                        otherItem.querySelector('.submenu-container').style.display = 'none';
+                    }
+                });
+                // Toggle the clicked item
+                if (wasActive) {
+                    item.classList.remove('active');
+                    submenu.style.display = 'none';
+                } else {
+                    item.classList.add('active');
+                    submenu.style.display = 'block';
+                }
+            });
+        }
+    });
+    
+    // --- NEW: Podcast Player Logic ---
+    const playerContainer = document.getElementById('podcast-player-container');
+    // Important: The audio player element should exist on the main page.
+    const audioPlayer = document.getElementById('flamea-audio-player');
+    if (!audioPlayer) {
+        console.error("Critical Error: Audio element with id 'flamea-audio-player' not found on the main page.");
+        return;
+    }
+
+    let episodes = [];
+    let currentEpisodeIndex = 0;
+    let isPlaying = false;
+
+    // Using RSS2JSON service which is more reliable for RSS feeds
+    const RSS_URL = "https://anchor.fm/s/10357aacc/podcast/rss";
+    const RSS_API_URL = `https://api.rss2json.com/v1/api.json?rss_url=${encodeURIComponent(RSS_URL)}`;
+
+    fetch(RSS_API_URL)
+        .then(response => {
+            if (!response.ok) throw new Error('Network response was not ok.');
+            return response.json();
+        })
+        .then(data => {
+            if (!data.items || data.items.length === 0) {
+                throw new Error("No episodes found in RSS feed.");
+            }
+
+            episodes = data.items.map(item => ({
+                title: item.title,
+                audioSrc: item.enclosure?.link || null,
+                artworkUrl: data.feed?.image || 'https://placehold.co/100x100/111827/4ade80?text=F',
+                description: item.description
+            })).filter(ep => ep.audioSrc); // Only include episodes with audio
+
+            if (episodes.length === 0) {
+                throw new Error("No playable episodes found.");
+            }
+
+            renderPlayer();
+            loadEpisode(0);
+        })
+        .catch(err => {
+            console.error("Error loading podcast feed:", err);
+            playerContainer.innerHTML = `
+                <div class="p-4 text-center">
+                    <i class="fas fa-exclamation-triangle text-red-400 text-lg mb-2"></i>
+                    <p class="text-xs text-red-400">Could not load podcast feed.</p>
+                    <p class="text-xs text-gray-500 mt-1">Please try again later.</p>
+                </div>
+            `;
+        });
+
+    function renderPlayer() {
+        // Build the player UI inside the container
+        playerContainer.innerHTML = `
+            <div class="flex items-center gap-3 mb-3">
+                <img id="podcast-art" class="w-14 h-14 rounded-md object-cover" src="https://placehold.co/100x100/111827/4ade80?text=F">
+                <div class="flex-grow overflow-hidden">
+                    <p id="podcast-title" class="font-semibold text-white truncate">Select an Episode</p>
+                    <div class="flex items-center justify-between text-xs text-gray-400">
+                         <span id="podcast-current-time">0:00</span>
+                         <span id="podcast-total-duration">0:00</span>
+                    </div>
+                </div>
+            </div>
+            <div id="podcast-progress-container" class="h-1.5 rounded-full w-full bg-gray-600 mb-3">
+                <div id="podcast-progress-bar" class="h-full rounded-full" style="width: 0%;"></div>
+            </div>
+            <div class="flex items-center justify-around">
+                <button id="podcast-prev-btn" class="p-2 hover:text-white"><i class="fas fa-backward-step"></i></button>
+                <button id="podcast-play-pause-btn" class="p-2 text-xl hover:text-white"><i class="fas fa-play"></i></button>
+                <button id="podcast-next-btn" class="p-2 hover:text-white"><i class="fas fa-forward-step"></i></button>
+            </div>
+            <div id="podcast-playlist" class="mt-3"></div>
+        `;
+
+        const playlistEl = document.getElementById('podcast-playlist');
+        episodes.forEach((ep, index) => {
+            const itemEl = document.createElement('div');
+            itemEl.className = 'podcast-playlist-item p-2 flex items-center gap-2 rounded-md';
+            itemEl.innerHTML = `
+                <img src="${ep.artworkUrl}" class="w-8 h-8 rounded-sm object-cover">
+                <p class="flex-grow truncate text-xs">${ep.title}</p>
+            `;
+            itemEl.addEventListener('click', () => {
+                currentEpisodeIndex = index;
+                loadEpisode(index);
+            });
+            playlistEl.appendChild(itemEl);
+        });
+        
+        // Add event listeners to the newly created player controls
+        document.getElementById('podcast-play-pause-btn').addEventListener('click', togglePlayPause);
+        document.getElementById('podcast-next-btn').addEventListener('click', playNext);
+        document.getElementById('podcast-prev-btn').addEventListener('click', playPrev);
+        document.getElementById('podcast-progress-container').addEventListener('click', setProgress);
+    }
+    
+    function loadEpisode(index) {
+        const episode = episodes[index];
+        if (!episode || !episode.audioSrc) return;
+        
+        // Stop current playback
+        if (isPlaying) {
+            pauseEpisode();
+        }
+        
+        document.getElementById('podcast-art').src = episode.artworkUrl;
+        document.getElementById('podcast-title').textContent = episode.title;
+        
+        // Set audio source directly without proxy
+        audioPlayer.src = episode.audioSrc;
+        audioPlayer.load(); // Force reload of the audio element
+        
+        // Reset progress
+        document.getElementById('podcast-progress-bar').style.width = '0%';
+        document.getElementById('podcast-current-time').textContent = '0:00';
+        document.getElementById('podcast-total-duration').textContent = '0:00';
+
+        // Update playlist active state
+        document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
+            item.classList.toggle('active', idx === index);
+        });
+
+        // Automatically play the episode after loading
+        audioPlayer.addEventListener('canplay', playEpisode, { once: true });
+    }
+
+    function playEpisode() {
+        if (!audioPlayer.src) return;
+        
+        const playPromise = audioPlayer.play();
+        if (playPromise !== undefined) {
+            playPromise.then(() => {
+                isPlaying = true;
+                document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-pause"></i>';
+            }).catch(e => {
+                console.error("Playback Error:", e);
+                // Show user-friendly error
+                alert("Unable to play this episode. Please try another one.");
+            });
+        }
+    }
+
+    function pauseEpisode() {
+        audioPlayer.pause();
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+    }
+
+    function togglePlayPause() { 
+        if (isPlaying) {
+            pauseEpisode();
+        } else {
+            playEpisode();
+        }
+    }
+    
+    function playNext() {
+        currentEpisodeIndex = (currentEpisodeIndex + 1) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+    }
+    
+    function playPrev() {
+        currentEpisodeIndex = (currentEpisodeIndex - 1 + episodes.length) % episodes.length;
+        loadEpisode(currentEpisodeIndex);
+    }
+
+    function setProgress(e) {
+        const width = e.currentTarget.clientWidth;
+        const clickX = e.offsetX;
+        if(audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+            audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
+        }
+    }
+
+    // --- Audio Player Event Listeners ---
+    audioPlayer.addEventListener('loadstart', () => {
+        console.log('Started loading audio');
+    });
+
+    audioPlayer.addEventListener('canplay', () => {
+        console.log('Audio can start playing');
+    });
+
+    audioPlayer.addEventListener('error', (e) => {
+        console.error('Audio error:', e);
+        pauseEpisode();
+    });
+
+    audioPlayer.addEventListener('timeupdate', () => {
+        const { currentTime, duration } = audioPlayer;
+        if(duration && !isNaN(duration) && !isNaN(currentTime)) {
+            const progressPercent = (currentTime / duration) * 100;
+            document.getElementById('podcast-progress-bar').style.width = `${progressPercent}%`;
+            document.getElementById('podcast-current-time').textContent = formatTime(currentTime);
+        }
+    });
+
+    audioPlayer.addEventListener('loadedmetadata', () => {
+        if (audioPlayer.duration && !isNaN(audioPlayer.duration)) {
+            document.getElementById('podcast-total-duration').textContent = formatTime(audioPlayer.duration);
+        }
+    });
+    
+    audioPlayer.addEventListener('ended', () => {
+        isPlaying = false;
+        document.getElementById('podcast-play-pause-btn').innerHTML = '<i class="fas fa-play"></i>';
+        playNext();
+    });
+
+    function formatTime(seconds) {
+        if (isNaN(seconds) || seconds < 0) return "0:00";
+        const mins = Math.floor(seconds / 60);
+        const secs = Math.floor(seconds % 60);
+        return `${mins}:${secs < 10 ? '0' : ''}${secs}`;
+    }
+});
+</script>
 
 </body>
 </html>
