@@ -282,32 +282,36 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('podcast-progress-container').addEventListener('click', setProgress);
     }
     
-    function loadEpisode(index) {
-        const episode = episodes[index];
-        if (!episode || !episode.audioSrc) return;
-        
-        // Stop current playback
-        if (isPlaying) {
-            pauseEpisode();
-        }
-        
-        document.getElementById('podcast-art').src = episode.artworkUrl;
-        document.getElementById('podcast-title').textContent = episode.title;
-        
-        // Set audio source directly without proxy
-        audioPlayer.src = episode.audioSrc;
-        audioPlayer.load(); // Force reload of the audio element
-        
-        // Reset progress
-        document.getElementById('podcast-progress-bar').style.width = '0%';
-        document.getElementById('podcast-current-time').textContent = '0:00';
-        document.getElementById('podcast-total-duration').textContent = '0:00';
-
-        // Update playlist active state
-        document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
-            item.classList.toggle('active', idx === index);
-        });
+  function loadEpisode(index) {
+    const episode = episodes[index];
+    if (!episode || !episode.audioSrc) return;
+    
+    // Stop current playback
+    if (isPlaying) {
+        pauseEpisode();
     }
+    
+    document.getElementById('podcast-art').src = episode.artworkUrl;
+    document.getElementById('podcast-title').textContent = episode.title;
+    
+    // Set audio source directly without proxy
+    audioPlayer.src = episode.audioSrc;
+    audioPlayer.load(); // Force reload of the audio element
+    
+    // Reset progress
+    document.getElementById('podcast-progress-bar').style.width = '0%';
+    document.getElementById('podcast-current-time').textContent = '0:00';
+    document.getElementById('podcast-total-duration').textContent = '0:00';
+
+    // Update playlist active state
+    document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
+        item.classList.toggle('active', idx === index);
+    });
+
+    // ✅ Auto-play the episode after loading
+    playEpisode();
+}
+
 
     function playEpisode() {
         if (!audioPlayer.src) return;
