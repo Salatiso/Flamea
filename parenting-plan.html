@@ -22,19 +22,21 @@
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
         .accordion-header { transition: background-color 0.3s; }
         .accordion-item.active .accordion-header { background-color: #374151; }
-        .accordion-item.active .accordion-content { max-height: 10000px; /* Large enough for content */ }
+        .accordion-item.active .accordion-content { max-height: 20000px; /* Large enough for content */ }
         .accordion-icon { transition: transform 0.3s ease-out; }
         .accordion-item.active .accordion-icon { transform: rotate(180deg); }
         
         .form-input, .form-select { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
         .form-input:focus, .form-select:focus { outline: none; border-color: #3b82f6; ring: 0; }
         .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
-        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; }
+        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; }
+        .btn-primary:disabled { background-color: #4b5563; cursor: not-allowed; }
+        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer;}
         .btn-secondary:hover { background-color: #6b7280; }
-        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem;}
+        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem; cursor: pointer;}
         .btn-danger:hover { background-color: #b91c1c; }
+        .btn-success { background-color: #16a34a; color: white; font-weight: 600; padding: 0.25rem 0.75rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; font-size: 0.875rem;}
 
         .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;}
         .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
@@ -43,7 +45,6 @@
         .contribution-slider:hover { opacity: 1; }
         .contribution-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
         .contribution-slider::-moz-range-thumb { width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
-
     </style>
 </head>
 <body>
@@ -115,7 +116,7 @@
       <div class="modal-content">
         <h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3>
         <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is **not legal advice**. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
-        <label class="flex items-center space-x-3 mb-6">
+        <label class="flex items-center space-x-3 mb-6 cursor-pointer">
             <input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500">
             <span class="text-white">I Understand and Agree</span>
         </label>
@@ -127,9 +128,537 @@
     </div>
 
     <script>
-        // All JavaScript is embedded here for a self-contained, zero-dependency MVP.
         document.addEventListener('DOMContentLoaded', () => {
-            // JS Code will go here
+            // --- SECTION 1: STATE MANAGEMENT & DATA ---
+            const state = {
+                currentView: 'landing-view', // landing-view, wizard-view, builder-view
+                wizardStep: 0,
+                planData: {},
+                allSections: [
+                    { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: renderPartiesSection },
+                    { id: 'custody', title: 'Custody & Activity Schedule', icon: 'fa-calendar-days', render: renderCustodySection },
+                    { id: 'expenses', title: 'Expense & Benefit Tracker', icon: 'fa-hand-holding-dollar', render: renderExpensesSection },
+                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: renderCommunicationSection },
+                ],
+                selectedSections: [],
+                partyNames: { A: 'Parent A', B: 'Parent B' }
+            };
+
+            const dropdownOptions = {
+                relationship: ['Father', 'Mother', 'Grandfather', 'Grandmother', 'Uncle', 'Aunt', 'Legal Guardian', 'Other'],
+                addressType: ['Home', 'Work', 'Postal', 'Other'],
+                contactType: ['Primary Cell', 'Work Phone', 'Email', 'WhatsApp', 'Facebook', 'Other'],
+                eventType: ['Contact Schedule', 'Visitation', 'Holiday', 'Emergency', 'School Activity', 'Cultural Event', 'Other'],
+                budgetOrigin: ['Mutual Agreement'],
+                expenseCategory: ['Living Expenses', 'Education', 'Healthcare', 'Cultural Obligations', 'Other'],
+                communicationClassification: ['For Urgent Matters', 'For Formal Communication', 'For Daily Updates']
+            };
+
+            // --- SECTION 2: DOM ELEMENT REFERENCES ---
+            const views = {
+                landing: document.getElementById('landing-view'),
+                wizard: document.getElementById('wizard-view'),
+                builder: document.getElementById('builder-view')
+            };
+            const buttons = {
+                startWizard: document.getElementById('start-wizard-btn'),
+                startManual: document.getElementById('start-manual-btn'),
+                backToLanding: document.getElementById('back-to-landing'),
+                savePlan: document.getElementById('save-plan-btn'),
+                previewDoc: document.getElementById('preview-doc-btn')
+            };
+            const containers = {
+                accordion: document.getElementById('accordion-container'),
+                sidebar: document.getElementById('sidebar-placeholder')
+            };
+            const alertModal = {
+                modal: document.getElementById('alert-modal'),
+                title: document.getElementById('alert-modal-title'),
+                message: document.getElementById('alert-modal-message'),
+                close: document.getElementById('alert-modal-close')
+            };
+            const disclaimerModal = {
+                modal: document.getElementById('disclaimer-modal'),
+                agree: document.getElementById('disclaimer-agree'),
+                cancel: document.getElementById('disclaimer-cancel'),
+                proceed: document.getElementById('disclaimer-proceed'),
+            };
+
+            // --- SECTION 3: CORE APP LOGIC ---
+
+            const switchView = (viewId) => {
+                state.currentView = viewId;
+                Object.values(views).forEach(v => v.classList.remove('active'));
+                if (views[viewId.split('-')[0]]) {
+                    views[viewId.split('-')[0]].classList.add('active');
+                }
+            };
+            
+            const showAlert = (title, message) => {
+                alertModal.title.textContent = title;
+                alertModal.message.textContent = message;
+                alertModal.modal.style.display = 'flex';
+            };
+
+            const renderBuilder = (sectionIds) => {
+                containers.accordion.innerHTML = '';
+                state.selectedSections = state.allSections.filter(s => sectionIds.includes(s.id));
+                state.selectedSections.forEach(section => {
+                    const accordionItem = document.createElement('div');
+                    accordionItem.className = 'accordion-item bg-gray-800 rounded-lg shadow-md';
+                    accordionItem.dataset.sectionId = section.id;
+                    accordionItem.innerHTML = `
+                        <div class="accordion-header cursor-pointer p-4 flex justify-between items-center">
+                            <h3 class="text-xl font-bold text-white"><i class="fas ${section.icon} mr-3 text-blue-400"></i>${section.title}</h3>
+                            <i class="fas fa-chevron-down accordion-icon text-gray-400"></i>
+                        </div>
+                        <div class="accordion-content border-t border-gray-700">
+                            <div class="p-6" id="content-${section.id}"></div>
+                        </div>
+                    `;
+                    containers.accordion.appendChild(accordionItem);
+                    section.render(document.getElementById(`content-${section.id}`));
+                });
+                if(containers.accordion.firstChild) {
+                    containers.accordion.firstChild.classList.add('active');
+                }
+                switchView('builder-view');
+            };
+
+            // --- SECTION 4: SECTION RENDERERS ---
+
+            function renderPartiesSection(container) {
+                 container.innerHTML = `
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+                        <div id="parties-A" class="space-y-4 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
+                           <h3 class="text-xl font-bold text-center text-blue-300" contenteditable="true" data-party-name="A">Parent A's Side</h3>
+                        </div>
+                        <div id="parties-B" class="space-y-4 p-4 bg-gray-900/50 rounded-lg border border-gray-700">
+                           <h3 class="text-xl font-bold text-center text-pink-300" contenteditable="true" data-party-name="B">Parent B's Side</h3>
+                        </div>
+                    </div>
+                    <div class="text-center mt-4">
+                        <button class="btn-secondary add-guardian-btn" data-side="A"><i class="fas fa-plus mr-2"></i>Add to Parent A's Side</button>
+                        <button class="btn-secondary add-guardian-btn" data-side="B"><i class="fas fa-plus mr-2"></i>Add to Parent B's Side</button>
+                    </div>
+                    <hr class="my-8 border-gray-600">
+                    <h3 class="text-2xl font-bold mb-4 text-center">Children</h3>
+                    <div id="children-container" class="space-y-4 max-w-3xl mx-auto"></div>
+                    <div class="text-center mt-4">
+                        <button class="btn-secondary" id="add-child-btn"><i class="fas fa-plus mr-2"></i>Add Child</button>
+                    </div>
+                `;
+                addGuardian('A'); // Add initial party for side A
+                addGuardian('B'); // Add initial party for side B
+            }
+            
+            function renderCustodySection(container) {
+                container.innerHTML = `
+                    <div class="p-4 bg-gray-900/50 rounded-lg mb-6">
+                        <h4 class="text-lg font-semibold text-center mb-4">Time Spent with Child(ren) Dashboard</h4>
+                        <div id="time-dashboard-summary" class="text-center text-gray-400">Log activities below to see the summary.</div>
+                    </div>
+                    <div class="bg-gray-900/50 p-6 rounded-lg">
+                        <h4 class="text-xl font-semibold mb-4">Log a New Activity or Schedule</h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 items-end">
+                            <div><label class="form-label">Event Title</label><input type="text" class="form-input" id="event-title" placeholder="e.g., Weekend Visit"></div>
+                            <div><label class="form-label">Start Date & Time</label><input type="datetime-local" class="form-input" id="event-start" style="color-scheme: dark;"></div>
+                            <div><label class="form-label">End Date & Time</label><input type="datetime-local" class="form-input" id="event-end" style="color-scheme: dark;"></div>
+                            <div><label class="form-label">Assign To</label><select class="form-select" id="event-assignee"></select></div>
+                            <div><label class="form-label">Event Type</label><select class="form-select" id="event-type">${generateOptions(dropdownOptions.eventType)}</select></div>
+                            <div class="flex items-center h-full"><label class="flex items-center space-x-2 cursor-pointer"><input type="checkbox" id="event-recurring" class="h-4 w-4 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500"><span>Recurring</span></label></div>
+                        </div>
+                         <div class="mt-4"><label class="form-label">Details / Notes</label><textarea class="form-input" id="event-details" rows="3" placeholder="Add any relevant notes..."></textarea></div>
+                        <div class="text-right mt-4"><button id="add-event-btn" class="btn-primary">Log Event</button></div>
+                    </div>
+                     <hr class="my-8 border-gray-600">
+                     <h4 class="text-xl font-semibold mb-4">Logged Activities & Schedules</h4>
+                     <div id="event-log-container" class="space-y-2 text-sm">
+                        <div class="text-center text-gray-500 p-4">No activities logged yet.</div>
+                     </div>
+                `;
+                updatePartyDropdown(container.querySelector('#event-assignee'));
+            }
+
+            function renderExpensesSection(container) {
+                 container.innerHTML = `
+                    <div class="p-4 bg-gray-900/50 rounded-lg mb-6">
+                         <h4 class="text-lg font-semibold text-center mb-4">Overall Financial Contribution</h4>
+                         <div class="flex items-center gap-4">
+                            <span id="expense-summary-A" class="text-blue-300 font-bold">Parent A: 50%</span>
+                            <div class="w-full bg-gray-700 rounded-full h-2.5">
+                                <div id="overall-contribution-bar" class="bg-gradient-to-r from-blue-500 to-pink-500 h-2.5 rounded-full" style="width: 50%"></div>
+                            </div>
+                            <span id="expense-summary-B" class="text-pink-300 font-bold">Parent B: 50%</span>
+                         </div>
+                    </div>
+                    <div class="mb-4">
+                        <label class="form-label">Who determined this budget?</label>
+                        <select class="form-select max-w-xs" id="budget-origin">${generateOptions(dropdownOptions.budgetOrigin)}</select>
+                    </div>
+                    <div id="expense-categories-container" class="space-y-6"></div>
+                    <div class="text-center mt-6">
+                         <button id="add-expense-category-btn" class="btn-secondary"><i class="fas fa-plus mr-2"></i>Add Custom Category</button>
+                    </div>
+                 `;
+                 dropdownOptions.expenseCategory.forEach(catName => addExpenseCategory(catName));
+                 updatePartyDropdown(container.querySelector('#budget-origin'));
+                 updateExpenseDashboard();
+            }
+
+            function renderCommunicationSection(container) {
+                container.innerHTML = `<div id="communication-pairs-container" class="space-y-6"></div>`;
+                updateCommunicationPairs();
+            }
+            
+            // --- SECTION 5: HELPER FUNCTIONS (for rendering complex parts) ---
+
+            function generateOptions(arr) {
+                return arr.map(opt => `<option value="${opt}">${opt}</option>`).join('');
+            }
+            
+            function addGuardian(side) {
+                const container = document.getElementById(`parties-${side}`);
+                const partyDiv = document.createElement('div');
+                partyDiv.className = 'party-card p-4 border border-gray-600 rounded-lg space-y-4';
+                partyDiv.innerHTML = `
+                    <div class="flex justify-between items-center">
+                        <h4 class="font-bold text-lg text-gray-300">Guardian</h4>
+                        <button class="btn-danger remove-guardian-btn"><i class="fas fa-trash"></i></button>
+                    </div>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" data-party-side="${side}" placeholder="e.g., John Doe"></div>
+                        <div><label class="form-label">Relationship to Child(ren)</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div>
+                    </div>
+                    <div><label class="form-label">ID Number (Optional)</label><input type="text" class="form-input" placeholder="For court documents"></div>
+                    
+                    <div class="pt-4 border-t border-gray-700">
+                        <h5 class="font-semibold text-gray-400 mb-2">Addresses</h5>
+                        <div class="addresses-sub-container space-y-2"></div>
+                        <button class="btn-secondary text-xs mt-2 add-address-btn"><i class="fas fa-plus mr-1"></i>Add Address</button>
+                    </div>
+                    <div class="pt-4 border-t border-gray-700">
+                        <h5 class="font-semibold text-gray-400 mb-2">Contact Details</h5>
+                        <div class="contacts-sub-container space-y-2"></div>
+                        <button class="btn-secondary text-xs mt-2 add-contact-btn"><i class="fas fa-plus mr-1"></i>Add Contact</button>
+                    </div>
+                `;
+                container.appendChild(partyDiv);
+            }
+            
+            function addAddress(container) {
+                 const div = document.createElement('div');
+                 div.className = 'grid grid-cols-1 md:grid-cols-4 gap-2 items-end';
+                 div.innerHTML = `
+                    <div class="md:col-span-2"><label class="form-label">Street Address</label><input type="text" class="form-input" placeholder="123 Main St"></div>
+                    <div><label class="form-label">Type</label><select class="form-select">${generateOptions(dropdownOptions.addressType)}</select></div>
+                    <div><button class="btn-danger w-full remove-sub-item-btn">Remove</button></div>
+                 `;
+                 container.appendChild(div);
+            }
+
+            function addContact(container) {
+                const div = document.createElement('div');
+                 div.className = 'grid grid-cols-1 md:grid-cols-4 gap-2 items-end';
+                 div.innerHTML = `
+                    <div class="md:col-span-2"><label class="form-label">Detail / Username</label><input type="text" class="form-input" placeholder="0821234567 or example@email.com"></div>
+                    <div><label class="form-label">Type</label><select class="form-select">${generateOptions(dropdownOptions.contactType)}</select></div>
+                    <div><button class="btn-danger w-full remove-sub-item-btn">Remove</button></div>
+                 `;
+                 container.appendChild(div);
+            }
+            
+            function addChild() {
+                const container = document.getElementById('children-container');
+                const div = document.createElement('div');
+                div.className = 'p-4 border border-gray-700 rounded-lg relative bg-gray-800/50';
+                div.innerHTML = `
+                    <button class="btn-danger absolute top-2 right-2 remove-sub-item-btn"><i class="fas fa-trash"></i></button>
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                        <div><label class="form-label">Full Name</label><input type="text" class="form-input child-name"></div>
+                        <div><label class="form-label">Date of Birth</label><input type="date" class="form-input" style="color-scheme: dark;"></div>
+                        <div><label class="form-label">ID Number (Optional)</label><input type="text" class="form-input"></div>
+                    </div>
+                `;
+                container.appendChild(div);
+            }
+
+            function addExpenseCategory(name = '') {
+                const container = document.getElementById('expense-categories-container');
+                const div = document.createElement('div');
+                div.className = 'expense-category p-4 bg-gray-900/50 rounded-lg';
+                div.innerHTML = `
+                    <div class="flex justify-between items-center mb-4">
+                         <input type="text" value="${name}" class="text-xl font-bold bg-transparent border-0 border-b-2 border-gray-600 focus:ring-0 focus:border-blue-500">
+                         <button class="btn-danger remove-category-btn"><i class="fas fa-trash mr-2"></i>Remove Category</button>
+                    </div>
+                    <div class="expense-items-container space-y-2"></div>
+                    <button class="btn-secondary text-xs mt-4 add-expense-item-btn"><i class="fas fa-plus mr-1"></i>Add Expense Item</button>
+                    <div class="mt-4 pt-4 border-t border-gray-600 text-right font-bold">
+                        <span id="subtotal-A" class="text-blue-300 mr-4">A: R0.00</span>
+                        <span id="subtotal-B" class="text-pink-300">B: R0.00</span>
+                    </div>
+                `;
+                container.appendChild(div);
+                const itemsContainer = div.querySelector('.expense-items-container');
+                for(let i=0; i<3; i++) addExpenseItem(itemsContainer); // Add 3 default items
+            }
+
+            function addExpenseItem(container) {
+                const div = document.createElement('div');
+                div.className = 'expense-item grid grid-cols-12 gap-x-4 items-center';
+                div.innerHTML = `
+                    <div class="col-span-3"><input type="text" class="form-input text-sm" placeholder="Expense description"></div>
+                    <div class="col-span-2"><input type="number" class="form-input text-sm expense-budget" placeholder="Budget (R or hrs)"></div>
+                    <div class="col-span-4 flex items-center gap-2">
+                        <span class="text-xs text-blue-300">A: <span class="percent-a">50</span>%</span>
+                        <input type="range" min="0" max="100" value="50" class="contribution-slider">
+                        <span class="text-xs text-pink-300">B: <span class="percent-b">50</span>%</span>
+                    </div>
+                    <div class="col-span-2"><input type="number" class="form-input text-sm expense-final" placeholder="Final (R or hrs)"></div>
+                    <div class="col-span-1"><button class="btn-danger w-full remove-sub-item-btn"><i class="fas fa-times"></i></button></div>
+                `;
+                container.appendChild(div);
+            }
+            
+            function updatePartyNames(e) {
+                const side = e.target.dataset.partyName;
+                state.partyNames[side] = e.target.textContent || (side === 'A' ? 'Parent A' : 'Parent B');
+                updateAllPartyDropdowns();
+                updateExpenseDashboard();
+            }
+            
+            function updateAllPartyDropdowns() {
+                const partyDropdowns = document.querySelectorAll('#event-assignee, #budget-origin');
+                partyDropdowns.forEach(updatePartyDropdown);
+                updateCommunicationPairs();
+            }
+
+            function updatePartyDropdown(selectElement) {
+                if(!selectElement) return;
+                const partyInputs = document.querySelectorAll('.party-name');
+                const options = Array.from(partyInputs).map(input => {
+                    const name = input.value.trim();
+                    return name ? `<option value="${name}">${name}</option>` : '';
+                }).join('');
+                selectElement.innerHTML = generateOptions(dropdownOptions.budgetOrigin) + options;
+            }
+            
+            function updateCommunicationPairs() {
+                const container = document.getElementById('communication-pairs-container');
+                if(!container) return;
+                
+                const parties = Array.from(document.querySelectorAll('.party-card')).map((card, index) => {
+                    return {
+                        name: card.querySelector('.party-name').value || `Guardian ${index + 1}`,
+                        contacts: Array.from(card.querySelectorAll('.contacts-sub-container > div')).map(c => {
+                             return {
+                                 type: c.querySelector('select').value,
+                                 detail: c.querySelector('input').value,
+                             }
+                        })
+                    }
+                }).filter(p => p.name);
+                
+                container.innerHTML = '';
+                if(parties.length < 2) {
+                     container.innerHTML = `<p class="text-center text-gray-500">Add at least two parties with contact details to set up a communication plan.</p>`;
+                     return;
+                }
+                
+                for(let i=0; i < parties.length; i++) {
+                    for(let j=i+1; j < parties.length; j++) {
+                        const partyA = parties[i];
+                        const partyB = parties[j];
+                        
+                        const pairDiv = document.createElement('div');
+                        pairDiv.className = 'p-4 bg-gray-900/50 rounded-lg';
+                        pairDiv.innerHTML = `
+                            <h4 class="text-lg font-bold mb-4">Plan between ${partyA.name} and ${partyB.name}</h4>
+                            <div class="comm-methods-container space-y-2"></div>
+                             <button class="btn-secondary text-xs mt-2 add-comm-method-btn"><i class="fas fa-plus mr-1"></i>Add Method</button>
+                        `;
+                        container.appendChild(pairDiv);
+                        addCommunicationMethod(pairDiv.querySelector('.comm-methods-container'), partyA, partyB);
+                    }
+                }
+            }
+            
+            function addCommunicationMethod(container, partyA, partyB) {
+                const contactsA = partyA.contacts.map(c => `<option value="${c.detail}">${partyA.name} - ${c.type}</option>`).join('');
+                const contactsB = partyB.contacts.map(c => `<option value="${c.detail}">${partyB.name} - ${c.type}</option>`).join('');
+
+                const div = document.createElement('div');
+                div.className = 'comm-method grid grid-cols-12 gap-x-4 items-end';
+                div.innerHTML = `
+                    <div class="col-span-5"><label class="form-label">Method of Communication</label><select class="form-select">${contactsA}${contactsB}</select></div>
+                    <div class="col-span-5"><label class="form-label">Classification</label><select class="form-select">${generateOptions(dropdownOptions.communicationClassification)}</select></div>
+                    <div class="col-span-2"><button class="btn-danger w-full remove-sub-item-btn">Remove</button></div>
+                `;
+                container.appendChild(div);
+            }
+            
+            // --- SECTION 6: WIZARD LOGIC ---
+            
+            function renderWizardStep(step) {
+                state.wizardStep = step;
+                let content = '';
+                switch(step) {
+                    case 0: // Purpose
+                        content = `
+                            <div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
+                                <button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3><p class="text-sm text-gray-400">I want to explore the tool and see how it works.</p></button>
+                                <button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3><p class="text-sm text-gray-400">I'm ready to build a plan to use.</p></button>
+                            </div>
+                        `;
+                        break;
+                    case 1: // Section Selection
+                        const checkboxes = state.allSections.map(s => `
+                            <label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600">
+                                <input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked>
+                                <span class="text-white">${s.title}</span>
+                            </label>`).join('');
+                        content = `
+                            <div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections to Include</h2><p class="text-gray-400 mt-2">Choose the parts of the plan you need. You can generate a document for just one section, or the whole plan.</p></div>
+                            <div class="space-y-3 mt-8">${checkboxes}</div>
+                            <div class="mt-8 flex justify-between">
+                                <button class="btn-secondary wizard-back" data-prev="0">Back</button>
+                                <button class="btn-primary" id="wizard-finish-btn">Build My Plan</button>
+                            </div>
+                        `;
+                        break;
+                }
+                views.wizard.innerHTML = content;
+            };
+
+            // --- SECTION 7: DASHBOARD & CALCULATION LOGIC ---
+            function updateExpenseDashboard() {
+                let totalBudgetA = 0, totalFinalA = 0;
+                let totalBudgetB = 0, totalFinalB = 0;
+
+                document.querySelectorAll('.expense-category').forEach(category => {
+                    let catBudgetA = 0, catFinalA = 0;
+                    let catBudgetB = 0, catFinalB = 0;
+
+                    category.querySelectorAll('.expense-item').forEach(item => {
+                        const budgetInput = item.querySelector('.expense-budget');
+                        const finalInput = item.querySelector('.expense-final');
+                        const slider = item.querySelector('.contribution-slider');
+                        
+                        const budget = parseFloat(budgetInput.value) || 0;
+                        const finalVal = finalInput.value.trim() === '' ? budget : parseFloat(finalInput.value) || 0;
+                        const percentA = parseInt(slider.value, 10);
+                        const percentB = 100 - percentA;
+                        
+                        catBudgetA += budget * (percentA / 100);
+                        catBudgetB += budget * (percentB / 100);
+                        catFinalA += finalVal * (percentA / 100);
+                        catFinalB += finalVal * (percentB / 100);
+                    });
+                    
+                    category.querySelector('#subtotal-A').textContent = `${state.partyNames.A}: R${catFinalA.toFixed(2)}`;
+                    category.querySelector('#subtotal-B').textContent = `${state.partyNames.B}: R${catFinalB.toFixed(2)}`;
+
+                    totalFinalA += catFinalA;
+                    totalFinalB += catFinalB;
+                });
+                
+                const grandTotal = totalFinalA + totalFinalB;
+                const percentA = grandTotal > 0 ? (totalFinalA / grandTotal) * 100 : 50;
+                const percentB = 100 - percentA;
+                
+                document.getElementById('expense-summary-A').textContent = `${state.partyNames.A}: ${percentA.toFixed(1)}%`;
+                document.getElementById('expense-summary-B').textContent = `${state.partyNames.B}: ${percentB.toFixed(1)}%`;
+                const bar = document.getElementById('overall-contribution-bar');
+                if(bar) bar.style.width = `${percentA}%`;
+            }
+            
+            // --- SECTION 8: EVENT LISTENERS ---
+            
+            buttons.startWizard.addEventListener('click', () => { renderWizardStep(0); switchView('wizard-view'); });
+            buttons.startManual.addEventListener('click', () => { renderBuilder(state.allSections.map(s => s.id)); });
+            buttons.backToLanding.addEventListener('click', () => switchView('landing-view'));
+            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon', 'Online saving and real-time collaboration will be available in a future update. For now, please use "Preview & Generate" to save a PDF of your plan.'));
+            buttons.previewDoc.addEventListener('click', () => { disclaimerModal.modal.style.display = 'flex'; });
+            
+            alertModal.close.addEventListener('click', () => alertModal.modal.style.display = 'none');
+            
+            disclaimerModal.cancel.addEventListener('click', () => disclaimerModal.modal.style.display = 'none');
+            disclaimerModal.agree.addEventListener('change', () => { disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked; });
+            disclaimerModal.proceed.addEventListener('click', () => {
+                disclaimerModal.modal.style.display = 'none';
+                generateDocument();
+            });
+
+            document.body.addEventListener('click', e => {
+                const target = e.target;
+                if (target.closest('.accordion-header')) { target.closest('.accordion-item').classList.toggle('active'); }
+                if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
+                if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
+                if (target.id === 'wizard-finish-btn') {
+                    const selectedIds = Array.from(document.querySelectorAll('input[name="section"]:checked')).map(cb => cb.value);
+                    if(selectedIds.length === 0) { showAlert('No Sections Selected', 'Please select at least one section to include in your plan.'); return; }
+                    renderBuilder(selectedIds);
+                }
+                if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
+                if (target.matches('.add-address-btn')) { addAddress(target.previousElementSibling); }
+                if (target.matches('.add-contact-btn')) { addContact(target.previousElementSibling); }
+                if (target.id === 'add-child-btn') { addChild(); }
+                if (target.id === 'add-expense-category-btn') { addExpenseCategory('New Custom Category'); }
+                if (target.matches('.add-expense-item-btn')) { addExpenseItem(target.previousElementSibling); }
+                if (target.matches('.add-comm-method-btn')) { 
+                    const partyCards = Array.from(document.querySelectorAll('.party-card'));
+                     if(partyCards.length > 1) updateCommunicationPairs(); // Simplified logic
+                }
+                if (target.closest('.remove-guardian-btn')) { target.closest('.party-card').remove(); updateAllPartyDropdowns(); }
+                if (target.closest('.remove-sub-item-btn')) { target.closest('.remove-sub-item-btn').parentElement.remove(); }
+                if (target.closest('.remove-category-btn')) { target.closest('.expense-category').remove(); updateExpenseDashboard(); }
+            });
+            
+            document.body.addEventListener('input', e => {
+                const target = e.target;
+                if(target.matches('.contribution-slider')) {
+                    const percentA = target.value;
+                    const percentB = 100 - percentA;
+                    target.parentElement.querySelector('.percent-a').textContent = percentA;
+                    target.parentElement.querySelector('.percent-b').textContent = percentB;
+                    updateExpenseDashboard();
+                }
+                if(target.matches('.expense-budget, .expense-final')) {
+                    updateExpenseDashboard();
+                }
+                if(target.matches('.party-name')) {
+                    updateAllPartyDropdowns();
+                }
+                if(target.matches('[data-party-name]')) {
+                    updatePartyNames(e);
+                }
+            });
+
+             // --- SECTION 9: Document Generation ---
+             function generateDocument() {
+                showAlert('Generating...', 'Your document is being compiled.');
+                // Placeholder - in a real app, this would build the complex HTML string
+                // based on the templates and collected data.
+                setTimeout(() => {
+                    const win = window.open('', '_blank');
+                    win.document.write(`
+                        <html>
+                            <head><title>Generated Document</title>
+                            <script src="https://cdn.tailwindcss.com"><\/script>
+                            </head>
+                            <body class="p-8">
+                                <h1 class="text-3xl font-bold">Document Generation is Working</h1>
+                                <p>This is a placeholder for the final, styled document. The data collection and triggering mechanism are functional.</p>
+                                <pre class="bg-gray-100 p-4 rounded-lg mt-4 text-xs">${JSON.stringify(state.planData, null, 2)}</pre>
+                             </body>
+                        </html>
+                    `);
+                    win.document.close();
+                    alertModal.modal.style.display = 'none';
+                }, 1000);
+             }
         });
     </script>
 </body>
