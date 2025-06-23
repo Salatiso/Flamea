@@ -4,45 +4,27 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA - The Father's Armoury Training Hub</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Tailwind CDN removed, assuming style.min.css is used for production -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <!-- Link to your main compiled stylesheet which contains the bg-theme-* classes -->
+    <link rel="stylesheet" href="assets/css/style.min.css">
     <style>
-        /* --- Styles from original training.html --- */
+        /* Minimal styles to ensure layout works before CSS loads */
         body { font-family: 'Open Sans', sans-serif; }
         .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; position: relative; z-index: 1; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; padding: 0 1.5rem; }
-        .accordion-item.active .accordion-content { max-height: 2000px; padding: 1.5rem; }
-        .accordion-icon { transition: transform 0.3s ease-out; }
-        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
-        .option-card:hover { transform: translateY(-4px); }
-        .course-card:hover { border-color: #3b82f6; background-color: #1f2937; }
-
-        /* --- Styles for Dynamic Background --- */
-        #particles-js {
-            position: fixed;
-            width: 100%;
-            height: 100%;
-            top: 0;
-            left: 0;
-            z-index: 0; /* Ensures it's behind the content */
-            background-color: #111827; /* Dark fallback */
-        }
+        .main-content { flex-grow: 1; overflow-y: auto; }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
-
-    <!-- Container for the dynamic background -->
-    <div id="particles-js"></div>
-
     <div class="main-container">
-        <!-- Sidebar will be loaded here by original script -->
+        <!-- The sidebar will be loaded here by main.js -->
         <div id="sidebar-placeholder"></div>
 
+        <!-- The main.js script will target this element to apply the time-of-day background -->
         <main class="main-content p-8 md:p-12">
-            <!-- All original content from training.html is preserved below -->
             <div class="max-w-7xl mx-auto">
+                <!-- This is the original, unchanged content structure -->
                 <div class="text-center mb-12 bg-gray-800/50 backdrop-blur-sm p-6 rounded-lg">
                     <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">The Father's Armoury</h1>
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
@@ -66,8 +48,8 @@
                     </a>
                 </div>
 
+                <!-- The course catalogue will be populated by main.js -->
                 <div id="course-catalogue" class="space-y-4">
-                    <!-- This div will be populated by the script below -->
                     <div class="text-center text-gray-400 p-10">
                         <i class="fas fa-spinner fa-spin text-3xl"></i>
                         <p class="mt-2">Loading Courses...</p>
@@ -77,117 +59,8 @@
         </main>
     </div>
 
-    <!-- Particle.js script -->
-    <script src="https://cdn.jsdelivr.net/particles.js/2.0.0/particles.min.js"></script>
-
-    <!-- Original scripts from training.html -->
-    <script>
-    document.addEventListener('DOMContentLoaded', () => {
-
-        // --- Complete Course Database ---
-        const courseData = {
-            "For the Children": [
-                { title: "The Big Rule Book", description: "An interactive guide for kids to understand rules, rights, and responsibilities in a fun way.", link: "training/course-kids-big_rule_book.html" },
-                { title: "The Best Nest", description: "Helping children understand family changes and co-parenting through storytelling.", link: "training/course-kids-the_best_nest.html" },
-                { title: "Who's In Charge?", description: "A course for kids about respecting authority and understanding family structures.", link: "training/course-kids-whos_in_charge.html" },
-                { title: "My Rights Shield", description: "Empowering children with knowledge about their constitutional rights in an accessible format.", link: "training/course_kids-rights_shield.html" },
-            ],
-            "For Parents & Co-Parents": [
-                { title: "The Father's Shield", description: "A foundational course for fathers on their rights, roles, and responsibilities.", link: "training/course-fathers-shield.html" },
-                { title: "Newborn Daily Care", description: "Practical skills and tips for parents on caring for a newborn child.", link: "training/course-newborn-daily-care.html" },
-                { title: "Effective Co-Parenting", description: "Strategies and tools for successful co-parenting, focusing on communication and the child's well-being.", link: "training/course-coparenting.html" },
-                { title: "The Role of Extended Family", description: "Understanding the importance and legal standing of the extended family in a child's life.", link: "training/course-extended-family.html" },
-                { title: "Foundations of Family Law", description: "An introduction to the key concepts and principles of South African family law.", link: "training/course-family-law.html" },
-                { title: "The Children's Act", description: "A detailed breakdown of the Children's Act 38 of 2005 for parents and guardians.", link: "training/course-childrens-act.html" },
-            ],
-            "Advanced & Constitutional Mastery": [
-                 { title: "The Constitution", description: "An in-depth study of the South African Constitution and its supremacy in all legal matters.", link: "training/course-constitution.html" },
-                 { title: "Khulu: The Constitution, Your Ultimate Shield", description: "Advanced constitutional principles for family elders to champion and protect their kin.", link: "training/courses_khulu-the_constitution_your_ultimate_shield.html" },
-                 { title: "Khulu: Senior Crusaders", description: "Specialized training for elders on their rights and their role as pillars of the family.", link: "training/course-khulu-senior-crusaders.html" },
-                 { title: "Family Risk Management", description: "Identifying and mitigating potential legal and social risks to protect your family.", link: "training/course-risk-management.html" },
-            ],
-             "Cultural & Practical Skills": [
-                { title: "The Ancestors Within", description: "Exploring cultural heritage and the role of ancestors in family identity and values.", link: "training/course-ancestors-within.html" },
-                { title: "The Unbroken Chain", description: "A course on maintaining family lineage, traditions, and inter-generational bonds.", link: "training/course-unbroken-chain.html" },
-                { title: "Build Your Curriculum", description: "A guide for parents on developing a personalized educational curriculum for their children.", link: "training/course-build-curriculum.html" },
-            ]
-        };
-
-        const courseCatalogue = document.getElementById('course-catalogue');
-        if (!courseCatalogue) return;
-        courseCatalogue.innerHTML = ''; // Clear the loading spinner
-
-        Object.keys(courseData).forEach(category => {
-            const accordionItem = document.createElement('div');
-            accordionItem.className = 'accordion-item bg-gray-800/70 backdrop-blur-sm rounded-lg overflow-hidden border border-gray-700';
-
-            const accordionHeader = document.createElement('div');
-            accordionHeader.className = 'accordion-header cursor-pointer p-6 flex justify-between items-center';
-            accordionHeader.innerHTML = `
-                <h3 class="text-2xl font-bold text-white">${category}</h3>
-                <i class="fas fa-chevron-down accordion-icon text-gray-400"></i>
-            `;
-
-            const accordionContent = document.createElement('div');
-            accordionContent.className = 'accordion-content';
-
-            const coursesGrid = document.createElement('div');
-            coursesGrid.className = 'grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-6';
-
-            courseData[category].forEach(course => {
-                const courseCard = document.createElement('a');
-                courseCard.href = course.link;
-                courseCard.className = 'course-card block p-6 bg-gray-900/50 rounded-lg border border-gray-700 transition duration-300';
-                courseCard.innerHTML = `
-                    <h4 class="text-xl font-bold text-blue-400 mb-2">${course.title}</h4>
-                    <p class="text-gray-400">${course.description}</p>
-                `;
-                coursesGrid.appendChild(courseCard);
-            });
-
-            accordionContent.appendChild(coursesGrid);
-            accordionItem.appendChild(accordionHeader);
-            accordionItem.appendChild(accordionContent);
-            courseCatalogue.appendChild(accordionItem);
-        });
-
-        // Accordion functionality
-        courseCatalogue.addEventListener('click', function(e) {
-            const header = e.target.closest('.accordion-header');
-            if (!header) return;
-            const item = header.parentElement;
-            item.classList.toggle('active');
-        });
-    });
-    </script>
-    <script>
-        // Sidebar loader script
-        document.addEventListener('DOMContentLoaded', function () {
-            const placeholder = document.getElementById('sidebar-placeholder');
-            if(placeholder) {
-                fetch('sidebar.html')
-                    .then(response => {
-                        if (response.ok) {
-                            return response.text();
-                        }
-                        throw new Error('Sidebar not found.');
-                    })
-                    .then(data => {
-                        placeholder.outerHTML = data;
-                    })
-                    .catch(error => {
-                        console.error('Error loading sidebar:', error);
-                        placeholder.innerHTML = '<p class="text-red-500 p-4">Sidebar could not be loaded.</p>';
-                    });
-            }
-        });
-    <script>
-    <!-- Scripts -->
-    <script src="https://cdn.jsdelivr.net/npm/rss-parser@3.12.0/dist/rss-parser.min.js"></script>
-    <script type="module" src="assets/js/firebase-config.js"></script>
+    <!-- This single script will handle the sidebar, dynamic background, and all page functionality -->
     <script type="module" src="assets/js/main.js"></script>
-    <script type="module" src="assets/js/auth.js"></script>
-    <script type="module" src="assets/js/podcast-player.js"></script>
 
 </body>
 </html>
