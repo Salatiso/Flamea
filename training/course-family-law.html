@@ -1,127 +1,219 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Family Law Overview</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        /* Re-using the same styles from the master course template */
-        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #3B82F6; padding-bottom: 0.5rem; color: #60A5FA;}
-        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #93C5FD;}
-        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
-        .prose strong { color: #93C5FD; }
-        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
-        .quiz-option:hover { background-color: #374151; }
-        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
-        .module { display: none; }
-        .module.active { display: block; }
-        .quiz-section { display: none; }
-        .quiz-section.active { display: block; }
-        .certificate-modal { display: none; }
-        .certificate-modal.active { display: flex; }
-        .progress-bar-container { background-color: #4B5563; }
-        .progress-bar-fill { background-color: #3B82F6; transition: width 0.5s ease-in-out; }
-        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: rgba(59, 130, 246, 0.2); border: 1px solid #3B82F6; color: white; }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .module-card:hover { transform: translateY(-5px); border-color: #60a5fa; }
+        .module-card.selected { border-color: #60a5fa; background-color: rgba(96, 165, 250, 0.1); }
+        .prose h2 { color: #93c5fd; } .prose h3 { color: #bfdbfe; } .prose strong { color: #bfdbfe; }
+        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-blue-400">A</span></a>
-             <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Marriage Regimes</a>
-                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: The Divorce Process</a>
-                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Maintenance & Protection</a>
-            </nav>
-            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
-                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
-            </div>
-            <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-             <div class="max-w-4xl mx-auto">
-                <!-- Course Header -->
-                <div class="mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-blue-400">Family Law Overview</h1>
-                    <p class="text-lg text-gray-400 mt-2">Understand the laws governing marriage, divorce, and domestic partnerships.</p>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #3B82F6;"></div>
-                </div>
-
-                 <!-- Course Content Area -->
-                <div class="prose max-w-none prose-invert">
-                    <!-- Module 1: Marriage Regimes -->
-                    <div id="module1" class="module active">
-                        <section>
-                            <h2>Module 1: Understanding Marriage Regimes in South Africa</h2>
-                            <p>Family law governs the relationships, rights, and duties within family structures. One of the first and most critical decisions a couple makes is their <strong>marital regime</strong>. This choice has significant financial consequences, especially during a divorce. In South Africa, there are three main types.</p>
-                            
-                            <h3>A. Types of Marriages</h3>
-                             <ul>
-                                <li><strong>Civil Marriage:</strong> This is a monogamous marriage between a man and a woman, governed by the Marriage Act.</li>
-                                <li><strong>Civil Union:</strong> This allows same-sex or opposite-sex couples to enter into a legal union with the same consequences as a civil marriage. Governed by the Civil Union Act.</li>
-                                <li><strong>Customary Marriage:</strong> A marriage negotiated, celebrated or concluded according to any of the systems of indigenous African customary law that exist in South Africa. This is recognised by the Recognition of Customary Marriages Act. Importantly, if a man is in a customary marriage, he cannot enter into a civil marriage with another woman, but he can enter into further customary marriages.</li>
-                            </ul>
-
-                            <h3>B. The Financial Consequences: Your Marital Regime</h3>
-                            <p>When you get married, you must decide how your assets will be treated. If you do not sign an Antenuptial Contract (ANC) before getting married, you are automatically married <strong>In Community of Property</strong>.</p>
-                             <!-- SVG Diagram: Marital Regimes -->
-                            <div class="bg-gray-900 p-6 rounded-lg my-6">
-                                <h4 class="text-lg font-bold text-center text-blue-300 mb-4">Marital Property Regimes</h4>
-                                <svg width="100%" viewBox="0 0 450 150" xmlns="http://www.w3.org/2000/svg">
-                                     <style>.svg-text{font-family: 'Open Sans', sans-serif; fill: white; font-size: 11px;}</style>
-                                     <!-- In Community -->
-                                     <rect x="10" y="40" width="130" height="60" rx="5" fill="#1E40AF"/>
-                                     <text x="75" y="65" text-anchor="middle" class="svg-text font-bold">In Community</text>
-                                     <text x="75" y="85" text-anchor="middle" class="svg-text">One Joint Estate</text>
-                                     <!-- Out of Community (No Accrual) -->
-                                      <rect x="160" y="40" width="130" height="60" rx="5" fill="#1E3A8A"/>
-                                      <text x="225" y="60" text-anchor="middle" class="svg-text font-bold">Out of Community</text>
-                                      <text x="225" y="75" text-anchor="middle" class="svg-text">(without accrual)</text>
-                                      <text x="225" y="95" text-anchor="middle" class="svg-text">Two Separate Estates</text>
-                                     <!-- Out of Community (With Accrual) -->
-                                     <rect x="310" y="40" width="130" height="60" rx="5" fill="#1D4ED8"/>
-                                      <text x="375" y="60" text-anchor="middle" class="svg-text font-bold">Out of Community</text>
-                                      <text x="375" y="75" text-anchor="middle" class="svg-text">(with accrual)</text>
-                                      <text x="375" y="95" text-anchor="middle" class="svg-text">Share the Growth</text>
-                                </svg>
-                            </div>
-                        </section>
-                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <div id="course-hub" class="max-w-4xl mx-auto text-center">
+                <header class="mb-12">
+                     <div class="flex justify-center items-center gap-4 mb-4">
+                        <!-- SVG Icon for Family Law -->
+                        <svg class="h-20 w-20 text-blue-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                           <path fill-rule="evenodd" clip-rule="evenodd" d="M12 2C7.93 2 4.51 5.36 4.51 9.5C4.51 14.14 8.71 18.81 11.53 21.41C11.83 21.68 12.17 21.68 12.47 21.41C15.29 18.81 19.49 14.14 19.49 9.5C19.49 5.36 16.07 2 12 2ZM12 11.5C10.62 11.5 9.5 10.38 9.5 9C9.5 7.62 10.62 6.5 12 6.5C13.38 6.5 14.5 7.62 14.5 9C14.5 10.38 13.38 11.5 12 11.5Z"/>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Family Law Overview</h1>
                     </div>
-                     <!-- Other modules and quizzes follow -->
-                </div>
+                    <p class="text-lg text-gray-300">Understand the laws governing marriage, divorce, and domestic partnerships.</p>
+                </header>
+
+                <section id="module-selection-section">
+                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Choose a Module to Begin</h2>
+                    <div id="module-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="1">
+                            <h3 class="text-xl font-bold text-white mb-2">Marriage Regimes</h3>
+                            <p class="text-gray-400 text-sm">Learn the critical differences between In and Out of Community of Property.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="2">
+                            <h3 class="text-xl font-bold text-white mb-2">The Divorce Process</h3>
+                            <p class="text-gray-400 text-sm">Understand the steps involved in dissolving a marriage legally in South Africa.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="3">
+                            <h3 class="text-xl font-bold text-white mb-2">Maintenance & Protection</h3>
+                            <p class="text-gray-400 text-sm">Learn about the laws governing child maintenance and protection orders.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <!-- Course Content & Quiz Area (Initially Hidden) -->
+            <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
+                <div id="module-content" class="prose max-w-none prose-invert mb-8 bg-slate-800/70 p-6 rounded-lg"></div>
+                <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Knowledge</button>
+                <section id="quiz-section" class="quiz-section mt-8 p-8 rounded-lg hidden"></section>
+                <div id="end-screen" class="end-screen mt-8 p-8 rounded-lg hidden text-center"></div>
+                <button id="back-to-hub-btn" class="btn btn-secondary mt-4">Back to Modules</button>
             </div>
         </main>
     </div>
-    <!-- Modal and Scripts would be identical to the master template -->
-    <script type="module" src="../assets/js/auth.js"></script>
-    <script type="module" src="../assets/js/course-logic.js"></script>
+
+    <!-- Scripts -->
+    <script type="module" src="../assets/js/main.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Main UI elements
+        const courseHub = document.getElementById('course-hub');
+        const contentArea = document.getElementById('content-area');
+        const moduleContentEl = document.getElementById('module-content');
+        const quizSection = document.getElementById('quiz-section');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const backToHubBtn = document.getElementById('back-to-hub-btn');
+        const endScreen = document.getElementById('end-screen');
+        const moduleCards = document.querySelectorAll('.module-card');
+
+        // Course Content and Questions
+        const courseContent = {
+            1: {
+                title: 'Module 1: Understanding Marriage Regimes in South Africa',
+                content: `
+                    <p>One of the first and most critical decisions a couple makes is their <strong>marital regime</strong>. This choice has significant financial consequences, especially during a divorce. In South Africa, there are three main types.</p>
+                    <h3>Types of Marriages</h3>
+                    <ul>
+                        <li><strong>Civil Marriage:</strong> A monogamous marriage governed by the Marriage Act.</li>
+                        <li><strong>Civil Union:</strong> Allows same-sex or opposite-sex couples to enter into a legal union with the same consequences.</li>
+                        <li><strong>Customary Marriage:</strong> A marriage concluded according to indigenous African customary law.</li>
+                    </ul>
+                    <h3>Financial Consequences</h3>
+                    <p>If you do not sign an Antenuptial Contract (ANC) before getting married, you are automatically married <strong>In Community of Property</strong>. This means all assets and debts are shared equally. The other options, created via an ANC, are <strong>Out of Community of Property</strong> (with or without the accrual system).</p>
+                `,
+                questions: [
+                    { q: "If a couple marries without an Antenuptial Contract (ANC), what is their default marital regime?", a: "In Community of Property", o: ["Out of Community of Property", "A Civil Union"] },
+                    { q: "Which Act governs marriages for same-sex couples?", a: "The Civil Union Act", o: ["The Marriage Act", "The Customary Marriages Act"] }
+                ]
+            },
+            2: {
+                title: 'Module 2: The Divorce Process',
+                content: `
+                    <p>The divorce process in South Africa is governed by the Divorce Act. It is a no-fault system, meaning you do not need to prove that your spouse did something wrong; you only need to state that the marriage has broken down irretrievably.</p>
+                    <h3>Key Steps</h3>
+                    <ul>
+                        <li><strong>Summons:</strong> One spouse (the Plaintiff) serves a divorce summons on the other (the Defendant).</li>
+                        <li><strong>Pleadings:</strong> The Defendant can then file a notice to defend and a plea.</li>
+                        <li><strong>Settlement or Trial:</strong> Most divorces are settled out of court. If an agreement on the division of assets and care of children can be reached, it is made an order of the court. If not, the matter proceeds to trial.</li>
+                    </ul>
+                    <h3>Role of the Family Advocate</h3>
+                    <p>If there are minor children involved, the Family Advocate's office must be involved. Their role is to investigate the circumstances and make a recommendation to the court based on the <strong>child's best interests</strong>.</p>
+                `,
+                questions: [
+                    { q: "Does South Africa have a 'no-fault' divorce system?", a: "Yes, you only need to prove the marriage has broken down.", o: ["No, you must prove your spouse was at fault.", "Only for civil unions."] },
+                    { q: "Whose role is it to represent the child's best interests in a divorce?", a: "The Family Advocate", o: ["The Plaintiff's lawyer", "The Judge"] }
+                ]
+            },
+            3: {
+                title: 'Module 3: Maintenance & Protection',
+                content: `
+                    <h3>Child Maintenance</h3>
+                    <p>Both parents have a legal duty to support their children financially according to their respective means. This is governed by the Maintenance Act. If a parent fails to pay, the other can approach the Maintenance Court for an order.</p>
+                    <h3>Spousal Maintenance</h3>
+                    <p>In some cases, a court may order one spouse to pay maintenance to the other after a divorce. This is not automatic and depends on factors like age, earning capacity, and the standard of living during the marriage.</p>
+                    <h3>Protection Orders</h3>
+                    <p>The Domestic Violence Act provides protection for victims of domestic abuse. A person can apply to the court for a protection order, which can prevent the abuser from contacting or coming near them. Violating a protection order is a criminal offence.</p>
+                `,
+                questions: [
+                    { q: "Who has a legal duty to financially support a child?", a: "Both parents, according to their means", o: ["Only the father", "Only the parent the child lives with"] },
+                    { q: "What Act provides protection for victims of domestic abuse?", a: "The Domestic Violence Act", o: ["The Divorce Act", "The Maintenance Act"] }
+                ]
+            }
+        };
+
+        let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
+
+        function displayModule(moduleNum) {
+            currentModuleData = courseContent[moduleNum];
+            courseHub.classList.add('hidden');
+            contentArea.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            startQuizBtn.classList.remove('hidden');
+            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
+        }
+        
+        function setupQuiz() {
+            startQuizBtn.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = currentModuleData.questions[currentQuestionIndex];
+            let optionsHTML = shuffleArray([...questionData.o, questionData.a]).map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700 cursor-pointer" data-answer="${opt === questionData.a}">${opt}</div>`).join('');
+            quizSection.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p><div class="space-y-3">${optionsHTML}</div><div class="feedback mt-4 text-sm p-3 rounded-lg"></div>`;
+        }
+
+        function handleAnswerClick(e) {
+            if (!e.target.classList.contains('quiz-option')) return;
+            const selectedOption = e.target;
+            const isCorrect = selectedOption.dataset.answer === 'true';
+            const feedbackDiv = quizSection.querySelector('.feedback');
+            
+            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (isCorrect) {
+                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
+                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! Knowledge is power.</p>';
+                score++;
+            } else {
+                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
+                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Review the module content to strengthen your understanding.</p>';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentModuleData.questions.length) {
+                    loadQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 2500);
+        }
+
+        function showEndScreen() {
+            quizSection.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            endScreen.innerHTML = `<h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2><p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p><p class="mt-4">You have a solid foundation in Family Law.</p>`;
+        }
+        
+        function goBackToHub() {
+            contentArea.classList.add('hidden');
+            courseHub.classList.remove('hidden');
+            moduleCards.forEach(c => c.classList.remove('selected'));
+        }
+
+        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        moduleCards.forEach(card => card.addEventListener('click', () => {
+            selectCard(card, 'module');
+            displayModule(parseInt(card.dataset.module));
+        }));
+        startQuizBtn.addEventListener('click', setupQuiz);
+        quizSection.addEventListener('click', handleAnswerClick);
+        backToHubBtn.addEventListener('click', goBackToHub);
+        
+        function selectCard(card, cardType) {
+            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+    });
+    </script>
 </body>
 </html>
