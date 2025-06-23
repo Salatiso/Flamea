@@ -73,15 +73,16 @@
                         While our automated tool is being perfected, you can begin structuring your co-parenting agreement immediately. Use these comprehensive, editable templates to lay the groundwork.
                     </p>
                     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-                        <a href="Parenting_Plan_Template.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                        <!-- FIXED: Corrected paths to the template files -->
+                        <a href="assets/templates/Parenting_Plan_Template.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
                             <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-file-alt"></i>Parenting Plan Template</h3>
                             <p class="text-gray-400 mt-2">The foundational document for outlining all aspects of your co-parenting arrangement.</p>
                         </a>
-                        <a href="Affirmation_Parental_Rights_and_Responsibilities_final.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                        <a href="assets/templates/Affirmation_Parental_Rights_and_Responsibilities_final.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
                             <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-fist-raised"></i>Affirmation of Rights</h3>
                             <p class="text-gray-400 mt-2">A formal letter to assert your constitutional rights and responsibilities as a parent.</p>
                         </a>
-                        <a href="Pre_Birth_Planning_Guide.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
+                        <a href="assets/templates/Pre_Birth_Planning_Guide.html" target="_blank" class="bg-gray-800 p-6 rounded-lg hover:bg-gray-700 hover:border-teal-500 border-2 border-transparent transition duration-300">
                             <h3 class="text-xl font-semibold text-teal-400 flex items-center gap-3"><i class="fas fa-baby"></i>Pre-Birth Planning Guide</h3>
                             <p class="text-gray-400 mt-2">For expectant parents to proactively agree on roles, finances, and support.</p>
                         </a>
@@ -92,7 +93,7 @@
     </div>
 
     <script>
-        // Standard Sidebar Loader Script
+        // FIXED: Standard Sidebar Loader Script, now embedded for reliability
         document.addEventListener('DOMContentLoaded', function () {
             const placeholder = document.getElementById('sidebar-placeholder');
             if(placeholder) {
@@ -104,17 +105,21 @@
                         throw new Error('Sidebar not found.');
                     })
                     .then(data => {
-                        // Replace placeholder with sidebar content
-                        const sidebarWrapper = document.createElement('div');
-                        sidebarWrapper.innerHTML = data;
-                        placeholder.replaceWith(sidebarWrapper.firstChild);
-                        
-                        // Re-initialize any scripts that might be needed by the sidebar itself
-                        // This is a placeholder for any such scripts.
+                        // Replace placeholder with sidebar content by creating a temporary element
+                        // This is a robust way to insert HTML content from a string
+                        const tempDiv = document.createElement('div');
+                        tempDiv.innerHTML = data;
+                        const sidebarElement = tempDiv.querySelector('aside'); // assuming sidebar is <aside>
+                        if(sidebarElement) {
+                           placeholder.replaceWith(sidebarElement);
+                        } else {
+                           throw new Error("Could not find the sidebar element in the fetched HTML.");
+                        }
+
                     })
                     .catch(error => {
                         console.error('Error loading sidebar:', error);
-                        placeholder.innerHTML = '<div class="p-4 text-red-500">Sidebar could not be loaded.</div>';
+                        placeholder.innerHTML = '<div class="p-4 text-red-500 bg-gray-800">Sidebar could not be loaded. Please check that sidebar.html exists in the root directory.</div>';
                     });
             }
         });
