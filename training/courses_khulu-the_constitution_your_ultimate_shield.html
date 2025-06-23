@@ -358,16 +358,6 @@
         restartBtn.addEventListener('click', goBackToHub);
     });
     </script>
-      <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const placeholder = document.getElementById('sidebar-placeholder');
-        if(placeholder) {
-            fetch('../training-sidebar.html')
-                .then(res => res.ok ? res.text() : Promise.reject('Sidebar not found'))
-                .then(data => placeholder.outerHTML = data)
-                .catch(err => console.error('Sidebar load error:', err));
-        }
-    });
-    </script>
+    
 </body>
 </html>
