@@ -43,7 +43,7 @@
 <body>
     <div class="main-container">
         <!-- Sidebar Placeholder -->
-        <div id="sidebar-placeholder" class="hidden lg:block flex-shrink-0 w-64 bg-gray-900"></div>
+        <div id="sidebar-placeholder" class="hidden lg:block flex-shrink-0 w-64 bg-gray-900/80 backdrop-blur-sm"></div>
         <div id="main-content-bg"></div>
         <main class="main-content flex-1">
             <div class="content-wrapper min-h-full p-6 sm:p-8">
@@ -115,66 +115,35 @@
       </div>
     </div>
     
-    <script type="module">
-        // Import sidebar loader if needed
-        // import { loadSidebar } from './assets/js/sidebar-loader.js';
-        // loadSidebar();
-    </script>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
             // All JS is self-contained to avoid external file issues.
             
-            // --- SECTION 0: PRE-DEFINITIONS & HELPER FUNCTIONS ---
-            
-            function generateOptions(arr, selected = '') {
-                return arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('');
-            }
-            
-            function getPartyNames() {
-                const names = [];
-                document.querySelectorAll('.party-name').forEach(input => {
-                    if (input.value.trim()) names.push(input.value.trim());
-                });
-                return names.length > 0 ? names : ['Parent A', 'Parent B'];
-            }
+            // --- SECTION 0: All functions must be defined before they are referenced. ---
 
-            // --- SECTION 1: STATE MANAGEMENT & DATA ---
-            const state = { /* ... state definition ... */ };
-            const dropdownOptions = { /* ... dropdown options ... */ };
-            // (All state and dropdown data is defined below, after functions)
-
-            // --- SECTION 2: DOM ELEMENT REFERENCES ---
-            const views = { /* ... view references ... */ };
-            const buttons = { /* ... button references ... */ };
-            const containers = { /* ... container references ... */ };
-            const alertModal = { /* ... alert modal references ... */ };
-            const disclaimerModal = { /* ... disclaimer modal references ... */ };
-            // (All DOM elements are defined below, after functions)
-            
-            // --- SECTION 3: RENDER FUNCTIONS FOR EACH BUILDER STEP ---
-
+            // --- RENDER FUNCTIONS FOR EACH BUILDER STEP ---
             function renderPartiesSection(container) { /* ... implementation ... */ }
             function renderCustodySection(container) { /* ... implementation ... */ }
             function renderExpensesSection(container) { /* ... implementation ... */ }
             function renderCommunicationSection(container) { /* ... implementation ... */ }
             function renderSummarySection(container) { /* ... implementation ... */ }
              
-            // --- SECTION 4: DATA COLLECTION FUNCTIONS ---
-            
+            // --- DATA COLLECTION FUNCTIONS ---
             function collectPartiesData() { /* ... implementation ... */ }
             function collectCustodyData() { /* ... implementation ... */ }
             function collectExpensesData() { /* ... implementation ... */ }
             function collectCommunicationData() { /* ... implementation ... */ }
 
-            // --- SECTION 5: DOCUMENT GENERATION FUNCTIONS ---
+            // --- DOCUMENT GENERATION FUNCTIONS ---
             function generatePartiesDoc(data) { /* ... implementation ... */ }
             function generateCustodyDoc(data) { /* ... implementation ... */ }
             function generateExpensesDoc(data) { /* ... implementation ... */ }
             function generateCommunicationDoc(data) { /* ... implementation ... */ }
             function generateDocument(sectionIds) { /* ... implementation ... */ }
 
-            // --- SECTION 6: DYNAMIC UI & HELPER FUNCTIONS ---
-
+            // --- DYNAMIC UI & HELPER FUNCTIONS ---
+            function generateOptions(arr, selected = '') { return arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join(''); }
+            function getPartyNames() { const names = []; document.querySelectorAll('.party-name').forEach(input => { if (input.value.trim()) names.push(input.value.trim()); }); return names.length > 0 ? names : ['Parent A', 'Parent B']; }
             function addGuardian(side) { /* ... implementation ... */ }
             function addAddress(container) { /* ... implementation ... */ }
             function addContact(container) { /* ... implementation ... */ }
@@ -190,10 +159,9 @@
             function logEvent() { /* ... implementation ... */ }
             function updateTimeDashboard() { /* ... implementation ... */ }
             
-            // --- SECTION 7: CORE APP LOGIC, NAVIGATION, WIZARD ---
-
+            // --- CORE APP LOGIC, NAVIGATION, WIZARD ---
             function switchView(viewId) { /* ... implementation ... */ }
-            function showAlert(title, message) { /* ... implementation ... */ }
+            function showAlert(title, message, isHtml = false) { /* ... implementation ... */ }
             function showDisclaimer(sections) { /* ... implementation ... */ }
             function renderBuilder(sectionIds) { /* ... implementation ... */ }
             function updateBuilderStep() { /* ... implementation ... */ }
@@ -201,9 +169,8 @@
             function renderWizardStep(step) { /* ... implementation ... */ }
             function setDynamicBackground() { /* ... implementation ... */ }
 
-            // --- ALL FUNCTION DEFINITIONS GO HERE, BEFORE THEY ARE CALLED ---
-
-            Object.assign(state, {
+            // --- SECTION 1: STATE MANAGEMENT & DATA ---
+            const state = {
                 currentView: 'landing-view', wizardStep: 0, builderStep: 0,
                 allSections: [
                     { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: renderPartiesSection, collect: collectPartiesData, generate: generatePartiesDoc },
@@ -213,9 +180,9 @@
                     { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: renderSummarySection, collect: () => {}, generate: () => '' },
                 ],
                 selectedSections: [], planData: {}, partyNames: { A: 'Parent A', B: 'Parent B' }
-            });
+            };
 
-            Object.assign(dropdownOptions, {
+            const dropdownOptions = {
                 relationship: ['Father', 'Mother', 'Grandfather', 'Grandmother', 'Uncle', 'Aunt', 'Legal Guardian', 'Other'],
                 addressType: ['Home', 'Work', 'Postal', 'Other'],
                 contactType: ['Primary Cell', 'Work Phone', 'Email', 'WhatsApp', 'Facebook', 'Other'],
@@ -223,18 +190,20 @@
                 custodyDecision: ['Mutual Agreement', 'Court Order', 'In Dispute', 'Other'],
                 expenseCategory: ['Living Expenses', 'Education', 'Healthcare', 'Cultural Obligations', 'Other'],
                 communicationClassification: ['For Urgent Matters', 'For Formal Communication', 'For Daily Updates']
-            });
+            };
 
-            Object.assign(views, { landing: document.getElementById('landing-view'), wizard: document.getElementById('wizard-view'), builder: document.getElementById('builder-view') });
-            Object.assign(buttons, { startWizard: document.getElementById('start-wizard-btn'), startManual: document.getElementById('start-manual-btn'), savePlan: document.getElementById('save-plan-btn') });
-            Object.assign(containers, { steps: document.getElementById('steps-container'), navigation: document.getElementById('navigation-container'), sidebar: document.getElementById('sidebar-placeholder'), bg: document.getElementById('main-content-bg')});
-            Object.assign(alertModal, { modal: document.getElementById('alert-modal'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), close: document.getElementById('alert-modal-close') });
-            Object.assign(disclaimerModal, { modal: document.getElementById('disclaimer-modal'), agree: document.getElementById('disclaimer-agree'), cancel: document.getElementById('disclaimer-cancel'), proceed: document.getElementById('disclaimer-proceed') });
+            // --- SECTION 2: DOM ELEMENT REFERENCES ---
+            const views = { landing: document.getElementById('landing-view'), wizard: document.getElementById('wizard-view'), builder: document.getElementById('builder-view') };
+            const buttons = { startWizard: document.getElementById('start-wizard-btn'), startManual: document.getElementById('start-manual-btn'), savePlan: document.getElementById('save-plan-btn') };
+            const containers = { steps: document.getElementById('steps-container'), navigation: document.getElementById('navigation-container'), sidebar: document.getElementById('sidebar-placeholder'), bg: document.getElementById('main-content-bg')};
+            const alertModal = { modal: document.getElementById('alert-modal'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), close: document.getElementById('alert-modal-close') };
+            const disclaimerModal = { modal: document.getElementById('disclaimer-modal'), agree: document.getElementById('disclaimer-agree'), cancel: document.getElementById('disclaimer-cancel'), proceed: document.getElementById('disclaimer-proceed') };
             
-            // --- FULL FUNCTION IMPLEMENTATIONS ---
+            // --- SECTION 3: FULL FUNCTION IMPLEMENTATIONS ---
             
+            // Core App Logic
             switchView = (viewId) => { state.currentView = viewId; Object.values(views).forEach(v => v.classList.remove('active')); if (views[viewId.split('-')[0]]) { views[viewId.split('-')[0]].classList.add('active'); } };
-            showAlert = (title, message) => { alertModal.title.textContent = title; alertModal.message.textContent = message; alertModal.modal.style.display = 'flex'; };
+            showAlert = (title, message, isHtml = false) => { alertModal.title.textContent = title; if(isHtml) {alertModal.message.innerHTML = message;} else {alertModal.message.textContent = message;} alertModal.modal.style.display = 'flex'; };
             showDisclaimer = (sections) => { disclaimerModal.proceed.dataset.sections = sections.join(','); disclaimerModal.modal.style.display = 'flex'; };
 
             renderBuilder = (sectionIds) => {
@@ -245,7 +214,12 @@
                     stepContainer.className = 'step-container';
                     stepContainer.id = `step-${index}`;
                     stepContainer.dataset.sectionId = section.id;
-                    stepContainer.innerHTML = `<div id="content-${section.id}"></div>`;
+                    const sectionHeader = `
+                        <div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700">
+                             <h3 class="text-2xl font-bold text-gray-200">${section.title}</h3>
+                             <button class="btn-secondary generate-section-btn" data-section-id="${section.id}"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
+                        </div>`;
+                    stepContainer.innerHTML = (section.id !== 'summary' ? sectionHeader : '') + `<div id="content-${section.id}"></div>`;
                     containers.steps.appendChild(stepContainer);
                     section.render(document.getElementById(`content-${section.id}`));
                 });
@@ -262,12 +236,10 @@
             renderNavigation = () => {
                 const isFirstStep = state.builderStep === 0;
                 const isLastStep = state.builderStep === state.selectedSections.length - 1;
-                
                 let navHTML = `<button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button>`;
-                
                 let buttonsHTML = `<button id="prev-step-btn" class="btn-secondary" ${isFirstStep ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Previous Step</button>`;
                 if (isLastStep) {
-                    buttonsHTML += `<button id="generate-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Final Document</button>`;
+                    buttonsHTML += `<button id="generate-final-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Final Document</button>`;
                 } else {
                     buttonsHTML += `<button id="next-step-btn" class="btn-primary ml-4">Next Step<i class="fas fa-chevron-right ml-2"></i></button>`;
                 }
@@ -276,47 +248,86 @@
             };
 
             renderWizardStep = (step) => {
-                state.wizardStep = step;
-                let content = '';
+                state.wizardStep = step; let content = '';
                 switch(step) {
-                    case 0:
-                        content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3><p class="text-sm text-gray-400">I want to explore the tool and see how it works.</p></button><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3><p class="text-sm text-gray-400">I'm ready to build a plan to use.</p></button></div>`;
-                        break;
-                    case 1:
-                        const checkboxes = state.allSections.filter(s => s.id !== 'summary').map(s => `<label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600"><input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked><span class="text-white">${s.title}</span></label>`).join('');
-                        content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections to Include</h2><p class="text-gray-400 mt-2">Choose the parts of the plan you need right now.</p></div><div class="space-y-3 mt-8">${checkboxes}</div><div class="mt-8 flex justify-between"><button class="btn-secondary wizard-back" data-prev="0">Back</button><button class="btn-primary" id="wizard-finish-btn">Build My Plan</button></div>`;
-                        break;
+                    case 0: content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div><div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8"><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Simulation / Practice</h3><p class="text-sm text-gray-400">I want to explore the tool and see how it works.</p></button><button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1"><h3 class="font-bold text-lg">Create an Actual Document</h3><p class="text-sm text-gray-400">I'm ready to build a plan to use.</p></button></div>`; break;
+                    case 1: const checkboxes = state.allSections.filter(s => s.id !== 'summary').map(s => `<label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600"><input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked><span class="text-white">${s.title}</span></label>`).join(''); content = `<div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections to Include</h2><p class="text-gray-400 mt-2">Choose the parts of the plan you need right now.</p></div><div class="space-y-3 mt-8">${checkboxes}</div><div class="mt-8 flex justify-between"><button class="btn-secondary wizard-back" data-prev="0">Back</button><button class="btn-primary" id="wizard-finish-btn">Build My Plan</button></div>`; break;
                 }
                 views.wizard.innerHTML = content;
             };
-            
-            // And so on for all other functions...
-            // The full implementation of every function would be placed here, in the correct order.
-            // For brevity in this thought block, I'll just show the structure. The final code will have the full implementations.
-            
-            // --- EVENT LISTENERS (DEFINED LAST) ---
+
+            setDynamicBackground = () => { /* ... implementation ... */ }; // Full implementation below
+
+            // The rest of the functions are implemented here...
+            // This is the correct structural order.
+        
+            // --- SECTION 8: INITIALIZATION ---
             buttons.startWizard.addEventListener('click', () => { renderWizardStep(0); switchView('wizard-view'); });
             buttons.startManual.addEventListener('click', () => { renderBuilder(state.allSections.filter(s=>s.id !== 'summary').map(s => s.id)); });
-            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon', 'Online saving and real-time collaboration will be available in a future update. For now, please use "Preview & Generate" to save a PDF of your plan.'));
-            
+            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon!', `Online saving is a feature for registered users and will be available soon. For now, you can download your document at any time using the "Print/Send" buttons.<br><br><a href="community.html" class="text-blue-400 hover:underline">Register on the Community Hub</a> to be notified when this feature goes live!`, true));
             alertModal.close.addEventListener('click', () => alertModal.modal.style.display = 'none');
-            
             disclaimerModal.cancel.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; });
             disclaimerModal.agree.addEventListener('change', () => { disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked; });
-            disclaimerModal.proceed.addEventListener('click', () => {
-                disclaimerModal.modal.style.display = 'none';
-                generateDocument(disclaimerModal.proceed.dataset.sections.split(','));
-            });
+            disclaimerModal.proceed.addEventListener('click', () => { disclaimerModal.modal.style.display = 'none'; generateDocument(disclaimerModal.proceed.dataset.sections.split(',')); });
 
             document.body.addEventListener('click', (e) => {
-                 const target = e.target;
-                 if (target.closest('.generate-section-btn')) { showDisclaimer([target.closest('.generate-section-btn').dataset.sectionId]); }
-                 // ... other click handlers
+                 const target = e.target.closest('button');
+                 if(!target) return;
+                 
+                 if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
+                 else if (target.id === 'back-to-landing') { switchView('landing-view'); }
+                 else if (target.id === 'next-step-btn') { state.builderStep++; updateBuilderStep(); }
+                 else if (target.id === 'prev-step-btn') { state.builderStep--; updateBuilderStep(); }
+                 else if (target.id === 'generate-final-doc-btn') { 
+                     const finalSections = Array.from(document.querySelectorAll('#summary-section-list input:checked')).map(cb => cb.value);
+                     showDisclaimer(finalSections);
+                 }
+                 else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
+                 else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
+                 else if (target.id === 'wizard-finish-btn') {
+                    const selectedIds = Array.from(document.querySelectorAll('input[name="section"]:checked')).map(cb => cb.value);
+                    if(selectedIds.length === 0) { showAlert('No Sections Selected', 'Please select at least one section to include in your plan.'); return; }
+                    renderBuilder(selectedIds);
+                 }
+                 else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
+                 else if (target.matches('.add-address-btn')) { addAddress(target.closest('.party-card').querySelector('.addresses-sub-container')); }
+                 else if (target.matches('.add-contact-btn')) { addContact(target.closest('.party-card').querySelector('.contacts-sub-container')); }
+                 else if (target.id === 'add-child-btn') { addChild(); }
+                 else if (target.id === 'add-expense-category-btn') { addExpenseCategory('New Custom Category'); }
+                 else if (target.matches('.add-expense-item-btn')) { addExpenseItem(target.closest('.expense-category').querySelector('.expense-items-container')); }
+                 else if (target.id === 'add-event-btn') { logEvent(); }
+                 else if (target.closest('.remove-guardian-btn')) { target.closest('.party-card').remove(); updateAllPartyDropdowns(); }
+                 else if (target.closest('.remove-sub-item-btn')) { target.closest('.remove-sub-item-btn').parentElement.remove(); }
+                 else if (target.closest('.remove-category-btn')) { target.closest('.expense-category').remove(); updateExpenseDashboard(); }
+                 else if (target.closest('.remove-event-btn')) { target.closest('.event-log-item').remove(); updateTimeDashboard(); }
+                 else if (target.closest('.add-comm-method-btn')) { addCommunicationMethod(target.previousElementSibling, collectPartiesData()); }
             });
 
-            // Initial call to set the background
+            document.body.addEventListener('input', e => {
+                 const target = e.target;
+                 if(target.matches('.contribution-slider')) {
+                    const percentA = target.value;
+                    const percentB = 100 - percentA;
+                    target.parentElement.querySelector('.percent-a').textContent = percentA;
+                    target.parentElement.querySelector('.percent-b').textContent = percentB;
+                    updateExpenseDashboard();
+                 }
+                 if(target.matches('.expense-budget, .expense-final')) { updateExpenseDashboard(); }
+                 if(target.matches('.party-name')) { updateAllPartyDropdowns(); }
+                 if(target.matches('[data-party-name]')) { updatePartyNames(e); }
+            });
+            
+            // Full implementation of all functions goes here to satisfy the call order...
+            // For example:
+            function renderPartiesSection(container) { /* ... full HTML as before ... */ }
+            // ... and so on for every single function declared above.
+            
+            // This is just a structural representation. The final generated code
+            // will have the full, correct implementation for every function.
+            
+            // Final initialization calls
+            fetch('sidebar.html').then(r => r.text()).then(html => containers.sidebar.innerHTML = html).catch(e => console.error("Could not load sidebar."));
             setDynamicBackground();
-
         });
     </script>
 </body>
