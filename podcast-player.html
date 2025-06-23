@@ -10,20 +10,53 @@
     <style>
         body {
             font-family: 'Inter', sans-serif;
-            /* Replaced broken background.jpg with a clean gradient */
             background: linear-gradient(135deg, #111827 0%, #1f2937 100%);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
+            /* Add some content to scroll behind the player */
+            height: 200vh;
+            padding: 2rem;
         }
 
-        .player-card {
-            background-color: rgba(17, 24, 39, 0.8);
-            backdrop-filter: blur(10px);
+        /* The main player container, fixed to the bottom */
+        .player-container {
+            position: fixed;
+            bottom: 1.5rem;
+            right: 1.5rem;
+            width: 90%;
+            max-width: 420px;
+            background-color: rgba(31, 41, 55, 0.8);
+            backdrop-filter: blur(15px);
+            border-radius: 1rem;
             border: 1px solid rgba(255, 255, 255, 0.1);
-            width: 100%;
-            max-width: 400px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            transition: all 0.4s cubic-bezier(0.25, 1, 0.5, 1);
+            overflow: hidden;
+        }
+        
+        /* Collapsed state */
+        .player-container.collapsed .player-body {
+            max-height: 0;
+            opacity: 0;
+        }
+
+        /* Header for both states */
+        .player-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            padding: 1rem;
+            cursor: pointer;
+        }
+        
+        .player-body {
+            max-height: 500px; /* Adjust as needed */
+            opacity: 1;
+            transition: all 0.4s ease-in-out;
+        }
+
+        #playlist {
+            max-height: 250px;
+            overflow-y: auto;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
         }
 
         .playlist-item:hover {
@@ -34,150 +67,178 @@
              background-color: rgba(255, 69, 0, 0.2);
              border-left: 3px solid #ff4500;
         }
+        
+        .progress-bar-bg { background-color: #4b5563; }
+        .progress-bar-fg { background-color: #ff4500; transition: width 0.1s linear; }
+
+        .control-btn { color: #d1d5db; transition: all 0.2s; }
+        .control-btn:hover { color: #ff4500; transform: scale(1.1); }
+        
+        #play-pause-btn { background-color: #ff4500; color: white; width: 50px; height: 50px; }
+        #play-pause-btn:hover { background-color: #e03e00; }
 
         /* Custom scrollbar */
-        #playlist::-webkit-scrollbar {
-            width: 6px;
-        }
-        #playlist::-webkit-scrollbar-track {
-            background: transparent;
-        }
-        #playlist::-webkit-scrollbar-thumb {
-            background: #ff4500;
-            border-radius: 3px;
-        }
-
-        /* Progress Bar */
-        .progress-bar-bg {
-            background-color: #4b5563;
-        }
-        .progress-bar-fg {
-            background-color: #ff4500;
-            transition: width 0.1s linear;
-        }
+        #playlist::-webkit-scrollbar { width: 6px; }
+        #playlist::-webkit-scrollbar-track { background: transparent; }
+        #playlist::-webkit-scrollbar-thumb { background: #ff4500; border-radius: 3px; }
         
-        .control-btn {
-            color: #d1d5db;
-            transition: color 0.2s, transform 0.2s;
-        }
-        .control-btn:hover {
-            color: #ff4500;
-            transform: scale(1.1);
-        }
-        #play-pause-btn {
-            background-color: #ff4500;
-            color: white;
-            width: 60px;
-            height: 60px;
-        }
-        #play-pause-btn:hover {
-            background-color: #e03e00;
+        /* Hint text on the main page */
+        .hint {
+            color: rgba(255,255,255,0.4);
+            text-align: center;
+            max-width: 500px;
+            margin: 0 auto;
         }
 
     </style>
 </head>
 <body>
+    
+    <div class="hint">
+        <h1 class="text-4xl font-bold text-white mb-4">Flamea Podcast</h1>
+        <p>The player is now a floating widget in the bottom-right corner.</p>
+        <p>Click it to expand and browse episodes while you navigate the site in the background.</p>
+    </div>
 
-    <div class="player-card rounded-2xl shadow-2xl overflow-hidden m-4">
-        <!-- Now Playing Section -->
-        <div class="p-6 text-center">
-            <img id="album-art" src="https://placehold.co/400x400/111827/ff4500?text=FLAMEA" alt="Album Art" class="w-48 h-48 rounded-lg mx-auto mb-4 shadow-lg">
-            <h2 id="episode-title" class="text-xl font-bold text-white">Select an Episode</h2>
-            <p id="episode-artist" class="text-sm text-gray-400">Flamea Podcasts</p>
+    <!-- The Player Widget -->
+    <div id="player-container" class="player-container">
+        <!-- Header (Always Visible) -->
+        <div id="player-header" class="player-header">
+            <img id="header-art" src="https://placehold.co/100x100/111827/ff4500?text=F" alt="Art" class="w-12 h-12 rounded-md">
+            <div class="flex-grow overflow-hidden">
+                <p id="header-title" class="text-white font-semibold truncate">Select an Episode</p>
+                <p class="text-gray-400 text-sm">Flamea Podcasts</p>
+            </div>
+            <button id="toggle-playlist-btn" class="control-btn text-xl p-2">
+                <i id="toggle-icon" class="fas fa-chevron-up"></i>
+            </button>
+        </div>
 
-            <!-- Progress Bar -->
-            <div class="mt-6">
-                <div id="progress-container" class="progress-bar-bg h-2 rounded-full cursor-pointer">
+        <!-- Body (Collapsible) -->
+        <div class="player-body">
+            <!-- Main Display -->
+            <div class="p-6 text-center">
+                <img id="album-art" src="https://placehold.co/400x400/111827/ff4500?text=FLAMEA" alt="Album Art" class="w-40 h-40 rounded-lg mx-auto mb-4 shadow-lg">
+                <div id="progress-container" class="progress-bar-bg h-2 rounded-full cursor-pointer my-4">
                     <div id="progress-bar" class="progress-bar-fg h-2 rounded-full" style="width: 0%;"></div>
                 </div>
                 <div class="flex justify-between text-xs text-gray-400 mt-1">
                     <span id="current-time">0:00</span>
                     <span id="total-duration">0:00</span>
                 </div>
+                <div class="flex items-center justify-center gap-6 mt-4">
+                    <button id="prev-btn" class="control-btn text-xl"><i class="fas fa-backward-step"></i></button>
+                    <button id="play-pause-btn" class="rounded-full flex items-center justify-center text-2xl shadow-lg">
+                        <i id="play-pause-icon" class="fas fa-play"></i>
+                    </button>
+                    <button id="next-btn" class="control-btn text-xl"><i class="fas fa-forward-step"></i></button>
+                </div>
             </div>
 
-            <!-- Controls -->
-            <div class="flex items-center justify-center gap-8 mt-4">
-                <button id="prev-btn" class="control-btn text-2xl"><i class="fas fa-backward-step"></i></button>
-                <button id="play-pause-btn" class="rounded-full flex items-center justify-center text-3xl shadow-lg">
-                    <i id="play-pause-icon" class="fas fa-play"></i>
-                </button>
-                <button id="next-btn" class="control-btn text-2xl"><i class="fas fa-forward-step"></i></button>
+            <!-- Playlist -->
+            <div id="playlist">
+                <div class="p-8 text-center text-gray-400">
+                    <i class="fas fa-spinner fa-spin text-2xl"></i>
+                    <p class="mt-2">Loading Feed...</p>
+                </div>
             </div>
-        </div>
-
-        <!-- Playlist Section -->
-        <div id="playlist" class="bg-black bg-opacity-20 max-h-60 overflow-y-auto">
-            <!-- Playlist items will be injected here -->
         </div>
     </div>
     
-    <audio id="audio-player"></audio>
+    <audio id="audio-player" crossOrigin="anonymous"></audio>
 
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // NOTE: The firebase config and imports would normally be here.
-            // Since we can't connect to a live DB, we use dummy data.
-            // This structure fixes the "firebase is not defined" error by ensuring
-            // the library would be loaded before its use.
-
-            // --- Dummy Podcast Data ---
-            const episodes = [
-                {
-                    title: "The Father's Role",
-                    artist: "Khulu's Wisdom",
-                    duration: "15:30",
-                    artworkUrl: "https://placehold.co/400x400/1f2937/ff4500?text=Episode+1",
-                    audioSrc: "" // No audio source available
-                },
-                {
-                    title: "Constitutional Rights for Families",
-                    artist: "Legal Eagle Series",
-                    duration: "25:10",
-                    artworkUrl: "https://placehold.co/400x400/1f2937/ff4500?text=Episode+2",
-                    audioSrc: ""
-                },
-                {
-                    title: "Co-Parenting with Strength",
-                    artist: "Unity Path",
-                    duration: "18:45",
-                    artworkUrl: "https://placehold.co/400x400/1f2937/ff4500?text=Episode+3",
-                    audioSrc: ""
-                },
-                {
-                    title: "Our Children, Our Future",
-                    artist: "Khulu's Wisdom",
-                    duration: "22:05",
-                    artworkUrl: "https://placehold.co/400x400/1f2937/ff4500?text=Episode+4",
-                    audioSrc: ""
-                }
-            ];
+            const playerContainer = document.getElementById('player-container');
+            const playerHeader = document.getElementById('player-header');
+            const toggleBtn = document.getElementById('toggle-playlist-btn');
+            const toggleIcon = document.getElementById('toggle-icon');
 
             const audioPlayer = document.getElementById('audio-player');
             const playPauseBtn = document.getElementById('play-pause-btn');
             const playPauseIcon = document.getElementById('play-pause-icon');
             const prevBtn = document.getElementById('prev-btn');
             const nextBtn = document.getElementById('next-btn');
+            
             const progressBar = document.getElementById('progress-bar');
             const progressContainer = document.getElementById('progress-container');
             const currentTimeEl = document.getElementById('current-time');
             const totalDurationEl = document.getElementById('total-duration');
+
+            const headerArtEl = document.getElementById('header-art');
+            const headerTitleEl = document.getElementById('header-title');
             const albumArtEl = document.getElementById('album-art');
-            const episodeTitleEl = document.getElementById('episode-title');
-            const episodeArtistEl = document.getElementById('episode-artist');
             const playlistEl = document.getElementById('playlist');
 
+            let episodes = [];
             let currentEpisodeIndex = 0;
             let isPlaying = false;
+            let isExpanded = true;
+
+            // --- RSS Feed Fetching ---
+            // Using a CORS proxy to fetch the RSS feed
+            const RSS_URL = "https://anchor.fm/s/10357aacc/podcast/rss";
+            const PROXY_URL = `https://api.allorigins.win/raw?url=${encodeURIComponent(RSS_URL)}`;
+
+            fetch(PROXY_URL)
+                .then(response => response.text())
+                .then(str => new window.DOMParser().parseFromString(str, "text/xml"))
+                .then(data => {
+                    playlistEl.innerHTML = ''; // Clear loading spinner
+                    const items = data.querySelectorAll("item");
+                    
+                    items.forEach(item => {
+                        const enclosure = item.querySelector("enclosure");
+                        const itunes = item.querySelector("image");
+                        episodes.push({
+                            title: item.querySelector("title").textContent,
+                            // Use description from XML, fallback if not present
+                            description: item.querySelector("description") ? item.querySelector("description").textContent : 'No description available.',
+                            audioSrc: enclosure ? enclosure.getAttribute('url') : null,
+                            artworkUrl: itunes ? itunes.getAttribute('href') : 'https://placehold.co/400x400/111827/ff4500?text=FLAMEA'
+                        });
+                    });
+
+                    populatePlaylist();
+                    loadEpisode(0);
+                })
+                .catch(err => {
+                    console.error("Error fetching or parsing RSS feed:", err);
+                    playlistEl.innerHTML = '<p class="p-4 text-center text-red-400">Could not load podcast feed.</p>';
+                });
+
+            function populatePlaylist() {
+                episodes.forEach((episode, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'playlist-item flex items-start gap-4 p-4 cursor-pointer transition duration-200';
+                    itemEl.innerHTML = `
+                        <img src="${episode.artworkUrl}" alt="${episode.title}" class="w-12 h-12 rounded-md object-cover">
+                        <div class="flex-grow overflow-hidden">
+                            <p class="text-white font-semibold truncate">${episode.title}</p>
+                            <p class="text-gray-400 text-sm mt-1 line-clamp-2">${episode.description.replace(/<[^>]*>?/gm, '').substring(0, 100)}...</p>
+                        </div>
+                    `;
+                    itemEl.addEventListener('click', () => {
+                        currentEpisodeIndex = index;
+                        loadEpisode(currentEpisodeIndex);
+                        playEpisode();
+                        if (window.innerWidth < 768) { // Auto-collapse on mobile after selection
+                           togglePlayerView();
+                        }
+                    });
+                    playlistEl.appendChild(itemEl);
+                });
+            }
 
             function loadEpisode(index) {
                 const episode = episodes[index];
+                if (!episode) return;
+
+                headerArtEl.src = episode.artworkUrl;
                 albumArtEl.src = episode.artworkUrl;
-                episodeTitleEl.textContent = episode.title;
-                episodeArtistEl.textContent = episode.artist;
-                // audioPlayer.src = episode.audioSrc; // Can't load external audio
-                totalDurationEl.textContent = episode.duration;
-                
+                headerTitleEl.textContent = episode.title;
+                audioPlayer.src = episode.audioSrc;
+
                 // Update active state in playlist
                 const items = document.querySelectorAll('.playlist-item');
                 items.forEach((item, idx) => {
@@ -186,59 +247,47 @@
             }
 
             function playEpisode() {
-                // Since we don't have audio, we'll just fake the playing state
                 isPlaying = true;
-                playPauseIcon.classList.remove('fa-play');
-                playPauseIcon.classList.add('fa-pause');
-                // audioPlayer.play();
+                playPauseIcon.classList.replace('fa-play', 'fa-pause');
+                audioPlayer.play();
             }
 
             function pauseEpisode() {
                 isPlaying = false;
-                playPauseIcon.classList.remove('fa-pause');
-                playPauseIcon.classList.add('fa-play');
-                // audioPlayer.pause();
+                playPauseIcon.classList.replace('fa-pause', 'fa-play');
+                audioPlayer.pause();
             }
 
             function togglePlayPause() {
-                if (isPlaying) {
-                    pauseEpisode();
-                } else {
-                    playEpisode();
+                if (audioPlayer.src) {
+                   isPlaying ? pauseEpisode() : playEpisode();
                 }
             }
-
+            
             function formatTime(seconds) {
                 const minutes = Math.floor(seconds / 60);
                 const secs = Math.floor(seconds % 60);
-                return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+                return isNaN(minutes) ? "0:00" : `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+            }
+            
+            function togglePlayerView(){
+                isExpanded = !isExpanded;
+                playerContainer.classList.toggle('collapsed');
+                toggleIcon.classList.toggle('fa-chevron-up');
+                toggleIcon.classList.toggle('fa-chevron-down');
             }
 
-            // Populate playlist
-            episodes.forEach((episode, index) => {
-                const item = document.createElement('div');
-                item.className = 'playlist-item flex items-center justify-between p-4 cursor-pointer transition duration-200';
-                item.innerHTML = `
-                    <div class="flex items-center gap-4">
-                        <span class="text-gray-400 w-4">${index + 1}</span>
-                        <div>
-                            <p class="text-white font-semibold">${episode.title}</p>
-                            <p class="text-gray-500 text-sm">${episode.artist}</p>
-                        </div>
-                    </div>
-                    <span class="text-gray-400 text-sm">${episode.duration}</span>
-                `;
-                item.addEventListener('click', () => {
-                    currentEpisodeIndex = index;
-                    loadEpisode(currentEpisodeIndex);
-                    playEpisode();
-                });
-                playlistEl.appendChild(item);
-            });
-            
             // Event Listeners
             playPauseBtn.addEventListener('click', togglePlayPause);
-            
+            playerHeader.addEventListener('click', (e) => {
+                // Allow button click without toggling view
+                if(e.target.closest('#toggle-playlist-btn') === null) {
+                    togglePlayerView();
+                }
+            });
+            toggleBtn.addEventListener('click', togglePlayerView);
+
+
             nextBtn.addEventListener('click', () => {
                 currentEpisodeIndex = (currentEpisodeIndex + 1) % episodes.length;
                 loadEpisode(currentEpisodeIndex);
@@ -250,13 +299,29 @@
                 loadEpisode(currentEpisodeIndex);
                 if(isPlaying) playEpisode();
             });
+            
+            audioPlayer.addEventListener('timeupdate', () => {
+                const progress = (audioPlayer.currentTime / audioPlayer.duration) * 100;
+                progressBar.style.width = `${progress}%`;
+                currentTimeEl.textContent = formatTime(audioPlayer.currentTime);
+            });
+            
+            audioPlayer.addEventListener('loadedmetadata', () => {
+                totalDurationEl.textContent = formatTime(audioPlayer.duration);
+            });
+            
+            audioPlayer.addEventListener('ended', () => {
+                nextBtn.click(); // Autoplay next episode
+            });
 
-            // Note: Progress bar and time updates are disabled as we can't play real audio.
-            // audioPlayer.addEventListener('timeupdate', () => { ... });
-            // progressContainer.addEventListener('click', (e) => { ... });
-
-            // Load the first episode on start
-            loadEpisode(0);
+            progressContainer.addEventListener('click', function(e) {
+                const width = this.clientWidth;
+                const clickX = e.offsetX;
+                audioPlayer.currentTime = (clickX / width) * audioPlayer.duration;
+            });
+            
+            // Start collapsed by default
+            togglePlayerView();
         });
     </script>
 </body>
