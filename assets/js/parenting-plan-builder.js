@@ -234,20 +234,19 @@ const ParentingPlanApp = {
     },
 
     addChild(childData = {}) {
-        childEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-2 items-center';
+        const childrenList = document.getElementById('children-list');
+        if (!childrenList) return;
         const childEntry = document.createElement('div');
-        // **THE FIX for the date format error is here:**s-1 md:grid-cols-3 gap-2 items-center';
-        // We ensure that `childData.dob` is either a valid date string or an empty string `''`.
-        const dobValue = childData.dob || '';r is here:**
-        // We ensure that `childData.dob` is either a valid date string or an empty string `''`.
-        childEntry.innerHTML = `ta.dob || '';
+        childEntry.className = 'child-entry grid grid-cols-1 md:grid-cols-3 gap-2 items-center';
+        const dobValue = childData.dob || '';
+        childEntry.innerHTML = `
             <input type="text" placeholder="Child's Full Name" data-type="name" class="input-field" value="${childData.name || ''}">
             <input type="date" data-type="dob" class="input-field" value="${dobValue}">
-            <button class="remove-child-btn bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>| ''}">
-        `;  <input type="date" data-type="dob" class="input-field" value="${dobValue}">
-        childrenList.appendChild(childEntry);g-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>
-    },  `;
+            <button class="remove-child-btn bg-red-600 hover:bg-red-700 text-white text-xs py-1 px-2 rounded">Remove</button>
+        `;
         childrenList.appendChild(childEntry);
+    },
+
     initCalendar() {
         const calendarEl = document.getElementById('calendar');
         if (calendarEl) {
@@ -262,17 +261,15 @@ const ParentingPlanApp = {
         }
     getDefaultPlanData() {
         return {
-            metadata: { ownerId: this.userId, authorizedUsers: [this.userId] },
+            metadata: { ownerId: this.userId, authorizedUsers: [this.userId], lastModified: '', lastModifiedBy: '' },
             parties: { parentA: { name: '' }, parentB: { name: '' }, children: [] },
-            schedule: { custodyDetails: '', events: [] },sers: [this.userId] },
-            communication: { methods: '' },}, parentB: { name: '' }, children: [] },
-            finances: { details: '' },: '', events: [] },
-            decision_making: { details: '' },
+            schedule: { custodyDetails: '', events: [] },
+            communication: { methods: '' },
+            finances: { details: '' },
+            decision_making: { details: '' }
         };  finances: { details: '' },
     }       decision_making: { details: '' },
 };      };
     }
-// Expose the app to the global window object so the module script in HTML can access it.
-window.ParentingPlanApp = ParentingPlanApp;
 // Expose the app to the global window object so the module script in HTML can access it.
 window.ParentingPlanApp = ParentingPlanApp;
