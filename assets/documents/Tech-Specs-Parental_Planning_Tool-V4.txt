@@ -1,0 +1,70 @@
+Parenting Plan Blueprint - Version 4.0
+Guiding Philosophy: This tool is a life-enhancing instrument for fathers. It allows a man to objectively quantify and track his involvement, organize his thoughts, and prepare for any eventuality—from a simple desire to be a more engaged parent to needing objective documentation for legal matters. It is constructive, not confrontational. The default is always 50/50 fairness, reflecting the constitutional ideal.
+
+Phase 1: The Offline MVP (Minimum Viable Product)
+This is the immediate goal. It is a completely self-contained, offline tool. It has zero dependencies on Firebase or user accounts. A user can open the page, fill out the plan, and generate a professional document in one session.
+
+1. Technology Stack (Simplified):
+
+Frontend: A single HTML file (parenting-plan.html).
+
+Styling: Tailwind CSS (loaded from CDN). All custom styles will be embedded in the HTML.
+
+Scripting: Vanilla JavaScript (ES6+), embedded directly in the HTML file.
+
+Removed Dependencies: All Firebase libraries.
+
+2. New Landing Page UI:
+
+The page will open with a standard Flamea header (title and slogan).
+
+Below the header, there will be the 3-box selection view, matching the design of training.html and forms.html:
+
+Box 1: Automated Wizard: "Start Here. Let us guide you."
+
+Box 2: Manual Builder: "Go Straight to the Full Plan."
+
+Box 3: Featured Forms & Tools: A rotating showcase of relevant templates like "Affidavit," "School Letter," etc.
+
+3. The Wizard Flow:
+
+Clicking the "Automated Wizard" box starts a simple, two-step setup.
+
+Step A (Simulation/Actual): The user first chooses: "I am doing a Simulation/Practice run" or "I am creating an Actual Document." (This choice is for user mindset only in Phase 1).
+
+Step B (Section Selection): A list of all parenting plan sections appears with checkboxes. All are checked by default. The user can uncheck sections they don't need (e.g., if they only want to create an "Expense & Benefit Tracker").
+
+Clicking "Begin" takes them to the main tool, with only the selected sections visible.
+
+4. The Main Tool - The Standalone Builder:
+
+This is a single, scrollable page containing all the selected sections as collapsible accordions.
+
+Flexibility & Modularity:
+
+Dynamic Fields: Users can click "Add another Child," "Add another Party," or "Add Expense Item" to dynamically add more fields. Every item will have a "Remove" button. This caters to nuclear and large, extended families.
+
+Optional ID Numbers: Fields for ID numbers will be present for legal completeness but will be clearly marked as optional.
+
+Functionality without Saving:
+
+Generate Document Button: This is the primary action. It will read all the data the user has entered and generate a complete, professionally formatted HTML document in a new browser tab. The user can then print this page or use the browser's "Save as PDF" function.
+
+Save Plan Button: This button will be present but will show a pop-up message: "Online saving and collaboration are coming soon! Please use the 'Generate Document' button to save a PDF copy of your work." This manages user expectations perfectly.
+
+Share Button: This will trigger the browser's native share functionality (if available) to share the link to the tool itself, or it will provide a simple pop-up with a pre-written message for WhatsApp/Email, like: "I'm using this excellent Parenting Plan tool from Flamea to get organized. You should check it out: [link]".
+
+Phase 2: Online Saving & Collaboration (Future Enhancement)
+Once the Offline MVP is launched and proven stable, these features can be added back in.
+
+Firebase Re-integration: Firebase Auth and Firestore will be re-introduced.
+
+User Accounts: The Save Plan button will now prompt non-logged-in users to create a free account to save their progress.
+
+Cloud Saving: For logged-in users, "Save Plan" will write the planData to their secure Firestore document.
+
+True Collaboration: The "Share" button will provide the unique Plan ID, and the "Load Plan" feature will be enabled, allowing for real-time collaborative editing.
+
+This phased approach eliminates the biggest point of failure (Firebase complexity) and delivers the core, most valuable functionality to your users immediately. We build the solid, working car first, then we add the turbocharger and sound system later.
+
+I will now provide the full code for the Phase 1 Offline MVP. This will be a single, self-contained parenting-plan.html file. You will only need to upload this one file to your server, and it will work.
