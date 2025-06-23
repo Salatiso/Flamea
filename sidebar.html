@@ -151,6 +151,8 @@
     </div>
 </aside>
 
+<audio id="flamea-audio-player" crossOrigin="anonymous"></audio>
+
 <!-- IMPORTANT: The main page that loads this sidebar must have this audio tag in its body -->
 <audio id="flamea-audio-player" crossOrigin="anonymous"></audio>
 
@@ -278,7 +280,7 @@ document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('podcast-art').src = episode.artworkUrl;
         document.getElementById('podcast-title').textContent = episode.title;
         // Use proxy for audio source to avoid CORS issues
-        audioPlayer.src = `https://api.allorigins.win/raw?url=${encodeURIComponent(episode.audioSrc)}`;
+        audioPlayer.src = episode.audioSrc;
 
         document.querySelectorAll('.podcast-playlist-item').forEach((item, idx) => {
             item.classList.toggle('active', idx === index);
