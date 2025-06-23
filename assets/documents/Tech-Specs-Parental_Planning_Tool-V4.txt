@@ -1,3 +1,113 @@
+Parenting Plan Blueprint - Version 4.1
+Guiding Philosophy: This tool is a life-enhancing instrument for fathers. It allows a man to objectively quantify and track his involvement, organize his thoughts, and prepare for any eventuality—from a simple desire to be a more engaged parent to needing objective documentation for legal matters. It is constructive, not confrontational. The default is always 50/50 fairness, reflecting the constitutional ideal. It is modular, allowing a user to build a complete plan or just the specific section they need at that moment.
+
+Phase 1: The Offline MVP (Minimum Viable Product)
+This is the immediate goal. It is a completely self-contained, offline tool with zero dependencies on Firebase.
+
+1. Technology Stack & Design:
+
+Frontend: A single HTML file (parenting-plan.html).
+
+Styling: Tailwind CSS. The design will be standardized to match the aesthetic of training.html and forms.html (dark theme, interactive cards, specific fonts).
+
+Scripting: Vanilla JavaScript (ES6+), self-contained within the HTML file.
+
+2. Landing Page & User Flow:
+
+UI: The page opens with a standard Flamea header, followed by the 3-box selection view.
+
+Box 1: Automated Wizard: "Start Here. Let us guide you."
+
+Box 2: Manual Builder: "Go Straight to the Full Plan."
+
+Box 3: Featured Forms: Rotates through relevant templates (e.g., Affidavit, School Letter, Lobola Documents).
+
+Wizard Flow:
+
+Goal Selection: User chooses "Simulation/Practice" or "Actual Document".
+
+Section Selection: A list of all plan sections appears with checkboxes (all checked by default). The user can select one, some, or all sections.
+
+Builder: Clicking "Begin" takes the user to the main builder tool, which will only render the accordions for the sections they selected.
+
+3. The Main Tool - The Standalone Builder:
+
+Structure: A single, scrollable page of collapsible accordions for the chosen sections. A "Back to Start" button and a "Preview & Generate" button are always visible.
+
+Core Principle - Modularity: Each section is a self-contained module. A user can fill out only the "Expense Tracker," for example, and generate a complete, professional document just for that section.
+
+4. Detailed Section Specifications:
+
+Section 1: Parties & Children
+
+Structure: The UI will be split into two main columns: "Parent A's Side" and "Parent B's Side".
+
+Parent/Guardian Input:
+
+Under each parent's column, the user can add multiple people (e.g., the parent themselves, a grandparent, an uncle). Each person is an object with fields for: Full Name, ID Number (Optional), and Relationship to Child(ren) (dropdown: Father, Mother, Grandmother, etc., with "Other").
+
+Each person entry will have its own sub-section for Contact Details and Addresses, where users can dynamically add/remove multiple entries for each.
+
+Addresses: Each address entry has fields for Address Type (dropdown: Home, Work, Postal, Other), Street Address (with a non-functional "Find on Map" icon for Phase 2), City, and Postal Code.
+
+Contact Details: Each contact entry has fields for Contact Type (dropdown: Primary Cell, Work Phone, Email, WhatsApp, Facebook, etc., with "Other") and Detail/Username.
+
+Children Input: A separate area below the parent columns for adding children. Each child entry has fields for Full Name, Date of Birth, and ID Number (Optional).
+
+Section 2: Custody & Activity Schedule
+
+Structure: This section acts as a powerful activity logger.
+
+Calendar: Will feature a large, interactive calendar (FullCalendar.js will be integrated in a future update; for now, a list-based log will be used).
+
+Event Logging: A form allows users to log an event with: Event Title, Start Date/Time, End Date/Time, Assign To (dropdown of all parties entered in Section 1), Event Type (dropdown: Contact Schedule, Visitation, Holiday, Emergency, School Activity, Cultural Event, Custom), and Details/Notes.
+
+Recurring Events: A checkbox for "This is a recurring event" will reveal options to set frequency (e.g., "Every Weekend," "Tuesdays & Thursdays").
+
+Time Dashboard: A dashboard within this section will automatically calculate and display the total time (in hours and days) that the child(ren) have spent with each parent/party based on the logged events.
+
+Section 3: Expense & Benefit Tracker
+
+Structure: A comprehensive financial table.
+
+Budget Origin: At the top of the section, a dropdown asks, "Who determined this budget?" (Mutual Agreement, or a dropdown of the parties from Section 1).
+
+Expense Categories: The section will have expandable categories (e.g., Living Expenses, Education, Healthcare, Cultural Obligations). Each category starts with 5 suggested, editable line items (e.g., under Living, items are Groceries, Clothing, Rent/Bond Contribution). Users can add/remove items.
+
+Line Item Details: Each row in the table will have the following columns:
+
+Expense Description (text input).
+
+Budgeted Cost (user can input a monetary value OR a time value in hours).
+
+Parent A % | Parent B % (An interactive slider, defaulting to 50/50, allows users to allocate the budgeted contribution).
+
+Final Cost (user can input the actual money/time spent. If left blank, it defaults to the budgeted amount).
+
+Proof (A disabled "Upload Receipt" button, placeholder for Phase 2).
+
+Totals: Each category will have a subtotal row showing the total contribution for each parent. A master dashboard at the top of the section will show the grand total contribution split visually with a 50/50 bar.
+
+Section 4: Communication Plan
+
+Structure: Automatically populates with the names of the parties entered in Section 1.
+
+Functionality: For each pair of parties (e.g., Parent A to Parent B), the user can define multiple methods of communication.
+
+For each method, the user selects from a dropdown of the actual contact details entered in Section 1 (e.g., Parent B's Primary Cell, Parent A's Email) and assigns it a Classification (dropdown: For Urgent Matters, For Formal Communication, For Daily Updates).
+
+5. Document Generation & Disclaimer:
+
+The "Preview & Generate" button will be the primary action for output.
+
+Disclaimer Modal: Clicking it will first open a pop-up window with a clear disclaimer: "You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is not legal advice. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page." The user must check a box "I Understand and Agree" to proceed.
+
+Output: After agreeing, a new tab will open with the professionally formatted document. It will include only the sections the user selected, and will feature the standard Flamea cover page, annexures, and back page.
+
+This is our definitive plan. I will now proceed with building the full code for this Offline MVP.
+
+Now, here is the complete code for the parenting-plan.html file based on the detailed Blueprint 4.1. This is a single, self-contained file. You only need to save this code as parenting-plan.html and upload it to your server. It will work.
+
 Parenting Plan Blueprint - Version 4.0
 Guiding Philosophy: This tool is a life-enhancing instrument for fathers. It allows a man to objectively quantify and track his involvement, organize his thoughts, and prepare for any eventuality—from a simple desire to be a more engaged parent to needing objective documentation for legal matters. It is constructive, not confrontational. The default is always 50/50 fairness, reflecting the constitutional ideal.
 

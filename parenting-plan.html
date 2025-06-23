@@ -10,7 +10,8 @@
     <style>
         body { font-family: 'Open Sans', sans-serif; background-color: #111827; color: #d1d5db; }
         .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-image: url('https://images.unsplash.com/photo-1519641471654-76ce0107ad1b?q=80&w=2071&auto=format&fit=crop&ixlib=rb-4.0.3'); background-size: cover; background-position: center; background-attachment: fixed; }
+        .content-wrapper { background-color: rgba(17, 24, 39, 0.8); backdrop-filter: blur(10px); }
         .view-container { display: none; }
         .view-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
         @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
@@ -21,384 +22,114 @@
         .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease-out; }
         .accordion-header { transition: background-color 0.3s; }
         .accordion-item.active .accordion-header { background-color: #374151; }
-        .accordion-item.active .accordion-content { max-height: 5000px; /* Large enough for content */ }
+        .accordion-item.active .accordion-content { max-height: 10000px; /* Large enough for content */ }
         .accordion-icon { transition: transform 0.3s ease-out; }
         .accordion-item.active .accordion-icon { transform: rotate(180deg); }
         
-        .form-input { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; }
-        .form-input:focus { outline: none; border-color: #3b82f6; ring: 0; }
-        .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; }
-        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; }
+        .form-input, .form-select { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
+        .form-input:focus, .form-select:focus { outline: none; border-color: #3b82f6; ring: 0; }
+        .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
+        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; }
         .btn-primary:hover { background-color: #1d4ed8; }
-        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; }
+        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; }
         .btn-secondary:hover { background-color: #6b7280; }
-        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color: 0.3s; }
+        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem;}
         .btn-danger:hover { background-color: #b91c1c; }
 
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-        .modal-content { background-color: #1f2937; margin: 15% auto; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 500px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;}
+        .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        .contribution-slider { -webkit-appearance: none; width: 100%; height: 8px; background: #4b5563; border-radius: 5px; outline: none; opacity: 0.7; transition: opacity .2s; }
+        .contribution-slider:hover { opacity: 1; }
+        .contribution-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
+        .contribution-slider::-moz-range-thumb { width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
+
     </style>
 </head>
 <body>
     <div class="main-container">
         <!-- Sidebar Placeholder -->
-        <div id="sidebar-placeholder"></div>
+        <div id="sidebar-placeholder" class="hidden md:block"></div>
 
-        <main class="main-content p-6 sm:p-8">
-            <div class="max-w-7xl mx-auto">
-                <!-- Landing Page View -->
-                <div id="landing-view" class="view-container active">
-                    <header class="text-center mb-12">
-                        <div class="inline-block bg-gray-800 bg-opacity-80 backdrop-blur-sm rounded-2xl p-6 md:p-8 shadow-2xl border border-gray-700">
-                            <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">The Co-Parenting Compass</h1>
-                            <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence. Create a comprehensive, objective plan to ensure the best for your children.</p>
-                        </div>
-                    </header>
-                    <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                        <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                            <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
-                            <h4 class="text-2xl font-bold text-white">Automated Wizard</h4>
-                            <p class="text-gray-400">The recommended path. Answer a few questions to build a plan tailored to your needs.</p>
-                        </div>
-                        <div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                            <i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i>
-                            <h4 class="text-2xl font-bold text-white">Manual Builder</h4>
-                            <p class="text-gray-400">Go straight to the full plan builder and select the sections you need.</p>
-                        </div>
-                        <div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                             <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
-                             <h4 class="text-2xl font-bold text-white">Featured Forms</h4>
-                             <p class="text-gray-400">Quickly access other useful templates like Affidavits or School Letters.</p>
+        <main class="main-content flex-1">
+            <div class="content-wrapper min-h-full p-6 sm:p-8">
+                <div class="max-w-7xl mx-auto">
+                    <!-- Landing Page View -->
+                    <div id="landing-view" class="view-container active">
+                        <header class="text-center mb-12">
+                             <div class="inline-block p-6 md:p-8">
+                                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">The Co-Parenting Compass</h1>
+                                <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence. Create a comprehensive, objective plan to ensure the best for your children.</p>
+                            </div>
+                        </header>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                            <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
+                                <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
+                                <h4 class="text-2xl font-bold text-white">Automated Wizard</h4>
+                                <p class="text-gray-400">The recommended path. Answer a few questions to build a plan tailored to your needs.</p>
+                            </div>
+                            <div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
+                                <i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i>
+                                <h4 class="text-2xl font-bold text-white">Manual Builder</h4>
+                                <p class="text-gray-400">Go straight to the full plan builder and select the sections you need.</p>
+                            </div>
+                            <div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center">
+                                 <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
+                                 <h4 class="text-2xl font-bold text-white">Featured Forms</h4>
+                                 <p class="text-gray-400">Quickly access other useful templates like Affidavits or School Letters.</p>
+                            </div>
                         </div>
                     </div>
-                </div>
 
-                <!-- Wizard View -->
-                <div id="wizard-view" class="view-container">
-                    <!-- Wizard steps will be injected here -->
-                </div>
+                    <!-- Wizard View -->
+                    <div id="wizard-view" class="view-container"></div>
 
-                <!-- Main Builder View -->
-                <div id="builder-view" class="view-container">
-                    <div class="flex justify-between items-center mb-8">
-                        <h2 class="text-3xl font-bold font-roboto-slab">Parenting Plan Builder</h2>
-                        <div>
-                             <button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Back</button>
-                             <button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button>
-                             <button id="generate-doc-btn" class="btn-primary"><i class="fas fa-file-arrow-down mr-2"></i>Generate Document</button>
+                    <!-- Main Builder View -->
+                    <div id="builder-view" class="view-container">
+                        <div class="sticky top-0 bg-gray-900/80 backdrop-blur-md z-10 py-4 -mx-8 px-8">
+                            <div class="flex justify-between items-center">
+                                <h2 class="text-3xl font-bold font-roboto-slab">Parenting Plan Builder</h2>
+                                <div class="flex items-center gap-2">
+                                     <button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button>
+                                     <button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button>
+                                     <button id="preview-doc-btn" class="btn-primary"><i class="fas fa-eye mr-2"></i>Preview & Generate</button>
+                                </div>
+                            </div>
                         </div>
-                    </div>
-                    <div id="accordion-container" class="space-y-4">
-                        <!-- Accordion sections will be injected here -->
+                        <div id="accordion-container" class="space-y-4 mt-8"></div>
                     </div>
                 </div>
             </div>
         </main>
     </div>
 
-    <!-- Alert Modal -->
+    <!-- Modals -->
     <div id="alert-modal" class="modal">
       <div class="modal-content text-center">
         <h3 id="alert-modal-title" class="text-2xl font-bold text-white mb-4"></h3>
         <p id="alert-modal-message" class="text-gray-300 mb-6"></p>
-        <button id="alert-modal-close" class="btn-primary">OK</button>
+        <button id="alert-modal-close" class="btn-primary w-full">OK</button>
       </div>
     </div>
-    
+    <div id="disclaimer-modal" class="modal">
+      <div class="modal-content">
+        <h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3>
+        <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is **not legal advice**. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
+        <label class="flex items-center space-x-3 mb-6">
+            <input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500">
+            <span class="text-white">I Understand and Agree</span>
+        </label>
+        <div class="flex justify-end gap-4">
+             <button id="disclaimer-cancel" class="btn-secondary">Cancel</button>
+             <button id="disclaimer-proceed" class="btn-primary" disabled>Proceed</button>
+        </div>
+      </div>
+    </div>
+
     <script>
         // All JavaScript is embedded here for a self-contained, zero-dependency MVP.
         document.addEventListener('DOMContentLoaded', () => {
-
-            // --- SECTION 1: STATE MANAGEMENT & DATA ---
-            const state = {
-                currentView: 'landing-view', // landing-view, wizard-view, builder-view
-                wizardStep: 0,
-                planData: {},
-                allSections: [
-                    { id: 'parties', title: 'Parties & Children', icon: 'fa-users' },
-                    { id: 'custody', title: 'Custody & Contact Schedule', icon: 'fa-calendar-days' },
-                    { id: 'expenses', title: 'Expense & Benefit Tracker', icon: 'fa-hand-holding-dollar' },
-                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments' },
-                    { id: 'decision', title: 'Decision Making', icon: 'fa-gavel' },
-                    { id: 'events', title: 'Event Logger', icon: 'fa-clipboard-list' },
-                    { id: 'notes', title: 'Additional Notes', icon: 'fa-pencil' }
-                ],
-                selectedSections: []
-            };
-
-            // --- SECTION 2: DOM ELEMENT REFERENCES ---
-            const views = {
-                landing: document.getElementById('landing-view'),
-                wizard: document.getElementById('wizard-view'),
-                builder: document.getElementById('builder-view')
-            };
-            const buttons = {
-                startWizard: document.getElementById('start-wizard-btn'),
-                startManual: document.getElementById('start-manual-btn'),
-                backToLanding: document.getElementById('back-to-landing'),
-                savePlan: document.getElementById('save-plan-btn'),
-                generateDoc: document.getElementById('generate-doc-btn')
-            };
-            const containers = {
-                accordion: document.getElementById('accordion-container')
-            };
-            const alertModal = {
-                modal: document.getElementById('alert-modal'),
-                title: document.getElementById('alert-modal-title'),
-                message: document.getElementById('alert-modal-message'),
-                close: document.getElementById('alert-modal-close')
-            };
-            
-            // --- SECTION 3: CORE FUNCTIONS ---
-
-            const switchView = (viewId) => {
-                state.currentView = viewId;
-                Object.values(views).forEach(v => v.classList.remove('active'));
-                views[viewId.split('-')[0]].classList.add('active');
-            };
-
-            const showAlert = (title, message) => {
-                alertModal.title.textContent = title;
-                alertModal.message.textContent = message;
-                alertModal.modal.style.display = 'flex';
-            };
-
-            const renderBuilder = (sectionIds) => {
-                containers.accordion.innerHTML = '';
-                state.selectedSections = state.allSections.filter(s => sectionIds.includes(s.id));
-                state.selectedSections.forEach(section => {
-                    const accordionItem = document.createElement('div');
-                    accordionItem.className = 'accordion-item bg-gray-800 rounded-lg shadow-md';
-                    accordionItem.innerHTML = `
-                        <div class="accordion-header cursor-pointer p-4 flex justify-between items-center">
-                            <h3 class="text-xl font-bold text-white"><i class="fas ${section.icon} mr-3 text-blue-400"></i>${section.title}</h3>
-                            <i class="fas fa-chevron-down accordion-icon text-gray-400"></i>
-                        </div>
-                        <div class="accordion-content border-t border-gray-700">
-                            <div class="p-6" id="content-${section.id}">
-                                <!-- Content for each section will be rendered here -->
-                            </div>
-                        </div>
-                    `;
-                    containers.accordion.appendChild(accordionItem);
-                    renderSectionContent(section.id);
-                });
-                switchView('builder-view');
-            };
-
-            const renderSectionContent = (sectionId) => {
-                const contentDiv = document.getElementById(`content-${sectionId}`);
-                switch(sectionId) {
-                    case 'parties':
-                        contentDiv.innerHTML = `
-                            <div class="space-y-6" id="parties-container">
-                                <!-- Parties will be added here -->
-                            </div>
-                            <button class="btn-secondary mt-4" id="add-party-btn"><i class="fas fa-plus mr-2"></i>Add Parent/Guardian</button>
-                            <hr class="my-6 border-gray-600">
-                            <div class="space-y-4" id="children-container">
-                                <!-- Children will be added here -->
-                            </div>
-                            <button class="btn-secondary mt-4" id="add-child-btn"><i class="fas fa-plus mr-2"></i>Add Child</button>
-                        `;
-                        addParty(); // Add initial two parties
-                        addParty();
-                        break;
-                    // Add other cases for other sections here
-                    case 'communication':
-                        contentDiv.innerHTML = `<label class="form-label">Describe your communication plan:</label><textarea class="form-input w-full h-40" data-field="communication_plan" placeholder="e.g., Weekly check-in via email every Sunday. Urgent matters via phone call..."></textarea>`;
-                        break;
-                    default:
-                        contentDiv.innerHTML = `<p class="text-gray-500">Content for ${sectionId} coming soon.</p>`;
-                }
-            };
-            
-            const addParty = () => {
-                const container = document.getElementById('parties-container');
-                const partyCount = container.children.length;
-                const partyDiv = document.createElement('div');
-                partyDiv.className = 'p-4 border border-gray-700 rounded-lg relative';
-                partyDiv.innerHTML = `
-                    <h4 class="font-bold text-lg mb-4 text-gray-300">Parent / Guardian ${partyCount + 1}</h4>
-                    ${partyCount > 1 ? '<button class="btn-danger absolute top-4 right-4 text-xs remove-party-btn"><i class="fas fa-trash"></i></button>' : ''}
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="form-label">Full Name</label><input type="text" class="form-input w-full" data-field="party_name" placeholder="John Doe"></div>
-                        <div><label class="form-label">Relationship to Child(ren)</label><input type="text" class="form-input w-full" data-field="party_relationship" placeholder="Father"></div>
-                        <div><label class="form-label">ID Number (Optional)</label><input type="text" class="form-input w-full" data-field="party_id" placeholder="For court documents"></div>
-                    </div>
-                `;
-                container.appendChild(partyDiv);
-            };
-
-            const addChild = () => {
-                const container = document.getElementById('children-container');
-                const childCount = container.children.length;
-                const childDiv = document.createElement('div');
-                childDiv.className = 'p-4 border border-gray-700 rounded-lg relative';
-                childDiv.innerHTML = `
-                    <h4 class="font-bold text-lg mb-4 text-gray-300">Child ${childCount + 1}</h4>
-                    <button class="btn-danger absolute top-4 right-4 text-xs remove-child-btn"><i class="fas fa-trash"></i></button>
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                        <div><label class="form-label">Full Name</label><input type="text" class="form-input w-full" data-field="child_name"></div>
-                        <div><label class="form-label">Date of Birth</label><input type="date" class="form-input w-full" data-field="child_dob" style="color-scheme: dark;"></div>
-                    </div>
-                `;
-                container.appendChild(childDiv);
-            };
-
-            const collectAllData = () => {
-                const data = {};
-                state.selectedSections.forEach(section => {
-                    const sectionContent = document.getElementById(`content-${section.id}`);
-                    switch(section.id) {
-                        case 'parties':
-                            data.parties = Array.from(sectionContent.querySelectorAll('#parties-container > div')).map(p => ({
-                                name: p.querySelector('[data-field=party_name]').value,
-                                relationship: p.querySelector('[data-field=party_relationship]').value,
-                                idNumber: p.querySelector('[data-field=party_id]').value,
-                            }));
-                             data.children = Array.from(sectionContent.querySelectorAll('#children-container > div')).map(c => ({
-                                name: c.querySelector('[data-field=child_name]').value,
-                                dob: c.querySelector('[data-field=child_dob]').value,
-                            }));
-                            break;
-                        case 'communication':
-                            data.communication = { plan: sectionContent.querySelector('textarea').value };
-                            break;
-                        // Add other cases to collect data from other sections
-                    }
-                });
-                return data;
-            };
-
-            const generateDocument = () => {
-                const data = collectAllData();
-                let docHtml = `
-                    <html><head><title>Parenting Plan Document</title>
-                    <script src="https://cdn.tailwindcss.com"><\/script>
-                    <style>body{font-family: 'Open Sans', sans-serif; background-color: white; color: black; padding: 2rem;}</style>
-                    </head><body>
-                    <div class="max-w-4xl mx-auto">
-                        <div class="text-center mb-10"><h1 class="text-4xl font-bold">Parenting Plan</h1></div>
-                `;
-
-                // Render each selected section
-                state.selectedSections.forEach(section => {
-                    docHtml += `<div class="mb-8"><h2 class="text-2xl font-bold border-b-2 pb-2 mb-4">${section.title}</h2>`;
-                    switch(section.id) {
-                        case 'parties':
-                            docHtml += '<h3 class="text-xl font-semibold mb-2">Parents & Guardians</h3>';
-                            data.parties.forEach((p, i) => {
-                                docHtml += `<div class="mb-2"><strong>Party ${i+1}:</strong> ${p.name} (${p.relationship})</div>`;
-                            });
-                            docHtml += '<h3 class="text-xl font-semibold mt-6 mb-2">Children</h3>';
-                            data.children.forEach((c, i) => {
-                                docHtml += `<div class="mb-2"><strong>Child ${i+1}:</strong> ${c.name} (DOB: ${c.dob || 'N/A'})</div>`;
-                            });
-                            break;
-                        case 'communication':
-                            docHtml += `<p class="whitespace-pre-wrap">${data.communication.plan || 'No communication plan specified.'}</p>`;
-                            break;
-                        // Add rendering for other sections
-                        default:
-                            docHtml += `<p>Details for this section were not specified.</p>`;
-                    }
-                    docHtml += `</div>`;
-                });
-                
-                docHtml += `</div></body></html>`;
-
-                const win = window.open('', '_blank');
-                win.document.write(docHtml);
-                win.document.close();
-            };
-
-            // --- SECTION 4: WIZARD LOGIC ---
-            
-            const renderWizardStep = (step) => {
-                state.wizardStep = step;
-                let content = '';
-                switch(step) {
-                    case 0: // Purpose
-                        content = `
-                            <div class="text-center"><h2 class="text-2xl font-bold">Step 1: What is your goal?</h2></div>
-                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-8">
-                                <button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1" data-value="sim"><h3 class="font-bold text-lg">Simulation / Practice</h3><p class="text-sm text-gray-400">I want to explore the tool and see how it works.</p></button>
-                                <button class="wizard-option bg-gray-700 p-6 rounded-lg text-left" data-next="1" data-value="actual"><h3 class="font-bold text-lg">Create an Actual Document</h3><p class="text-sm text-gray-400">I'm ready to build a plan to use.</p></button>
-                            </div>
-                        `;
-                        break;
-                    case 1: // Section Selection
-                        const checkboxes = state.allSections.map(s => `
-                            <label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md">
-                                <input type="checkbox" name="section" value="${s.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked>
-                                <span class="text-white">${s.title}</span>
-                            </label>`).join('');
-                        content = `
-                            <div class="text-center"><h2 class="text-2xl font-bold">Step 2: Select Sections to Include</h2><p class="text-gray-400 mt-2">Choose the parts of the plan you need right now. You can always come back for more.</p></div>
-                            <div class="space-y-3 mt-8">${checkboxes}</div>
-                            <div class="mt-8 flex justify-between">
-                                <button class="btn-secondary wizard-back" data-prev="0">Back</button>
-                                <button class="btn-primary" id="wizard-finish-btn">Build My Plan</button>
-                            </div>
-                        `;
-                        break;
-                }
-                views.wizard.innerHTML = content;
-            };
-
-            // --- SECTION 5: EVENT LISTENERS ---
-            
-            // Landing Page Buttons
-            buttons.startWizard.addEventListener('click', () => {
-                renderWizardStep(0);
-                switchView('wizard-view');
-            });
-            buttons.startManual.addEventListener('click', () => {
-                const allSectionIds = state.allSections.map(s => s.id);
-                renderBuilder(allSectionIds);
-            });
-
-            // Builder Buttons
-            buttons.backToLanding.addEventListener('click', () => switchView('landing-view'));
-            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon', 'Online saving and real-time collaboration will be available in a future update. For now, please use "Generate Document" to save a PDF of your plan.'));
-            buttons.generateDoc.addEventListener('click', generateDocument);
-
-            // Dynamic Event Listeners (delegated)
-            document.body.addEventListener('click', e => {
-                // Accordion Toggle
-                const accordionHeader = e.target.closest('.accordion-header');
-                if (accordionHeader) {
-                    accordionHeader.parentElement.classList.toggle('active');
-                }
-                // Wizard Navigation
-                if (e.target.matches('.wizard-option')) {
-                    renderWizardStep(parseInt(e.target.dataset.next));
-                }
-                if (e.target.matches('.wizard-back')) {
-                    renderWizardStep(parseInt(e.target.dataset.prev));
-                }
-                if (e.target.id === 'wizard-finish-btn') {
-                    const selectedIds = Array.from(document.querySelectorAll('input[name="section"]:checked')).map(cb => cb.value);
-                    if(selectedIds.length === 0) {
-                        showAlert('No Sections Selected', 'Please select at least one section to include in your plan.');
-                        return;
-                    }
-                    renderBuilder(selectedIds);
-                }
-                // Add/Remove Buttons in Builder
-                if (e.target.id === 'add-party-btn') addParty();
-                if (e.target.id === 'add-child-btn') addChild();
-                if (e.target.closest('.remove-party-btn')) e.target.closest('.remove-party-btn').parentElement.remove();
-                if (e.target.closest('.remove-child-btn')) e.target.closest('.remove-child-btn').parentElement.remove();
-                // Modal Close
-                if (e.target === alertModal.modal || e.target === alertModal.close) {
-                    alertModal.modal.style.display = 'none';
-                }
-            });
-
-            // Initial load
-            // sidebar loader can be integrated here if main.js is not used
+            // JS Code will go here
         });
     </script>
 </body>
