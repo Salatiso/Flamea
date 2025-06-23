@@ -520,7 +520,606 @@
                 });
                 return { categories };
             }
+// --- RENDER FUNCTIONS FOR EACH BUILDER STEP ---
+function renderPartiesSection(container) {
+    container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Parent/Guardian A</h4>
+                <div id="a-parties-container"></div>
+                <button class="btn-secondary add-guardian-btn" data-side="a">Add Guardian/Party</button>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Parent/Guardian B</h4>
+                <div id="b-parties-container"></div>
+                <button class="btn-secondary add-guardian-btn" data-side="b">Add Guardian/Party</button>
+            </div>
+        </div>
+        <div class="mt-8">
+            <h4 class="text-lg font-semibold mb-4">Children</h4>
+            <div id="children-container"></div>
+            <button id="add-child-btn" class="btn-secondary">Add Child</button>
+        </div>`;
+    
+    // Add default guardians
+    addGuardian('a');
+    addGuardian('b');
+    addChild();
+}
 
-            function collectCommunicationData() {
-                return {
-                    methods: Array.from(document.querySelectorAll('#communication-
+function renderCustodySection(container) {
+    container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Custody Schedule</h4>
+                <div class="mb-4">
+                    <label class="form-label">Schedule Type</label>
+                    <select id="custody-schedule" class="form-select">
+                        ${generateOptions(dropdownOptions.custodyDecision)}
+                    </select>
+                </div>
+                <div class="mb-4">
+                    <label class="form-label">Schedule Details</label>
+                    <textarea id="custody-notes" class="form-textarea" rows="6" placeholder="Describe the custody arrangement, including weekends, holidays, and special occasions..."></textarea>
+                </div>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Activity Log</h4>
+                <div id="time-dashboard" class="bg-gray-800 p-4 rounded-lg mb-4">
+                    <div class="text-center">
+                        <div class="text-2xl font-bold text-purple-400">0.0 hrs</div>
+                        <div class="text-sm text-gray-400">Total Logged Time</div>
+                    </div>
+                </div>
+                <div id="events-log-container" class="max-h-96 overflow-y-auto"></div>
+                <button id="add-event-btn" class="btn-secondary">Log New Event</button>
+            </div>
+        </div>`;
+}
+
+function renderExpensesSection(container) {
+    container.innerHTML = `
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
+            <div class="lg:col-span-2">
+                <h4 class="text-lg font-semibold mb-4">Expense Categories</h4>
+                <div id="expense-categories-container"></div>
+                <button id="add-expense-category-btn" class="btn-secondary">Add Custom Category</button>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Summary Dashboard</h4>
+                <div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg">
+                    <div class="grid grid-cols-2 gap-4">
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-green-400">R0.00</div>
+                            <div class="text-sm text-gray-400">Total Budget</div>
+                        </div>
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-blue-400">R0.00</div>
+                            <div class="text-sm text-gray-400">Total Spent</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>`;
+    
+    // Add default categories
+    dropdownOptions.expenseCategory.forEach(cat => addExpenseCategory(cat));
+}
+
+function renderCommunicationSection(container) {
+    const parties = collectPartiesData();
+    container.innerHTML = `
+        <div class="space-y-6">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Communication Methods & Preferences</h4>
+                <div id="communication-methods-container"></div>
+                <button class="btn-secondary add-comm-method-btn">Add Communication Method</button>
+            </div>
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Communication Guidelines</h4>
+                <div class="space-y-4">
+                    ${dropdownOptions.communicationClassification.map(type => `
+                        <div class="bg-gray-800 p-4 rounded-lg">
+                            <h5 class="font-medium mb-2">${type}</h5>
+                            <textarea class="form-textarea" rows="3" placeholder="Guidelines for ${type.toLowerCase()}..."></textarea>
+                        </div>
+                    `).join('')}
+                </div>
+            </div>
+        </div>`;
+}
+
+function renderSummarySection(container) {
+    const availableSections = state.selectedSections.filter(s => s.id !== 'summary');
+    container.innerHTML = `
+        <div class="space-y-6">
+            <div>
+                <h4 class="text-lg font-semibold mb-4">Select Sections for Final Document</h4>
+                <div id="summary-section-list" class="space-y-3">
+                    ${availableSections.map(section => `
+                        <label class="flex items-center space-x-3 p-3 bg-gray-700 rounded-md cursor-pointer hover:bg-gray-600">
+                            <input type="checkbox" value="${section.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked>
+                            <span class="text-white">${section.title}</span>
+                        </label>
+                    `).join('')}
+                </div>
+            </div>
+            <div class="bg-gray-800 p-6 rounded-lg">
+                <h4 class="text-lg font-semibold mb-4">Document Preview</h4>
+                <p class="text-gray-400">Your parenting plan will include all selected sections above. Click "Generate Final Document" to create your comprehensive plan.</p>
+            </div>
+        </div>`;
+}
+
+// --- DATA COLLECTION FUNCTIONS ---
+function collectPartiesData() {
+    const parties = [];
+    document.querySelectorAll('.party-card').forEach(card => {
+        const nameInput = card.querySelector('.party-name');
+        if (nameInput && nameInput.value.trim()) {
+            const addresses = [];
+            card.querySelectorAll('.addresses-sub-container .grid').forEach(addr => {
+                const type = addr.querySelector('select')?.value;
+                const address = addr.querySelector('input')?.value;
+                if (type && address) addresses.push({ type, address });
+            });
+            
+            const contacts = [];
+            card.querySelectorAll('.contacts-sub-container .grid').forEach(cont => {
+                const type = cont.querySelector('select')?.value;
+                const contact = cont.querySelector('input')?.value;
+                if (type && contact) contacts.push({ type, contact });
+            });
+            
+            parties.push({
+                name: nameInput.value.trim(),
+                relationship: card.querySelector('select')?.value || '',
+                addresses,
+                contacts
+            });
+        }
+    });
+    return parties;
+}
+
+function collectCustodyData() {
+    const events = [];
+    document.querySelectorAll('.event-log-item').forEach(event => {
+        const date = event.querySelector('input[type="date"]')?.value;
+        const type = event.querySelector('select')?.value;
+        const duration = event.querySelector('input[step="0.5"]')?.value;
+        const notes = event.querySelector('textarea')?.value;
+        if (date && type) {
+            events.push({ date, type, duration: parseFloat(duration) || 0, notes });
+        }
+    });
+    
+    return {
+        schedule: document.getElementById('custody-schedule')?.value || '',
+        notes: document.getElementById('custody-notes')?.value || '',
+        events
+    };
+}
+
+function collectExpensesData() {
+    const categories = [];
+    document.querySelectorAll('.expense-category').forEach(cat => {
+        const items = [];
+        cat.querySelectorAll('.expense-item').forEach((item, index) => {
+            const container = item.closest('.grid');
+            const budget = container.querySelector('.expense-budget')?.value;
+            const final = container.querySelector('.expense-final')?.value;
+            const slider = container.querySelector('.contribution-slider')?.value;
+            
+            items.push({
+                description: item.value,
+                budget: parseFloat(budget) || 0,
+                final: parseFloat(final) || 0,
+                split: parseInt(slider) || 50
+            });
+        });
+        
+        const categoryName = cat.querySelector('.category-name')?.value;
+        if (categoryName) {
+            categories.push({ name: categoryName, items });
+        }
+    });
+    return { categories };
+}
+
+function collectCommunicationData() {
+    const methods = [];
+    document.querySelectorAll('#communication-methods-container .grid').forEach(method => {
+        const selects = method.querySelectorAll('select');
+        const input = method.querySelector('input');
+        if (input && input.value && selects.length >= 2) {
+            methods.push({
+                method: input.value,
+                from: selects[0].value,
+                to: selects[1].value
+            });
+        }
+    });
+    
+    const guidelines = {};
+    document.querySelectorAll('#communication-guidelines textarea').forEach((textarea, index) => {
+        const type = dropdownOptions.communicationClassification[index];
+        if (type) guidelines[type] = textarea.value;
+    });
+    
+    return { methods, guidelines };
+}
+
+// --- DOCUMENT GENERATION FUNCTIONS ---
+function generatePartiesDoc(data) {
+    return `
+        <h2>PARTIES, GUARDIANS & CHILDREN</h2>
+        <h3>Parties</h3>
+        ${data.map(party => `
+            <p><strong>${party.name}</strong> - ${party.relationship}</p>
+            ${party.addresses.length ? `<p>Addresses: ${party.addresses.map(a => `${a.type}: ${a.address}`).join('; ')}</p>` : ''}
+            ${party.contacts.length ? `<p>Contacts: ${party.contacts.map(c => `${c.type}: ${c.contact}`).join('; ')}</p>` : ''}
+        `).join('<br>')}
+    `;
+}
+
+function generateCustodyDoc(data) {
+    return `
+        <h2>CUSTODY & ACTIVITY SCHEDULE</h2>
+        <p><strong>Schedule Type:</strong> ${data.schedule}</p>
+        <p><strong>Details:</strong> ${data.notes}</p>
+        ${data.events && data.events.length ? `
+            <h3>Activity Log</h3>
+            ${data.events.map(event => `
+                <p>${event.date} - ${event.type} (${event.duration}hrs): ${event.notes}</p>
+            `).join('')}
+        ` : ''}
+    `;
+}
+
+function generateExpensesDoc(data) {
+    return `
+        <h2>EXPENSE & BENEFIT TRACKER</h2>
+        ${data.categories.map(cat => `
+            <h3>${cat.name}</h3>
+            ${cat.items.map(item => `
+                <p>${item.description}: Budget R${item.budget.toFixed(2)}, Final R${item.final.toFixed(2)} (Split: ${item.split}/${100-item.split})</p>
+            `).join('')}
+        `).join('')}
+    `;
+}
+
+function generateCommunicationDoc(data) {
+    return `
+        <h2>COMMUNICATION PLAN</h2>
+        <h3>Communication Methods</h3>
+        ${data.methods.map(method => `
+            <p>${method.method}: ${method.from} → ${method.to}</p>
+        `).join('')}
+        <h3>Guidelines</h3>
+        ${Object.entries(data.guidelines).map(([type, guideline]) => `
+            <p><strong>${type}:</strong> ${guideline}</p>
+        `).join('')}
+    `;
+}
+
+function generateDocument(sectionIds) {
+    let fullDocument = '<html><head><title>Parenting Plan</title><style>body{font-family:Arial,sans-serif;margin:40px;}</style></head><body>';
+    fullDocument += '<h1>PARENTING PLAN</h1>';
+    fullDocument += `<p><em>Generated on ${new Date().toLocaleDateString()}</em></p><hr>`;
+    
+    sectionIds.forEach(sectionId => {
+        const section = state.allSections.find(s => s.id === sectionId);
+        if (section && section.collect && section.generate) {
+            const data = section.collect();
+            fullDocument += section.generate(data);
+            fullDocument += '<hr>';
+        }
+    });
+    
+    fullDocument += '</body></html>';
+    
+    const blob = new Blob([fullDocument], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'parenting-plan.html';
+    a.click();
+    URL.revokeObjectURL(url);
+}
+
+// --- MISSING DYNAMIC UI FUNCTIONS ---
+function addGuardian(side) {
+    const container = document.getElementById(`${side}-parties-container`);
+    const guardianId = `guardian-${Date.now()}`;
+    const guardianHtml = `
+        <div class="party-card bg-gray-800 p-4 rounded-lg mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="font-semibold">Guardian/Party</h4>
+                <button class="btn-danger remove-guardian-btn">Remove</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input party-name" data-party-name="${guardianId}">
+                </div>
+                <div>
+                    <label class="form-label">Relationship to Child</label>
+                    <select class="form-select">
+                        ${generateOptions(dropdownOptions.relationship)}
+                    </select>
+                </div>
+            </div>
+            <div class="addresses-sub-container mb-4">
+                <h5 class="font-medium mb-2">Addresses</h5>
+            </div>
+            <button class="btn-secondary add-address-btn mb-4">Add Address</button>
+            <div class="contacts-sub-container mb-4">
+                <h5 class="font-medium mb-2">Contact Information</h5>
+            </div>
+            <button class="btn-secondary add-contact-btn">Add Contact</button>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', guardianHtml);
+    updateAllPartyDropdowns();
+}
+
+function addAddress(container) {
+    const addressHtml = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 p-3 bg-gray-700 rounded">
+            <div>
+                <label class="form-label">Address Type</label>
+                <select class="form-select">
+                    ${generateOptions(dropdownOptions.addressType)}
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="form-label">Full Address</label>
+                <div class="flex gap-2">
+                    <input type="text" class="form-input" placeholder="Street, City, Province, Postal Code">
+                    <button class="btn-danger remove-sub-item-btn">×</button>
+                </div>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', addressHtml);
+}
+
+function addContact(container) {
+    const contactHtml = `
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 p-3 bg-gray-700 rounded">
+            <div>
+                <label class="form-label">Contact Type</label>
+                <select class="form-select">
+                    ${generateOptions(dropdownOptions.contactType)}
+                </select>
+            </div>
+            <div class="md:col-span-2">
+                <label class="form-label">Contact Information</label>
+                <div class="flex gap-2">
+                    <input type="text" class="form-input" placeholder="Phone number, email, etc.">
+                    <button class="btn-danger remove-sub-item-btn">×</button>
+                </div>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', contactHtml);
+}
+
+function addChild() {
+    const container = document.getElementById('children-container');
+    const childHtml = `
+        <div class="party-card bg-gray-800 p-4 rounded-lg mb-4">
+            <div class="flex justify-between items-center mb-4">
+                <h4 class="font-semibold">Child</h4>
+                <button class="btn-danger remove-sub-item-btn">Remove</button>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                <div>
+                    <label class="form-label">Full Name</label>
+                    <input type="text" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Date of Birth</label>
+                    <input type="date" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Primary Residence</label>
+                    <select class="form-select party-dropdown">
+                        <option value="">Select Parent/Guardian</option>
+                    </select>
+                </div>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', childHtml);
+    updateAllPartyDropdowns();
+}
+
+function addExpenseCategory(name = '') {
+    const container = document.getElementById('expense-categories-container');
+    const categoryId = `category-${Date.now()}`;
+    const categoryHtml = `
+        <div class="expense-category bg-gray-800 p-4 rounded-lg mb-4" data-category-id="${categoryId}">
+            <div class="flex justify-between items-center mb-4">
+                <input type="text" class="form-input category-name" value="${name}" placeholder="Category Name">
+                <button class="btn-danger remove-category-btn">Remove Category</button>
+            </div>
+            <div class="expense-items-container mb-4"></div>
+            <button class="btn-secondary add-expense-item-btn">Add Expense Item</button>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', categoryHtml);
+    updateExpenseDashboard();
+}
+
+function addExpenseItem(container) {
+    const partyNames = getPartyNames();
+    const itemHtml = `
+        <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-2 p-3 bg-gray-700 rounded">
+            <div>
+                <label class="form-label">Item</label>
+                <input type="text" class="form-input expense-item" placeholder="Expense description">
+            </div>
+            <div>
+                <label class="form-label">Budget</label>
+                <input type="number" class="form-input expense-budget" placeholder="0.00" step="0.01">
+            </div>
+            <div>
+                <label class="form-label">Final Cost</label>
+                <input type="number" class="form-input expense-final" placeholder="0.00" step="0.01">
+            </div>
+            <div class="md:col-span-2">
+                <label class="form-label">Contribution Split</label>
+                <div class="flex items-center space-x-2">
+                    <span class="text-xs percent-a">50</span>%
+                    <input type="range" class="contribution-slider flex-1" min="0" max="100" value="50">
+                    <span class="text-xs percent-b">50</span>%
+                </div>
+                <div class="text-xs text-gray-400 mt-1">${partyNames[0] || 'Parent A'} - ${partyNames[1] || 'Parent B'}</div>
+            </div>
+            <div class="flex items-end">
+                <button class="btn-danger remove-sub-item-btn">Remove</button>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', itemHtml);
+    updateExpenseDashboard();
+}
+
+function addCommunicationMethod(container, parties) {
+    const partyOptions = parties.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+    const methodHtml = `
+        <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2 p-3 bg-gray-700 rounded">
+            <div>
+                <label class="form-label">Method</label>
+                <input type="text" class="form-input" placeholder="e.g., WhatsApp, Email">
+            </div>
+            <div>
+                <label class="form-label">From</label>
+                <select class="form-select">${partyOptions}</select>
+            </div>
+            <div>
+                <label class="form-label">To</label>
+                <select class="form-select">${partyOptions}</select>
+            </div>
+            <div class="flex items-end">
+                <button class="btn-danger remove-sub-item-btn">Remove</button>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', methodHtml);
+}
+
+function updatePartyNames(e) {
+    const input = e.target;
+    const partyId = input.dataset.partyName;
+    updateAllPartyDropdowns();
+}
+
+function updateAllPartyDropdowns() {
+    const partyNames = getPartyNames();
+    document.querySelectorAll('.party-dropdown').forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = '<option value="">Select Parent/Guardian</option>' + 
+            partyNames.map(name => `<option value="${name}" ${name === currentValue ? 'selected' : ''}>${name}</option>`).join('');
+    });
+    updateCommunicationPairs();
+}
+
+function updatePartyDropdown(selectElement) {
+    const partyNames = getPartyNames();
+    const currentValue = selectElement.value;
+    selectElement.innerHTML = '<option value="">Select Parent/Guardian</option>' + 
+        partyNames.map(name => `<option value="${name}" ${name === currentValue ? 'selected' : ''}>${name}</option>`).join('');
+}
+
+function updateCommunicationPairs() {
+    const partyNames = getPartyNames();
+    const partyOptions = partyNames.map(name => `<option value="${name}">${name}</option>`).join('');
+    document.querySelectorAll('#communication-methods-container select').forEach(select => {
+        const currentValue = select.value;
+        select.innerHTML = partyOptions;
+        select.value = currentValue;
+    });
+}
+
+function updateExpenseDashboard() {
+    let totalBudget = 0;
+    let totalFinal = 0;
+    
+    document.querySelectorAll('.expense-budget').forEach(input => {
+        totalBudget += parseFloat(input.value) || 0;
+    });
+    
+    document.querySelectorAll('.expense-final').forEach(input => {
+        totalFinal += parseFloat(input.value) || 0;
+    });
+    
+    const dashboard = document.getElementById('expense-dashboard');
+    if (dashboard) {
+        dashboard.innerHTML = `
+            <div class="grid grid-cols-2 gap-4">
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-green-400">R${totalBudget.toFixed(2)}</div>
+                    <div class="text-sm text-gray-400">Total Budget</div>
+                </div>
+                <div class="text-center">
+                    <div class="text-2xl font-bold text-blue-400">R${totalFinal.toFixed(2)}</div>
+                    <div class="text-sm text-gray-400">Total Spent</div>
+                </div>
+            </div>`;
+    }
+}
+
+function logEvent() {
+    const container = document.getElementById('events-log-container');
+    const eventHtml = `
+        <div class="event-log-item bg-gray-800 p-4 rounded-lg mb-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                <div>
+                    <label class="form-label">Date</label>
+                    <input type="date" class="form-input">
+                </div>
+                <div>
+                    <label class="form-label">Event Type</label>
+                    <select class="form-select">
+                        ${generateOptions(dropdownOptions.eventType)}
+                    </select>
+                </div>
+                <div>
+                    <label class="form-label">Duration (hours)</label>
+                    <input type="number" class="form-input" step="0.5" placeholder="0.0">
+                </div>
+                <div class="flex items-end">
+                    <button class="btn-danger remove-event-btn">Remove</button>
+                </div>
+            </div>
+            <div class="mt-2">
+                <label class="form-label">Notes</label>
+                <textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea>
+            </div>
+        </div>`;
+    container.insertAdjacentHTML('beforeend', eventHtml);
+    updateTimeDashboard();
+}
+
+function updateTimeDashboard() {
+    let totalHours = 0;
+    document.querySelectorAll('#events-log-container input[step="0.5"]').forEach(input => {
+        totalHours += parseFloat(input.value) || 0;
+    });
+    
+    const dashboard = document.getElementById('time-dashboard');
+    if (dashboard) {
+        dashboard.innerHTML = `
+            <div class="text-center">
+                <div class="text-2xl font-bold text-purple-400">${totalHours.toFixed(1)} hrs</div>
+                <div class="text-sm text-gray-400">Total Logged Time</div>
+            </div>`;
+    }
+}
+
+function setDynamicBackground() {
+    const backgrounds = [
+        'linear-gradient(135deg, #667eea 0%, #764ba2 100%)',
+        'linear-gradient(135deg, #f093fb 0%, #f5576c 100%)',
+        'linear-gradient(135deg, #4facfe 0%, #00f2fe 100%)',
+        'linear-gradient(135deg, #43e97b 0%, #38f9d7 100%)'
+    ];
+    const randomBg = backgrounds[Math.floor(Math.random() * backgrounds.length)];
+    containers.bg.style.background = randomBg;
+}
