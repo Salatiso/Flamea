@@ -1,139 +1,245 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA Training - The Children's Act</title>
-    <script src="https://cdn.tailwindcss.com"></script>
+    <title>FLAMEA Training - The Children's Act: A Father's Armoury</title>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #34D399; padding-bottom: 0.5rem; color: #6EE7B7;}
-        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #A7F3D0;}
-        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
-        .prose strong { color: #A7F3D0; }
-        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
-        .quiz-option:hover { background-color: #374151; }
-        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
-        .module { display: none; }
-        .module.active { display: block; }
-        .quiz-section { display: none; }
-        .quiz-section.active { display: block; }
-        .certificate-modal { display: none; }
-        .certificate-modal.active { display: flex; }
-        .progress-bar-container { background-color: #4B5563; }
-        .progress-bar-fill { background-color: #34D399; transition: width 0.5s ease-in-out; }
-        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: rgba(16, 185, 129, 0.2); border: 1px solid #10B981; color: white; }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .module-card:hover { transform: translateY(-5px); border-color: #34d399; }
+        .module-card.selected { border-color: #34d399; background-color: rgba(16, 185, 129, 0.1); }
+        .prose h2 { color: #6ee7b7; font-family: 'Roboto Slab', serif;} 
+        .prose h3 { color: #a7f3d0; font-family: 'Roboto Slab', serif;} 
+        .prose strong { color: #a7f3d0; }
+        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-green-400">A</span></a>
-            <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: Intro to the Act</a>
-                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: PR&R in Detail</a>
-                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Court & Family Advocate</a>
-            </nav>
-            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
-                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
-            </div>
-            <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-4xl mx-auto">
-                <!-- Course Header -->
-                <div class="mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-green-400">The Children's Act 38 of 2005</h1>
-                    <p class="text-lg text-gray-400 mt-2">Your definitive guide to parental rights, responsibilities, and the well-being of your child.</p>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%"></div>
-                </div>
-
-                <!-- Course Content Area -->
-                <div class="prose max-w-none prose-invert">
-                    <!-- Module 1: Introduction -->
-                    <div id="module1" class="module active">
-                        <section>
-                            <h2>Module 1: Introduction to the Children's Act</h2>
-                            <p>While the Constitution is the supreme law, the <strong>Children's Act 38 of 2005</strong> is the most important piece of national legislation dealing specifically with children. It gives effect to the constitutional rights of children. For fathers, understanding this Act is non-negotiable. It defines your rights, your responsibilities, and the legal framework for your relationship with your child.</p>
-                            <h3>A. Purpose of the Act (Section 2)</h3>
-                            <p>The Act's main goals are to protect children from harm, promote their well-being, and give effect to their constitutional rights. Crucially, it sets out principles to guide all decisions concerning children, always emphasizing that the <strong>child's best interests are paramount</strong>. This Act moves away from the old concept of parents having "custody" or "ownership" over a child, and instead talks about <strong>Parental Responsibilities and Rights (PR&R)</strong>.</p>
-                             <!-- SVG Diagram: Bundle of Rights -->
-                            <div class="bg-gray-900 p-6 rounded-lg my-6">
-                                <h4 class="text-lg font-bold text-center text-green-300 mb-4">The Bundle of Parental Responsibilities & Rights</h4>
-                                <svg width="100%" viewBox="0 0 400 150" xmlns="http://www.w3.org/2000/svg">
-                                     <style>.svg-text{font-family: 'Open Sans', sans-serif; fill: white; font-size: 12px;}</style>
-                                     <!-- Central Node -->
-                                     <circle cx="200" cy="75" r="40" fill="#10B981"/>
-                                     <text x="200" y="79" text-anchor="middle" fill="black" font-weight="bold">PR&R</text>
-                                     <!-- Lines -->
-                                     <line x1="200" y1="35" x2="200" y2="5" stroke="#4B5563" stroke-width="2"/>
-                                     <line x1="240" y1="75" x2="280" y2="75" stroke="#4B5563" stroke-width="2"/>
-                                     <line x1="200" y1="115" x2="200" y2="145" stroke="#4B5563" stroke-width="2"/>
-                                     <line x1="160" y1="75" x2="120" y2="75" stroke="#4B5563" stroke-width="2"/>
-                                     <!-- Surrounding Nodes -->
-                                     <text x="200" y="15" text-anchor="middle" class="svg-text">Care (Sec 18(2)(a))</text>
-                                     <text x="320" y="79" text-anchor="middle" class="svg-text">Contact (Sec 18(2)(b))</text>
-                                     <text x="200" y="135" text-anchor="middle" class="svg-text">Guardianship (Sec 18(2)(c))</text>
-                                     <text x="60" y="79" text-anchor="middle" class="svg-text">Maintenance (Sec 18(2)(d))</text>
-                                </svg>
-                            </div>
-                            <h3>B. Who has Parental Responsibilities and Rights?</h3>
-                            <p>This is a critical concept. The Act automatically gives full PR&R to:</p>
-                            <ul>
-                                <li>The child's <strong>biological mother</strong>.</li>
-                                <li>The child's <strong>biological father</strong>, IF he is married to the mother, or was married to her at the time of conception or birth.</li>
-                            </ul>
-                            <p>But importantly for unmarried fathers, <strong>Section 21</strong> of the Act grants you full PR&R if you meet certain conditions, such as living with the mother in a permanent life-partnership or consenting to be identified as the father and contributing to the child's upbringing and maintenance. This was a major step forward for fathers' rights in South Africa.</p>
-                        </section>
-                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <div id="course-hub" class="max-w-4xl mx-auto text-center">
+                <header class="mb-12">
+                     <div class="flex justify-center items-center gap-4 mb-4">
+                        <svg class="h-20 w-20 text-green-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                           <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Father's Armoury: The Children's Act</h1>
                     </div>
+                    <p class="text-lg text-gray-300">A comprehensive guide to your rights, your child's best interests, and navigating the system.</p>
+                </header>
 
-                    <!-- Other Modules and Quizzes would follow the same structure -->
-                    <div id="module2" class="module"></div>
-                    <div id="module3" class="module"></div>
-                    <section id="quiz1" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700"></section>
-                    <section id="quiz2" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700"></section>
-                    <section id="quiz3" class="quiz-section mt-12 pt-8 border-t-2 border-gray-700"></section>
-                </div>
+                <section id="module-selection-section">
+                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Choose a Module to Begin</h2>
+                    <div id="module-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="1">
+                            <h3 class="text-xl font-bold text-white mb-2">The Legal Landscape</h3>
+                            <p class="text-gray-400 text-sm">How the Constitution and key institutions shape your parental journey.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="2">
+                            <h3 class="text-xl font-bold text-white mb-2">A Father's Rights & Duties</h3>
+                            <p class="text-gray-400 text-sm">A detailed look at the sections of the Act that empower fathers.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="3">
+                            <h3 class="text-xl font-bold text-white mb-2">The System in Reality</h3>
+                            <p class="text-gray-400 text-sm">Confronting discrimination and understanding the role of the High Court.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
+                <div id="module-content" class="prose max-w-none prose-invert mb-8 bg-slate-800/70 p-6 rounded-lg"></div>
+                <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Knowledge</button>
+                <section id="quiz-section" class="quiz-section mt-8 p-8 rounded-lg hidden"></section>
+                <div id="end-screen" class="end-screen mt-8 p-8 rounded-lg hidden text-center"></div>
+                <button id="back-to-hub-btn" class="btn btn-secondary mt-4">Back to Modules</button>
             </div>
         </main>
     </div>
 
-    <!-- Certificate Modal (same as previous course) -->
-    <div id="certificate-modal" class="certificate-modal fixed inset-0 bg-black bg-opacity-80 items-center justify-center z-50 p-4">
-       <!-- ... Modal Content ... -->
-    </div>
-    
+    <script type="module" src="../assets/js/main.js"></script>
     <script>
-    // JS would be identical to the constitution course, dynamically loading content and quizzes for this specific course page.
-    // The script would handle module unlocking, progress bar, quiz logic, and certificate generation based on the specific IDs and content of this page.
+    document.addEventListener('DOMContentLoaded', () => {
+        const courseHub = document.getElementById('course-hub');
+        const contentArea = document.getElementById('content-area');
+        const moduleContentEl = document.getElementById('module-content');
+        const quizSection = document.getElementById('quiz-section');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const backToHubBtn = document.getElementById('back-to-hub-btn');
+        const endScreen = document.getElementById('end-screen');
+        const moduleCards = document.querySelectorAll('.module-card');
+
+        const courseContent = {
+            1: {
+                title: 'Module 1: The Legal Landscape for Parents',
+                content: `
+                    <h2>The Foundation: The Constitution</h2>
+                    <p>Before diving into the Children's Act, we must start with the supreme law: the Constitution. Two principles are your shield and sword:</p>
+                    <ul>
+                        <li><strong>Section 9 (Equality):</strong> The law cannot discriminate against you based on your gender. As a father, you have equal standing to the mother.</li>
+                        <li><strong>Section 28 (Best Interests of the Child):</strong> This is the ultimate test. In every matter concerning a child, their well-being is paramount. Every action by a court, social worker, or parent must pass this test.</li>
+                    </ul>
+                    <h3>How the System Fits Together</h3>
+                    <p>The Children's Act was created to give effect to these constitutional rights. The institutions you will encounter are all bound by it:</p>
+                    <ul>
+                        <li><strong>Social Workers:</strong> Investigate a child's circumstances and make recommendations, always guided by the child's best interests.</li>
+                        <li><strong>Magistrates' & Children's Courts:</strong> These are the first courts you may encounter. They handle maintenance, protection orders, and some parental rights issues. They MUST apply the Children's Act fairly.</li>
+                        <li><strong>The Family Advocate:</strong> An impartial officer of the court whose only job is to investigate and report on what is in the child's best interests in disputes.</li>
+                    </ul>
+                `,
+                questions: [
+                    { q: "What is the supreme law that governs all other laws, including the Children's Act?", a: "The Constitution", o: ["The Maintenance Act", "The Rulings of the Family Advocate"] },
+                    { q: "The principle that ensures a father is not treated differently from a mother is called:", a: "The Right to Equality (Section 9)", o: ["The Father's Preference Rule", "The Children's Court Mandate"] },
+                    { q: "What is the single most important factor in any decision concerning a child?", a: "The child's best interests", o: ["Which parent earns more money", "What the parents want"] },
+                    { q: "Which institution investigates and makes an impartial recommendation to the court about the child's welfare?", a: "The Office of the Family Advocate", o: ["The South African Police Service", "The Department of Home Affairs"] },
+                    { q: "Are Children's Courts allowed to make rulings that contradict the Constitution?", a: "No, all court rulings must be consistent with the Constitution.", o: ["Yes, if they believe it is necessary.", "Only on weekdays."] },
+                    { q: "The Children's Act was created to give effect to:", a: "The rights of children as enshrined in the Constitution.", o: ["The rights of parents only.", "The rules of social workers."] }
+                ]
+            },
+            2: {
+                title: "Module 2: A Father's Rights & Duties Under the Act",
+                content: `
+                    <p>The Act defines a father's involvement through 'Parental Responsibilities and Rights' (PR&R). It's crucial to know how you acquire these rights, especially as an unmarried father.</p>
+                    <h3>The Components of PR&R (Section 18)</h3>
+                    <p>PR&R is a bundle of four distinct rights and duties: (1) <strong>Care</strong>, (2) <strong>Contact</strong>, (3) <strong>Guardianship</strong>, and (4) <strong>Maintenance</strong>. A father can have some or all of these.</p>
+                    <h3>The Married Father (Section 20)</h3>
+                    <p>If you are married to the child's mother, you automatically acquire full and equal PR&R. It is that simple. You are a co-holder of all rights from the moment of marriage.</p>
+                    <h3>The Unmarried Father (Section 21) - Your Most Important Tool</h3>
+                    <p>This section is revolutionary. An unmarried biological father <strong>automatically</strong> acquires full PR&R if he meets specific, common-sense conditions. You DO NOT need a court to grant you these rights if you qualify. You have them. The conditions are:</p>
+                    <ul>
+                        <li>If you were living with the mother in a permanent life-partnership at the time of birth.</li>
+                        <li><strong>OR</strong>, if you (regardless of your relationship with the mother):</li>
+                        <ol>
+                           <li>Consent to be identified as the father; <strong>AND</strong></li>
+                           <li>Contribute or attempt in good faith to contribute to the child's upbringing; <strong>AND</strong></li>
+                           <li>Contribute or attempt in good faith to contribute to the child's maintenance.</li>
+                        </ol>
+                    </ul>
+                `,
+                questions: [
+                    { q: "Which is NOT one of the four components of PR&R?", a: "Control", o: ["Care", "Contact"] },
+                    { q: "Does a married father have the same rights as the mother?", a: "Yes, they are equal co-holders of PR&R.", o: ["No, the mother's rights are superior.", "Only if he earns more money."] },
+                    { q: "For an unmarried father, living with the mother at birth automatically grants him full PR&R.", a: "True", o: ["False"] },
+                    { q: "An unmarried father who supports his child financially and is involved in their life automatically acquires full PR&R.", a: "True", o: ["False"] },
+                    { q: "The right to make major decisions about a child's life, like consenting to adoption, is called:", a: "Guardianship", o: ["Maintenance", "Contact"] },
+                    { q: "The duty to provide for a child's daily needs like food and shelter is called:", a: "Care", o: ["Contact", "Guardianship"] },
+                    { q: "Section 21 of the Children's Act is important primarily for:", a: "Unmarried fathers", o: ["Married fathers", "All mothers"] },
+                    { q: "If an unmarried father has paid maintenance and tried to be part of the child's life, but is blocked by the mother, does he still acquire rights?", a: "Yes, because he attempted 'in good faith'.", o: ["No, because he was not successful.", "Only if he pays a large amount."] }
+                ]
+            },
+            3: {
+                title: 'Module 3: The System in Reality & The High Court',
+                content: `
+                    <h3>Controversial & Discriminatory Clauses</h3>
+                    <p>Despite progress, the Act and the system still contain biases. Section 21, while empowering, places the burden of proof on the unmarried father to show he meets the criteria. There is no such burden on the mother. Furthermore, the concept of paying "damages" in customary law for a child born out of wedlock is sometimes misapplied in courts, creating a financial barrier to fatherhood that is not placed on mothers.</p>
+                    <h3>Societal Issues and Their Impact</h3>
+                    <p>South Africa's high rates of unemployment and father absence create a vicious cycle. The system often defaults to placing the child with the mother, who may be overburdened, while the paternal family (especially grandmothers) who are willing and able to care for the child are overlooked. This is not in the child's best interests, which demands that ALL available family support be considered.</p>
+                    <h3>The High Court as Upper Guardian</h3>
+                    <p>When a lower court (like the Children's or Magistrate's Court) makes an unfair or biased ruling, you are not defeated. The <strong>High Court</strong> is the "upper guardian" of all children. This means it has the power to review and overturn decisions made by lower courts. If a Magistrate ignores your Section 21 rights or shows bias, you have the constitutional right to take the matter on review or appeal to the High Court, which has a duty to correct that injustice based on the child's best interests.</p>
+                `,
+                questions: [
+                    { q: "Does the Children's Act place an equal burden of proof on unmarried mothers and fathers to acquire rights?", a: "No, the burden is placed on the unmarried father.", o: ["Yes, the burden is equal.", "No, the burden is on the mother."] },
+                    { q: "When the system defaults to placing a child with an overburdened mother while ignoring a supportive paternal family, this can be argued as:", a: "Not being in the child's best interests.", o: ["The correct legal procedure.", "A family problem, not a legal one."] },
+                    { q: "What is the role of the High Court in relation to children?", a: "It is the upper guardian of all children.", o: ["It only handles criminal cases.", "It cannot overrule a Children's Court."] },
+                    { q: "If you believe a Magistrate's Court decision was biased and ignored your rights, what can you do?", a: "Take the matter on review or appeal to the High Court.", o: ["You must accept the decision.", "Report the magistrate to the police."] },
+                    { q: "The idea that an unmarried father might have to pay 'damages' to acquire rights is:", a: "A potentially discriminatory application of a customary concept.", o: ["A standard part of the Children's Act.", "A fee paid to the court."] },
+                    { q: "A child's right to have a relationship with their paternal grandparents is:", a: "An important factor in determining the child's best interests.", o: ["Not relevant in court.", "Only considered if the father is absent."] },
+                    { q: "The high rate of unemployment in South Africa primarily impacts:", a: "Both parents' ability to care for a child.", o: ["Only the mother's ability.", "Only the father's ability."] },
+                    { q: "The concept of 'best interests' requires courts to consider:", a: "All relevant factors, including the child's relationship with the extended family.", o: ["Only the financial status of the parents.", "Only the mother's wishes."] },
+                    { q: "True or False: A father's rights are less important than a mother's rights under the Constitution.", a: "False", o: ["True"] },
+                    { q: "Appealing to the High Court is a process to:", a: "Correct a legal error or injustice from a lower court.", o: ["Punish the other parent.", "Start the case over from scratch."] }
+                ]
+            }
+        };
+
+        let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
+
+        function displayModule(moduleNum) {
+            currentModuleData = courseContent[moduleNum];
+            courseHub.classList.add('hidden');
+            contentArea.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            startQuizBtn.classList.remove('hidden');
+            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
+        }
+        
+        function setupQuiz() {
+            startQuizBtn.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = currentModuleData.questions[currentQuestionIndex];
+            let optionsHTML = shuffleArray([...questionData.o, questionData.a]).map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700 cursor-pointer" data-answer="${opt === questionData.a}">${opt}</div>`).join('');
+            quizSection.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p><div class="space-y-3">${optionsHTML}</div><div class="feedback mt-4 text-sm p-3 rounded-lg"></div>`;
+        }
+
+        function handleAnswerClick(e) {
+            if (!e.target.classList.contains('quiz-option')) return;
+            const selectedOption = e.target;
+            const isCorrect = selectedOption.dataset.answer === 'true';
+            const feedbackDiv = quizSection.querySelector('.feedback');
+            
+            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (isCorrect) {
+                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
+                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! This knowledge is your shield.</p>';
+                score++;
+            } else {
+                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
+                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Understanding the Act is key to protecting your rights.</p>';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentModuleData.questions.length) {
+                    loadQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 2500);
+        }
+
+        function showEndScreen() {
+            quizSection.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            endScreen.innerHTML = `<h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2><p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p><p class="mt-4">You have a strong understanding of the Children's Act.</p>`;
+        }
+        
+        function goBackToHub() {
+            contentArea.classList.add('hidden');
+            courseHub.classList.remove('hidden');
+            moduleCards.forEach(c => c.classList.remove('selected'));
+        }
+
+        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        moduleCards.forEach(card => card.addEventListener('click', () => {
+            selectCard(card, 'module');
+            displayModule(parseInt(card.dataset.module));
+        }));
+        startQuizBtn.addEventListener('click', setupQuiz);
+        quizSection.addEventListener('click', handleAnswerClick);
+        backToHubBtn.addEventListener('click', goBackToHub);
+        
+        function selectCard(card, cardType) {
+            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+    });
     </script>
-    <script type="module" src="../assets/js/auth.js"></script>
-    <script type="module" src="../assets/js/course-logic.js"></script> <!-- A generic script could be used -->
 </body>
 </html>
