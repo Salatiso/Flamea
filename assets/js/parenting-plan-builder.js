@@ -19,7 +19,7 @@ import { getAuth, onAuthStateChanged, signInAnonymously } from "https://www.gsta
 import { getFirestore, doc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 */
 
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+import { getAuth, onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 const ParentingPlanApp = {
     // State and properties remain as you defined them.
@@ -66,9 +66,12 @@ const ParentingPlanApp = {
     },
 
     handleAuthentication() {
-        const { onAuthStateChanged, signInAnonymously, signInWithCustomToken } = this.auth;
-        
-        onAuthStateChanged(getAuth(this.app), async (user) => {
+        const auth = this.auth;
+
+        // Import these from firebase-auth if not already imported at the top
+        // import { onAuthStateChanged, signInAnonymously, signInWithCustomToken } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
+
+        onAuthStateChanged(auth, async (user) => {
             if (user) {
                 this.userId = user.uid;
                 this.elements.userIdDisplay.textContent = this.userId;
@@ -79,9 +82,9 @@ const ParentingPlanApp = {
                 try {
                     const initialAuthToken = typeof __initial_auth_token !== 'undefined' ? __initial_auth_token : null;
                     if (initialAuthToken) {
-                        await signInWithCustomToken(getAuth(this.app), initialAuthToken);
+                        await signInWithCustomToken(auth, initialAuthToken);
                     } else {
-                        await signInAnonymously(getAuth(this.app));
+                        await signInAnonymously(auth);
                     }
                 } catch (error) {
                     console.error("Sign-in failed:", error);
