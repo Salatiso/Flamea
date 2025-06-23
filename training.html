@@ -1,66 +1,346 @@
-<!-- training.html -->
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA - The Father's Armoury Training Hub</title>
+    <title>Flamea | Training Hub</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-color: #111827; }
-        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.5s ease-in-out, padding 0.5s ease-in-out; padding: 0 1.5rem; }
-        .accordion-item.active .accordion-content { max-height: 2000px; /* Increased max-height */ padding: 1.5rem; }
-        .accordion-icon { transition: transform 0.3s ease-out; }
-        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
-        .option-card:hover { transform: translateY(-4px); }
-        .course-card:hover { border-color: #3b82f6; background-color: #1f2937; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #1a1a1a;
+            color: #f0f0f0;
+        }
+
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #2c2c2c;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #ff4500;
+            border-radius: 4px;
+        }
+
+        .course-card {
+            background-color: #2a2a2a;
+            border: 1px solid #444;
+            border-radius: 0.75rem;
+            transition: transform 0.2s ease-in-out, box-shadow 0.2s ease-in-out;
+            overflow: hidden;
+        }
+
+        .course-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.2), 0 4px 6px -2px rgba(0, 0, 0, 0.1);
+        }
+
+        .course-card a {
+            color: #ff4500;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        
+        .course-card a:hover {
+            color: #e03e00;
+        }
+
+        #sidebar-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100%;
+            z-index: 1000;
+            width: 250px;
+            transform: translateX(-100%);
+            transition: transform 0.3s ease-in-out;
+        }
+
+        #sidebar-container.open {
+            transform: translateX(0);
+        }
+
+        #content-area {
+            transition: margin-left 0.3s ease-in-out;
+            padding-left: 1rem;
+            padding-right: 1rem;
+        }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<body class="bg-gray-900">
 
-        <main class="main-content p-8 md:p-12">
-            <div class="max-w-7xl mx-auto">
-                <div class="text-center mb-12 bg-gray-800/50 p-6 rounded-lg">
-                    <h1 class="text-5xl font-bold font-roboto-slab text-white mb-4">The Father's Armoury</h1>
-                    <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Forge your skills. Sharpen your knowledge. Build your "Life CV" and reclaim your role.</p>
-                </div>
+    <div id="sidebar-container"></div>
 
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 mb-12">
-                    <a href="training-assessment.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-teal-500 transition-all duration-300">
-                        <i class="fas fa-magic text-5xl text-teal-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Find Your Learning Path</h4>
-                        <p class="text-gray-400">New here? Get a personalized training plan.</p>
-                    </a>
-                    <a href="#course-catalogue" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-blue-500 transition-all duration-300">
-                        <i class="fas fa-th-list text-5xl text-blue-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Explore All Courses</h4>
-                        <p class="text-gray-400">Browse our full catalogue of courses.</p>
-                    </a>
-                    <a href="games.html" class="option-card block bg-gray-800 p-8 rounded-xl text-center border border-gray-700 hover:border-pink-500 transition-all duration-300">
-                        <i class="fas fa-gamepad text-5xl text-pink-400 mb-4"></i>
-                        <h4 class="text-2xl font-bold text-white mb-2">Play a Game</h4>
-                        <p class="text-gray-400">Test your knowledge in our interactive arcade.</p>
-                    </a>
-                </div>
-
-                <div id="course-catalogue" class="space-y-4">
-                    <!-- This div will be populated by training.js -->
-                    <div class="text-center text-gray-400 p-10">
-                        <i class="fas fa-spinner fa-spin text-3xl"></i>
-                        <p class="mt-2">Loading Courses...</p>
-                    </div>
-                </div>
+    <div id="content-area" class="lg:ml-[250px] py-8">
+        <header class="flex items-center gap-4 mb-10">
+            <button id="menu-toggle" class="lg:hidden text-white">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6h16M4 12h16M4 18h16"></path></svg>
+            </button>
+            <div>
+                <h1 class="text-3xl md:text-4xl font-bold text-orange-500">Flamea Training Hub</h1>
+                <p class="text-md text-gray-400">Empower yourself with knowledge and skills for your journey.</p>
             </div>
+        </header>
+
+        <main class="space-y-12">
+            <!-- Courses For Kids -->
+            <section id="courses-kids">
+                <h2 class="text-2xl font-bold border-l-4 border-orange-500 pl-4 mb-6">For Kids: Building a Strong Foundation</h2>
+                <div id="kids-courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Kids courses will be injected here -->
+                </div>
+            </section>
+
+            <!-- Courses For Fathers -->
+            <section id="courses-fathers">
+                <h2 class="text-2xl font-bold border-l-4 border-orange-500 pl-4 mb-6">For Fathers: The Protector's Path</h2>
+                <div id="fathers-courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Fathers courses will be injected here -->
+                </div>
+            </section>
+
+            <!-- Courses For Co-Parents -->
+            <section id="courses-coparents">
+                <h2 class="text-2xl font-bold border-l-4 border-orange-500 pl-4 mb-6">For Co-Parents: The Path of Unity</h2>
+                <div id="coparents-courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Co-parents courses will be injected here -->
+                </div>
+            </section>
+
+            <!-- Advanced Courses -->
+            <section id="courses-advanced">
+                <h2 class="text-2xl font-bold border-l-4 border-orange-500 pl-4 mb-6">Advanced & Legal Courses</h2>
+                <div id="advanced-courses-container" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+                    <!-- Advanced courses will be injected here -->
+                </div>
+            </section>
         </main>
     </div>
 
-    <script type="module" src="assets/js/main.js"></script>
-    <script src="assets/js/training.js"></script>
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+
+        // --- START: Updated and Complete Course Database ---
+        const allCourses = [
+            // Category: kids
+            {
+                title: "The Big Rule Book",
+                description: "An interactive guide for kids to understand rules, rights, and responsibilities in a fun way.",
+                link: "training/course-kids-big_rule_book.html",
+                category: "kids"
+            },
+            {
+                title: "The Best Nest",
+                description: "Helping children understand family changes and co-parenting through storytelling.",
+                link: "training/course-kids-the_best_nest.html",
+                category: "kids"
+            },
+            {
+                title: "Who's In Charge?",
+                description: "A course for kids about respecting authority and understanding family structures.",
+                link: "training/course-kids-whos_in_charge.html",
+                category: "kids"
+            },
+            {
+                title: "My Rights Shield",
+                description: "Empowering children with knowledge about their constitutional rights in an accessible format.",
+                link: "training/course_kids-rights_shield.html",
+                category: "kids"
+            },
+            // Category: fathers
+            {
+                title: "The Father's Shield",
+                description: "A foundational course for fathers on their rights, roles, and responsibilities.",
+                link: "training/course-fathers-shield.html",
+                category: "fathers"
+            },
+            {
+                title: "Newborn Daily Care",
+                description: "Practical skills and tips for fathers on caring for a newborn child.",
+                link: "training/course-newborn-daily-care.html",
+                category: "fathers"
+            },
+            // Category: coparents
+            {
+                title: "Effective Co-Parenting",
+                description: "Strategies and tools for successful co-parenting, focusing on communication and the child's well-being.",
+                link: "training/course-coparenting.html",
+                category: "coparents"
+            },
+            {
+                title: "The Role of Extended Family",
+                description: "Understanding the importance and legal standing of the extended family in a child's life.",
+                link: "training/course-extended-family.html",
+                category: "coparents"
+            },
+             {
+                title: "The Children's Act",
+                description: "A detailed breakdown of the Children's Act 38 of 2005 for parents and guardians.",
+                link: "training/course-childrens-act.html",
+                category: "coparents"
+            },
+            {
+                title: "Foundations of Family Law",
+                description: "An introduction to the key concepts and principles of South African family law.",
+                link: "training/course-family-law.html",
+                category: "coparents"
+            },
+            // Category: advanced
+            {
+                title: "The Ancestors Within",
+                description: "Exploring cultural heritage and the role of ancestors in family identity and values.",
+                link: "training/course-ancestors-within.html",
+                category: "advanced"
+            },
+            {
+                title: "Build Your Curriculum",
+                description: "A guide for parents on developing a personalized educational curriculum for their children.",
+                link: "training/course-build-curriculum.html",
+                category: "advanced"
+            },
+            {
+                title: "The Constitution",
+                description: "An in-depth study of the South African Constitution and its supremacy in all legal matters.",
+                link: "training/course-constitution.html",
+                category: "advanced"
+            },
+            {
+                title: "Khulu: Senior Crusaders",
+                description: "Specialized training for elders on their rights and their role as pillars of the family.",
+                link: "training/course-khulu-senior-crusaders.html",
+                category: "advanced"
+            },
+            {
+                title: "Family Risk Management",
+                description: "Identifying and mitigating potential legal and social risks to protect your family.",
+                link: "training/course-risk-management.html",
+                category: "advanced"
+            },
+            {
+                title: "The Unbroken Chain",
+                description: "A course on maintaining family lineage, traditions, and inter-generational bonds.",
+                link: "training/course-unbroken-chain.html",
+                category: "advanced"
+            },
+            {
+                title: "Khulu: The Constitution, Your Ultimate Shield",
+                description: "Advanced constitutional principles for family elders to champion and protect their kin.",
+                link: "training/courses_khulu-the_constitution_your_ultimate_shield.html",
+                category: "advanced"
+            }
+        ];
+        // --- END: Course Database ---
+
+
+        /**
+         * Creates an HTML card for a course.
+         * @param {object} course - The course object with title, description, and link.
+         * @returns {string} - The HTML string for the course card.
+         */
+        const createCourseCard = (course) => {
+            return `
+                <div class="course-card flex flex-col justify-between p-6">
+                    <div>
+                        <h3 class="text-xl font-bold text-white mb-2">${course.title}</h3>
+                        <p class="text-gray-400 mb-4 h-24 overflow-hidden">${course.description}</p>
+                    </div>
+                    <div class="mt-auto">
+                        <a href="${course.link}" class="inline-block">
+                            Start Course &rarr;
+                        </a>
+                    </div>
+                </div>
+            `;
+        };
+
+        /**
+         * Populates a container with courses from a specific category.
+         * @param {string} category - The category to filter by (e.g., 'kids').
+         * @param {string} containerId - The ID of the HTML element to populate.
+         */
+        const populateCourses = (category, containerId) => {
+            const container = document.getElementById(containerId);
+            if (!container) {
+                console.error(`Container with id "${containerId}" not found.`);
+                return;
+            }
+
+            const coursesToDisplay = allCourses.filter(course => course.category === category);
+            
+            if (coursesToDisplay.length > 0) {
+                 container.innerHTML = coursesToDisplay.map(createCourseCard).join('');
+            } else {
+                container.innerHTML = '<p class="text-gray-500">No courses available in this category yet.</p>';
+            }
+        };
+
+        // Populate all sections
+        populateCourses('kids', 'kids-courses-container');
+        populateCourses('fathers', 'fathers-courses-container');
+        populateCourses('coparents', 'coparents-courses-container');
+        populateCourses('advanced', 'advanced-courses-container');
+    });
+    </script>
+    <script>
+        // --- START: sidebar-loader.js CONTENT ---
+        document.addEventListener('DOMContentLoaded', function () {
+            const sidebarContainer = document.getElementById('sidebar-container');
+            const contentArea = document.getElementById('content-area');
+            const menuToggle = document.getElementById('menu-toggle');
+
+            fetch('sidebar.html')
+                .then(response => response.ok ? response.text() : Promise.reject('Sidebar not found'))
+                .then(data => {
+                    sidebarContainer.innerHTML = data;
+                    console.log("Sidebar loaded successfully.");
+                    setupSidebar();
+                })
+                .catch(error => {
+                    console.error('Error loading sidebar:', error);
+                    sidebarContainer.innerHTML = '<p class="p-4 text-red-400">Error loading sidebar.</p>';
+                });
+
+            function setupSidebar() {
+                const isMobile = () => window.innerWidth < 1024;
+                const updateLayout = () => {
+                    if (isMobile()) {
+                        sidebarContainer.classList.remove('open');
+                        contentArea.style.marginLeft = '0';
+                    } else {
+                        sidebarContainer.classList.add('open');
+                        contentArea.style.marginLeft = sidebarContainer.offsetWidth + 'px';
+                    }
+                };
+
+                menuToggle.addEventListener('click', () => {
+                    sidebarContainer.classList.toggle('open');
+                     // Adjust margin on mobile when sidebar is toggled
+                    if (sidebarContainer.classList.contains('open') && isMobile()) {
+                         contentArea.style.marginLeft = '0'; // Keep content from shifting
+                    }
+                });
+                
+                window.addEventListener('resize', updateLayout);
+                // Initial check, ensuring mobile starts closed but content area is correctly positioned
+                 if (isMobile()) {
+                    sidebarContainer.classList.remove('open');
+                    contentArea.style.marginLeft = '0';
+                } else {
+                    sidebarContainer.classList.add('open');
+                    contentArea.style.marginLeft = '0'; // Start at 0, then adjust
+                     setTimeout(() => { // Allow render
+                        if(sidebarContainer.classList.contains('open')){
+                           contentArea.style.marginLeft = sidebarContainer.offsetWidth + 'px';
+                        }
+                    }, 50);
+                }
+            }
+        });
+        // --- END: sidebar-loader.js CONTENT ---
+    </script>
 </body>
 </html>
