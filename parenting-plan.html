@@ -8,11 +8,45 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
     <style>
-        /* ... original styles unchanged ... */
+        body { font-family: 'Open Sans', sans-serif; background-color: #111827; color: #d1d5db; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; }
+        #main-content-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
+        .content-wrapper { background-color: rgba(17, 24, 39, 0.85); backdrop-filter: blur(10px); }
+        .view-container, .step-container { display: none; }
+        .view-container.active, .step-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+
+        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 1px solid #374151; }
+        .option-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05); }
+        
+        .form-input, .form-select, .form-textarea { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
+        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; ring: 0; }
+        .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
+        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; }
+        .btn-primary:hover:not(:disabled) { background-color: #1d4ed8; }
+        .btn-primary:disabled { background-color: #4b5563; cursor: not-allowed; }
+        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer;}
+        .btn-secondary:hover:not(:disabled) { background-color: #6b7280; }
+        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem; cursor: pointer;}
+        .btn-danger:hover { background-color: #b91c1c; }
+
+        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;}
+        .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
+        
+        .contribution-slider { -webkit-appearance: none; width: 100%; height: 8px; background: #4b5563; border-radius: 5px; outline: none; opacity: 0.7; transition: opacity .2s; }
+        .contribution-slider:hover { opacity: 1; }
+        .contribution-slider::-webkit-slider-thumb { -webkit-appearance: none; appearance: none; width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
+        .contribution-slider::-moz-range-thumb { width: 20px; height: 20px; background: #3b82f6; border-radius: 50%; cursor: pointer; }
+        
+        .party-card { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #1f2937; }
+        .expense-category { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #1f2937; }
+        .event-log-item { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 0.5rem; background-color: #1f2937; }
     </style>
 </head>
 <body>
     <div class="main-container">
+        <!-- Sidebar Placeholder -->
         <div id="sidebar-placeholder" class="hidden lg:block flex-shrink-0 w-64 bg-gray-900/80 backdrop-blur-sm"></div>
         <div id="main-content-bg"></div>
         <main class="main-content flex-1">
@@ -20,7 +54,12 @@
                 <div class="max-w-7xl mx-auto">
                     <!-- Landing Page View -->
                     <div id="landing-view" class="view-container active">
-                        <!-- ... landing content unchanged ... -->
+                         <header class="text-center mb-12">
+                             <div class="inline-block p-6 md:p-8">
+                                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight font-roboto-slab">The Co-Parenting Compass</h1>
+                                <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence. Create a comprehensive, objective plan to ensure the best for your children.</p>
+                            </div>
+                        </header>
                         <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                             <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
                                 <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
@@ -39,7 +78,11 @@
                             </div>
                         </div>
                     </div>
+
+                    <!-- Wizard View -->
                     <div id="wizard-view" class="view-container"></div>
+
+                    <!-- Main Builder View -->
                     <div id="builder-view" class="view-container">
                          <div id="builder-header" class="flex justify-between items-center mb-6">
                             <h2 class="text-3xl font-bold font-roboto-slab">Parenting Plan Builder</h2>
@@ -52,6 +95,7 @@
             </div>
         </main>
     </div>
+
     <!-- Modals -->
     <div id="alert-modal" class="modal">
       <div class="modal-content text-center">
@@ -63,7 +107,7 @@
     <div id="disclaimer-modal" class="modal">
       <div class="modal-content">
         <h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3>
-        <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is <b>not legal advice</b>. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
+        <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is **not legal advice**. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
         <label class="flex items-center space-x-3 mb-6 cursor-pointer">
             <input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500">
             <span class="text-white">I Understand and Agree</span>
@@ -74,82 +118,24 @@
         </div>
       </div>
     </div>
+    
     <script>
         document.addEventListener('DOMContentLoaded', () => {
-            // --- SECTION 0: All functions must be defined before they are referenced. ---
-
-            // Placeholders for required functions (must be implemented for full functionality)
-            function renderPartiesSection(container) { container.innerHTML = '<div>Parties Section</div>'; }
-            function renderCustodySection(container) { container.innerHTML = '<div>Custody Section</div>'; }
-            function renderExpensesSection(container) { container.innerHTML = '<div>Expenses Section</div>'; }
-            function renderCommunicationSection(container) { container.innerHTML = '<div>Communication Section</div>'; }
-            function renderSummarySection(container) { container.innerHTML = '<div>Summary Section</div>'; }
-            function collectPartiesData() { return {}; }
-            function collectCustodyData() { return {}; }
-            function collectExpensesData() { return {}; }
-            function collectCommunicationData() { return {}; }
-            function generatePartiesDoc(data) { return ''; }
-            function generateCustodyDoc(data) { return ''; }
-            function generateExpensesDoc(data) { return ''; }
-            function generateCommunicationDoc(data) { return ''; }
-            function generateDocument(sectionIds) { return ''; }
-            function generateOptions(arr, selected = '') { return arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join(''); }
-            function getPartyNames() { const names = []; document.querySelectorAll('.party-name').forEach(input => { if (input.value.trim()) names.push(input.value.trim()); }); return names.length > 0 ? names : ['Parent A', 'Parent B']; }
-            function addGuardian(side) {}
-            function addAddress(container) {}
-            function addContact(container) {}
-            function addChild() {}
-            function addExpenseCategory(name = '') {}
-            function addExpenseItem(container) {}
-            function addCommunicationMethod(container, parties) {}
-            function updatePartyNames(e) {}
-            function updateAllPartyDropdowns() {}
-            function updatePartyDropdown(selectElement) {}
-            function updateCommunicationPairs() {}
-            function updateExpenseDashboard() {}
-            function logEvent() {}
-            function updateTimeDashboard() {}
-
-            // --- CORE APP LOGIC, NAVIGATION, WIZARD ---
-            function switchView(viewId) {
-                Object.values(views).forEach(v => v.classList.remove('active'));
-                if (views[viewId]) views[viewId].classList.add('active');
-                state.currentView = viewId;
-            }
-            function showAlert(title, message, isHtml = false) {
-                document.getElementById('alert-modal-title').textContent = title;
-                const msgElem = document.getElementById('alert-modal-message');
-                if (isHtml) msgElem.innerHTML = message;
-                else msgElem.textContent = message;
-                document.getElementById('alert-modal').style.display = 'flex';
-            }
-            function showDisclaimer(sections) {
-                document.getElementById('disclaimer-modal').style.display = 'flex';
-            }
-            function renderBuilder(sectionIds) {
-                containers.steps.innerHTML = '';
-                // Render first section for demonstration
-                if (sectionIds && sectionIds.length > 0) {
-                    const section = state.allSections.find(s => s.id === sectionIds[0]);
-                    if (section) section.render(containers.steps);
-                }
-            }
-            function updateBuilderStep() {}
-            function renderNavigation() {}
-            function renderWizardStep(step) {}
-            function setDynamicBackground() {}
-
-            // --- SECTION 1: STATE MANAGEMENT & DATA ---
+            // --- STATE MANAGEMENT & DATA ---
             const state = {
-                currentView: 'landing-view', wizardStep: 0, builderStep: 0,
+                currentView: 'landing-view', 
+                wizardStep: 0, 
+                builderStep: 0,
                 allSections: [
-                    { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: renderPartiesSection, collect: collectPartiesData, generate: generatePartiesDoc },
-                    { id: 'custody', title: 'Custody & Activity Schedule', icon: 'fa-calendar-days', render: renderCustodySection, collect: collectCustodyData, generate: generateCustodyDoc },
-                    { id: 'expenses', title: 'Expense & Benefit Tracker', icon: 'fa-hand-holding-dollar', render: renderExpensesSection, collect: collectExpensesData, generate: generateExpensesDoc },
-                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: renderCommunicationSection, collect: collectCommunicationData, generate: generateCommunicationDoc },
-                    { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: renderSummarySection, collect: () => {}, generate: () => '' },
+                    { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: null, collect: null, generate: null },
+                    { id: 'custody', title: 'Custody & Activity Schedule', icon: 'fa-calendar-days', render: null, collect: null, generate: null },
+                    { id: 'expenses', title: 'Expense & Benefit Tracker', icon: 'fa-hand-holding-dollar', render: null, collect: null, generate: null },
+                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: null, collect: null, generate: null },
+                    { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: null, collect: () => {}, generate: () => '' },
                 ],
-                selectedSections: [], planData: {}, partyNames: { A: 'Parent A', B: 'Parent B' }
+                selectedSections: [], 
+                planData: {}, 
+                partyNames: { A: 'Parent A', B: 'Parent B' }
             };
 
             const dropdownOptions = {
@@ -162,61 +148,379 @@
                 communicationClassification: ['For Urgent Matters', 'For Formal Communication', 'For Daily Updates']
             };
 
-            // --- SECTION 2: DOM ELEMENT REFERENCES ---
-            const views = {
-                'landing-view': document.getElementById('landing-view'),
-                'wizard-view': document.getElementById('wizard-view'),
-                'builder-view': document.getElementById('builder-view')
+            // --- DOM ELEMENT REFERENCES ---
+            const views = { 
+                landing: document.getElementById('landing-view'), 
+                wizard: document.getElementById('wizard-view'), 
+                builder: document.getElementById('builder-view') 
             };
-            const buttons = {
-                startWizard: document.getElementById('start-wizard-btn'),
-                startManual: document.getElementById('start-manual-btn'),
-                savePlan: document.getElementById('save-plan-btn')
+            const buttons = { 
+                startWizard: document.getElementById('start-wizard-btn'), 
+                startManual: document.getElementById('start-manual-btn'), 
+                savePlan: document.getElementById('save-plan-btn') 
             };
-            const containers = {
-                steps: document.getElementById('steps-container'),
-                navigation: document.getElementById('navigation-container'),
-                sidebar: document.getElementById('sidebar-placeholder')
+            const containers = { 
+                steps: document.getElementById('steps-container'), 
+                navigation: document.getElementById('navigation-container'), 
+                sidebar: document.getElementById('sidebar-placeholder'), 
+                bg: document.getElementById('main-content-bg')
             };
+            const alertModal = { 
+                modal: document.getElementById('alert-modal'), 
+                title: document.getElementById('alert-modal-title'), 
+                message: document.getElementById('alert-modal-message'), 
+                close: document.getElementById('alert-modal-close') 
+            };
+            const disclaimerModal = { 
+                modal: document.getElementById('disclaimer-modal'), 
+                agree: document.getElementById('disclaimer-agree'), 
+                cancel: document.getElementById('disclaimer-cancel'), 
+                proceed: document.getElementById('disclaimer-proceed') 
+            };
+            
+            // --- FUNCTION IMPLEMENTATIONS ---
 
-            // --- SECTION 3: EVENT LISTENERS ---
-            buttons.startWizard.addEventListener('click', () => {
-                switchView('wizard-view');
-                // Add wizard logic here
-            });
-            buttons.startManual.addEventListener('click', () => {
-                switchView('builder-view');
-                // For demo, render all sections
-                state.selectedSections = state.allSections.map(s => s.id);
-                renderBuilder(state.selectedSections);
-            });
-            document.getElementById('alert-modal-close').addEventListener('click', () => {
-                document.getElementById('alert-modal').style.display = 'none';
-            });
-            // Disclaimer modal logic
-            const disclaimerAgree = document.getElementById('disclaimer-agree');
-            const disclaimerProceed = document.getElementById('disclaimer-proceed');
-            disclaimerAgree.addEventListener('change', () => {
-                disclaimerProceed.disabled = !disclaimerAgree.checked;
-            });
-            document.getElementById('disclaimer-cancel').addEventListener('click', () => {
-                document.getElementById('disclaimer-modal').style.display = 'none';
-                disclaimerAgree.checked = false;
-                disclaimerProceed.disabled = true;
-            });
-            disclaimerProceed.addEventListener('click', () => {
-                document.getElementById('disclaimer-modal').style.display = 'none';
-                disclaimerAgree.checked = false;
-                disclaimerProceed.disabled = true;
-                // Continue with document generation
-            });
+            // Dynamic UI & Helper Functions
+            function generateOptions(arr, selected = '') { 
+                return arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join(''); 
+            }
 
-            // Set initial background
-            setDynamicBackground();
+            function getPartyNames() { 
+                const names = []; 
+                document.querySelectorAll('.party-name').forEach(input => { 
+                    if (input.value.trim()) names.push(input.value.trim()); 
+                }); 
+                return names.length > 0 ? names : ['Parent A', 'Parent B']; 
+            }
 
-            // Hide all views except landing
-            switchView('landing-view');
-        });
-    </script>
-</body>
-</html>
+            function addGuardian(side) {
+                const container = document.getElementById(`${side}-parties-container`);
+                const guardianId = `guardian-${Date.now()}`;
+                const guardianHtml = `
+                    <div class="party-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-semibold">Guardian/Party</h4>
+                            <button class="btn-danger remove-guardian-btn">Remove</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                            <div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input party-name" data-party-name="${guardianId}">
+                            </div>
+                            <div>
+                                <label class="form-label">Relationship to Child</label>
+                                <select class="form-select">
+                                    ${generateOptions(dropdownOptions.relationship)}
+                                </select>
+                            </div>
+                        </div>
+                        <div class="addresses-sub-container mb-4">
+                            <h5 class="font-medium mb-2">Addresses</h5>
+                        </div>
+                        <button class="btn-secondary add-address-btn mb-4">Add Address</button>
+                        <div class="contacts-sub-container mb-4">
+                            <h5 class="font-medium mb-2">Contact Information</h5>
+                        </div>
+                        <button class="btn-secondary add-contact-btn">Add Contact</button>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', guardianHtml);
+                updateAllPartyDropdowns();
+            }
+
+            function addAddress(container) {
+                const addressHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 p-3 bg-gray-800 rounded">
+                        <div>
+                            <label class="form-label">Address Type</label>
+                            <select class="form-select">
+                                ${generateOptions(dropdownOptions.addressType)}
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Full Address</label>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input" placeholder="Street, City, Province, Postal Code">
+                                <button class="btn-danger remove-sub-item-btn">×</button>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', addressHtml);
+            }
+
+            function addContact(container) {
+                const contactHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-2 p-3 bg-gray-800 rounded">
+                        <div>
+                            <label class="form-label">Contact Type</label>
+                            <select class="form-select">
+                                ${generateOptions(dropdownOptions.contactType)}
+                            </select>
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Contact Information</label>
+                            <div class="flex gap-2">
+                                <input type="text" class="form-input" placeholder="Phone number, email, etc.">
+                                <button class="btn-danger remove-sub-item-btn">×</button>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', contactHtml);
+            }
+
+            function addChild() {
+                const container = document.getElementById('children-container');
+                const childHtml = `
+                    <div class="party-card">
+                        <div class="flex justify-between items-center mb-4">
+                            <h4 class="font-semibold">Child</h4>
+                            <button class="btn-danger remove-sub-item-btn">Remove</button>
+                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            <div>
+                                <label class="form-label">Full Name</label>
+                                <input type="text" class="form-input">
+                            </div>
+                            <div>
+                                <label class="form-label">Date of Birth</label>
+                                <input type="date" class="form-input">
+                            </div>
+                            <div>
+                                <label class="form-label">Primary Residence</label>
+                                <select class="form-select party-dropdown">
+                                    <option value="">Select Parent/Guardian</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', childHtml);
+                updateAllPartyDropdowns();
+            }
+
+            function addExpenseCategory(name = '') {
+                const container = document.getElementById('expense-categories-container');
+                const categoryId = `category-${Date.now()}`;
+                const categoryHtml = `
+                    <div class="expense-category" data-category-id="${categoryId}">
+                        <div class="flex justify-between items-center mb-4">
+                            <input type="text" class="form-input category-name" value="${name}" placeholder="Category Name">
+                            <button class="btn-danger remove-category-btn">Remove Category</button>
+                        </div>
+                        <div class="expense-items-container mb-4"></div>
+                        <button class="btn-secondary add-expense-item-btn">Add Expense Item</button>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', categoryHtml);
+                updateExpenseDashboard();
+            }
+
+            function addExpenseItem(container) {
+                const partyNames = getPartyNames();
+                const itemHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-6 gap-4 mb-2 p-3 bg-gray-800 rounded">
+                        <div>
+                            <label class="form-label">Item</label>
+                            <input type="text" class="form-input expense-item" placeholder="Expense description">
+                        </div>
+                        <div>
+                            <label class="form-label">Budget</label>
+                            <input type="number" class="form-input expense-budget" placeholder="0.00" step="0.01">
+                        </div>
+                        <div>
+                            <label class="form-label">Final Cost</label>
+                            <input type="number" class="form-input expense-final" placeholder="0.00" step="0.01">
+                        </div>
+                        <div class="md:col-span-2">
+                            <label class="form-label">Contribution Split</label>
+                            <div class="flex items-center space-x-2">
+                                <span class="text-xs percent-a">50</span>%
+                                <input type="range" class="contribution-slider flex-1" min="0" max="100" value="50">
+                                <span class="text-xs percent-b">50</span>%
+                            </div>
+                            <div class="text-xs text-gray-400 mt-1">${partyNames[0] || 'Parent A'} - ${partyNames[1] || 'Parent B'}</div>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="btn-danger remove-sub-item-btn">Remove</button>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', itemHtml);
+                updateExpenseDashboard();
+            }
+
+            function addCommunicationMethod(container, parties) {
+                const partyOptions = parties.map(p => `<option value="${p.name}">${p.name}</option>`).join('');
+                const methodHtml = `
+                    <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-2 p-3 bg-gray-800 rounded">
+                        <div>
+                            <label class="form-label">Method</label>
+                            <input type="text" class="form-input" placeholder="e.g., WhatsApp, Email">
+                        </div>
+                        <div>
+                            <label class="form-label">From</label>
+                            <select class="form-select">${partyOptions}</select>
+                        </div>
+                        <div>
+                            <label class="form-label">To</label>
+                            <select class="form-select">${partyOptions}</select>
+                        </div>
+                        <div class="flex items-end">
+                            <button class="btn-danger remove-sub-item-btn">Remove</button>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', methodHtml);
+            }
+
+            function updatePartyNames(e) {
+                const input = e.target;
+                const partyId = input.dataset.partyName;
+                // Update logic would go here
+                updateAllPartyDropdowns();
+            }
+
+            function updateAllPartyDropdowns() {
+                const partyNames = getPartyNames();
+                document.querySelectorAll('.party-dropdown').forEach(select => {
+                    const currentValue = select.value;
+                    select.innerHTML = '<option value="">Select Parent/Guardian</option>' + 
+                        partyNames.map(name => `<option value="${name}" ${name === currentValue ? 'selected' : ''}>${name}</option>`).join('');
+                });
+                updateCommunicationPairs();
+            }
+
+            function updatePartyDropdown(selectElement) {
+                const partyNames = getPartyNames();
+                const currentValue = selectElement.value;
+                selectElement.innerHTML = '<option value="">Select Parent/Guardian</option>' + 
+                    partyNames.map(name => `<option value="${name}" ${name === currentValue ? 'selected' : ''}>${name}</option>`).join('');
+            }
+
+            function updateCommunicationPairs() {
+                const partyNames = getPartyNames();
+                const partyOptions = partyNames.map(name => `<option value="${name}">${name}</option>`).join('');
+                document.querySelectorAll('#communication-methods-container select').forEach(select => {
+                    const currentValue = select.value;
+                    select.innerHTML = partyOptions;
+                    select.value = currentValue;
+                });
+            }
+
+            function updateExpenseDashboard() {
+                // Calculate totals and update dashboard
+                let totalBudget = 0;
+                let totalFinal = 0;
+                
+                document.querySelectorAll('.expense-budget').forEach(input => {
+                    totalBudget += parseFloat(input.value) || 0;
+                });
+                
+                document.querySelectorAll('.expense-final').forEach(input => {
+                    totalFinal += parseFloat(input.value) || 0;
+                });
+                
+                const dashboard = document.getElementById('expense-dashboard');
+                if (dashboard) {
+                    dashboard.innerHTML = `
+                        <div class="grid grid-cols-2 gap-4">
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-green-400">R${totalBudget.toFixed(2)}</div>
+                                <div class="text-sm text-gray-400">Total Budget</div>
+                            </div>
+                            <div class="text-center">
+                                <div class="text-2xl font-bold text-blue-400">R${totalFinal.toFixed(2)}</div>
+                                <div class="text-sm text-gray-400">Total Spent</div>
+                            </div>
+                        </div>`;
+                }
+            }
+
+            function logEvent() {
+                const container = document.getElementById('events-log-container');
+                const eventHtml = `
+                    <div class="event-log-item">
+                        <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+                            <div>
+                                <label class="form-label">Date</label>
+                                <input type="date" class="form-input">
+                            </div>
+                            <div>
+                                <label class="form-label">Event Type</label>
+                                <select class="form-select">
+                                    ${generateOptions(dropdownOptions.eventType)}
+                                </select>
+                            </div>
+                            <div>
+                                <label class="form-label">Duration (hours)</label>
+                                <input type="number" class="form-input" step="0.5" placeholder="0.0">
+                            </div>
+                            <div class="flex items-end">
+                                <button class="btn-danger remove-event-btn">Remove</button>
+                            </div>
+                        </div>
+                        <div class="mt-2">
+                            <label class="form-label">Notes</label>
+                            <textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea>
+                        </div>
+                    </div>`;
+                container.insertAdjacentHTML('beforeend', eventHtml);
+                updateTimeDashboard();
+            }
+
+            function updateTimeDashboard() {
+                // Calculate time statistics
+                let totalHours = 0;
+                document.querySelectorAll('#events-log-container input[step="0.5"]').forEach(input => {
+                    totalHours += parseFloat(input.value) || 0;
+                });
+                
+                const dashboard = document.getElementById('time-dashboard');
+                if (dashboard) {
+                    dashboard.innerHTML = `
+                        <div class="text-center">
+                            <div class="text-2xl font-bold text-purple-400">${totalHours.toFixed(1)} hrs</div>
+                            <div class="text-sm text-gray-400">Total Logged Time</div>
+                        </div>`;
+                }
+            }
+
+            // Data Collection Functions
+            function collectPartiesData() {
+                const parties = [];
+                document.querySelectorAll('.party-card').forEach(card => {
+                    const nameInput = card.querySelector('.party-name');
+                    if (nameInput && nameInput.value.trim()) {
+                        parties.push({
+                            name: nameInput.value.trim(),
+                            relationship: card.querySelector('select')?.value || ''
+                        });
+                    }
+                });
+                return parties;
+            }
+
+            function collectCustodyData() {
+                return {
+                    schedule: document.getElementById('custody-schedule')?.value || '',
+                    notes: document.getElementById('custody-notes')?.value || ''
+                };
+            }
+
+            function collectExpensesData() {
+                const categories = [];
+                document.querySelectorAll('.expense-category').forEach(cat => {
+                    const items = [];
+                    cat.querySelectorAll('.expense-item').forEach(item => {
+                        items.push({
+                            description: item.value,
+                            budget: parseFloat(item.closest('.grid').querySelector('.expense-budget').value) || 0,
+                            final: parseFloat(item.closest('.grid').querySelector('.expense-final').value) || 0
+                        });
+                    });
+                    categories.push({
+                        name: cat.querySelector('.category-name').value,
+                        items: items
+                    });
+                });
+                return { categories };
+            }
+
+            function collectCommunicationData() {
+                return {
+                    methods: Array.from(document.querySelectorAll('#communication-
