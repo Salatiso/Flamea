@@ -33,6 +33,34 @@ const ParentingPlanApp = {
         this.mapDOMElements();
         this.handleAuthentication();
         this.attachEventListeners();
+
+        // Render dashboard after initialization
+        this.renderDashboard();
+    },
+
+    renderDashboard() {
+        const main = document.querySelector('.main-container');
+        if (!main) return;
+        main.innerHTML = `
+            <div class="parenting-plan-dashboard">
+                <h1 class="text-3xl font-bold mb-4">Parenting Plan Builder</h1>
+                <div class="sections">
+                    <div class="section" data-section="parties">Parties</div>
+                    <div class="section" data-section="schedule">Schedule</div>
+                    <div class="section" data-section="communication">Communication</div>
+                    <div class="section" data-section="finances">Finances</div>
+                    <div class="section" data-section="decision_making">Decision Making</div>
+                    <div class="section" data-section="finalize">Finalize</div>
+                </div>
+            </div>
+        `;
+        // Attach click listeners to sections
+        main.querySelectorAll('.section').forEach(section => {
+            section.addEventListener('click', (e) => {
+                const sectionName = e.currentTarget.getAttribute('data-section');
+                this.openSectionModal(sectionName);
+            });
+        });
     },
 
     handleAuthentication() {
