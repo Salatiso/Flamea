@@ -1,102 +1,243 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Finding Your Ancestors Within</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        /* Re-using the same styles from the master course template with a new color scheme */
-        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #4F46E5; color: white; transform: translateX(10px); }
-        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #6366F1; padding-bottom: 0.5rem; color: #818CF8;}
-        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #A5B4FC;}
-        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
-        .prose strong { color: #A5B4FC; }
-        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
-        .quiz-option:hover { background-color: #374151; }
-        .quiz-option.selected { background-color: #4338CA; border-color: #4F46E5; }
-        .module { display: none; }
-        .module.active { display: block; }
-        .quiz-section { display: none; }
-        .quiz-section.active { display: block; }
-        .certificate-modal { display: none; }
-        .certificate-modal.active { display: flex; }
-        .progress-bar-container { background-color: #4B5563; }
-        .progress-bar-fill { background-color: #6366F1; transition: width 0.5s ease-in-out; }
-        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: rgba(79, 70, 229, 0.2); border: 1px solid #6366F1; color: white; }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .module-card:hover { transform: translateY(-5px); border-color: #818cf8; }
+        .module-card.selected { border-color: #818cf8; background-color: rgba(99, 102, 241, 0.1); }
+        .prose h2 { color: #a5b4fc; } .prose h3 { color: #c7d2fe; } .prose strong { color: #c7d2fe; }
+        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
+<body class="bg-gray-900 text-gray-200">
     <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-indigo-400">A</span></a>
-             <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: The Living Legacy</a>
-                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: Science & Spirit</a>
-                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: Honoring the Ancestors</a>
-            </nav>
-            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
-                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
-            </div>
-            <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
-
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-             <div class="max-w-4xl mx-auto">
-                <!-- Course Header -->
-                <div class="mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-indigo-400">Finding Your Ancestors Within</h1>
-                    <p class="text-lg text-gray-400 mt-2">A guide to modern spirituality, inspired by "Beyond the Grave."</p>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #6366F1;"></div>
-                </div>
-
-                 <!-- Course Content Area -->
-                <div class="prose max-w-none prose-invert">
-                    <!-- Module 1: The Living Legacy -->
-                    <div id="module1" class="module active">
-                        <section>
-                            <h2>Module 1: The Living Legacy - You Are the Connection</h2>
-                            <p>Many cultures, including our own isiXhosa traditions, teach us to honour our ancestors through physical rituals at specific places, like gravesites. While these rituals are important for community and remembrance, the true connection to your ancestors is not bound by location. As explored in *Beyond the Grave*, the most powerful link is the one you carry within you every day.</p>
-                            
-                            <h3>A. You are the Physical Manifestation</h3>
-                            <p>Think about it logically. You would not exist without your parents, your grandparents, and the countless generations before them. Their physical legacy—their DNA—is literally inside you. Your father's strength, your mother's resilience, your grandfather's laugh... these are not just memories; they are parts of your biological and spiritual makeup. You don't need to visit a grave to be close to your father; you can see him in the mirror, feel him in your own determination.</p>
-                            
-                            <h3>B. Freeing the Spirit</h3>
-                            <p>Xhosa tradition teaches us `umhlaba emhlabeni, uthuli eluthulini` (earth to earth, dust to dust). This acknowledges that the physical body returns to the land. But what of the spirit? A spirit cannot be confined to a grave. By focusing too much on the physical location, we risk limiting our understanding of their spiritual presence. The most profound way to honour them is to recognise that their spirits are free, unbound, and omnipresent. They are with you in Johannesburg just as they are in the Eastern Cape.</p>
-                        </section>
-                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+        <div id="sidebar-placeholder"></div>
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <!-- Main Hub -->
+            <div id="course-hub" class="max-w-4xl mx-auto text-center">
+                <header class="mb-12">
+                    <div class="flex justify-center items-center gap-4 mb-4">
+                        <!-- SVG Icon for Ancestry (DNA + Tree) -->
+                        <svg class="h-20 w-20 text-indigo-400" viewBox="0 0 100 100" xmlns="http://www.w3.org/2000/svg">
+                            <path d="M50 95 V60" stroke="currentColor" stroke-width="4" stroke-linecap="round"/>
+                            <path d="M50 60 C 40 50, 60 40, 50 30" stroke="currentColor" stroke-width="3" fill="none"/>
+                            <path d="M50 30 C 40 20, 60 10, 50 0" stroke="currentColor" stroke-width="3" fill="none"/>
+                            <path d="M30 70 A 20 20 0 0 1 70 70" stroke="currentColor" stroke-width="4" fill="none"/>
+                            <path d="M20 80 A 30 30 0 0 1 80 80" stroke="currentColor" stroke-width="4" fill="none"/>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Finding Your Ancestors Within</h1>
                     </div>
-                     <!-- Other modules and quizzes follow -->
-                </div>
+                    <p class="text-lg text-gray-300">A guide to modern spirituality and self-knowledge, inspired by "Beyond the Grave."</p>
+                </header>
+
+                <section id="module-selection-section">
+                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Explore the Modules</h2>
+                    <div id="module-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="1">
+                            <h3 class="text-xl font-bold text-white mb-2">The Living Legacy</h3>
+                            <p class="text-gray-400 text-sm">Discover why you are the most powerful, living connection to your heritage.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="2">
+                            <h3 class="text-xl font-bold text-white mb-2">Science & Spirit</h3>
+                            <p class="text-gray-400 text-sm">Explore the harmony between your genetic inheritance (DNA) and your spiritual connection.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="3">
+                            <h3 class="text-xl font-bold text-white mb-2">Honoring the Ancestors</h3>
+                            <p class="text-gray-400 text-sm">Learn meaningful, modern ways to respect and carry forward your ancestral legacy.</p>
+                        </div>
+                    </div>
+                </section>
             </div>
+            
+            <!-- Course Content & Quiz Area (Initially Hidden) -->
+            <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
+                <div id="module-content" class="prose max-w-none prose-invert mb-8"></div>
+                <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Wisdom</button>
+                <section id="quiz-section" class="quiz-section mt-8 p-8 rounded-lg hidden"></section>
+                <div id="end-screen" class="end-screen mt-8 p-8 rounded-lg hidden text-center"></div>
+                <button id="back-to-hub-btn" class="btn btn-secondary mt-4">Back to Modules</button>
+            </div>
+
         </main>
     </div>
-    <!-- Modal and Scripts would be identical to the master template -->
-    <script type="module" src="../assets/js/auth.js"></script>
-    <script type="module" src="../assets/js/course-logic.js"></script>
+
+    <!-- Sidebar Loader Script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const placeholder = document.getElementById('sidebar-placeholder');
+            if(placeholder) {
+                fetch('../training-sidebar.html')
+                    .then(res => res.ok ? res.text() : Promise.reject('Sidebar not found'))
+                    .then(data => placeholder.outerHTML = data)
+                    .catch(err => console.error('Sidebar load error:', err));
+            }
+        });
+    </script>
+    
+    <!-- Game Logic -->
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        // Main UI elements
+        const courseHub = document.getElementById('course-hub');
+        const contentArea = document.getElementById('content-area');
+        const moduleContentEl = document.getElementById('module-content');
+        const quizSection = document.getElementById('quiz-section');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const backToHubBtn = document.getElementById('back-to-hub-btn');
+        const endScreen = document.getElementById('end-screen');
+
+        const moduleCards = document.querySelectorAll('.module-card');
+
+        // Course Content and Questions
+        const courseContent = {
+            1: {
+                title: 'Module 1: The Living Legacy - You Are the Connection',
+                content: `
+                    <p>Many cultures, including our own isiXhosa traditions, teach us to honour our ancestors through physical rituals at specific places, like gravesites. While these rituals are important for community and remembrance, the true connection to your ancestors is not bound by location. As explored in *Beyond the Grave*, the most powerful link is the one you carry within you every day.</p>
+                    <h3>You are the Physical Manifestation</h3>
+                    <p>You would not exist without your parents, your grandparents, and the countless generations before them. Their physical legacy—their DNA—is literally inside you. Your father's strength, your mother's resilience, your grandfather's laugh... these are not just memories; they are parts of your biological and spiritual makeup. You don't need to visit a grave to be close to your father; you can see him in the mirror and feel him in your own determination.</p>
+                    <h3>Freeing the Spirit</h3>
+                    <p>Xhosa tradition teaches us \`umhlaba emhlabeni, uthuli eluthulini\` (earth to earth, dust to dust). This acknowledges that the physical body returns to the land. But what of the spirit? A spirit cannot be confined to a grave. By focusing too much on the physical location, we risk limiting our understanding of their spiritual presence. The most profound way to honour them is to recognise that their spirits are free, unbound, and omnipresent. They are with you in Johannesburg just as they are in the Eastern Cape.</p>
+                `,
+                questions: [
+                    { q: "According to this module, what is the most powerful connection to your ancestors?", a: "The legacy you carry within you", o: ["Visiting their gravesite", "Performing a specific ritual"] },
+                    { q: "What does 'umhlaba emhlabeni, uthuli eluthulini' imply about the spirit?", a: "The spirit is free and not confined to the grave", o: ["The spirit stays with the body", "The spirit disappears"] }
+                ]
+            },
+            2: {
+                title: 'Module 2: Science & Spirit',
+                content: `
+                    <h3>The Science of You: DNA</h3>
+                    <p>Modern science affirms what our traditions have always known. Your DNA is a living library of your ancestry. It contains the genetic memory of countless generations. When you exhibit a certain talent, a personality trait, or even a physical resemblance to a distant relative, that is scientific proof of the unbroken chain. This is not mysticism; it is biology.</p>
+                    <h3>The Spirit of You: Inherited Wisdom</h3>
+                    <p>Spirituality and science are not in conflict; they are two sides of the same coin. The 'wisdom of the ancestors' can be seen as the inherited instincts and knowledge passed down through your DNA and your upbringing. The gut feeling you have, the sudden insight, the unexplainable resilience—these can be seen as the echoes of your ancestors guiding you.</p>
+                `,
+                questions: [
+                    { q: "How does this module describe DNA?", a: "A living library of your ancestry", o: ["A spiritual force", "A simple chemical"] },
+                    { q: "Are science and ancestral wisdom considered to be in conflict?", a: "No, they are seen as two sides of the same coin", o: ["Yes, they are completely separate", "Only science is valid"] }
+                ]
+            },
+            3: {
+                title: 'Module 3: Honoring the Ancestors in a Modern World',
+                content: `
+                    <h3>Living with Intention</h3>
+                    <p>The best way to honor your ancestors is to live a life of purpose, integrity, and responsibility. By building a strong family, contributing positively to your community, and carrying forward the best of your family's values, you are creating a living tribute to their legacy.</p>
+                    <h3>Adapting Rituals</h3>
+                    <p>Rituals are important because they bring family and community together. If a traditional ritual like slaughtering a cow is not practical in an urban setting, the spirit of the tradition can be maintained. The goal is unity and remembrance. This can be achieved through a family feast, sharing stories, or a moment of collective silence and respect. The form can change, but the intention remains.</p>
+                `,
+                questions: [
+                    { q: "What is described as the best way to honor your ancestors?", a: "To live a life of purpose and integrity", o: ["To perform every ritual exactly as it was done in the past", "To build a physical monument"] },
+                    { q: "When adapting rituals, what is the most important element to maintain?", a: "The intention and core value of the ritual", o: ["The exact physical actions", "The location of the ritual"] }
+                ]
+            }
+        };
+
+        let currentModuleData = {};
+        let currentQuestionIndex = 0;
+        let score = 0;
+
+        function displayModule(moduleNum) {
+            currentModuleData = courseContent[moduleNum];
+            courseHub.classList.add('hidden');
+            contentArea.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            startQuizBtn.classList.remove('hidden');
+            
+            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
+        }
+        
+        function setupQuiz() {
+            startQuizBtn.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = currentModuleData.questions[currentQuestionIndex];
+            let optionsHTML = shuffleArray([...questionData.o, questionData.a])
+                .map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700" data-answer="${opt === questionData.a}">${opt}</div>`)
+                .join('');
+
+            quizSection.innerHTML = `
+                <p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p>
+                <div class="space-y-3">${optionsHTML}</div>
+                <div class="feedback mt-4 text-sm p-3 rounded-lg"></div>
+            `;
+        }
+
+        function handleAnswerClick(e) {
+            if (!e.target.classList.contains('quiz-option')) return;
+
+            const selectedOption = e.target;
+            const isCorrect = selectedOption.dataset.answer === 'true';
+            const feedbackDiv = quizSection.querySelector('.feedback');
+            
+            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (isCorrect) {
+                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
+                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! Your ancestors would be proud.</p>';
+                score++;
+            } else {
+                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
+                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Reflect on the module content.</p>';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentModuleData.questions.length) {
+                    loadQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 2000);
+        }
+
+        function showEndScreen() {
+            quizSection.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            endScreen.innerHTML = `
+                <h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2>
+                <p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p>
+                <p class="mt-4">You have honored the wisdom passed down to you.</p>
+            `;
+        }
+        
+        function goBackToHub() {
+            contentArea.classList.add('hidden');
+            courseHub.classList.remove('hidden');
+            moduleCards.forEach(c => c.classList.remove('selected'));
+        }
+
+        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        // Event Listeners
+        moduleCards.forEach(card => card.addEventListener('click', () => {
+            selectCard(card, 'module');
+            displayModule(parseInt(card.dataset.module));
+        }));
+        startQuizBtn.addEventListener('click', setupQuiz);
+        quizSection.addEventListener('click', handleAnswerClick);
+        backToHubBtn.addEventListener('click', goBackToHub);
+        
+        function selectCard(card, cardType) {
+            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+    });
+    </script>
 </body>
 </html>
