@@ -13,101 +13,11 @@
     <style>
         .parenting-plan-dashboard { max-width: 800px; margin: auto; text-align: center; }
         .sections { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 1rem; margin-top: 2rem; }
-        .section { background: rgba(17, 24, 39, 0.8); padding: 1rem; border-radius: 0.5rem; cursor: pointer; transition: background 0.3s; }
-        .section:hover { background: rgba(17, 24, 39, 0.9); transform: translateY(-2px); }
-        .share-plan, .cancel, .save-close { background: #F97316; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; margin: 0.5rem; cursor: pointer; border: none; }
-        .share-plan:hover, .cancel:hover, .save-close:hover { background: #ea580c; }
-        .section-modal { 
-            display: none; 
-            position: fixed; 
-            top: 0; 
-            left: 0; 
-            width: 100%; 
-            height: 100%; 
-            background: rgba(0,0,0,0.8); 
-            z-index: 1000;
-        }
-        .modal-content { 
-            position: absolute; 
-            top: 50%; 
-            left: 50%; 
-            transform: translate(-50%, -50%); 
-            background: #111827; 
-            padding: 2rem; 
-            border-radius: 0.5rem; 
-            max-width: 90vw; 
-            max-height: 90vh; 
-            overflow-y: auto; 
-            width: 600px;
-        }
+        .section { background: rgba(17, 24, 39, 0.8); padding: 1rem; border-radius: 0.5rem; }
+        .share-plan, .cancel, .save-close { background: #F97316; color: white; padding: 0.5rem 1rem; border-radius: 0.25rem; margin: 0.5rem; }
+        .edit-section-modal { display: none; position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background: #111827; padding: 2rem; border-radius: 0.5rem; }
         .text-shadow { text-shadow: 2px 2px 4px rgba(0,0,0,0.5); }
         .content-box { background: rgba(17, 24, 39, 0.8); backdrop-filter: blur(8px); border: 1px solid rgba(255, 255, 255, 0.1); }
-        .input-field { 
-            width: 100%; 
-            padding: 0.5rem; 
-            margin: 0.25rem 0; 
-            border: 1px solid #374151; 
-            border-radius: 0.25rem; 
-            background: #1f2937; 
-            color: #f9fafb; 
-        }
-        .child-entry { 
-            background: rgba(55, 65, 81, 0.5); 
-            padding: 1rem; 
-            margin: 0.5rem 0; 
-            border-radius: 0.25rem; 
-            display: grid; 
-            grid-template-columns: 1fr 1fr auto; 
-            gap: 0.5rem; 
-            align-items: center; 
-        }
-        .remove-child-btn { 
-            background: #dc2626; 
-            color: white; 
-            border: none; 
-            padding: 0.25rem 0.5rem; 
-            border-radius: 0.25rem; 
-            cursor: pointer; 
-            font-size: 0.75rem; 
-        }
-        .remove-child-btn:hover { background: #b91c1c; }
-        #add-child-btn { 
-            background: #059669; 
-            color: white; 
-            border: none; 
-            padding: 0.5rem 1rem; 
-            border-radius: 0.25rem; 
-            cursor: pointer; 
-            margin-top: 1rem; 
-        }
-        #add-child-btn:hover { background: #047857; }
-        .hidden { display: none !important; }
-        .modal-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; }
-        .modal-footer { display: flex; justify-content: flex-end; gap: 1rem; margin-top: 2rem; }
-        .close-btn { 
-            background: none; 
-            border: none; 
-            color: #9ca3af; 
-            font-size: 1.5rem; 
-            cursor: pointer; 
-            padding: 0; 
-            width: 2rem; 
-            height: 2rem; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center; 
-        }
-        .close-btn:hover { color: #f3f4f6; }
-        textarea { 
-            width: 100%; 
-            min-height: 100px; 
-            padding: 0.5rem; 
-            border: 1px solid #374151; 
-            border-radius: 0.25rem; 
-            background: #1f2937; 
-            color: #f9fafb; 
-            resize: vertical; 
-        }
     </style>
 </head>
 <body class="bg-gray-900 text-gray-200">
@@ -123,156 +33,79 @@
                 <div class="parenting-plan-dashboard content-box p-6 rounded-lg shadow-md z-10">
                     <h1 class="text-4xl md:text-5xl font-bold font-roboto mb-4 text-white text-shadow">Parenting Plan Dashboard</h1>
                     <p class="text-xl text-gray-300 max-w-3xl leading-relaxed mx-auto">Your central hub for managing your family agreement.</p>
-                    <div class="user-id">Your User ID: <span id="user-id-display">Loading...</span></div>
-                    <button id="sharePlanBtn" class="share-plan" disabled>Share Plan</button>
-                    
-                    <!-- Section Hub -->
-                    <div id="section-hub" class="sections">
-                        <div class="section hub-card" data-section="parties">
+                    <div class="user-id">Your User ID: Loading...</div>
+                    <button class="share-plan">Share Plan</button>
+                    <div class="sections">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Parties & Children</h2>
                             <p>Manage parent and child information.</p>
                         </div>
-                        <div class="section hub-card" data-section="schedule">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Contact Schedule</h2>
                             <p>Set custody and visitation arrangements.</p>
                         </div>
-                        <div class="section hub-card" data-section="communication">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Communication</h2>
                             <p>Define how you'll communicate.</p>
                         </div>
-                        <div class="section hub-card" data-section="finances">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Financials</h2>
                             <p>Outline support and expense sharing.</p>
                         </div>
-                        <div class="section hub-card" data-section="decision_making">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Decision Making</h2>
                             <p>Specify who decides on key issues.</p>
                         </div>
-                        <div class="section hub-card" data-section="finalize">
+                        <div class="section">
                             <h2 class="text-2xl font-bold font-roboto">Finalize & Download</h2>
                             <p>Generate a PDF of your plan.</p>
                         </div>
+                    </div>
+                    <div class="edit-section-modal">
+                        <h3 class="text-xl font-bold font-roboto">Edit Section</h3>
+                        <button class="cancel">Cancel</button>
+                        <button class="save-close">Save & Close</button>
                     </div>
                 </div>
             </div>
         </main>
     </div>
-
-    <!-- Section Modal -->
-    <div id="section-modal" class="section-modal hidden">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h3 id="modal-title" class="text-xl font-bold font-roboto text-white">Edit Section</h3>
-                <button id="close-modal-btn" class="close-btn">&times;</button>
-            </div>
-            <div id="modal-body" class="text-gray-200">
-                <!-- Dynamic content will be inserted here -->
-            </div>
-            <div class="modal-footer">
-                <button id="cancel-section-btn" class="cancel">Cancel</button>
-                <button id="save-section-btn" class="save-close">Save & Close</button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Templates for different sections -->
-    <template id="section-parties-template">
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Parent A Name:</label>
-                <input type="text" id="parentA-name" class="input-field" placeholder="Enter parent A name">
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">Parent B Name:</label>
-                <input type="text" id="parentB-name" class="input-field" placeholder="Enter parent B name">
-            </div>
-            <div>
-                <label class="block text-sm font-medium mb-2">Children:</label>
-                <div id="children-list"></div>
-                <button type="button" id="add-child-btn">Add Child</button>
-            </div>
-        </div>
-    </template>
-
-    <template id="section-schedule-template">
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Custody Details:</label>
-                <textarea id="custody-details" class="input-field" placeholder="Describe the custody arrangement..."></textarea>
-            </div>
-            <div id="calendar"></div>
-        </div>
-    </template>
-
-    <template id="section-communication-template">
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Communication Methods:</label>
-                <textarea id="communication-methods" class="input-field" placeholder="Describe how you will communicate..."></textarea>
-            </div>
-        </div>
-    </template>
-
-    <template id="section-finances-template">
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Financial Details:</label>
-                <textarea id="financial-details" class="input-field" placeholder="Describe financial arrangements..."></textarea>
-            </div>
-        </div>
-    </template>
-
-    <template id="section-decision_making-template">
-        <div class="space-y-4">
-            <div>
-                <label class="block text-sm font-medium mb-2">Decision Making Details:</label>
-                <textarea id="decision-making-details" class="input-field" placeholder="Describe how decisions will be made..."></textarea>
-            </div>
-        </div>
-    </template>
-
-    <template id="section-finalize-template">
-        <div class="space-y-4">
-            <div>
-                <h3 class="text-lg font-bold mb-2">Review Your Plan</h3>
-                <p class="text-gray-300 mb-4">Review all sections of your parenting plan before finalizing.</p>
-                <button id="generate-pdf-btn" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Generate PDF</button>
-            </div>
-        </div>
-    </template>
-
     <!-- Footer -->
     <footer class="text-center p-4 bg-gray-900 text-gray-400">
         <p>© <span id="currentYear"></span> FLAMEA. All rights reserved.</p>
     </footer>
-
     <!-- Scripts -->
     <script>
         document.getElementById('currentYear').textContent = new Date().getFullYear();
     </script>
-    
     <script type="module">
-import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
-import { getFirestore } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
-import { getAuth } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-import "./assets/js/parenting-plan-builder.js"; // This attaches ParentingPlanApp to window
+        import { initializeApp } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-app.js';
+        import { getAnalytics } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-analytics.js';
+        import { getAuth } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-auth.js';
+        import { getFirestore } from 'https://www.gstatic.com/firebasejs/9.22.0/firebase-firestore.js';
 
-const firebaseConfig = {
-    apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
-    authDomain: "flamea.firebaseapp.com",
-    projectId: "flamea",
-    storageBucket: "flamea.firebasestorage.app",
-    messagingSenderId: "681868881622",
-    appId: "1:681868881622:web:d20687c688b2d1d943a377",
-    measurementId: "G-MX7X9JQE51"
-};
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.firebasestorage.app",
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
 
-const app = initializeApp(firebaseConfig);
-const db = getFirestore(app);
-const auth = getAuth(app);
+        const app = initializeApp(firebaseConfig);
+        const analytics = getAnalytics(app);
+        const auth = getAuth(app);
+        const db = getFirestore(app);
 
-// Initialize the ParentingPlanApp
-window.ParentingPlanApp.init(app, db, auth);
-</script>
+        // Make Firebase instances globally available
+        window.firebaseApp = app;
+        window.firebaseAuth = auth;
+        window.firebaseDb = db;
+    </script>
+    <script type="module" src="assets/js/main.js"></script>
+    <script type="module" src="assets/js/auth.js"></script>
+    <script type="module" src="assets/js/parenting-plan-builder.js"></script>
 </body>
 </html>
