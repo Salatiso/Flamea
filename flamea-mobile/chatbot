@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>iSazi Chatbot - Flamea Mobile</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
+    <style>
+        body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
+        .font-slab { font-family: 'Roboto Slab', serif; }
+    </style>
+</head>
+<body class="flex flex-col h-screen text-gray-200">
+
+    <!-- Header -->
+    <header class="bg-gray-800/80 backdrop-blur-sm p-4 flex items-center sticky top-0 z-10 border-b border-gray-700">
+        <a href="dashboard.html" class="text-xl text-gray-300 w-8"><i class="fas fa-chevron-left"></i></a>
+        <div class="text-center flex-grow">
+            <h1 class="font-slab text-xl font-bold">iSazi</h1>
+            <p class="text-xs text-green-400 font-semibold">Online</p>
+        </div>
+        <div class="w-8"></div>
+    </header>
+    
+    <!-- Chat Window -->
+    <main id="chat-window" class="flex-grow p-4 overflow-y-auto">
+        <div class="space-y-5">
+            <!-- Bot Message -->
+            <div class="flex items-start gap-3">
+                <div class="w-10 h-10 flex-shrink-0 bg-amber-500 rounded-full flex items-center justify-center">
+                    <i class="fas fa-robot text-xl text-gray-900"></i>
+                </div>
+                <div class="bg-gray-800 p-3 rounded-lg rounded-bl-none max-w-xs">
+                    <p>Molweni, I am iSazi. How can I assist you with your journey of fatherhood today?</p>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Input Area -->
+    <footer class="bg-gray-900/80 backdrop-blur-sm p-2 border-t border-gray-700">
+        <form id="chat-form" class="flex items-center gap-2">
+            <input id="chat-input" type="text" placeholder="Ask iSazi..." class="flex-grow bg-gray-800 text-white rounded-full p-3 px-5 focus:outline-none focus:ring-2 focus:ring-amber-500 border border-gray-700" autocomplete="off">
+            <button id="send-btn" type="submit" class="bg-amber-500 text-gray-900 rounded-full w-12 h-12 flex-shrink-0 flex items-center justify-center">
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </form>
+    </footer>
+
+    <script src="assets/js/chatbot.js"></script>
+</body>
+</html>

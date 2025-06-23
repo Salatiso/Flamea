@@ -3,14 +3,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Locator - Flamea</title>
+    <title>Locator - Flamea Mobile</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="assets/css/style.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; background-color: #111827; }
         .font-slab { font-family: 'Roboto Slab', serif; }
-        /* Hide scrollbar for filter chips */
         .filter-chips::-webkit-scrollbar { display: none; }
         .filter-chips { -ms-overflow-style: none; scrollbar-width: none; }
     </style>
@@ -27,35 +27,45 @@
         <!-- Search and Filter Bar -->
         <div class="p-4 bg-gray-900/50 border-b border-gray-700">
              <div class="relative">
-                <input type="text" placeholder="Search by city or name..." class="w-full p-3 pl-10 rounded-full bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
+                <input id="search-input" type="text" placeholder="Search by city or name..." class="w-full p-3 pl-10 rounded-full bg-gray-800 border border-gray-600 text-white focus:outline-none focus:ring-2 focus:ring-amber-500">
                 <i class="fas fa-search absolute left-4 top-1/2 -translate-y-1/2 text-gray-500"></i>
             </div>
-            <div class="filter-chips flex gap-2 mt-4 overflow-x-auto">
-                <button class="bg-amber-500 text-gray-900 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">All</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">Courts</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">NGOs</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">Gov</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">GP</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">KZN</button>
-                <button class="bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">WC</button>
+            <div id="filter-container" class="filter-chips flex gap-2 mt-4 overflow-x-auto">
+                <button data-filter="All" class="filter-chip bg-amber-500 text-gray-900 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">All</button>
+                <button data-filter="Lower Court" class="filter-chip bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">Courts</button>
+                <button data-filter="NGO" class="filter-chip bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">NGOs</button>
+                <button data-filter="Government Service" class="filter-chip bg-gray-700 text-gray-300 font-semibold py-1 px-4 rounded-full text-sm flex-shrink-0">Gov</button>
             </div>
         </div>
 
         <!-- Results List -->
-        <div class="p-4 space-y-4">
-            <div class="bg-gray-800 p-4 rounded-lg">
-                <h3 class="font-bold text-lg text-amber-400">Cape Town Magistrate's Court</h3>
-                <span class="inline-block bg-indigo-900 text-indigo-300 text-xs font-semibold px-2 py-0.5 rounded-full my-2">Lower Court</span>
-                <p class="text-sm text-gray-400"><i class="fas fa-map-marker-alt fa-fw mr-2"></i>Caledon St, Cape Town</p>
-                <p class="text-sm text-gray-400"><i class="fas fa-phone fa-fw mr-2"></i>021 462 3456</p>
-            </div>
-             <div class="bg-gray-800 p-4 rounded-lg">
-                <h3 class="font-bold text-lg text-amber-400">Lawyers for Human Rights</h3>
-                <span class="inline-block bg-teal-900 text-teal-300 text-xs font-semibold px-2 py-0.5 rounded-full my-2">NGO</span>
-                <p class="text-sm text-gray-400"><i class="fas fa-map-marker-alt fa-fw mr-2"></i>47 De Korte St, Braamfontein, JHB</p>
-                <p class="text-sm text-gray-400"><i class="fas fa-phone fa-fw mr-2"></i>011 339 1960</p>
+        <div id="results-list" class="p-4 space-y-4">
+             <!-- Results will be injected by locator.js -->
+             <div class="text-center text-gray-400 p-8">
+                <i class="fas fa-spinner fa-spin text-3xl"></i>
+                <p class="mt-2">Loading database...</p>
             </div>
         </div>
+        <div id="no-results" class="hidden text-center text-gray-500 p-8">
+            <p>No results found.</p>
+        </div>
     </main>
+
+    <!-- Database Scripts -->
+    <script src="../assets/js/higher_special_courts_sa.js"></script>
+    <script src="../assets/js/law_gender_ngos_db.js"></script>
+    <script src="../assets/js/lower_courts_ec.js"></script>
+    <script src="../assets/js/lower_courts_fs.js"></script>
+    <script src="../assets/js/lower_courts_gp.js"></script>
+    <script src="../assets/js/lower_courts_kzn.js"></script>
+    <script src="../assets/js/lower_courts_lp.js"></script>
+    <script src="../assets/js/lower_courts_mp.js"></script>
+    <script src="../assets/js/lower_courts_nc.js"></script>
+    <script src="../assets/js/lower_courts_nw.js"></script>
+    <script src="../assets/js/lower_courts_wc.js"></script>
+    <script src="../assets/js/south_african_government_service_points.js"></script>
+    
+    <!-- Main Locator Logic -->
+    <script src="assets/js/locator.js"></script>
 </body>
 </html>
