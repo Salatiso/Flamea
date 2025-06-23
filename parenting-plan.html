@@ -1,560 +1,932 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Parenting Plan - The Co-Parenting Compass</title>
+    <title>Parenting Plan - Flamea</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
     <style>
-        /* Base styles for dark mode and typography */
-        body { font-family: 'Open Sans', sans-serif; background-color: #111827; color: #d1d5db; }
-        h1, h2, h3, h4, .font-roboto-slab { font-family: 'Roboto Slab', serif; }
-
-        /* Layout and containers */
-        .main-container { display: flex; min-height: 100vh; }
-        .main-content { flex-grow: 1; overflow-y: auto; }
-        #main-content-bg { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; background-size: cover; background-position: center; background-attachment: fixed; transition: background-image 1s ease-in-out; }
-        .content-wrapper { background-color: rgba(17, 24, 39, 0.9); backdrop-filter: blur(10px); }
-        
-        /* View and Step animation */
-        .view-container, .step-container { display: none; }
-        .view-container.active, .step-container.active { display: block; animation: fadeIn 0.5s ease-in-out; }
-        @keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-
-        /* Interactive cards */
-        .option-card { transition: all 0.3s ease-in-out; cursor: pointer; border: 1px solid #374151; }
-        .option-card:hover { transform: translateY(-5px); border-color: #3b82f6; box-shadow: 0 10px 15px -3px rgba(59, 130, 246, 0.1), 0 4px 6px -2px rgba(59, 130, 246, 0.05); }
-        
-        /* Form elements styling */
-        .form-input, .form-select, .form-textarea { background-color: #374151; border: 1px solid #4b5563; border-radius: 0.375rem; padding: 0.75rem; color: white; transition: border-color 0.2s; width: 100%; }
-        .form-input:focus, .form-select:focus, .form-textarea:focus { outline: none; border-color: #3b82f6; ring: 0; }
-        .form-label { font-weight: 600; color: #9ca3af; margin-bottom: 0.5rem; display: block; font-size: 0.875rem; }
-        
-        /* Button styles */
-        .btn-primary { background-color: #2563eb; color: white; font-weight: 600; padding: 0.75rem 1.5rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer; }
-        .btn-primary:hover:not(:disabled) { background-color: #1d4ed8; }
-        .btn-primary:disabled { background-color: #4b5563; cursor: not-allowed; }
-        .btn-secondary { background-color: #4b5563; color: white; font-weight: 600; padding: 0.5rem 1rem; border-radius: 0.5rem; transition: background-color 0.3s; border:0; cursor: pointer;}
-        .btn-secondary:hover:not(:disabled) { background-color: #6b7280; }
-        .btn-danger { background-color: #dc2626; color: white; font-weight: 600; padding: 0.25rem 0.5rem; border-radius: 0.5rem; transition: background-color: 0.3s; border:0; font-size: 0.75rem; cursor: pointer;}
-        .btn-danger:hover { background-color: #b91c1c; }
-
-        /* Modal styles */
-        .modal { display: none; position: fixed; z-index: 1000; left: 0; top: 0; width: 100%; height: 100%; overflow: auto; background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); align-items: center; justify-content: center;}
-        .modal-content { background-color: #1f2937; padding: 2rem; border-radius: 0.5rem; width: 90%; max-width: 600px; box-shadow: 0 10px 25px rgba(0,0,0,0.5); }
-        
-        /* Card styles for form sections */
-        .party-card, .expense-category, .event-log-item { border: 1px solid #374151; border-radius: 0.5rem; padding: 1rem; margin-bottom: 1rem; background-color: #1f2937; }
-        .dashboard-metric { background-color: #374151; padding: 1rem; border-radius: 0.5rem; text-align: center; }
-        .dashboard-metric .value { font-size: 1.75rem; font-weight: 700; }
-        .dashboard-metric .label { font-size: 0.875rem; color: #9ca3af; }
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(to bottom, #1f2937, #111827);
+        }
+        .hidden {
+            display: none;
+        }
+        input, select, textarea {
+            @apply bg-gray-700 text-white p-2 rounded w-full mb-2;
+        }
+        button {
+            @apply rounded;
+        }
+        .accordion-header {
+            @apply bg-gray-800 p-4 rounded-lg cursor-pointer hover:bg-gray-700;
+        }
+        .accordion-content {
+            @apply p-4 bg-gray-900 rounded-b-lg;
+        }
     </style>
 </head>
-<body>
-    <div class="main-container">
-        <!-- Sidebar placeholder -->
-        <div id="sidebar-placeholder" class="hidden lg:block flex-shrink-0 w-64 bg-gray-900/80 backdrop-blur-sm">
-            <!-- Sidebar content can be loaded here -->
+<body class="bg-gray-900 text-white min-h-screen">
+    <header class="p-4 border-b border-gray-800">
+        <h1 class="text-3xl font-bold">The Co-Parenting Compass</h1>
+        <p class="text-gray-400">Navigate your parenting journey with clarity and confidence.</p>
+    </header>
+    <main class="p-8 max-w-4xl mx-auto">
+        <!-- Hub Section -->
+        <div id="hub" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="wizard">
+                <h2 class="text-xl font-semibold">Automated Wizard</h2>
+                <p class="text-gray-300">Start here. Let us guide you.</p>
+            </div>
+            <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="builder">
+                <h2 class="text-xl font-semibold">Manual Builder</h2>
+                <p class="text-gray-300">Go straight to the full plan.</p>
+            </div>
+            <div class="hub-card bg-gray-800 p-6 rounded-lg shadow-md cursor-pointer hover:bg-gray-700 transition" data-section="featured">
+                <h2 class="text-xl font-semibold">Featured Forms</h2>
+                <p class="text-gray-300">Access templates like Affidavits or School Letters.</p>
+            </div>
         </div>
 
-        <!-- Dynamic background element -->
-        <div id="main-content-bg"></div>
-        
-        <main class="main-content flex-1">
-            <div class="content-wrapper min-h-full p-6 sm:p-8">
-                <div class="max-w-7xl mx-auto">
-                    <!-- Landing Page View -->
-                    <div id="landing-view" class="view-container active">
-                         <header class="text-center mb-12">
-                            <div class="inline-block p-6 md:p-8">
-                                <h1 class="text-4xl md:text-5xl font-bold text-white tracking-tight">The Co-Parenting Compass</h1>
-                                <p class="text-lg md:text-xl text-gray-400 mt-4 max-w-3xl mx-auto">Navigate your parenting journey with clarity and confidence. Create a comprehensive, objective plan to ensure the best for your children.</p>
-                            </div>
-                        </header>
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
-                            <div id="start-wizard-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                <i class="fas fa-magic text-5xl text-blue-400 mb-4"></i>
-                                <h4 class="text-2xl font-bold text-white">Automated Wizard</h4>
-                                <p class="text-gray-400">The recommended path. Answer a few questions to build a plan tailored to your needs.</p>
-                            </div>
-                            <div id="start-manual-btn" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                <i class="fas fa-file-lines text-5xl text-teal-400 mb-4"></i>
-                                <h4 class="text-2xl font-bold text-white">Manual Builder</h4>
-                                <p class="text-gray-400">Go straight to the full plan builder and select the sections you need.</p>
-                            </div>
-                            <div id="featured-forms-card" class="option-card bg-gray-800 p-8 rounded-xl text-center">
-                                 <i class="fas fa-star text-5xl text-amber-400 mb-4"></i>
-                                 <h4 class="text-2xl font-bold text-white">Featured Forms</h4>
-                                 <p class="text-gray-400">Quickly access other useful templates like Affidavits or School Letters.</p>
-                            </div>
-                        </div>
-                    </div>
-
-                    <!-- Wizard View -->
-                    <div id="wizard-view" class="view-container"></div>
-
-                    <!-- Main Builder View -->
-                    <div id="builder-view" class="view-container">
-                         <div id="builder-header" class="flex justify-between items-center mb-6">
-                            <h2 class="text-3xl font-bold">Parenting Plan Builder</h2>
-                            <div><button id="save-plan-btn" class="btn-secondary"><i class="fas fa-save mr-2"></i>Save Progress</button></div>
-                        </div>
-                        <div id="steps-container"></div>
-                        <div id="navigation-container" class="flex justify-between items-center mt-8 pt-6 border-t border-gray-600"></div>
-                    </div>
+        <!-- Wizard Modal -->
+        <div id="wizard-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-8 rounded-lg w-full max-w-lg">
+                <h2 class="text-2xl font-bold mb-4">Automated Wizard</h2>
+                <div id="wizard-step-1" class="space-y-4">
+                    <p class="text-gray-300">Step 1: Select your goal</p>
+                    <label class="flex items-center">
+                        <input type="radio" name="goal" value="simulation" class="mr-2" checked> Simulation/Practice
+                    </label>
+                    <label class="flex items-center">
+                        <input type="radio" name="goal" value="actual" class="mr-2"> Actual Document
+                    </label>
+                    <button id="wizard-next-1" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4">Next</button>
+                </div>
+                <div id="wizard-step-2" class="hidden space-y-4">
+                    <p class="text-gray-300">Step 2: Select sections</p>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="sections" value="parties" checked class="mr-2"> Parties & Children
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="sections" value="schedule" checked class="mr-2"> Custody & Activity Schedule
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="sections" value="finances" checked class="mr-2"> Expense & Benefit Tracker
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="sections" value="communication" checked class="mr-2"> Communication Plan
+                    </label>
+                    <button id="begin-builder" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4">Begin</button>
                 </div>
             </div>
-        </main>
-    </div>
-
-    <!-- Modals -->
-    <div id="alert-modal" class="modal">
-      <div class="modal-content text-center">
-        <h3 id="alert-modal-title" class="text-2xl font-bold text-white mb-4"></h3>
-        <p id="alert-modal-message" class="text-gray-300 mb-6"></p>
-        <button id="alert-modal-close" class="btn-primary w-full">OK</button>
-      </div>
-    </div>
-    <div id="disclaimer-modal" class="modal">
-      <div class="modal-content">
-        <h3 class="text-2xl font-bold text-white mb-4">Important Disclaimer</h3>
-        <p class="text-gray-300 mb-6 text-sm">You are about to generate a document based on the information you have provided. This tool helps organize your information, but this is <strong>not legal advice</strong>. You are solely responsible for the content and its application. For legal advice, please consult a qualified professional. By proceeding, you acknowledge that you have read and understood this disclaimer.</p>
-        <label class="flex items-center space-x-3 mb-6 cursor-pointer">
-            <input type="checkbox" id="disclaimer-agree" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500">
-            <span class="text-white">I Understand and Agree</span>
-        </label>
-        <div class="flex justify-end gap-4">
-             <button id="disclaimer-cancel" class="btn-secondary">Cancel</button>
-             <button id="disclaimer-proceed" class="btn-primary" disabled>Proceed</button>
         </div>
-      </div>
-    </div>
-    
+
+        <!-- Builder Container -->
+        <div id="builder" class="hidden space-y-6">
+            <div id="step-navigation" class="flex justify-between mb-4">
+                <button id="prev-step" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4 rounded disabled:opacity-50" disabled>Previous</button>
+                <button id="next-step" class="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded">Next</button>
+            </div>
+            <div id="step-parties" class="step hidden">
+                <h2 class="text-2xl font-bold mb-4">Parties & Children</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Parent A</h3>
+                        <div id="parent-a-list" class="space-y-4"></div>
+                        <button class="add-parent-a bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Parent A</button>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Parent B</h3>
+                        <div id="parent-b-list" class="space-y-4"></div>
+                        <button class="add-parent-b bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Parent B</button>
+                    </div>
+                </div>
+                <div class="mt-6">
+                    <h3 class="text-lg font-semibold mb-2">Children</h3>
+                    <div id="children-list" class="space-y-4"></div>
+                    <button class="add-child bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Child</button>
+                </div>
+                <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
+            </div>
+            <div id="step-schedule" class="step hidden">
+                <h2 class="text-2xl font-bold mb-4">Custody & Activity Schedule</h2>
+                <div id="time-dashboard" class="bg-gray-800 p-4 rounded-lg mb-4">
+                    <h3 class="text-lg font-semibold">Time Dashboard</h3>
+                    <div id="time-stats" class="text-gray-300"></div>
+                </div>
+                <div class="space-y-4">
+                    <label>Who has custody?
+                        <select id="custody-holder" class="mt-2">
+                            <option value="">Select</option>
+                            <option value="parent-a">Parent A</option>
+                            <option value="parent-b">Parent B</option>
+                            <option value="other">Other</option>
+                        </select>
+                    </label>
+                    <div id="custody-other" class="hidden space-y-2">
+                        <input type="text" id="custody-other-name" placeholder="Name">
+                        <input type="text" id="custody-other-relationship" placeholder="Relationship to Child">
+                    </div>
+                    <label>How was this decided?
+                        <select id="custody-decision" class="mt-2">
+                            <option value="mutual">Mutual Agreement</option>
+                            <option value="court">Court Order</option>
+                            <option value="dispute">Under Dispute</option>
+                        </select>
+                    </label>
+                    <textarea id="custody-notes" placeholder="Details/Notes" class="w-full"></textarea>
+                </div>
+                <div id="events-list" class="space-y-4 mt-4"></div>
+                <button class="add-event bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Event</button>
+                <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
+            </div>
+            <div id="step-finances" class="step hidden">
+                <h2 class="text-2xl font-bold mb-4">Expense & Benefit Tracker</h2>
+                <div id="finance-dashboard" class="bg-gray-800 p-4 rounded-lg mb-4">
+                    <h3 class="text-lg font-semibold">Financial Dashboard</h3>
+                    <div id="finance-stats" class="text-gray-300"></div>
+                </div>
+                <label>Who determined this budget?
+                    <select id="budget-origin" class="mt-2">
+                        <option value="mutual">Mutual Agreement</option>
+                    </select>
+                </label>
+                <div id="expenses-list" class="space-y-4 mt-4"></div>
+                <button class="add-expense bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Expense</button>
+                <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
+            </div>
+            <div id="step-communication" class="step hidden">
+                <h2 class="text-2xl font-bold mb-4">Communication Plan</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Parent A</h3>
+                        <div id="communication-a-list" class="space-y-4"></div>
+                        <button class="add-communication-a bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Method</button>
+                    </div>
+                    <div>
+                        <h3 class="text-lg font-semibold mb-2">Parent B</h3>
+                        <div id="communication-b-list" class="space-y-4"></div>
+                        <button class="add-communication-b bg-blue-600 hover:bg-blue-700 text-white py-1 px-2 mt-2">Add Method</button>
+                    </div>
+                </div>
+                <textarea id="communication-notes" placeholder="General Communication Notes (e.g., call times)" class="w-full mt-4"></textarea>
+                <button class="print-section bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4"><i class="fas fa-print mr-2"></i>Print/Send Section</button>
+            </div>
+            <div id="step-summary" class="step hidden">
+                <h2 class="text-2xl font-bold mb-4">Summary & Finalize</h2>
+                <div id="summary-content" class="space-y-4"></div>
+                <div class="mt-4">
+                    <h3 class="text-lg font-semibold">Select Sections to Include</h3>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="summary-sections" value="parties" checked disabled class="mr-2"> Parties & Children (Required)
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="summary-sections" value="schedule" checked class="mr-2"> Custody & Activity Schedule
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="summary-sections" value="finances" checked class="mr-2"> Expense & Benefit Tracker
+                    </label>
+                    <label class="flex items-center">
+                        <input type="checkbox" name="summary-sections" value="communication" checked class="mr-2"> Communication Plan
+                    </label>
+                </div>
+                <button id="preview-document" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 mt-4">Preview & Generate</button>
+            </div>
+        </div>
+
+        <!-- Disclaimer Modal -->
+        <div id="disclaimer-modal" class="hidden fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50">
+            <div class="bg-gray-800 p-8 rounded-lg w-full max-w-lg">
+                <h2 class="text-2xl font-bold mb-4">Disclaimer</h2>
+                <p class="text-gray-300">You are about to generate a document based on the information you have provided. Flamea provides tools to help you organize your information, but this is not legal advice. The user is solely responsible for the content and its application. For legal advice, please consult a qualified professional or visit our free resources on the LegalHelp page.</p>
+                <label class="flex items-center mt-4">
+                    <input type="checkbox" id="disclaimer-agree" class="mr-2"> I Understand and Agree
+                </label>
+                <div class="flex space-x-4 mt-4">
+                    <button id="disclaimer-cancel" class="bg-gray-600 hover:bg-gray-700 text-white py-2 px-4">Cancel</button>
+                    <button id="disclaimer-proceed" class="bg-green-600 hover:bg-green-700 text-white py-2 px-4 disabled:opacity-50" disabled>Proceed</button>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Templates -->
+    <template id="parent-entry-template">
+        <div class="parent-entry space-y-2 border-b border-gray-700 pb-4">
+            <input type="text" placeholder="Full Name" class="name">
+            <input type="text" placeholder="ID Number (Optional)" class="id">
+            <select class="relationship">
+                <option value="Father">Father</option>
+                <option value="Mother">Mother</option>
+                <option value="Grandparent">Grandparent</option>
+                <option value="Other">Other</option>
+            </select>
+            <div class="contact-list space-y-2"></div>
+            <button class="add-contact bg-blue-600 hover:bg-blue-700 text-white py-1 px-2">Add Contact</button>
+            <div class="address-list space-y-2"></div>
+            <button class="add-address bg-blue-600 hover:bg-blue-700 text-white py-1 px-2">Add Address</button>
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="contact-entry-template">
+        <div class="contact-entry flex space-x-2">
+            <select class="type">
+                <option value="Primary Cell">Primary Cell</option>
+                <option value="Work Phone">Work Phone</option>
+                <option value="Email">Email</option>
+                <option value="WhatsApp">WhatsApp</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" placeholder="Detail/Username" class="detail">
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="address-entry-template">
+        <div class="address-entry flex space-x-2">
+            <select class="type">
+                <option value="Home">Home</option>
+                <option value="Work">Work</option>
+                <option value="Postal">Postal</option>
+                <option value="Other">Other</option>
+            </select>
+            <input type="text" placeholder="Street Address" class="street">
+            <input type="text" placeholder="City" class="city">
+            <input type="text" placeholder="Postal Code" class="postal">
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="child-entry-template">
+        <div class="child-entry space-y-2 border-b border-gray-700 pb-4">
+            <input type="text" placeholder="Child's Full Name" class="name">
+            <input type="date" placeholder="Date of Birth" class="dob">
+            <input type="text" placeholder="ID Number (Optional)" class="id">
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="event-entry-template">
+        <div class="event-entry space-y-2 border-b border-gray-700 pb-4">
+            <input type="text" placeholder="Event Title" class="title">
+            <input type="datetime-local" placeholder="Start Date/Time" class="start">
+            <input type="datetime-local" placeholder="End Date/Time" class="end">
+            <select class="assigned-to">
+                <option value="">Assign To</option>
+            </select>
+            <select class="type">
+                <option value="contact">Contact Schedule</option>
+                <option value="visitation">Visitation</option>
+                <option value="holiday">Holiday</option>
+                <option value="emergency">Emergency</option>
+                <option value="school">School Activity</option>
+                <option value="cultural">Cultural Event</option>
+                <option value="custom">Custom</option>
+            </select>
+            <label><input type="checkbox" class="recurring"> Recurring Event</label>
+            <div class="recurring-options hidden space-y-2">
+                <select class="frequency">
+                    <option value="daily">Daily</option>
+                    <option value="weekly">Weekly</option>
+                    <option value="monthly">Monthly</option>
+                </select>
+                <input type="text" placeholder="Details (e.g., Every Weekend)" class="recurring-details">
+            </div>
+            <textarea placeholder="Details/Notes" class="notes"></textarea>
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="expense-entry-template">
+        <div class="expense-entry space-y-2 border-b border-gray-700 pb-4">
+            <select class="category">
+                <option value="Living Expenses">Living Expenses</option>
+                <option value="Education">Education</option>
+                <option value="Healthcare">Healthcare</option>
+                <option value="Cultural Obligations">Cultural Obligations</option>
+            </select>
+            <input type="text" placeholder="Description" class="description">
+            <input type="number" placeholder="Budgeted Cost" class="budgeted-cost">
+            <div class="contribution-slider flex items-center space-x-4">
+                <input type="range" min="0" max="100" value="50" class="parent-a-contribution w-full">
+                <span class="parent-a-percentage">50%</span>
+                <span>|</span>
+                <span class="parent-b-percentage">50%</span>
+            </div>
+            <input type="number" placeholder="Final Cost" class="final-cost">
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+    <template id="communication-entry-template">
+        <div class="communication-entry space-y-2 border-b border-gray-700 pb-4">
+            <select class="contact-detail">
+                <option value="">Select Contact Detail</option>
+            </select>
+            <select class="classification">
+                <option value="Urgent">For Urgent Matters</option>
+                <option value="Formal">For Formal Communication</option>
+                <option value="Daily">For Daily Updates</option>
+            </select>
+            <button class="remove-entry bg-red-600 hover:bg-red-700 text-white py-1 px-2">Remove</button>
+        </div>
+    </template>
+
     <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            // SECTION 1: FORWARD DECLARATIONS
-            let renderPartiesSection, renderCustodySection, renderExpensesSection, renderCommunicationSection, renderSummarySection;
-            let collectPartiesData, collectCustodyData, collectExpensesData, collectCommunicationData;
-            let generatePartiesDoc, generateCustodyDoc, generateExpensesDoc, generateCommunicationDoc;
+        const ParentingPlanApp = {
+            planData: {},
+            currentStep: 0,
+            steps: ['parties', 'schedule', 'finances', 'communication', 'summary'],
+            selectedSections: [],
 
-            // SECTION 2: STATE & CONFIG
-            const state = {
-                currentView: 'landing-view', wizardStep: 0, builderStep: 0,
-                allSections: [
-                    { id: 'parties', title: "Parties, Guardians & Children", icon: 'fa-users', render: (c) => renderPartiesSection(c), collect: () => collectPartiesData(), generate: (d) => generatePartiesDoc(d) },
-                    { id: 'custody', title: 'Custody & Activity Schedule', icon: 'fa-calendar-days', render: (c) => renderCustodySection(c), collect: () => collectCustodyData(), generate: (d) => generateCustodyDoc(d) },
-                    { id: 'expenses', title: 'Expense & Contribution Tracker', icon: 'fa-hand-holding-dollar', render: (c) => renderExpensesSection(c), collect: () => collectExpensesData(), generate: (d) => generateExpensesDoc(d) },
-                    { id: 'communication', title: 'Communication Plan', icon: 'fa-comments', render: (c) => renderCommunicationSection(c), collect: () => collectCommunicationData(), generate: (d) => generateCommunicationDoc(d) },
-                    { id: 'summary', title: 'Summary & Generation', icon: 'fa-check-double', render: (c) => renderSummarySection(c), collect: () => {}, generate: () => '' },
-                ],
-                selectedSections: [],
-            };
+            init: function() {
+                this.loadData();
+                this.attachEventListeners();
+            },
 
-            const dropdownOptions = {
-                relationship: ['Father', 'Mother', 'Grandfather', 'Grandmother', 'Legal Guardian', 'Other'],
-                addressType: ['Home', 'Work', 'Postal', 'Other'],
-                contactType: ['Primary Cell', 'Work Phone', 'Email', 'WhatsApp'],
-                eventType: ['School Holiday', 'Public Holiday', 'Personal Day', 'Contact Schedule', 'Visitation', 'Emergency', 'School Activity', 'Cultural Event', 'Other'],
-                custodyDecision: ['Mutual Agreement', 'Court Order', 'In Dispute', 'Other'],
-                recurringSchedules: ['Week On, Week Off', '2-2-3 Schedule', 'Every Other Weekend', 'Custom'],
-                expenseCategory: ['Living Expenses', 'Education', 'Healthcare', 'Extracurricular', 'Cultural Obligations', 'Other'],
-                communicationClassification: ['Urgent Matters', 'Formal Communication', 'Daily Updates']
-            };
-
-            // SECTION 3: DOM REFERENCES
-            const views = { landing: document.getElementById('landing-view'), wizard: document.getElementById('wizard-view'), builder: document.getElementById('builder-view') };
-            const buttons = { startWizard: document.getElementById('start-wizard-btn'), startManual: document.getElementById('start-manual-btn'), savePlan: document.getElementById('save-plan-btn') };
-            const containers = { steps: document.getElementById('steps-container'), navigation: document.getElementById('navigation-container'), sidebar: document.getElementById('sidebar-placeholder'), bg: document.getElementById('main-content-bg') };
-            const alertModal = { modal: document.getElementById('alert-modal'), title: document.getElementById('alert-modal-title'), message: document.getElementById('alert-modal-message'), close: document.getElementById('alert-modal-close') };
-            const disclaimerModal = { modal: document.getElementById('disclaimer-modal'), agree: document.getElementById('disclaimer-agree'), cancel: document.getElementById('disclaimer-cancel'), proceed: document.getElementById('disclaimer-proceed') };
-            
-            // SECTION 4: HELPER & DYNAMIC UI
-            const generateOptions = (arr, selected = '') => arr.map(opt => `<option value="${opt}" ${opt === selected ? 'selected' : ''}>${opt}</option>`).join('');
-            
-            const getPartyNames = () => {
-                const names = [];
-                document.querySelectorAll('#parties-content .party-name').forEach(input => {
-                    if (input.value.trim()) names.push(input.value.trim());
-                });
-                return names.length > 0 ? names : ['Parent A', 'Parent B'];
-            };
-
-            const addGuardian = (side, name = '') => {
-                const container = document.getElementById(`${side}-parties-container`);
-                if (!container) return;
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="party-card">
-                        <div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Guardian/Party</h4><button class="btn-danger remove-item-btn">Remove</button></div>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div><label class="form-label">Full Name</label><input type="text" class="form-input party-name" value="${name}"></div>
-                            <div><label class="form-label">Relationship to Child</label><select class="form-select">${generateOptions(dropdownOptions.relationship)}</select></div>
-                        </div>
-                        <div class="addresses-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-address-btn mb-4 text-sm">Add Address</button>
-                        <div class="contacts-sub-container space-y-2 mb-4"></div><button class="btn-secondary add-contact-btn text-sm">Add Contact Info</button>
-                    </div>`);
-            };
-
-            const addAddress = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.addressType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Full Address</label><input type="text" class="form-input text-sm p-2" placeholder="Street, City, Province, Code"></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-            const addContact = (container) => container.insertAdjacentHTML('beforeend', `<div class="grid grid-cols-1 md:grid-cols-3 gap-2 p-2 bg-gray-800 rounded relative"><div><label class="form-label text-xs">Type</label><select class="form-select text-sm p-2">${generateOptions(dropdownOptions.contactType)}</select></div><div class="md:col-span-2"><label class="form-label text-xs">Details</label><input type="text" class="form-input text-sm p-2" placeholder="Phone, email, etc."></div><button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button></div>`);
-
-            const addChild = () => {
-                const container = document.getElementById('children-container');
-                if (!container) return;
-                container.insertAdjacentHTML('beforeend', `<div class="party-card"><div class="flex justify-between items-center mb-4"><h4 class="font-semibold text-white">Child</h4><button class="btn-danger remove-item-btn">Remove</button></div><div class="grid grid-cols-1 md:grid-cols-3 gap-4"><div><label class="form-label">Full Name</label><input type="text" class="form-input"></div><div><label class="form-label">Date of Birth</label><input type="date" class="form-input"></div><div><label class="form-label">Primary Residence With</label><select class="form-select party-dropdown">${generateOptions(getPartyNames())}</select></div></div></div>`);
-                updateAllPartyDropdowns();
-            };
-
-            const addEventLog = (container) => {
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="event-log-item">
-                        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
-                            <div><label class="form-label">Start Date</label><input type="date" class="form-input event-start-date"></div>
-                            <div><label class="form-label">End Date</label><input type="date" class="form-input event-end-date"></div>
-                            <div><label class="form-label">Event Type</label><select class="form-select">${generateOptions(dropdownOptions.eventType)}</select></div>
-                            <div class="flex items-end"><button class="btn-danger remove-item-btn w-full">Remove Event</button></div>
-                        </div>
-                        <div class="mt-2"><label class="form-label">Notes / Details</label><textarea class="form-textarea" rows="2" placeholder="Event details..."></textarea></div>
-                    </div>`);
-            };
-
-            const addExpenseItem = (container) => {
-                container.insertAdjacentHTML('beforeend', `
-                    <div class="grid grid-cols-1 lg:grid-cols-5 gap-4 p-3 bg-gray-800 rounded relative">
-                        <div class="lg:col-span-2"><label class="form-label text-xs">Expense Description</label><input type="text" class="form-input expense-description text-sm p-2" placeholder="e.g., School Fees Term 2"></div>
-                        <div><label class="form-label text-xs">Amount (R)</label><input type="number" class="form-input expense-amount text-sm p-2" placeholder="0.00" step="0.01"></div>
-                        <div><label class="form-label text-xs">Paid By</label><select class="form-select expense-paid-by party-dropdown text-sm p-2">${generateOptions(getPartyNames())}</select></div>
-                        <button class="btn-danger remove-item-btn absolute -top-2 -right-2 w-6 h-6 flex items-center justify-center p-0 leading-none">×</button>
-                    </div>`);
-            };
-            
-            // SECTION 5: UI UPDATE & CALCULATIONS
-            const updateAllPartyDropdowns = () => {
-                const partyNames = getPartyNames();
-                const partyOptions = generateOptions(partyNames);
-                document.querySelectorAll('.party-dropdown').forEach(select => {
-                    const currentValue = select.value;
-                    select.innerHTML = `<option value="">Select...</option>` + partyOptions;
-                    if (partyNames.includes(currentValue)) select.value = currentValue;
-                });
-                updateExpenseDashboard(); // Also update dashboard when names change
-            };
-
-            const updateExpenseDashboard = () => {
-                const partyNames = getPartyNames();
-                const parentA = partyNames[0] || 'Parent A';
-                const parentB = partyNames[1] || 'Parent B';
-                
-                let totalPaidA = 0;
-                let totalPaidB = 0;
-
-                document.querySelectorAll('#expense-items-container .grid').forEach(item => {
-                    const amount = parseFloat(item.querySelector('.expense-amount')?.value) || 0;
-                    const paidBy = item.querySelector('.expense-paid-by')?.value;
-                    if (paidBy === parentA) totalPaidA += amount;
-                    if (paidBy === parentB) totalPaidB += amount;
-                });
-
-                const totalSpent = totalPaidA + totalPaidB;
-                const targetContribution = totalSpent / 2;
-                
-                let equalizationPayment = 0;
-                let equalizationMessage = "Contributions are balanced.";
-
-                if (totalPaidA > targetContribution) {
-                    equalizationPayment = totalPaidA - targetContribution;
-                    equalizationMessage = `${parentB} owes ${parentA}`;
-                } else if (totalPaidB > targetContribution) {
-                    equalizationPayment = totalPaidB - targetContribution;
-                    equalizationMessage = `${parentA} owes ${parentB}`;
+            loadData: function() {
+                const savedPlan = localStorage.getItem('parentingPlan');
+                if (savedPlan) {
+                    this.planData = JSON.parse(savedPlan);
+                } else {
+                    this.planData = this.getDefaultPlanData();
                 }
+            },
 
-                const dashboard = document.getElementById('expense-dashboard');
-                if (dashboard) {
-                    dashboard.querySelector('#total-spent').textContent = `R ${totalSpent.toFixed(2)}`;
-                    dashboard.querySelector('#parent-a-name').textContent = parentA;
-                    dashboard.querySelector('#parent-a-paid').textContent = `R ${totalPaidA.toFixed(2)}`;
-                    dashboard.querySelector('#parent-b-name').textContent = parentB;
-                    dashboard.querySelector('#parent-b-paid').textContent = `R ${totalPaidB.toFixed(2)}`;
-                    dashboard.querySelector('#equalization-amount').textContent = `R ${equalizationPayment.toFixed(2)}`;
-                    dashboard.querySelector('#equalization-message').textContent = equalizationMessage;
-                }
-            };
-            
-            // SECTION 6: RENDER FUNCTIONS FOR BUILDER STEPS
-            renderPartiesSection = (container) => {
-                container.innerHTML = `<div id="parties-content" class="grid grid-cols-1 lg:grid-cols-2 gap-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian A's Side</h4><div id="a-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="a">Add Party</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Parent/Guardian B's Side</h4><div id="b-parties-container" class="space-y-4"></div><button class="btn-secondary add-guardian-btn mt-4" data-side="b">Add Party</button></div></div><div class="mt-8 pt-6 border-t border-gray-700"><h4 class="text-xl font-semibold mb-4 text-white">Children</h4><div id="children-container" class="space-y-4"></div><button id="add-child-btn" class="btn-secondary mt-4">Add Child</button></div>`;
-                addGuardian('a', 'Parent A');
-                addGuardian('b', 'Parent B');
-            };
+            saveData: function() {
+                this.planData.metadata.lastModified = new Date().toISOString();
+                localStorage.setItem('parentingPlan', JSON.stringify(this.planData));
+                alert('Progress saved locally!');
+            },
 
-            renderCustodySection = (container) => {
-                container.innerHTML = `
-                    <div class="space-y-8">
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 text-white">Recurring Schedule</h4>
-                             <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                                <div><label class="form-label">Base Schedule</label><select id="recurring-schedule-type" class="form-select">${generateOptions(dropdownOptions.recurringSchedules)}</select></div>
-                                <div><label class="form-label">Decision Basis</label><select id="custody-decision" class="form-select">${generateOptions(dropdownOptions.custodyDecision)}</select></div>
-                            </div>
-                            <div class="mt-4"><label class="form-label">Custom Schedule Details & Notes</label><textarea id="custody-notes" class="form-textarea" rows="4" placeholder="Describe the recurring schedule, holiday rotations, and any specific rules or exceptions..."></textarea></div>
-                        </div>
-                        <div class="pt-8 border-t border-gray-700">
-                             <div class="flex justify-between items-center mb-4">
-                                <h4 class="text-xl font-semibold text-white">Specific Events & Activity Log</h4>
-                                <div>
-                                    <button class="btn-secondary add-event-btn"><i class="fas fa-plus mr-2"></i>Log Event</button>
-                                    <button class="btn-secondary download-csv-btn"><i class="fas fa-download mr-2"></i>Download CSV</button>
-                                </div>
-                            </div>
-                            <div id="events-log-container" class="space-y-4 max-h-96 overflow-y-auto pr-2"></div>
-                        </div>
-                    </div>`;
-            };
-            
-            renderExpensesSection = (container) => {
-                container.innerHTML = `
-                    <div class="grid grid-cols-1 lg:grid-cols-3 gap-8">
-                        <div class="lg:col-span-2">
-                            <h4 class="text-xl font-semibold mb-4 text-white">Expense Items</h4>
-                            <div id="expense-items-container" class="space-y-2 mb-4"></div>
-                            <button class="btn-secondary add-expense-item-btn">Add Expense</button>
-                        </div>
-                        <div>
-                            <h4 class="text-xl font-semibold mb-4 text-white">Contribution Dashboard</h4>
-                            <div id="expense-dashboard" class="bg-gray-800 p-4 rounded-lg space-y-4">
-                                <div class="dashboard-metric"><div class="value text-blue-400" id="total-spent">R 0.00</div><div class="label">Total Combined Expenses</div></div>
-                                <div class="grid grid-cols-2 gap-4">
-                                    <div class="dashboard-metric"><div class="value text-green-400" id="parent-a-paid">R 0.00</div><div class="label" id="parent-a-name">Parent A Paid</div></div>
-                                    <div class="dashboard-metric"><div class="value text-purple-400" id="parent-b-paid">R 0.00</div><div class="label" id="parent-b-name">Parent B Paid</div></div>
-                                </div>
-                                <div class="dashboard-metric"><div class="value text-amber-400" id="equalization-amount">R 0.00</div><div class="label" id="equalization-message">Contributions are balanced.</div></div>
-                            </div>
-                        </div>
-                    </div>`;
-                addExpenseItem(container.querySelector('#expense-items-container'));
-                updateExpenseDashboard();
-            };
-
-            renderCommunicationSection = (container) => {
-                // This function remains largely the same but simplified for clarity
-                container.innerHTML = `<div class="space-y-8"><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Methods</h4><div id="communication-methods-container" class="space-y-2"></div><button class="btn-secondary add-comm-method-btn mt-4">Add Method</button></div><div><h4 class="text-xl font-semibold mb-4 text-white">Communication Guidelines</h4><div id="communication-guidelines" class="space-y-4">${dropdownOptions.communicationClassification.map(type => `<div class="bg-gray-800 p-4 rounded-lg"><h5 class="font-semibold mb-2 text-white">${type}</h5><textarea class="form-textarea" rows="3" data-guideline-type="${type}" placeholder="Guidelines for ${type.toLowerCase()}..."></textarea></div>`).join('')}</div></div></div>`;
-            };
-            
-            renderSummarySection = (container) => {
-                 container.innerHTML = `<div class="text-center"><h2 class="text-3xl font-bold text-white">Final Step: Generate Document</h2><p class="text-gray-400 mt-2">Select sections for the final document.</p></div><div class="max-w-2xl mx-auto mt-8 space-y-6"><div><h4 class="text-lg font-semibold mb-4 text-white">Included Sections</h4><div id="summary-section-list" class="space-y-3">${state.selectedSections.filter(s => s.id !== 'summary').map(section => `<label class="flex items-center space-x-3 p-4 bg-gray-800 rounded-md cursor-pointer hover:bg-gray-700 transition"><input type="checkbox" value="${section.id}" class="h-5 w-5 rounded bg-gray-600 border-gray-500 text-blue-600 focus:ring-blue-500" checked><i class="fas ${section.icon} text-gray-400 w-5 text-center"></i><span class="text-white font-semibold">${section.title}</span></label>`).join('')}</div></div><div class="bg-blue-900/50 border border-blue-700 text-blue-200 px-4 py-3 rounded-lg text-sm">After clicking "Generate Final Document", your plan will be downloaded as an HTML file.</div></div>`;
-            };
-
-            // SECTION 7: DATA COLLECTION
-            collectPartiesData = () => { /* ... implementation unchanged ... */ return { parties: [], children: [] }; }; // Placeholder
-            collectCustodyData = () => { /* ... implementation for new fields ... */ return {}; }; // Placeholder
-            collectExpensesData = () => { /* ... implementation for new fields ... */ return {}; }; // Placeholder
-            collectCommunicationData = () => { /* ... implementation unchanged ... */ return { methods: [], guidelines: {} }; }; // Placeholder
-            
-            // Re-implementing collection functions with new details
-            collectPartiesData = () => {
-                const data = { parties: [], children: [] };
-                document.querySelectorAll('#parties-content .party-card').forEach(card => {
-                    const nameInput = card.querySelector('.party-name');
-                    if (nameInput) {
-                        if (!nameInput.value.trim()) return;
-                        const party = { name: nameInput.value.trim(), relationship: card.querySelector('select')?.value || '', addresses: [], contacts: [] };
-                        card.querySelectorAll('.addresses-sub-container > div').forEach(addr => party.addresses.push({ type: addr.querySelector('select')?.value, address: addr.querySelector('input')?.value }));
-                        card.querySelectorAll('.contacts-sub-container > div').forEach(cont => party.contacts.push({ type: cont.querySelector('select')?.value, contact: cont.querySelector('input')?.value }));
-                        data.parties.push(party);
-                    } else {
-                        const childNameInput = card.querySelector('input[type="text"]');
-                        if (!childNameInput.value.trim()) return;
-                        data.children.push({ name: childNameInput.value.trim(), dob: card.querySelector('input[type="date"]')?.value || '', primaryResidence: card.querySelector('select')?.value || '' });
-                    }
-                });
-                return data;
-            };
-
-            collectCustodyData = () => {
-                const events = [];
-                document.querySelectorAll('#events-log-container .event-log-item').forEach(item => {
-                    events.push({
-                        startDate: item.querySelector('.event-start-date')?.value,
-                        endDate: item.querySelector('.event-end-date')?.value,
-                        type: item.querySelector('select')?.value,
-                        notes: item.querySelector('textarea')?.value
-                    });
-                });
+            getDefaultPlanData: function() {
                 return {
-                    recurringSchedule: document.getElementById('recurring-schedule-type')?.value || '',
-                    decisionBasis: document.getElementById('custody-decision')?.value || '',
-                    notes: document.getElementById('custody-notes')?.value || '',
-                    events: events
+                    metadata: { lastModified: new Date().toISOString() },
+                    parties: { parentA: [], parentB: [], children: [] },
+                    schedule: { custody: {}, events: [] },
+                    finances: { budgetOrigin: '', expenses: [] },
+                    communication: { parentA: [], parentB: [], notes: '' }
                 };
-            };
-            
-            collectExpensesData = () => {
-                const expenses = [];
-                document.querySelectorAll('#expense-items-container .grid').forEach(item => {
-                    expenses.push({
-                        description: item.querySelector('.expense-description')?.value || 'N/A',
-                        amount: parseFloat(item.querySelector('.expense-amount')?.value) || 0,
-                        paidBy: item.querySelector('.expense-paid-by')?.value || 'N/A'
+            },
+
+            attachEventListeners: function() {
+                document.querySelectorAll('.hub-card').forEach(card => {
+                    card.addEventListener('click', () => {
+                        const section = card.dataset.section;
+                        if (section === 'wizard') {
+                            this.openWizard();
+                        } else if (section === 'builder') {
+                            this.startBuilder(['parties', 'schedule', 'finances', 'communication']);
+                        } else if (section === 'featured') {
+                            alert('Featured forms coming soon!');
+                        }
                     });
                 });
-                return { expenses };
-            };
-            
-            // SECTION 8: DOCUMENT & CSV GENERATION
-            generatePartiesDoc = (data) => { /* unchanged */ return `<h2>Parties...</h2>`; };
-            generateCustodyDoc = (data) => {
-                 return `<h2>CUSTODY & SCHEDULE</h2><p><strong>Base Schedule:</strong> ${data.recurringSchedule}</p><p><strong>Decision Basis:</strong> ${data.decisionBasis}</p><p><strong>Details & Notes:</strong></p><pre>${data.notes || 'N/A'}</pre><h3>Activity Log</h3><ul>${data.events.map(e => `<li>${e.startDate} to ${e.endDate || e.startDate}: ${e.type} - ${e.notes}</li>`).join('')}</ul>`;
-            };
 
-            generateExpensesDoc = (data) => {
-                let report = `<h2>EXPENSE & CONTRIBUTION TRACKER</h2><table width="100%" border="1" cellpadding="5" cellspacing="0"><thead><tr><th>Expense</th><th>Amount</th><th>Paid By</th></tr></thead><tbody>`;
-                data.expenses.forEach(ex => {
-                    report += `<tr><td>${ex.description}</td><td>R ${ex.amount.toFixed(2)}</td><td>${ex.paidBy}</td></tr>`;
+                document.getElementById('wizard-next-1').addEventListener('click', () => {
+                    document.getElementById('wizard-step-1').classList.add('hidden');
+                    document.getElementById('wizard-step-2').classList.remove('hidden');
                 });
-                report += `</tbody></table>`;
-                // Add dashboard summary to doc
-                const dashboard = document.getElementById('expense-dashboard');
-                if(dashboard) {
-                    report += `<h3>Summary</h3>
-                    <p><strong>Total Spent:</strong> ${dashboard.querySelector('#total-spent').textContent}</p>
-                    <p><strong>${dashboard.querySelector('#parent-a-name').textContent} Paid:</strong> ${dashboard.querySelector('#parent-a-paid').textContent}</p>
-                    <p><strong>${dashboard.querySelector('#parent-b-name').textContent} Paid:</strong> ${dashboard.querySelector('#parent-b-paid').textContent}</p>
-                    <p><strong>Equalization:</strong> ${dashboard.querySelector('#equalization-message').textContent} - ${dashboard.querySelector('#equalization-amount').textContent}</p>`;
-                }
-                return report;
-            };
-            
-            const downloadScheduleCSV = () => {
-                const data = collectCustodyData();
-                let csvContent = "data:text/csv;charset=utf-8,Start Date,End Date,Event Type,Notes\n";
-                data.events.forEach(row => {
-                    csvContent += [row.startDate, row.endDate, row.type, `"${row.notes.replace(/"/g, '""')}"`].join(",") + "\n";
-                });
-                const encodedUri = encodeURI(csvContent);
-                const link = document.createElement("a");
-                link.setAttribute("href", encodedUri);
-                link.setAttribute("download", "parenting_schedule_log.csv");
-                document.body.appendChild(link);
-                link.click();
-                document.body.removeChild(link);
-            };
 
-            const generateDocument = (sectionIds) => { /* Main logic unchanged, just uses new doc generators */ 
-                let fullDocument = `<html><head><title>Parenting Plan</title><style>body{font-family:Arial,sans-serif;margin:40px;} h2{border-bottom:2px solid #333;padding-bottom:5px;} table{border-collapse:collapse;} pre{white-space:pre-wrap;font-family:inherit;background:#f4f4f4;padding:1em;}</style></head><body><h1>PARENTING PLAN</h1><p><em>Generated on ${new Date().toLocaleDateString()}</em></p><hr>`;
-                sectionIds.forEach(id => {
-                    const section = state.allSections.find(s => s.id === id);
-                    if (section?.collect && section.generate) {
-                        const data = section.collect();
-                        fullDocument += section.generate(data);
-                        fullDocument += '<hr>';
+                document.getElementById('begin-builder').addEventListener('click', () => {
+                    const form = document.getElementById('wizard-step-2');
+                    this.selectedSections = Array.from(form.querySelectorAll('input[name="sections"]:checked')).map(input => input.value);
+                    this.startBuilder(this.selectedSections);
+                });
+
+                document.getElementById('prev-step').addEventListener('click', () => this.prevStep());
+                document.getElementById('next-step').addEventListener('click', () => this.nextStep());
+
+                document.querySelectorAll('.print-section').forEach(btn => {
+                    btn.addEventListener('click', () => {
+                        this.collectAllData();
+                        this.saveData();
+                        const section = btn.closest('.step').id.replace('step-', '');
+                        this.showDisclaimer([section]);
+                    });
+                });
+
+                document.getElementById('preview-document').addEventListener('click', () => {
+                    this.collectAllData();
+                    this.saveData();
+                    const selected = Array.from(document.querySelectorAll('input[name="summary-sections"]:checked')).map(input => input.value);
+                    this.showDisclaimer(['parties', ...selected]);
+                });
+
+                document.getElementById('disclaimer-agree').addEventListener('change', (e) => {
+                    document.getElementById('disclaimer-proceed').disabled = !e.target.checked;
+                });
+
+                document.getElementById('disclaimer-cancel').addEventListener('click', () => {
+                    document.getElementById('disclaimer-modal').classList.add('hidden');
+                });
+
+                document.getElementById('disclaimer-proceed').addEventListener('click', () => {
+                    document.getElementById('disclaimer-modal').classList.add('hidden');
+                    const selected = Array.from(document.querySelectorAll('input[name="summary-sections"]:checked')).map(input => input.value);
+                    this.generateDocument(['parties', ...selected]);
+                });
+
+                document.addEventListener('click', e => {
+                    if (e.target.classList.contains('add-parent-a')) this.addParent('parent-a', e.target);
+                    if (e.target.classList.contains('add-parent-b')) this.addParent('parent-b', e.target);
+                    if (e.target.classList.contains('add-child')) this.addChild(e.target);
+                    if (e.target.classList.contains('add-event')) this.addEvent(e.target);
+                    if (e.target.classList.contains('add-expense')) this.addExpense(e.target);
+                    if (e.target.classList.contains('add-communication-a')) this.addCommunication('parent-a', e.target);
+                    if (e.target.classList.contains('add-communication-b')) this.addCommunication('parent-b', e.target);
+                    if (e.target.classList.contains('add-contact')) this.addContact(e.target);
+                    if (e.target.classList.contains('add-address')) this.addAddress(e.target);
+                    if (e.target.classList.contains('remove-entry')) e.target.closest('.parent-entry, .child-entry, .event-entry, .expense-entry, .communication-entry, .contact-entry, .address-entry').remove();
+                });
+
+                document.addEventListener('change', e => {
+                    if (e.target.classList.contains('recurring')) {
+                        e.target.closest('.event-entry').querySelector('.recurring-options').classList.toggle('hidden', !e.target.checked);
+                    }
+                    if (e.target.classList.contains('parent-a-contribution')) {
+                        const percentage = e.target.value;
+                        e.target.nextElementSibling.textContent = `${percentage}%`;
+                        e.target.parentElement.querySelector('.parent-b-percentage').textContent = `${100 - percentage}%`;
+                    }
+                    if (e.target.id === 'custody-holder') {
+                        document.getElementById('custody-other').classList.toggle('hidden', e.target.value !== 'other');
                     }
                 });
-                fullDocument += '</body></html>';
-                const blob = new Blob([fullDocument], { type: 'text/html' });
-                const url = URL.createObjectURL(blob);
-                const a = document.createElement('a'); a.href = url; a.download = 'parenting-plan.html'; document.body.appendChild(a); a.click(); document.body.removeChild(a); URL.revokeObjectURL(url);
-            };
+            },
 
-            // SECTION 9: CORE APP LOGIC & NAVIGATION
-            const switchView = (viewId) => {
-                state.currentView = viewId;
-                Object.values(views).forEach(v => v.classList.remove('active'));
-                if (views[viewId.split('-')[0]]) views[viewId.split('-')[0]].classList.add('active');
-            };
+            openWizard: function() {
+                document.getElementById('wizard-modal').classList.remove('hidden');
+                document.getElementById('wizard-step-1').classList.remove('hidden');
+                document.getElementById('wizard-step-2').classList.add('hidden');
+            },
 
-            const showAlert = (title, message, isHtml = false) => {
-                alertModal.title.textContent = title;
-                if (isHtml) { alertModal.message.innerHTML = message; } 
-                else { alertModal.message.textContent = message; }
-                alertModal.modal.style.display = 'flex';
-            };
-            
-            const renderBuilder = (sectionIds) => {
-                state.selectedSections = state.allSections.filter(s => sectionIds.includes(s.id) || s.id === 'summary');
-                containers.steps.innerHTML = '';
-                state.selectedSections.forEach((section, index) => {
-                    const stepContainer = document.createElement('div');
-                    stepContainer.className = 'step-container';
-                    stepContainer.id = `step-${index}`;
-                    stepContainer.innerHTML = `<div class="flex justify-between items-center mb-6 pb-4 border-b border-gray-700"><h3 class="text-2xl font-bold text-gray-200"><i class="fas ${section.icon} mr-3 text-blue-400"></i>${section.title}</h3>${section.id !== 'summary' ? `<button class="btn-secondary generate-section-btn" data-section-id="${section.id}"><i class="fas fa-print mr-2"></i>Print Section</button>` : ''}</div><div id="content-${section.id}"></div>`;
-                    containers.steps.appendChild(stepContainer);
-                    section.render(document.getElementById(`content-${section.id}`));
+            startBuilder: function(sections) {
+                this.selectedSections = sections;
+                document.getElementById('wizard-modal').classList.add('hidden');
+                document.getElementById('hub').classList.add('hidden');
+                document.getElementById('builder').classList.remove('hidden');
+                this.showStep(0);
+                this.loadExistingData();
+            },
+
+            showStep: function(index) {
+                this.currentStep = index;
+                document.querySelectorAll('.step').forEach(step => step.classList.add('hidden'));
+                document.getElementById(`step-${this.steps[index]}`).classList.remove('hidden');
+                document.getElementById('prev-step').disabled = index === 0;
+                document.getElementById('next-step').textContent = index === this.steps.length - 1 ? 'Finish' : 'Next';
+                if (index === this.steps.length - 1) this.showSummary();
+            },
+
+            prevStep: function() {
+                if (this.currentStep > 0) {
+                    this.collectAllData();
+                    this.saveData();
+                    this.showStep(this.currentStep - 1);
+                }
+            },
+
+            nextStep: function() {
+                if (this.currentStep < this.steps.length - 1) {
+                    this.collectAllData();
+                    this.saveData();
+                    this.showStep(this.currentStep + 1);
+                }
+            },
+
+            showSummary: function() {
+                const summary = document.getElementById('summary-content');
+                summary.innerHTML = `
+                    <h3 class="text-lg font-semibold">Parties & Children</h3>
+                    <p>Parents A: ${this.planData.parties.parentA.map(p => p.name).join(', ') || 'None'}</p>
+                    <p>Parents B: ${this.planData.parties.parentB.map(p => p.name).join(', ') || 'None'}</p>
+                    <p>Children: ${this.planData.parties.children.map(c => c.name).join(', ') || 'None'}</p>
+                    ${this.selectedSections.includes('schedule') ? `
+                        <h3 class="text-lg font-semibold mt-4">Custody & Activity Schedule</h3>
+                        <p>Custody: ${this.planData.schedule.custody.holder || 'None'}</p>
+                        <p>Events: ${this.planData.schedule.events.length} logged</p>
+                    ` : ''}
+                    ${this.selectedSections.includes('finances') ? `
+                        <h3 class="text-lg font-semibold mt-4">Expense & Benefit Tracker</h3>
+                        <p>Budget Origin: ${this.planData.finances.budgetOrigin || 'None'}</p>
+                        <p>Expenses: ${this.planData.finances.expenses.length} logged</p>
+                    ` : ''}
+                    ${this.selectedSections.includes('communication') ? `
+                        <h3 class="text-lg font-semibold mt-4">Communication Plan</h3>
+                        <p>Parent A Methods: ${this.planData.communication.parentA.length} logged</p>
+                        <p>Parent B Methods: ${this.planData.communication.parentB.length} logged</p>
+                    ` : ''}
+                `;
+            },
+
+            addParent: function(type, button, data = {}) {
+                const list = button ? button.closest('.step').querySelector(`#${type}-list`) : document.querySelector(`#${type}-list`);
+                const entry = document.getElementById('parent-entry-template').content.cloneNode(true);
+                entry.querySelector('.name').value = data.name || '';
+                entry.querySelector('.id').value = data.id || '';
+                entry.querySelector('.relationship').value = data.relationship || 'Father';
+                list.appendChild(entry);
+                (data.contacts || []).forEach(contact => this.addContact(null, contact, entry.querySelector('.contact-list')));
+                (data.addresses || []).forEach(address => this.addAddress(null, address, entry.querySelector('.address-list')));
+            },
+
+            addContact: function(button, data = {}, parent = null) {
+                const list = parent || button.closest('.parent-entry').querySelector('.contact-list');
+                const entry = document.getElementById('contact-entry-template').content.cloneNode(true);
+                entry.querySelector('.type').value = data.type || 'Primary Cell';
+                entry.querySelector('.detail').value = data.detail || '';
+                list.appendChild(entry);
+            },
+
+            addAddress: function(button, data = {}, parent = null) {
+                const list = parent || button.closest('.parent-entry').querySelector('.address-list');
+                const entry = document.getElementById('address-entry-template').content.cloneNode(true);
+                entry.querySelector('.type').value = data.type || 'Home';
+                entry.querySelector('.street').value = data.street || '';
+                entry.querySelector('.city').value = data.city || '';
+                entry.querySelector('.postal').value = data.postal || '';
+                list.appendChild(entry);
+            },
+
+            addChild: function(button, data = {}) {
+                const list = button ? button.closest('.step').querySelector('#children-list') : document.querySelector('#children-list');
+                const entry = document.getElementById('child-entry-template').content.cloneNode(true);
+                entry.querySelector('.name').value = data.name || '';
+                entry.querySelector('.dob').value = data.dob || '';
+                entry.querySelector('.id').value = data.id || '';
+                list.appendChild(entry);
+            },
+
+            addEvent: function(button, data = {}) {
+                const list = button ? button.closest('.step').querySelector('#events-list') : document.querySelector('#events-list');
+                const entry = document.getElementById('event-entry-template').content.cloneNode(true);
+                entry.querySelector('.title').value = data.title || '';
+                entry.querySelector('.start').value = data.start || '';
+                entry.querySelector('.end').value = data.end || '';
+                entry.querySelector('.type').value = data.type || 'contact';
+                entry.querySelector('.recurring').checked = data.recurring || false;
+                entry.querySelector('.recurring-options').classList.toggle('hidden', !data.recurring);
+                entry.querySelector('.frequency').value = data.frequency || 'daily';
+                entry.querySelector('.recurring-details').value = data.recurringDetails || '';
+                entry.querySelector('.notes').value = data.notes || '';
+                list.appendChild(entry);
+                const assignSelect = entry.querySelector('.assigned-to');
+                [...this.planData.parties.parentA, ...this.planData.parties.parentB].forEach(parent => {
+                    const option = document.createElement('option');
+                    option.value = parent.name;
+                    option.textContent = parent.name;
+                    option.selected = parent.name === data.assignedTo;
+                    assignSelect.appendChild(option);
                 });
-                state.builderStep = 0;
-                updateBuilderStep();
-                switchView('builder-view');
-            };
+            },
 
-            const updateBuilderStep = () => {
-                document.querySelectorAll('.step-container').forEach((step, index) => step.classList.toggle('active', index === state.builderStep));
-                renderNavigation();
-            };
+            addExpense: function(button, data = {}) {
+                const list = button ? button.closest('.step').querySelector('#expenses-list') : document.querySelector('#expenses-list');
+                const entry = document.getElementById('expense-entry-template').content.cloneNode(true);
+                entry.querySelector('.category').value = data.category || 'Living Expenses';
+                entry.querySelector('.description').value = data.description || '';
+                entry.querySelector('.budgeted-cost').value = data.budgetedCost || '';
+                entry.querySelector('.parent-a-contribution').value = data.parentAContribution || 50;
+                entry.querySelector('.parent-a-percentage').textContent = `${data.parentAContribution || 50}%`;
+                entry.querySelector('.parent-b-percentage').textContent = `${100 - (data.parentAContribution || 50)}%`;
+                entry.querySelector('.final-cost').value = data.finalCost || '';
+                list.appendChild(entry);
+            },
 
-            const renderNavigation = () => {
-                const isFirst = state.builderStep === 0;
-                const isLast = state.builderStep === state.selectedSections.length - 1;
-                containers.navigation.innerHTML = `<button id="back-to-landing" class="btn-secondary"><i class="fas fa-arrow-left mr-2"></i>Start Over</button><div><button id="prev-step-btn" class="btn-secondary" ${isFirst ? 'disabled' : ''}><i class="fas fa-chevron-left mr-2"></i>Previous</button>${isLast ? `<button id="generate-final-doc-btn" class="btn-primary ml-4"><i class="fas fa-file-arrow-down mr-2"></i>Generate Document</button>` : `<button id="next-step-btn" class="btn-primary ml-4">Next<i class="fas fa-chevron-right ml-2"></i></button>`}</div>`;
-            };
-            
-            const renderWizardStep = (step) => { /* Unchanged */ };
+            addCommunication: function(type, button, data = {}) {
+                const list = button ? button.closest('.step').querySelector(`#communication-${type.split('-')[1]}-list`) : document.querySelector(`#communication-${type.split('-')[1]}-list`);
+                const entry = document.getElementById('communication-entry-template').content.cloneNode(true);
+                entry.querySelector('.classification').value = data.classification || 'Urgent';
+                list.appendChild(entry);
+                const contactSelect = entry.querySelector('.contact-detail');
+                const contacts = this.planData.parties[type].flatMap(p => p.contacts || []);
+                contacts.forEach(contact => {
+                    const option = document.createElement('option');
+                    option.value = `${contact.type}: ${contact.detail}`;
+                    option.textContent = `${contact.type}: ${contact.detail}`;
+                    option.selected = contact.detail === data.detail;
+                    contactSelect.appendChild(option);
+                });
+            },
 
-            const setDynamicBackground = () => {
-                const bgs = ['linear-gradient(135deg, #1e3a8a 0%, #111827 100%)', 'linear-gradient(135deg, #3730a3 0%, #111827 100%)', 'linear-gradient(135deg, #047857 0%, #111827 100%)', 'linear-gradient(135deg, #9f1239 0%, #111827 100%)'];
-                containers.bg.style.backgroundImage = bgs[Math.floor(Math.random() * bgs.length)];
-            };
+            collectAllData: function() {
+                this.planData.parties.parentA = [];
+                document.querySelectorAll('#parent-a-list .parent-entry').forEach(entry => {
+                    const contacts = [];
+                    entry.querySelectorAll('.contact-entry').forEach(contact => {
+                        contacts.push({
+                            type: contact.querySelector('.type').value,
+                            detail: contact.querySelector('.detail').value
+                        });
+                    });
+                    const addresses = [];
+                    entry.querySelectorAll('.address-entry').forEach(address => {
+                        addresses.push({
+                            type: address.querySelector('.type').value,
+                            street: address.querySelector('.street').value,
+                            city: address.querySelector('.city').value,
+                            postal: address.querySelector('.postal').value
+                        });
+                    });
+                    this.planData.parties.parentA.push({
+                        name: entry.querySelector('.name').value,
+                        id: entry.querySelector('.id').value,
+                        relationship: entry.querySelector('.relationship').value,
+                        contacts,
+                        addresses
+                    });
+                });
 
+                this.planData.parties.parentB = [];
+                document.querySelectorAll('#parent-b-list .parent-entry').forEach(entry => {
+                    const contacts = [];
+                    entry.querySelectorAll('.contact-entry').forEach(contact => {
+                        contacts.push({
+                            type: contact.querySelector('.type').value,
+                            detail: contact.querySelector('.detail').value
+                        });
+                    });
+                    const addresses = [];
+                    entry.querySelectorAll('.address-entry').forEach(address => {
+                        addresses.push({
+                            type: address.querySelector('.type').value,
+                            street: address.querySelector('.street').value,
+                            city: address.querySelector('.city').value,
+                            postal: address.querySelector('.postal').value
+                        });
+                    });
+                    this.planData.parties.parentB.push({
+                        name: entry.querySelector('.name').value,
+                        id: entry.querySelector('.id').value,
+                        relationship: entry.querySelector('.relationship').value,
+                        contacts,
+                        addresses
+                    });
+                });
 
-            // SECTION 10: EVENT LISTENERS & INITIALIZATION
-            document.body.addEventListener('click', (e) => {
-                const target = e.target.closest('button');
-                if (!target) return;
-                
-                const parentCard = target.closest('.party-card');
+                this.planData.parties.children = [];
+                document.querySelectorAll('#children-list .child-entry').forEach(entry => {
+                    this.planData.parties.children.push({
+                        name: entry.querySelector('.name').value,
+                        dob: entry.querySelector('.dob').value,
+                        id: entry.querySelector('.id').value
+                    });
+                });
 
-                if (target.matches('.generate-section-btn')) { showDisclaimer([target.dataset.sectionId]); }
-                else if (target.id === 'back-to-landing') { switchView('landing-view'); }
-                else if (target.id === 'next-step-btn') { state.builderStep++; updateBuilderStep(); }
-                else if (target.id === 'prev-step-btn') { state.builderStep--; updateBuilderStep(); }
-                else if (target.id === 'generate-final-doc-btn') { showDisclaimer(Array.from(document.querySelectorAll('#summary-section-list input:checked')).map(cb => cb.value)); }
-                else if (target.matches('.wizard-option')) { renderWizardStep(parseInt(target.dataset.next)); }
-                else if (target.matches('.wizard-back')) { renderWizardStep(parseInt(target.dataset.prev)); }
-                else if (target.id === 'wizard-finish-btn') { renderBuilder(Array.from(document.querySelectorAll('input[name="section"]:checked')).map(cb => cb.value)); }
-                else if (target.matches('.add-guardian-btn')) { addGuardian(target.dataset.side); }
-                else if (target.matches('.add-address-btn')) { addAddress(parentCard.querySelector('.addresses-sub-container')); }
-                else if (target.matches('.add-contact-btn')) { addContact(parentCard.querySelector('.contacts-sub-container')); }
-                else if (target.id === 'add-child-btn') { addChild(); }
-                else if (target.matches('.add-expense-item-btn')) { addExpenseItem(document.getElementById('expense-items-container')); updateExpenseDashboard(); }
-                else if (target.matches('.add-event-btn')) { addEventLog(document.getElementById('events-log-container')); }
-                else if (target.matches('.add-comm-method-btn')) { /* logic */ }
-                else if (target.matches('.remove-item-btn')) { target.parentElement.closest('.party-card, .event-log-item, .grid').remove(); updateAllPartyDropdowns(); updateExpenseDashboard(); }
-                else if (target.matches('.download-csv-btn')) { downloadScheduleCSV(); }
-            });
-            
-            document.body.addEventListener('input', e => {
-                const target = e.target;
-                if (target.matches('.expense-amount, .expense-paid-by')) { updateExpenseDashboard(); } 
-                else if (target.matches('.party-name')) { updateAllPartyDropdowns(); }
-            });
+                this.planData.schedule.custody = {
+                    holder: document.getElementById('custody-holder')?.value || '',
+                    otherName: document.getElementById('custody-other-name')?.value || '',
+                    otherRelationship: document.getElementById('custody-other-relationship')?.value || '',
+                    decision: document.getElementById('custody-decision')?.value || '',
+                    notes: document.getElementById('custody-notes')?.value || ''
+                };
 
-            // Initial view setup buttons & modals
-            buttons.startWizard.addEventListener('click', () => { /* ... unchanged ... */ });
-            buttons.startManual.addEventListener('click', () => renderBuilder(state.allSections.filter(s => s.id !== 'summary').map(s => s.id)));
-            buttons.savePlan.addEventListener('click', () => showAlert('Feature Coming Soon!', 'Online saving and collaboration will be available for registered users soon.'));
+                this.planData.schedule.events = [];
+                document.querySelectorAll('#events-list .event-entry').forEach(entry => {
+                    this.planData.schedule.events.push({
+                        title: entry.querySelector('.title').value,
+                        start: entry.querySelector('.start').value,
+                        end: entry.querySelector('.end').value,
+                        assignedTo: entry.querySelector('.assigned-to').value,
+                        type: entry.querySelector('.type').value,
+                        recurring: entry.querySelector('.recurring').checked,
+                        frequency: entry.querySelector('.frequency')?.value || '',
+                        recurringDetails: entry.querySelector('.recurring-details')?.value || '',
+                        notes: entry.querySelector('.notes').value
+                    });
+                });
 
-            alertModal.close.addEventListener('click', () => alertModal.modal.style.display = 'none');
-            disclaimerModal.cancel.addEventListener('click', () => disclaimerModal.modal.style.display = 'none');
-            disclaimerModal.agree.addEventListener('change', () => disclaimerModal.proceed.disabled = !disclaimerModal.agree.checked);
-            disclaimerModal.proceed.addEventListener('click', () => {
-                disclaimerModal.modal.style.display = 'none';
-                generateDocument(disclaimerModal.proceed.dataset.sections.split(','));
-            });
+                this.planData.finances.budgetOrigin = document.getElementById('budget-origin')?.value || '';
+                this.planData.finances.expenses = [];
+                document.querySelectorAll('#expenses-list .expense-entry').forEach(entry => {
+                    this.planData.finances.expenses.push({
+                        category: entry.querySelector('.category').value,
+                        description: entry.querySelector('.description').value,
+                        budgetedCost: parseFloat(entry.querySelector('.budgeted-cost').value) || 0,
+                        parentAContribution: parseInt(entry.querySelector('.parent-a-contribution').value) || 50,
+                        parentBContribution: 100 - (parseInt(entry.querySelector('.parent-a-contribution').value) || 50),
+                        finalCost: parseFloat(entry.querySelector('.final-cost').value) || parseFloat(entry.querySelector('.budgeted-cost').value) || 0
+                    });
+                });
 
-            // Initial App Load
-            setDynamicBackground();
-            // Optional: fetch('sidebar.html').then(r=>r.text()).then(html=>containers.sidebar.innerHTML=html).catch(e=>console.error("Sidebar not found."));
-        });
+                this.planData.communication.parentA = [];
+                document.querySelectorAll('#communication-a-list .communication-entry').forEach(entry => {
+                    this.planData.communication.parentA.push({
+                        detail: entry.querySelector('.contact-detail').value,
+                        classification: entry.querySelector('.classification').value
+                    });
+                });
+
+                this.planData.communication.parentB = [];
+                document.querySelectorAll('#communication-b-list .communication-entry').forEach(entry => {
+                    this.planData.communication.parentB.push({
+                        detail: entry.querySelector('.contact-detail').value,
+                        classification: entry.querySelector('.classification').value
+                    });
+                });
+
+                this.planData.communication.notes = document.getElementById('communication-notes')?.value || '';
+
+                this.updateDashboards();
+            },
+
+            updateDashboards: function() {
+                // Time Dashboard
+                const timeStats = document.getElementById('time-stats');
+                if (timeStats) {
+                    const timeByParent = {};
+                    this.planData.parties.parentA.forEach(p => timeByParent[p.name] = 0);
+                    this.planData.parties.parentB.forEach(p => timeByParent[p.name] = 0);
+                    this.planData.schedule.events.forEach(event => {
+                        if (event.start && event.end && event.assignedTo) {
+                            const start = new Date(event.start);
+                            const end = new Date(event.end);
+                            const hours = (end - start) / (1000 * 60 * 60);
+                            timeByParent[event.assignedTo] = (timeByParent[event.assignedTo] || 0) + hours;
+                        }
+                    });
+                    let html = '';
+                    for (const [parent, hours] of Object.entries(timeByParent)) {
+                        const days = Math.floor hours / 24);
+                        const remainingHours = (hours % 24).toFixed(1);
+                        html += `<p>${parent}: ${days} days, ${remainingHours} hours</p>`;
+                    }
+                    timeStats.innerHTML = html || 'No events logged.';
+                }
+
+                // Finance Dashboard
+                const financeStats = document.getElementById('finance-stats');
+                if (financeStats) {
+                    let totalA = 0, totalB = 0;
+                    this.planData.finances.expenses.forEach(expense => {
+                        const cost = expense.finalCost || expense.budgetedCost;
+                        totalA += (cost * expense.parentAContribution / 100);
+                        totalB += (cost * expense.parentBContribution / 100);
+                    });
+                    financeStats.innerHTML = `
+                        <p>Parent A: $${totalA.toFixed(2)} (${((totalA / (totalA + totalB) || 0) * 100).toFixed(1)}%)</p>
+                        <p>Parent B: $${totalB.toFixed(2)} (${((totalB / (totalA + totalB) || 0) * 100).toFixed(1)}%)</p>
+                    `;
+                }
+            },
+
+            loadExistingData: function() {
+                this.planData.parties.parentA.forEach(parent => this.addParent('parent-a', null, parent));
+                this.planData.parties.parentB.forEach(parent => this.addParent('parent-b', null, parent));
+                this.planData.parties.children.forEach(child => this.addChild(null, child));
+                this.planData.schedule.events.forEach(event => this.addEvent(null, event));
+                this.planData.finances.expenses.forEach(expense => this.addExpense(null, expense));
+                this.planData.communication.parentA.forEach(method => this.addCommunication('parent-a', null, method));
+                this.planData.communication.parentB.forEach(method => this.addCommunication('parent-b', null, method));
+                if (this.planData.schedule.custody) {
+                    document.getElementById('custody-holder').value = this.planData.schedule.custody.holder || '';
+                    document.getElementById('custody-other').classList.toggle('hidden', this.planData.schedule.custody.holder !== 'other');
+                    document.getElementById('custody-other-name').value = this.planData.schedule.custody.otherName || '';
+                    document.getElementById('custody-other-relationship').value = this.planData.schedule.custody.otherRelationship || '';
+                    document.getElementById('custody-decision').value = this.planData.schedule.custody.decision || '';
+                    document.getElementById('custody-notes').value = this.planData.schedule.custody.notes || '';
+                }
+                document.getElementById('budget-origin').value = this.planData.finances.budgetOrigin || '';
+                document.getElementById('communication-notes').value = this.planData.communication.notes || '';
+                this.updateDashboards();
+            },
+
+            showDisclaimer: function(sections) {
+                this.selectedSections = sections;
+                document.getElementById('disclaimer-modal').classList.remove('hidden');
+                document.getElementById('disclaimer-agree').checked = false;
+                document.getElementById('disclaimer-proceed').disabled = true;
+            },
+
+            generateDocument: function(sections) {
+                let html = `
+                    <!DOCTYPE html>
+                    <html lang="en">
+                    <head>
+                        <meta charset="UTF-8">
+                        <title>Parenting Plan</title>
+                        <style>
+                            body { font-family: 'Arial', sans-serif; margin: 40px; }
+                            .cover-page { text-align: center; margin-bottom: 40px; }
+                            .section { margin-bottom: 20px; }
+                            h1 { font-size: 24px; }
+                            h2 { font-size: 20px; }
+                            ul { list-style-type: none; padding: 0; }
+                            .footer { position: fixed; bottom: 0; width: 100%; text-align: center; font-size: 12px; opacity: 0.5; }
+                            .watermark { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); opacity: 0.1; font-size: 48px; }
+                        </style>
+                    </head>
+                    <body>
+                        <div class="watermark">Flamea</div>
+                        <!-- Cover Page -->
+                        <div class="cover-page">
+                            <h1>The Father's Armoury</h1>
+                            <h2>Parenting Plan</h2>
+                            <p>Document ID: FLAMEA-PP-${Date.now()}</p>
+                            <p>Generated on: ${new Date().toLocaleDateString()}</p>
+                            <p>Last Modified: ${new Date(this.planData.metadata.lastModified).toLocaleDateString()}</p>
+                        </div>
+
+                        <!-- Sections -->
+                        ${sections.includes('parties') ? `
+                            <div class="section">
+                                <h2>Parties & Children</h2>
+                                <h3>Parent A</h3>
+                                <ul>
+                                    ${this.planData.parties.parentA.map(p => `
+                                        <li>${p.name} (${p.relationship}) - ID: ${p.id || 'N/A'}</li>
+                                        <ul>
+                                            ${p.contacts.map(c => `<li>Contact: ${c.type} - ${c.detail}</li>`).join('')}
+                                            ${p.addresses.map(a => `<li>Address: ${a.type} - ${a.street}, ${a.city}, ${a.postal}</li>`).join('')}
+                                        </ul>
+                                    `).join('')}
+                                </ul>
+                                <h3>Parent B</h3>
+                                <ul>
+                                    ${this.planData.parties.parentB.map(p => `
+                                        <li>${p.name} (${p.relationship}) - ID: ${p.id || 'N/A'}</li>
+                                        <ul>
+                                            ${p.contacts.map(c => `<li>Contact: ${c.type} - ${c.detail}</li>`).join('')}
+                                            ${p.addresses.map(a => `<li>Address: ${a.type} - ${a.street}, ${a.city}, ${a.postal}</li>`).join('')}
+                                        </ul>
+                                    `).join('')}
+                                </ul>
+                                <h3>Children</h3>
+                                <ul>
+                                    ${this.planData.parties.children.map(c => `<li>${c.name} - DOB: ${c.dob || 'N/A'}, ID: ${c.id || 'N/A'}</li>`).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        ${sections.includes('schedule') ? `
+                            <div class="section">
+                                <h2>Custody & Activity Schedule</h2>
+                                <p>Custody Holder: ${this.planData.schedule.custody.holder === 'other' ? `${this.planData.schedule.custody.otherName} (${this.planData.schedule.custody.otherRelationship})` : this.planData.schedule.custody.holder || 'None'}</p>
+                                <p>Decision: ${this.planData.schedule.custody.decision || 'None'}</p>
+                                <p>Notes: ${this.planData.schedule.custody.notes || 'None'}</p>
+                                <h3>Events</h3>
+                                <ul>
+                                    ${this.planData.schedule.events.map(e => `
+                                        <li>${e.title} (${e.type}) - ${e.start} to ${e.end}, Assigned to: ${e.assignedTo || 'N/A'}</li>
+                                        ${e.recurring ? `<li>Recurring: ${e.frequency} (${e.recurringDetails})</li>` : ''}
+                                        <li>Notes: ${e.notes}</li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        ${sections.includes('finances') ? `
+                            <div class="section">
+                                <h2>Expense & Benefit Tracker</h2>
+                                <p>Budget Origin: ${this.planData.finances.budgetOrigin || 'None'}</p>
+                                <ul>
+                                    ${this.planData.finances.expenses.map(e => `
+                                        <li>${e.category}: ${e.description} - Budget: $${e.budgetedCost}, Final: $${e.finalCost}, A: ${e.parentAContribution}%, B: ${e.parentBContribution}%</li>
+                                    `).join('')}
+                                </ul>
+                            </div>
+                        ` : ''}
+
+                        ${sections.includes('communication') ? `
+                            <div class="section">
+                                <h2>Communication Plan</h2>
+                                <h3>Parent A</h3>
+                                <ul>
+                                    ${this.planData.communication.parentA.map(m => `<li>${m.detail} (${m.classification})</li>`).join('')}
+                                </ul>
+                                <h3>Parent B</h3>
+                                <ul>
+                                    ${this.planData.communication.parentB.map(m => `<li>${m.detail} (${m.classification})</li>`).join('')}
+                                </ul>
+                                <p>Notes: ${this.planData.communication.notes || 'None'}</p>
+                            </div>
+                        ` : ''}
+
+                        <!-- Annexure -->
+                        <div class="section">
+                            <h2>Annexure A: Definitions & Key Principles</h2>
+                            <p>"Best Interests of the Child": Decisions prioritize the child's well-being as per South African law.</p>
+                        </div>
+
+                        <!-- Back Cover -->
+                        <div class="section">
+                            <h2>About Flamea</h2>
+                            <p>Mission: To empower fathers by dismantling systemic discrimination in family law.</p>
+                            <p>Contact: info@flamea.org | www.flamea.org</p>
+                        </div>
+
+                        <div class="footer">
+                            <p>Flamea.org - Empowering Fathers | Page <span class="page-number">1</span></p>
+                        </div>
+                    </body>
+                    </html>
+                `;
+                const newTab = window.open();
+                newTab.document.write(html);
+                newTab.document.close();
+            }
+        };
+
+        ParentingPlanApp.init();
     </script>
 </body>
 </html>
