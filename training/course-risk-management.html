@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
         .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
         .module-card:hover { transform: translateY(-5px); border-color: #64748b; }
@@ -27,9 +26,11 @@
         @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<body class="bg-gray-900 text-gray-200 font-sans flex">
+
+    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
+    
+    <div class="flex-1 flex flex-col">
         <main class="main-content p-4 md:p-8 flex items-center justify-center">
             
             <div id="course-hub" class="max-w-4xl mx-auto text-center">
@@ -54,7 +55,6 @@
                     <div class="flex justify-between items-center mb-4">
                         <h2 class="text-2xl font-bold font-roboto-slab text-slate-300">Risk Management Challenge</h2>
                         <div id="achievements-bar" class="flex gap-3 text-2xl">
-                           <!-- Achievements unlocked here -->
                         </div>
                     </div>
                     <div class="w-full bg-gray-700 rounded-full h-4 mb-6">
@@ -80,11 +80,19 @@
         </main>
     </div>
 
-    <!-- Scripts -->
-    <script type="module" src="../assets/js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // UI Elements
+        fetch('/training-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
+                    const scriptEl = placeholder.querySelector('script');
+                    if (scriptEl) eval(scriptEl.innerHTML);
+                }
+            }).catch(error => console.error('Error fetching training sidebar:', error));
+
         const courseHub = document.getElementById('course-hub');
         const quizArea = document.getElementById('quiz-area');
         const startCourseBtn = document.getElementById('start-course-btn');
@@ -97,26 +105,21 @@
         const finalScoreEl = document.getElementById('final-score');
         const restartBtn = document.getElementById('restart-btn');
 
-        // Game Data
         const questions = [
-            // Module 1 (5 questions)
             { q: "What is the primary goal of a proactive risk management mindset?", a: "To prevent problems before they start.", o: ["To react quickly to problems.", "To document problems after they happen."] },
             { q: "What is the FIRST step in the risk management process?", a: "Identify Hazards", o: ["Assess the Risk", "Control the Risk"] },
             { q: "What is the LAST step in the risk management process?", a: "Review Controls", o: ["Assess the Risk", "Identify Hazards"] },
             { q: "Risk assessment involves considering the likelihood of a hazard occurring and its potential...", a: "Severity", o: ["Cost", "Popularity"] },
             { q: "Thinking like a risk manager primarily helps a father be more...", a: "Proactive", o: ["Authoritarian", "Lenient"] },
-            // Module 2 (5 questions)
             { q: "A frayed electrical cord is an example of what kind of risk?", a: "Physical Risk", o: ["Financial Risk", "Emotional Risk"] },
             { q: "Having no emergency savings fund is what kind of risk?", a: "Financial Risk", o: ["Physical Risk", "Social Risk"] },
             { q: "Cyberbullying and online safety fall under which risk category?", a: "Emotional & Social Risk", o: ["Physical Risk", "Financial Risk"] },
             { q: "Which of these is NOT primarily a physical risk in a home?", a: "A child feeling excluded", o: ["An unfenced swimming pool", "Unsecured heavy furniture"] },
             { q: "Identifying potential risks helps a family to...", a: "Prepare and prevent harm", o: ["Worry more often", "Ignore problems"] },
-            // Module 3 (4 questions + 1 sudden death)
             { q: "According to the Hierarchy of Controls, what is the MOST effective control measure?", a: "Elimination (removing the hazard)", o: ["Substitution", "Using PPE"] },
             { q: "Installing a safety gate at the top of a staircase is an example of an...", a: "Engineering Control", o: ["Administrative Control", "Elimination"] },
             { q: "Making a child wear a bicycle helmet is an example of which type of control?", a: "Personal Protective Equipment (PPE)", o: ["Substitution", "Elimination"] },
             { q: "According to the hierarchy, PPE should be considered the...", a: "Last resort", o: ["First solution", "Only solution"] },
-            // Sudden Death Question
             { q: "Your teenager wants to go to a party where you suspect there will be no adult supervision. What is the BEST FIRST step using the Hierarchy of Controls?", a: "Administrative Control (Set clear rules and consequences)", o: ["Elimination (Forbid them from ever going to parties)", "PPE (Give them a phone to call you)"] }
         ];
 
@@ -163,7 +166,7 @@
             const isCorrect = selectedOption.dataset.answer === 'true';
             
             questionArea.querySelectorAll('.quiz-option').forEach(opt => {
-                opt.style.pointerEvents = 'none'; // Prevent further clicks
+                opt.style.pointerEvents = 'none';
                 if(opt.dataset.answer === 'true') {
                     opt.classList.add('correct');
                 } else if (opt === selectedOption) {

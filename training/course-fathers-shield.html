@@ -9,7 +9,6 @@
     <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
         .prose h2 { color: #67e8f9; font-family: 'Roboto Slab', serif;} 
         .prose h3 { color: #a5f3fc; font-family: 'Roboto Slab', serif;} 
@@ -24,9 +23,11 @@
         @keyframes pop-in { 0% { transform: scale(0.5); opacity: 0; } 100% { transform: scale(1); opacity: 1; } }
     </style>
 </head>
-<body class="bg-gray-900 text-gray-200">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
+<body class="bg-gray-900 text-gray-200 font-sans flex">
+
+    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
+
+    <div class="flex-1 flex flex-col">
         <main class="main-content p-4 md:p-8 flex items-center justify-center">
             
             <div id="course-hub" class="max-w-4xl mx-auto text-center">
@@ -71,10 +72,19 @@
         </main>
     </div>
 
-    <script type="module" src="../assets/js/main.js"></script>
     <script>
     document.addEventListener('DOMContentLoaded', () => {
-        // UI Elements
+        fetch('/training-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
+                    const scriptEl = placeholder.querySelector('script');
+                    if (scriptEl) eval(scriptEl.innerHTML);
+                }
+            }).catch(error => console.error('Error fetching training sidebar:', error));
+            
         const courseHub = document.getElementById('course-hub');
         const quizArea = document.getElementById('quiz-area');
         const startCourseBtn = document.getElementById('start-course-btn');
@@ -89,19 +99,16 @@
         const restartBtn = document.getElementById('restart-btn');
 
         const questions = [
-            // Module 1 (5 questions)
             { q: "What is the most powerful principle a father can use to challenge unfairness?", a: "The best interests of the child", o: ["The right to be heard", "The principle of redress"] },
             { q: "Section 28 of the Constitution states that a child's best interests are...", a: "of paramount importance.", o: ["a secondary consideration.", "only important in divorce cases."] },
             { q: "Why can Section 28 be more powerful than redress policies like BEE?", a: "Because it focuses on the individual child's welfare, not group politics.", o: ["Because it is a newer law.", "Because it only applies to fathers."] },
             { q: "The phrase 'in every matter concerning the child' means the principle applies to...", a: "Workplace, school, and court matters.", o: ["Only matters in the Children's Court.", "Only financial matters."] },
             { q: "True or False: An argument based on the child's best interests is often more effective than an argument based on personal unfairness.", a: "True", o: ["False"] },
-            // Module 2 (5 questions)
             { q: "When you argue from the 'best interests' principle, you are primarily arguing for...", a: "Your child's rights.", o: ["Your own rights.", "The mother's rights."] },
             { q: "How should you frame an argument about a discriminatory policy?", a: "This policy harms my child by limiting my ability to provide for them.", o: ["This policy is unfair to me as a man.", "This policy is unconstitutional."] },
             { q: "This approach shifts the focus away from divisive politics and towards...", a: "Universal child welfare.", o: ["Racial debates.", "Gender arguments."] },
             { q: "A court is more likely to be sympathetic to an argument based on...", a: "A child's right to have a capable and present father.", o: ["A father's personal frustration.", "A desire for revenge against an ex-partner."] },
             { q: "Using the 'best interests' principle makes your argument less about you and more about your...", a: "Duty as a parent.", o: ["Financial status.", "Personal feelings."] },
-            // Module 3 (5 questions)
             { q: "If a biased court ruling harms a child's relationship with their father, it is...", a: "Against the child's best interests.", o: ["Legally final and cannot be challenged.", "The mother's fault."] },
             { q: "If a father is denied a promotion due to his race, how can he argue this affects his child?", a: "It impacts his ability to provide maintenance and opportunities.", o: ["It doesn't affect his child.", "He should just find another job."] },
             { q: "This principle can be used to challenge biased recommendations from...", a: "Social workers and Family Advocates.", o: ["Teachers and school principals only.", "Police officers only."] },
@@ -134,9 +141,7 @@
             nextQuestionBtn.classList.add('hidden');
             const qData = questions[currentQuestionIndex];
             
-            let optionsHTML = shuffleArray([...qData.o, qData.a])
-                .map(opt => `<div class="quiz-option p-4 rounded-lg" data-answer="${opt === qData.a}">${opt}</div>`)
-                .join('');
+            let optionsHTML = shuffleArray([...qData.o, qData.a]).map(opt => `<div class="quiz-option p-4 rounded-lg" data-answer="${opt === qData.a}">${opt}</div>`).join('');
             
             questionArea.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${qData.q}</p><div class="space-y-3">${optionsHTML}</div>`;
             

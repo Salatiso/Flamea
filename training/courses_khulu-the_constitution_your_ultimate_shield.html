@@ -4,58 +4,33 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Khulu Courses: The Constitution, Your Ultimate Shield</title>
-    <!-- Tailwind CSS is loaded via the main style.min.css -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
         body { font-family: 'Open Sans', sans-serif; }
-        
-        .main-container { display: flex; min-height: 100vh; }
         .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-
-        /* Card styles */
-        .topic-card, .level-card {
-            border: 2px solid transparent;
-            transition: all 0.3s ease;
-        }
-        .topic-card:hover, .level-card:hover {
-            transform: translateY(-5px);
-            border-color: #f59e0b; /* amber-500 */
-        }
-        .topic-card.selected, .level-card.selected {
-            border-color: #f59e0b; /* amber-500 */
-            background-color: rgba(245, 158, 11, 0.1);
-        }
-
-        /* Ndebele-inspired Border */
-        .ndebele-border { 
-            border: 10px solid; 
-            border-image-slice: 1; 
-            border-width: 10px; 
-            border-image-source: linear-gradient(to left, #f59e0b, #ef4444, #3b82f6, #10b981); 
-        }
-        
-        /* Quiz styles */
+        .topic-card, .level-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .topic-card:hover, .level-card:hover { transform: translateY(-5px); border-color: #f59e0b; }
+        .topic-card.selected, .level-card.selected { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
+        .ndebele-border { border: 10px solid; border-image-slice: 1; border-width: 10px; border-image-source: linear-gradient(to left, #f59e0b, #ef4444, #3b82f6, #10b981); }
         .progress-bar-bg { background-color: #374151; }
         .progress-bar-fill { background-color: #f59e0b; transition: width 0.5s ease-in-out; }
         .option-select { appearance: none; background-image: url('data:image/svg+xml;charset=US-ASCII,%3Csvg%20xmlns%3D%22http%3A%2F%2Fwww.w3.org%2F2000%2Fsvg%22%20width%3D%22292.4%22%20height%3D%22292.4%22%3E%3Cpath%20fill%3D%22%234b5563%22%20d%3D%22M287%2069.4a17.6%2017.6%200%200%200-13-5.4H18.4c-5%200-9.3%201.8-12.9%205.4A17.6%2017.6%200%200%200%200%2082.2c0%205%201.8%209.3%205.4%2012.9l128%20127.9c3.6%203.6%207.8%205.4%2012.8%205.4s9.2-1.8%2012.8-5.4L287%2095c3.5-3.5%205.4-7.8%205.4-12.8%200-5-1.9-9.2-5.4-12.8z%22%2F%3E%3C%2Fsvg%3E'); background-repeat: no-repeat; background-position: right .7em top 50%; background-size: .65em auto; }
         .feedback-correct { border-left: 5px solid #22c55e; }
         .feedback-incorrect { border-left: 5px solid #ef4444; }
         .modal-backdrop { background-color: rgba(0,0,0,0.7); backdrop-filter: blur(5px); }
-
     </style>
 </head>
 <body class="bg-gray-100 dark:bg-gray-900 font-sans flex">
-    <div class="main-container">
-        <div id="sidebar-placeholder"></div>
-
+    
+    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
+    
+    <div class="flex-1 flex flex-col">
         <main class="main-content p-8 md:p-12">
             <div id="course-hub" class="max-w-4xl mx-auto">
-                <!-- Header Section -->
                 <header class="text-center mb-12">
                     <div class="flex justify-center items-center gap-4 mb-4">
-                        <!-- SVG Icon for "Shield" -->
                         <svg class="h-16 w-16 text-yellow-400" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg" stroke="currentColor" stroke-width="1.5">
                             <path d="M12 2L4 5v6.09c0 4.97 3.58 9.38 8 10.91c4.42-1.53 8-5.94 8-10.91V5L12 2z" />
                         </svg>
@@ -64,23 +39,19 @@
                     <p class="text-lg text-gray-300">As a Khulu, a father, an elder—your wisdom is the shield that protects your family. This course sharpens that shield with the supreme law of the land.</p>
                 </header>
 
-                <!-- Topic Selection -->
                 <section class="mb-12">
                     <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Step 1: Choose Your Area of Knowledge</h2>
                     <div id="topic-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                        <!-- Card 1: Bill of Rights -->
                         <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="bill_of_rights">
                              <i class="fas fa-users text-4xl text-blue-400 mb-3"></i>
                             <h3 class="text-xl font-bold text-white mb-2">The Bill of Rights</h3>
                             <p class="text-gray-400 text-sm">Understand the fundamental rights that protect you and your children, from equality to dignity.</p>
                         </div>
-                        <!-- Card 2: Branches of Government -->
                         <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="branches">
                              <i class="fas fa-sitemap text-4xl text-green-400 mb-3"></i>
                             <h3 class="text-xl font-bold text-white mb-2">Structure of State</h3>
                             <p class="text-gray-400 text-sm">Learn how power is balanced between the Legislature, Executive, and Judiciary.</p>
                         </div>
-                        <!-- Card 3: Customary Law -->
                         <div class="topic-card bg-slate-800/80 backdrop-blur-sm p-6 rounded-xl text-center cursor-pointer" data-topic="customary_law">
                              <i class="fas fa-feather-alt text-4xl text-yellow-400 mb-3"></i>
                             <h3 class="text-xl font-bold text-white mb-2">Customary Law & The Constitution</h3>
@@ -89,7 +60,6 @@
                     </div>
                 </section>
 
-                 <!-- Level Selection -->
                 <section class="mb-12 hidden" id="level-selection-section">
                     <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Step 2: Choose Your Level of Wisdom</h2>
                     <div id="level-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
@@ -116,7 +86,6 @@
                 </div>
             </div>
 
-            <!-- Quiz Area (Initially Hidden) -->
             <div id="quiz-area" class="course-container ndebele-border w-full max-w-3xl rounded-2xl shadow-2xl p-8 mx-auto hidden">
                 <div class="mb-6 text-center">
                     <h2 class="text-2xl font-bold font-roboto-slab text-yellow-400" id="quiz-title">Quiz Title</h2>
@@ -140,7 +109,6 @@
                 </div>
             </div>
 
-            <!-- End Screen (Initially Hidden) -->
             <div id="end-screen" class="text-center hidden bg-slate-800/80 backdrop-blur-sm p-8 rounded-xl">
                  <h2 class="text-4xl font-bold font-roboto-slab text-green-400">Course Complete!</h2>
                  <p class="text-xl mt-4">You have mastered the foundations of your rights. Your wisdom is a shield for your family.</p>
@@ -151,7 +119,6 @@
         </main>
     </div>
 
-    <!-- Award Modal -->
     <div id="award-modal" class="fixed inset-0 modal-backdrop flex items-center justify-center hidden z-50">
         <div class="bg-gray-800 p-8 rounded-lg text-center border-4 ndebele-border">
             <i class="fas fa-trophy text-7xl text-yellow-400 mb-4"></i>
@@ -161,12 +128,18 @@
         </div>
     </div>
     
-    <!-- Unified Loader Script -->
-    <script type="module" src="../assets/js/main.js"></script>
-
-    <!-- Page-Specific Course Logic -->
     <script>
     document.addEventListener('DOMContentLoaded', () => {
+        fetch('/training-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
+                    const scriptEl = placeholder.querySelector('script');
+                    if (scriptEl) eval(scriptEl.innerHTML);
+                }
+            }).catch(error => console.error('Error fetching training sidebar:', error));
 
         const courseHub = document.getElementById('course-hub');
         const quizArea = document.getElementById('quiz-area');
@@ -182,7 +155,6 @@
         let selectedLevel = null;
         let questions = [];
 
-        // --- Course Data ---
         const courseData = {
             bill_of_rights: [
                 { q: "What is the highest law in South Africa?", a: "The Constitution", o: ["The President's rules", "Police regulations"], exp: "The Constitution is the 'Big Rule Book' that everyone, including the President, must follow." },
@@ -206,108 +178,7 @@
                 { q: "Can a person be forced to follow a customary practice that goes against their constitutional rights?", a: "No, constitutional rights are supreme.", o: ["Yes, tradition must always be followed.", "Only if the Chief says so."], exp: "An individual's constitutional rights, like the right to dignity and bodily integrity, cannot be violated by cultural or traditional practices." }
             ]
         };
-
-        /**
- * Flamea.org - Final Unified Main Script
- * Version: 9.1
- * Description:
- * This script manages all core site-wide functionalities.
- * - Dynamically loads the sidebar with robust path handling.
- * - Handles all modals.
- * - Manages accordions and submenus.
- * - Renders dynamic catalogues for Tools, Games, and Customs.
- * - Implements the dynamic time-of-day background.
- * NOTE: Training catalogue logic is in training.js.
- */
-document.addEventListener('DOMContentLoaded', () => {
-
-    // --- 1. CORE INITIALIZATION ---
-    function initializeSiteFeatures() {
-        loadSidebar(); // This now contains the corrected logic
-        setDynamicBackground();
-        initializeModals();
-        initializeAccordionsAndSubmenus();
-        renderToolsCatalogue();
-        renderGamesCatalogue();
-        renderCustomsPage();
-    }
-
-    /**
-     * --- CORRECTED SIDEBAR LOADER ---
-     * This new function automatically calculates the correct path to the sidebar
-     * from any page, whether it's in the root folder or a subfolder like /training/.
-     */
-    function loadSidebar() {
-        const sidebarPlaceholder = document.getElementById('sidebar-placeholder');
-        if (!sidebarPlaceholder) return;
-
-        // Determine the relative path to the root directory
-        const pathSegments = window.location.pathname.split('/').filter(Boolean);
-        // The depth is the number of subdirectories, minus the filename
-        const depth = pathSegments.length > 1 ? pathSegments.length - 1 : 0;
-        const pathPrefix = '../'.repeat(depth);
-
-        fetch(`${pathPrefix}sidebar.html`)
-            .then(response => {
-                if (!response.ok) throw new Error(`Could not load sidebar.html from path: ${pathPrefix}`);
-                return response.text();
-            })
-            .then(html => {
-                sidebarPlaceholder.outerHTML = html;
-                // Run functions that depend on the sidebar *after* it's loaded
-                setActiveSidebarLink(pathPrefix);
-            })
-            .catch(error => {
-                console.error('Sidebar load error:', error);
-                sidebarPlaceholder.innerHTML = '<p class="p-4 text-red-400">Navigation could not be loaded.</p>';
-            });
-    }
-
-    // --- [Dynamic Background, Modals, Accordions, etc. remain here] ---
-
-    // Updated to accept pathPrefix to build correct link URLs
-    function setActiveSidebarLink(pathPrefix = '') {
-        const currentPage = window.location.pathname.split("/").pop() || "index.html";
-        const navLinks = document.querySelectorAll('#main-sidebar a'); // Target new sidebar ID
         
-        navLinks.forEach(link => {
-            const linkPage = link.getAttribute('href').split("/").pop();
-            if (linkPage === currentPage) {
-                link.classList.add('active');
-                const parentSubmenu = link.closest('.submenu-container');
-                if (parentSubmenu) {
-                    parentSubmenu.style.display = 'block';
-                    const parentToggle = parentSubmenu.closest('[data-menu-item]').querySelector('.submenu-toggle');
-                    if (parentToggle) {
-                        const icon = parentToggle.querySelector('i.fa-chevron-down');
-                        if (icon) icon.classList.add('rotate-180');
-                    }
-                }
-            }
-        });
-    }
-
-    // [ The rest of the main.js code (modals, accordions, other catalogues) is unchanged ]
-    // ...
-    // Note: I have omitted the rest of the file for brevity as only the loadSidebar function was changed.
-    // ...
-
-    function setDynamicBackground() { /* ... function code ... */ }
-    function initializeModals() { /* ... function code ... */ }
-    function initializeAccordionsAndSubmenus() { /* ... function code ... */ }
-    const toolData = [/* ... all tool data ... */];
-    const gameData = [/* ... all game data ... */];
-    const customsDatabase = [/* ... all customs data ... */];
-    function renderToolsCatalogue() { /* ... function code ... */ }
-    function renderGamesCatalogue() { /* ... function code ... */ }
-    function renderCustomsPage() { /* ... function code ... */ }
-    
-    // --- 5. INITIALIZE ---
-    initializeSiteFeatures();
-});
-
-        
-        // UI elements for the quiz
         const levelDisplay = document.getElementById('level-display');
         const progressBar = document.getElementById('progress-bar');
         const questionTextEl = document.getElementById('question-text');
@@ -448,7 +319,6 @@ document.addEventListener('DOMContentLoaded', () => {
             selectedLevel = null;
         }
 
-        // Event Listeners
         topicCards.forEach(card => card.addEventListener('click', () => selectCard(card, 'topic')));
         levelCards.forEach(card => card.addEventListener('click', () => selectCard(card, 'level')));
         startCourseBtn.addEventListener('click', startCourse);
