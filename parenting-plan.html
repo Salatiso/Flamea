@@ -1,22 +1,28 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Parenting Plan Builder</title>
+    <!-- Tailwind CSS and Fonts -->
     <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;70.0&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" xintegrity="sha512-iecdLmaskl7CVkqkXNQ/ZH/XLlvWZOJyj7Yy7tcenmpD1ypASozpmT/E0iPtmFIB46ZmdtAc9eNBvH0H/ZpiBw==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <!-- Custom Styles -->
     <style>
-        body {
-            font-family: 'Inter', sans-serif;
+         body {
+            font-family: 'Roboto', sans-serif;
+            background-color: #111827; /* dark:bg-gray-900 */
+            color: #d1d5db; /* dark:text-gray-300 */
         }
 
         .accordion-content {
-            display: none;
-            transition: max-height 0.3s ease-in-out;
+            max-height: 0;
             overflow: hidden;
+            transition: max-height 0.3s ease-out;
         }
 
         .accordion-button.active .fa-chevron-down {
@@ -25,36 +31,30 @@
 
         .modal {
             display: none;
-            /* Hidden by default */
             position: fixed;
-            /* Stay in place */
-            z-index: 100;
-            /* Sit on top */
+            z-index: 1000;
             left: 0;
             top: 0;
             width: 100%;
-            /* Full width */
             height: 100%;
-            /* Full height */
             overflow: auto;
-            /* Enable scroll if needed */
-            background-color: rgba(0, 0, 0, 0.5);
-            /* Black w/ opacity */
+            background-color: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(5px);
         }
 
         .modal-content {
-            background-color: #fefefe;
-            margin: 15% auto;
-            /* 15% from the top and centered */
-            padding: 20px;
-            border: 1px solid #888;
-            width: 80%;
+            background-color: #1f2937; /* dark:bg-gray-800 */
+            margin: 10% auto;
+            padding: 2rem;
+            border: 1px solid #4b5563; /* dark:border-gray-600 */
+            width: 90%;
             max-width: 500px;
-            border-radius: 10px;
+            border-radius: 0.75rem; /* rounded-xl */
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
         }
 
         .close-button {
-            color: #aaa;
+            color: #9ca3af; /* dark:text-gray-400 */
             float: right;
             font-size: 28px;
             font-weight: bold;
@@ -62,317 +62,275 @@
 
         .close-button:hover,
         .close-button:focus {
-            color: black;
+            color: #fff;
             text-decoration: none;
             cursor: pointer;
         }
     </style>
+    <script>
+        // Tailwind dark mode configuration
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        primary: { "50": "#eff6ff", "100": "#dbeafe", "200": "#bfdbfe", "300": "#93c5fd", "400": "#60a5fa", "500": "#3b82f6", "600": "#2563eb", "700": "#1d4ed8", "800": "#1e40af", "900": "#1e3a8a", "950": "#172554" }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body class="bg-gray-100 text-gray-800">
+<body class="bg-gray-50 dark:bg-gray-900">
 
-    <div class="container mx-auto p-4 md:p-8">
-        <header class="text-center mb-8">
-            <h1 class="text-3xl md:text-4xl font-bold text-gray-900">Parenting Plan Builder</h1>
-            <p class="text-gray-600 mt-2">Create a comprehensive and collaborative parenting plan.</p>
+    <div class="container mx-auto p-4 sm:p-6 lg:p-8">
+        <header class="text-center mb-10">
+            <h1 class="text-4xl md:text-5xl font-bold text-primary-500">Parenting Plan Builder</h1>
+            <p class="text-gray-400 mt-3 text-lg">Craft a legally sound and collaborative parenting plan with ease.</p>
         </header>
 
-        <!-- Main Content -->
-        <main class="bg-white p-6 md:p-8 rounded-2xl shadow-lg">
+        <main class="bg-gray-800 p-6 md:p-8 rounded-2xl shadow-2xl shadow-primary-500/10 border border-gray-700">
 
-            <!-- Action Buttons -->
-            <div class="flex flex-wrap gap-4 mb-8 border-b pb-6">
-                <button id="save-plan" class="flex-1 bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-blue-700 transition-colors disabled:opacity-50 disabled:cursor-not-allowed">
+            <div class="flex flex-wrap gap-4 mb-8 border-b-2 border-gray-700 pb-6">
+                <button id="save-plan" class="flex-1 bg-primary-600 text-white font-semibold py-3 px-5 rounded-lg shadow-lg hover:bg-primary-700 transition-all duration-300 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none">
                     <i class="fas fa-save mr-2"></i>Save Plan
                 </button>
-                <button id="generate-document" class="flex-1 bg-green-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-green-700 transition-colors">
+                <button id="generate-document" class="flex-1 bg-green-600 text-white font-semibold py-3 px-5 rounded-lg shadow-lg hover:bg-green-700 transition-all duration-300 transform hover:scale-105">
                     <i class="fas fa-file-alt mr-2"></i>Generate Document
                 </button>
-                <button id="share-plan" class="flex-1 bg-purple-600 text-white font-semibold py-2 px-4 rounded-lg shadow-md hover:bg-purple-700 transition-colors">
+                <button id="share-plan" class="flex-1 bg-purple-600 text-white font-semibold py-3 px-5 rounded-lg shadow-lg hover:bg-purple-700 transition-all duration-300 transform hover:scale-105">
                     <i class="fas fa-share-alt mr-2"></i>Share Plan
                 </button>
             </div>
-             <!-- User Info and Plan ID -->
-            <div id="user-info" class="mb-6 p-4 bg-gray-50 rounded-lg text-center hidden">
-                <p>Logged in as: <strong id="user-id-display"></strong></p>
-                <p>Current Plan ID: <strong id="plan-id-display"></strong></p>
-                <div class="mt-2">
-                    <input type="text" id="share-plan-id-input" placeholder="Enter Plan ID to load" class="p-2 border rounded-l-lg focus:outline-none focus:ring-2 focus:ring-blue-500">
-                    <button id="load-shared-plan-btn" class="bg-blue-500 text-white p-2 rounded-r-lg hover:bg-blue-600">Load Plan</button>
+
+            <div id="user-info" class="mb-6 p-4 bg-gray-900 rounded-lg text-center hidden border border-gray-700">
+                <p class="text-gray-400">Logged in as: <strong id="user-id-display" class="text-primary-400"></strong></p>
+                <p class="text-gray-400">Current Plan ID: <strong id="plan-id-display" class="text-green-400"></strong></p>
+                <div class="mt-4 flex justify-center">
+                    <input type="text" id="share-plan-id-input" placeholder="Enter Plan ID to load" class="p-2 bg-gray-700 border border-gray-600 rounded-l-lg focus:outline-none focus:ring-2 focus:ring-primary-500 text-white w-full max-w-xs">
+                    <button id="load-shared-plan-btn" class="bg-primary-600 text-white p-2 rounded-r-lg hover:bg-primary-700 transition-colors"><i class="fas fa-search"></i> Load</button>
                 </div>
             </div>
 
-
-            <!-- Case Information -->
-            <div id="case-info" class="mb-6">
-                <h2 class="text-2xl font-bold mb-4 border-l-4 border-blue-600 pl-4">Case Information</h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-                    <input type="text" id="case-name" placeholder="Case Name (e.g., Smith v. Jones)" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 transition">
-                    <input type="text" id="case-number" placeholder="Case Number" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 transition">
-                    <input type="text" id="court" placeholder="Court/Jurisdiction" class="p-3 border border-gray-300 rounded-lg w-full focus:ring-2 focus:ring-blue-500 transition">
+            <div id="case-info" class="mb-8">
+                <h2 class="text-2xl font-bold mb-4 border-l-4 border-primary-500 pl-4 text-gray-200">Case Information</h2>
+                <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <input type="text" id="case-name" placeholder="Case Name (e.g., Smith v. Jones)" class="p-3 bg-gray-700 border border-gray-600 rounded-lg w-full focus:ring-2 focus:ring-primary-500 transition text-white">
+                    <input type="text" id="case-number" placeholder="Case Number" class="p-3 bg-gray-700 border border-gray-600 rounded-lg w-full focus:ring-2 focus:ring-primary-500 transition text-white">
+                    <input type="text" id="court" placeholder="Court/Jurisdiction" class="p-3 bg-gray-700 border border-gray-600 rounded-lg w-full focus:ring-2 focus:ring-primary-500 transition text-white">
                 </div>
             </div>
 
-            <!-- Accordion Sections -->
             <div class="space-y-4">
-                <!-- Parties -->
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="accordion-button w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center font-semibold text-lg">
-                        <i class="fas fa-users mr-3 text-blue-600"></i> Parties Involved
-                        <i class="fas fa-chevron-down transition-transform"></i>
+                <div class="border border-gray-700 rounded-lg bg-gray-800/50 overflow-hidden">
+                    <button class="accordion-button w-full text-left p-5 flex justify-between items-center font-semibold text-lg text-gray-200 hover:bg-gray-700/50 transition-colors">
+                        <span><i class="fas fa-users mr-3 text-primary-400"></i> Parties Involved</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
                     </button>
-                    <div class="accordion-content p-6">
-                        <div id="parties-container" class="space-y-4">
-                            <!-- Party entries will be added here -->
-                        </div>
-                        <button id="add-party-btn" class="mt-4 bg-blue-500 text-white py-2 px-4 rounded-lg hover:bg-blue-600 transition-colors"><i class="fas fa-plus mr-2"></i>Add Party</button>
+                    <div class="accordion-content p-6 border-t border-gray-700">
+                        <div id="parties-container" class="space-y-4"></div>
+                        <button id="add-party-btn" class="mt-4 bg-primary-600 text-white py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors"><i class="fas fa-plus mr-2"></i>Add Party</button>
                     </div>
                 </div>
 
-                <!-- Children -->
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="accordion-button w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center font-semibold text-lg">
-                        <i class="fas fa-child mr-3 text-green-600"></i> Children
-                        <i class="fas fa-chevron-down transition-transform"></i>
+                <div class="border border-gray-700 rounded-lg bg-gray-800/50 overflow-hidden">
+                    <button class="accordion-button w-full text-left p-5 flex justify-between items-center font-semibold text-lg text-gray-200 hover:bg-gray-700/50 transition-colors">
+                        <span><i class="fas fa-child mr-3 text-green-400"></i> Children</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
                     </button>
-                    <div class="accordion-content p-6">
-                        <div id="children-container" class="space-y-4">
-                            <!-- Child entries will be added here -->
-                        </div>
-                        <button id="add-child-btn" class="mt-4 bg-green-500 text-white py-2 px-4 rounded-lg hover:bg-green-600 transition-colors"><i class="fas fa-plus mr-2"></i>Add Child</button>
-                    </div>
-                </div>
-                
-                <!-- Other Sections (Add content as needed) -->
-
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="accordion-button w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center font-semibold text-lg">
-                        <i class="fas fa-comments mr-3 text-purple-600"></i> Communication
-                        <i class="fas fa-chevron-down transition-transform"></i>
-                    </button>
-                    <div class="accordion-content p-6">
-                        <p class="text-gray-500">Define communication protocols here...</p>
-                         <textarea id="communication-plan" placeholder="Detail the methods, frequency, and topics of communication (e.g., weekly emails for scheduling, text for emergencies)." class="p-3 border border-gray-300 rounded-lg w-full h-32 focus:ring-2 focus:ring-purple-500 transition"></textarea>
-
+                    <div class="accordion-content p-6 border-t border-gray-700">
+                        <div id="children-container" class="space-y-4"></div>
+                        <button id="add-child-btn" class="mt-4 bg-green-600 text-white py-2 px-4 rounded-lg hover:bg-green-700 transition-colors"><i class="fas fa-plus mr-2"></i>Add Child</button>
                     </div>
                 </div>
 
-                <div class="border border-gray-200 rounded-lg">
-                    <button class="accordion-button w-full text-left p-4 bg-gray-50 hover:bg-gray-100 flex justify-between items-center font-semibold text-lg">
-                        <i class="fas fa-gavel mr-3 text-red-600"></i> Decision Making
-                        <i class="fas fa-chevron-down transition-transform"></i>
+                <div class="border border-gray-700 rounded-lg bg-gray-800/50 overflow-hidden">
+                    <button class="accordion-button w-full text-left p-5 flex justify-between items-center font-semibold text-lg text-gray-200 hover:bg-gray-700/50 transition-colors">
+                        <span><i class="fas fa-comments mr-3 text-purple-400"></i> Communication</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
                     </button>
-                    <div class="accordion-content p-6">
-                        <p class="text-gray-500">Outline decision-making responsibilities...</p>
-                        <textarea id="decision-making-plan" placeholder="Specify how major decisions (education, healthcare, religion) will be made (jointly, sole authority, etc.)." class="p-3 border border-gray-300 rounded-lg w-full h-32 focus:ring-2 focus:ring-red-500 transition"></textarea>
+                    <div class="accordion-content p-6 border-t border-gray-700">
+                        <textarea id="communication-plan" placeholder="Detail the methods, frequency, and topics of communication..." class="p-3 bg-gray-700 border border-gray-600 rounded-lg w-full h-32 focus:ring-2 focus:ring-purple-500 transition text-white"></textarea>
                     </div>
                 </div>
 
+                <div class="border border-gray-700 rounded-lg bg-gray-800/50 overflow-hidden">
+                    <button class="accordion-button w-full text-left p-5 flex justify-between items-center font-semibold text-lg text-gray-200 hover:bg-gray-700/50 transition-colors">
+                        <span><i class="fas fa-gavel mr-3 text-red-400"></i> Decision Making</span>
+                        <i class="fas fa-chevron-down transition-transform duration-300"></i>
+                    </button>
+                    <div class="accordion-content p-6 border-t border-gray-700">
+                        <textarea id="decision-making-plan" placeholder="Specify how major decisions (education, healthcare, religion) will be made..." class="p-3 bg-gray-700 border border-gray-600 rounded-lg w-full h-32 focus:ring-2 focus:ring-red-500 transition text-white"></textarea>
+                    </div>
+                </div>
             </div>
-
         </main>
     </div>
 
-    <!-- Share Modal -->
+    <!-- Modals -->
     <div id="share-modal" class="modal">
         <div class="modal-content">
-            <span class="close-button">&times;</span>
+            <span id="close-share-modal" class="close-button">&times;</span>
             <h2 class="text-2xl font-bold mb-4">Share Your Plan</h2>
-            <p class="mb-2">Share this ID with the other party to allow them to view and collaborate on this plan:</p>
-            <input type="text" id="share-link-input" readonly class="w-full p-2 border bg-gray-100 rounded-lg mb-4">
-            <button id="copy-link-button" class="w-full bg-blue-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-blue-700 transition-colors">
+            <p class="mb-4">Share this ID with the other party to allow them to view and collaborate on this plan:</p>
+            <input type="text" id="share-link-input" readonly class="w-full p-3 bg-gray-600 border border-gray-500 rounded-lg mb-4 text-white">
+            <button id="copy-link-button" class="w-full bg-primary-600 text-white font-semibold py-2 px-4 rounded-lg hover:bg-primary-700 transition-colors">
                 <i class="fas fa-copy mr-2"></i>Copy ID
             </button>
         </div>
     </div>
+    
+    <div id="alert-modal" class="modal">
+      <div class="modal-content">
+        <span id="close-alert-modal" class="close-button">&times;</span>
+        <p id="alert-modal-message" class="text-lg"></p>
+      </div>
+    </div>
 
-    <!-- Firebase SDKs -->
+    <!-- Firebase SDK and custom script -->
     <script type="module">
         // Import necessary functions from the Firebase SDKs
         import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
         import { getAuth, signInAnonymously, onAuthStateChanged } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
-        import { getFirestore, doc, getDoc, setDoc, onSnapshot } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
+        import { getFirestore, doc, setDoc, onSnapshot, collection } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-firestore.js";
 
         // --- 1. CONFIGURATION & INITIALIZATION ---
+        // Using the Firebase config you provided.
+        const firebaseConfig = {
+            apiKey: "AIzaSyDNxjCwlfXl4Hhr0C2eET0y1wBEhqy0zG4",
+            authDomain: "flamea.firebaseapp.com",
+            projectId: "flamea",
+            storageBucket: "flamea.appspot.com", // Corrected storage bucket domain
+            messagingSenderId: "681868881622",
+            appId: "1:681868881622:web:d20687c688b2d1d943a377",
+            measurementId: "G-MX7X9JQE51"
+        };
 
-        // Your web app's Firebase configuration
-        // IMPORTANT: Replace with your actual Firebase project configuration
-        const firebaseConfig = JSON.parse(
-          __firebase_config || 
-          '{"apiKey":"REPLACE_WITH_YOUR_API_KEY","authDomain":"REPLACE_WITH_YOUR_AUTH_DOMAIN","projectId":"REPLACE_WITH_YOUR_PROJECT_ID","storageBucket":"REPLACE_WITH_YOUR_STORAGE_BUCKET","messagingSenderId":"REPLACE_WITH_YOUR_SENDER_ID","appId":"REPLACE_WITH_YOUR_APP_ID"}'
-        );
-
-        // Initialize Firebase
         const app = initializeApp(firebaseConfig);
         const auth = getAuth(app);
         const db = getFirestore(app);
 
         // --- 2. GLOBAL STATE AND VARIABLES ---
-        
         let currentUser = null;
         let currentPlanId = null;
-        let planDataUnsubscribe = null; // To detach the Firestore listener
+        let planDataUnsubscribe = null;
         const appId = typeof __app_id !== 'undefined' ? __app_id : 'parenting-plan-app';
 
         // --- 3. DOM ELEMENT REFERENCES ---
+        const allDomElements = {
+            savePlanButton: document.getElementById('save-plan'),
+            generateButton: document.getElementById('generate-document'),
+            shareButton: document.getElementById('share-plan'),
+            addPartyButton: document.getElementById('add-party-btn'),
+            partiesContainer: document.getElementById('parties-container'),
+            addChildButton: document.getElementById('add-child-btn'),
+            childrenContainer: document.getElementById('children-container'),
+            shareModal: document.getElementById('share-modal'),
+            closeShareModal: document.getElementById('close-share-modal'),
+            copyLinkButton: document.getElementById('copy-link-button'),
+            shareLinkInput: document.getElementById('share-link-input'),
+            userInfoDisplay: document.getElementById('user-info'),
+            userIdDisplay: document.getElementById('user-id-display'),
+            planIdDisplay: document.getElementById('plan-id-display'),
+            sharePlanIdInput: document.getElementById('share-plan-id-input'),
+            loadSharedPlanBtn: document.getElementById('load-shared-plan-btn'),
+            alertModal: document.getElementById('alert-modal'),
+            alertModalMessage: document.getElementById('alert-modal-message'),
+            closeAlertModal: document.getElementById('close-alert-modal'),
+            accordionButtons: document.querySelectorAll('.accordion-button')
+        };
         
-        const savePlanButton = document.getElementById('save-plan');
-        const generateButton = document.getElementById('generate-document');
-        const shareButton = document.getElementById('share-plan');
-        
-        const addPartyButton = document.getElementById('add-party-btn');
-        const partiesContainer = document.getElementById('parties-container');
-        
-        const addChildButton = document.getElementById('add-child-btn');
-        const childrenContainer = document.getElementById('children-container');
-        
-        const shareModal = document.getElementById('share-modal');
-        const closeModalButton = document.querySelector('.close-button');
-        const copyLinkButton = document.getElementById('copy-link-button');
-        const shareLinkInput = document.getElementById('share-link-input');
+        // --- 4. MODALS & ALERTS ---
+        function showAlert(message) {
+            allDomElements.alertModalMessage.textContent = message;
+            allDomElements.alertModal.style.display = 'block';
+        }
+        allDomElements.closeAlertModal.onclick = () => allDomElements.alertModal.style.display = 'none';
+        allDomElements.closeShareModal.onclick = () => allDomElements.shareModal.style.display = 'none';
+        window.onclick = (event) => {
+            if (event.target == allDomElements.alertModal) allDomElements.alertModal.style.display = 'none';
+            if (event.target == allDomElements.shareModal) allDomElements.shareModal.style.display = 'none';
+        };
 
-        const userInfoDisplay = document.getElementById('user-info');
-        const userIdDisplay = document.getElementById('user-id-display');
-        const planIdDisplay = document.getElementById('plan-id-display');
-        const sharePlanIdInput = document.getElementById('share-plan-id-input');
-        const loadSharedPlanBtn = document.getElementById('load-shared-plan-btn');
-
-
-        // --- 4. AUTHENTICATION ---
-
+        // --- 5. AUTHENTICATION ---
         onAuthStateChanged(auth, (user) => {
             if (user) {
-                console.log("User is authenticated:", user.uid);
                 currentUser = user;
-                // A user's plan is identified by their UID.
-                // This makes it easy for them to find their plan again.
                 loadPlan(user.uid); 
-                savePlanButton.disabled = false;
-                userInfoDisplay.classList.remove('hidden');
-                userIdDisplay.textContent = user.uid;
+                allDomElements.savePlanButton.disabled = false;
+                allDomElements.userInfoDisplay.classList.remove('hidden');
+                allDomElements.userIdDisplay.textContent = user.uid;
             } else {
-                console.log("User not signed in. Signing in anonymously.");
                 signInAnonymously(auth).catch((error) => {
                     console.error("Anonymous sign-in failed:", error);
-                    savePlanButton.disabled = true;
-                    alert("Authentication failed. You will not be able to save your plan.");
+                    allDomElements.savePlanButton.disabled = true;
+                    showAlert("Authentication failed. You cannot save your plan.");
                 });
             }
         });
 
-        // --- 5. CORE LOGIC ---
-        
-        /**
-         * Loads a parenting plan from Firestore and sets up a real-time listener.
-         * @param {string} planId The unique ID of the plan to load.
-         */
+        // --- 6. CORE LOGIC ---
         function loadPlan(planId) {
-            // If we are already listening to a plan, stop listening.
-            if (planDataUnsubscribe) {
-                planDataUnsubscribe();
-            }
-            
+            if (planDataUnsubscribe) planDataUnsubscribe();
             currentPlanId = planId;
-            planIdDisplay.textContent = planId;
-            console.log(`Loading and subscribing to plan: ${planId}`);
-
+            allDomElements.planIdDisplay.textContent = planId;
             const planDocRef = doc(db, 'artifacts', appId, 'public/data/parentingPlans', planId);
 
-            // onSnapshot listens for real-time updates.
             planDataUnsubscribe = onSnapshot(planDocRef, (doc) => {
-                if (doc.exists()) {
-                    console.log("Plan data received:", doc.data());
-                    const planData = doc.data();
-                    renderPlan(planData);
-                } else {
-                    console.log("No such plan! Creating a new local plan.");
-                    // If no plan exists on the server, reset the form.
-                    renderPlan({}); 
-                }
+                renderPlan(doc.exists() ? doc.data() : {});
             }, (error) => {
-                console.error("Error listening to plan changes:", error);
+                console.error("Error listening to plan:", error);
+                showAlert("Error loading plan data.");
             });
         }
-        
-        /**
-         * Renders the entire form based on the plan data object.
-         * @param {object} planData The data object for the parenting plan.
-         */
-        function renderPlan(planData) {
-            // Case Info
-            document.getElementById('case-name').value = planData.caseInfo?.name || '';
-            document.getElementById('case-number').value = planData.caseInfo?.number || '';
-            document.getElementById('court').value = planData.caseInfo?.court || '';
 
-            // Parties
-            partiesContainer.innerHTML = ''; // Clear existing parties
-            if (planData.parties && Array.isArray(planData.parties)) {
-                planData.parties.forEach((party, index) => renderParty(party, index));
-            }
-
-            // Children
-            childrenContainer.innerHTML = ''; // Clear existing children
-             if (planData.children && Array.isArray(planData.children)) {
-                planData.children.forEach((child, index) => renderChild(child, index));
-            }
+        function renderPlan(data) {
+            document.getElementById('case-name').value = data.caseInfo?.name || '';
+            document.getElementById('case-number').value = data.caseInfo?.number || '';
+            document.getElementById('court').value = data.caseInfo?.court || '';
             
-            // Other text areas
-            document.getElementById('communication-plan').value = planData.communication || '';
-            document.getElementById('decision-making-plan').value = planData.decisionMaking || '';
-
-            console.log("Plan rendered on page.");
+            allDomElements.partiesContainer.innerHTML = '';
+            (data.parties || []).forEach((party, index) => renderParty(party, index));
+            
+            allDomElements.childrenContainer.innerHTML = '';
+            (data.children || []).forEach((child, index) => renderChild(child, index));
+            
+            document.getElementById('communication-plan').value = data.communication || '';
+            document.getElementById('decision-making-plan').value = data.decisionMaking || '';
         }
         
-        /**
-         * Creates and appends the HTML for a single party.
-         * @param {object} partyData The data for the party.
-         * @param {number} index The index of the party in the array.
-         */
-        function renderParty(partyData = {}, index) {
-            const partyId = `party-${index}`;
-            const partyElement = document.createElement('div');
-            partyElement.id = partyId;
-            partyElement.className = 'party-entry mt-4 p-4 border border-gray-300 rounded-lg relative';
-            partyElement.innerHTML = `
-                <h4 class="font-semibold text-gray-700">Party ${index + 1}</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                    <input type="text" data-field="name" value="${partyData.name || ''}" placeholder="Full Name" class="p-2 border rounded w-full">
-                    <input type="text" data-field="relationship" value="${partyData.relationship || ''}" placeholder="Relationship to Child(ren)" class="p-2 border rounded w-full">
-                </div>
-                <button data-index="${index}" class="remove-party-btn absolute top-2 right-2 text-red-500 hover:text-red-700">
-                    <i class="fas fa-trash-alt"></i>
+        function createStyledEntryBox(title, contentHTML, index, removeClass) {
+            const element = document.createElement('div');
+            element.className = 'entry-item p-4 bg-gray-700/50 border border-gray-600 rounded-lg relative';
+            element.innerHTML = `
+                <h4 class="font-semibold text-gray-300 mb-2">${title}</h4>
+                ${contentHTML}
+                <button data-index="${index}" class="${removeClass} absolute top-3 right-3 text-red-400 hover:text-red-600 transition-colors h-8 w-8 rounded-full flex items-center justify-center hover:bg-gray-600">
+                    <i class="fas fa-times"></i>
                 </button>
             `;
-            partiesContainer.appendChild(partyElement);
+            return element;
         }
 
-        /**
-         * Creates and appends the HTML for a single child.
-         * @param {object} childData The data for the child.
-         * @param {number} index The index of the child in the array.
-         */
-        function renderChild(childData = {}, index) {
-            const childId = `child-${index}`;
-            const childElement = document.createElement('div');
-            childElement.id = childId;
-            childElement.className = 'child-entry mt-4 p-4 border border-gray-300 rounded-lg relative';
-            childElement.innerHTML = `
-                <h4 class="font-semibold text-gray-700">Child ${index + 1}</h4>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
-                    <input type="text" data-field="name" value="${childData.name || ''}" placeholder="Full Name" class="p-2 border rounded w-full">
-                    <input type="date" data-field="dob" value="${childData.dob || ''}" class="p-2 border rounded w-full">
-                </div>
-                 <button data-index="${index}" class="remove-child-btn absolute top-2 right-2 text-red-500 hover:text-red-700">
-                    <i class="fas fa-trash-alt"></i>
-                </button>
-            `;
-            childrenContainer.appendChild(childElement);
+        function renderParty(partyData, index) {
+            const content = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" data-field="name" value="${partyData.name || ''}" placeholder="Full Name" class="p-2 bg-gray-600 border border-gray-500 rounded-md w-full text-white focus:ring-primary-500 focus:border-primary-500">
+                    <input type="text" data-field="relationship" value="${partyData.relationship || ''}" placeholder="Relationship to Child(ren)" class="p-2 bg-gray-600 border border-gray-500 rounded-md w-full text-white focus:ring-primary-500 focus:border-primary-500">
+                </div>`;
+            allDomElements.partiesContainer.appendChild(createStyledEntryBox(`Party ${index + 1}`, content, index, 'remove-party-btn'));
         }
 
-        /**
-         * Gathers all data from the form inputs into a single JS object.
-         * @returns {object} The complete parenting plan data object.
-         */
+        function renderChild(childData, index) {
+            const content = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <input type="text" data-field="name" value="${childData.name || ''}" placeholder="Full Name" class="p-2 bg-gray-600 border border-gray-500 rounded-md w-full text-white focus:ring-primary-500 focus:border-primary-500">
+                    <input type="date" data-field="dob" value="${childData.dob || ''}" class="p-2 bg-gray-600 border border-gray-500 rounded-md w-full text-white focus:ring-primary-500 focus:border-primary-500" style="color-scheme: dark;">
+                </div>`;
+            allDomElements.childrenContainer.appendChild(createStyledEntryBox(`Child ${index + 1}`, content, index, 'remove-child-btn'));
+        }
+
         function collectPlanDataFromForm() {
             const planData = {
                 caseInfo: {
@@ -384,180 +342,132 @@
                 children: [],
                 communication: document.getElementById('communication-plan').value,
                 decisionMaking: document.getElementById('decision-making-plan').value,
+                lastUpdated: new Date().toISOString()
             };
 
-            // Collect parties data
-            const partyElements = partiesContainer.querySelectorAll('.party-entry');
-            partyElements.forEach(p => {
+            document.querySelectorAll('#parties-container .entry-item').forEach(p => {
                 planData.parties.push({
                     name: p.querySelector('[data-field="name"]').value,
                     relationship: p.querySelector('[data-field="relationship"]').value,
                 });
             });
 
-            // Collect children data
-            const childElements = childrenContainer.querySelectorAll('.child-entry');
-            childElements.forEach(c => {
+            document.querySelectorAll('#children-container .entry-item').forEach(c => {
                  planData.children.push({
                     name: c.querySelector('[data-field="name"]').value,
                     dob: c.querySelector('[data-field="dob"]').value,
                 });
             });
-
             return planData;
         }
 
-        /**
-         * Saves the current state of the form to Firestore.
-         */
         async function handleSavePlan() {
             if (!currentUser || !currentPlanId) {
-                alert("Cannot save. No active user or plan session.");
+                showAlert("Cannot save. No active user or plan session.");
                 return;
             }
             const planData = collectPlanDataFromForm();
             const planDocRef = doc(db, 'artifacts', appId, 'public/data/parentingPlans', currentPlanId);
-            
             try {
-                await setDoc(planDocRef, planData, { merge: true }); // Use merge to avoid overwriting with partial data
-                console.log("Plan saved successfully!");
-                alert("Plan saved!");
+                await setDoc(planDocRef, planData, { merge: true });
+                showAlert("Plan saved successfully!");
             } catch (error) {
                 console.error("Error saving plan: ", error);
-                alert("An error occurred while saving the plan. See console for details.");
+                showAlert(`Error saving plan: ${error.message}`);
             }
         }
         
         function handleGenerateDocument() {
             const plan = collectPlanDataFromForm();
-            let content = `
-                <html><head><title>Parenting Plan: ${plan.caseInfo.name || 'N/A'}</title>
+            const content = `
+                <html><head><title>Parenting Plan: ${plan.caseInfo.name||'N/A'}</title>
                 <script src="https://cdn.tailwindcss.com"><\/script>
-                 <style> body { font-family: 'Inter', sans-serif; } </style>
-                </head>
-                <body class="p-8">
-                    <h1 class="text-3xl font-bold mb-6">Parenting Plan</h1>
-                    <div class="mb-6 p-4 border rounded-lg">
-                        <h2 class="text-xl font-bold mb-2">Case Information</h2>
-                        <p><strong>Case Name:</strong> ${plan.caseInfo.name || 'Not Specified'}</p>
-                        <p><strong>Case Number:</strong> ${plan.caseInfo.number || 'Not Specified'}</p>
-                        <p><strong>Court/Jurisdiction:</strong> ${plan.caseInfo.court || 'Not Specified'}</p>
-                    </div>
-            `;
-            
-            content += `<div class="mb-6 p-4 border rounded-lg"><h2 class="text-xl font-bold mb-2">Parties Involved</h2>`;
-            plan.parties.forEach((p, i) => {
-                content += `<div class="mb-2"><h3 class="font-semibold">Party ${i + 1}</h3><p>Name: ${p.name || 'N/A'}</p><p>Relationship: ${p.relationship || 'N/A'}</p></div>`;
-            });
-            content += `</div>`;
-
-            content += `<div class="mb-6 p-4 border rounded-lg"><h2 class="text-xl font-bold mb-2">Children</h2>`;
-            plan.children.forEach((c, i) => {
-                content += `<div class="mb-2"><h3 class="font-semibold">Child ${i + 1}</h3><p>Name: ${c.name || 'N/A'}</p><p>Date of Birth: ${c.dob || 'N/A'}</p></div>`;
-            });
-            content += `</div>`;
-            
-            content += `<div class="mb-6 p-4 border rounded-lg"><h2 class="text-xl font-bold mb-2">Communication Plan</h2><p>${plan.communication.replace(/\n/g, '<br>') || 'Not Specified'}</p></div>`;
-            content += `<div class="mb-6 p-4 border rounded-lg"><h2 class="text-xl font-bold mb-2">Decision Making</h2><p>${plan.decisionMaking.replace(/\n/g, '<br>') || 'Not Specified'}</p></div>`;
-
-
-            content += `</body></html>`;
-
+                <style>body{font-family:'Roboto',sans-serif;background-color:#111827;color:white;padding:2rem;}</style>
+                </head><body>
+                <div class="max-w-4xl mx-auto"><h1 class="text-4xl font-bold mb-8 text-blue-400 border-b-2 border-blue-400 pb-2">Parenting Plan</h1>
+                <div class="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg"><h2 class="text-2xl font-bold mb-3 text-blue-300">Case Information</h2>
+                <p><strong>Case Name:</strong> ${plan.caseInfo.name || 'N/A'}</p><p><strong>Case Number:</strong> ${plan.caseInfo.number || 'N/A'}</p><p><strong>Court/Jurisdiction:</strong> ${plan.caseInfo.court || 'N/A'}</p></div>
+                <div class="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg"><h2 class="text-2xl font-bold mb-3 text-green-300">Parties Involved</h2>${plan.parties.map((p,i)=>`<div class="mb-2"><h3 class="font-semibold text-lg">Party ${i+1}</h3><p>Name: ${p.name||'N/A'}</p><p>Relationship: ${p.relationship||'N/A'}</p></div>`).join('')||'<p>No parties specified.</p>'}</div>
+                <div class="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg"><h2 class="text-2xl font-bold mb-3 text-purple-300">Children</h2>${plan.children.map((c,i)=>`<div class="mb-2"><h3 class="font-semibold text-lg">Child ${i+1}</h3><p>Name: ${c.name||'N/A'}</p><p>Date of Birth: ${c.dob||'N/A'}</p></div>`).join('')||'<p>No children specified.</p>'}</div>
+                <div class="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg"><h2 class="text-2xl font-bold mb-3 text-red-300">Communication Plan</h2><p class="whitespace-pre-wrap">${plan.communication || 'Not specified.'}</p></div>
+                <div class="mb-6 p-4 bg-gray-800 border border-gray-700 rounded-lg"><h2 class="text-2xl font-bold mb-3">Decision Making</h2><p class="whitespace-pre-wrap">${plan.decisionMaking || 'Not specified.'}</p></div>
+                </div></body></html>`;
             const previewWindow = window.open('', '_blank');
             previewWindow.document.write(content);
             previewWindow.document.close();
         }
 
+        function removeEntry(container, index) {
+             const currentPlan = collectPlanDataFromForm();
+             if (container === allDomElements.partiesContainer) {
+                 currentPlan.parties.splice(index, 1);
+             } else if (container === allDomElements.childrenContainer) {
+                 currentPlan.children.splice(index, 1);
+             }
+             renderPlan(currentPlan); // Re-render to update indexes
+        }
 
-        // --- 6. EVENT LISTENERS ---
+        // --- 7. EVENT LISTENERS ---
+        allDomElements.savePlanButton.addEventListener('click', handleSavePlan);
+        allDomElements.generateButton.addEventListener('click', handleGenerateDocument);
         
-        // Setup main action buttons
-        savePlanButton.addEventListener('click', handleSavePlan);
-        generateButton.addEventListener('click', handleGenerateDocument);
-
-        // Accordion functionality
-        document.querySelectorAll('.accordion-button').forEach(button => {
+        allDomElements.accordionButtons.forEach(button => {
             button.addEventListener('click', () => {
                 const content = button.nextElementSibling;
                 button.classList.toggle('active');
-                if (content.style.display === "block") {
-                    content.style.display = "none";
+                if (content.style.maxHeight) {
+                    content.style.maxHeight = null;
                 } else {
-                    content.style.display = "block";
+                    content.style.maxHeight = content.scrollHeight + "px";
                 }
             });
         });
 
-        // Add Party
-        addPartyButton.addEventListener('click', () => {
-            const partyCount = partiesContainer.querySelectorAll('.party-entry').length;
+        allDomElements.addPartyButton.addEventListener('click', () => {
+            const partyCount = allDomElements.partiesContainer.querySelectorAll('.entry-item').length;
             renderParty({}, partyCount);
         });
 
-        // Add Child
-        addChildButton.addEventListener('click', () => {
-             const childCount = childrenContainer.querySelectorAll('.child-entry').length;
+        allDomElements.addChildButton.addEventListener('click', () => {
+             const childCount = allDomElements.childrenContainer.querySelectorAll('.entry-item').length;
              renderChild({}, childCount);
         });
         
-        // Remove Party (using event delegation)
-        partiesContainer.addEventListener('click', (e) => {
+        allDomElements.partiesContainer.addEventListener('click', (e) => {
             const removeBtn = e.target.closest('.remove-party-btn');
-            if (removeBtn) {
-                const indexToRemove = parseInt(removeBtn.dataset.index, 10);
-                const currentPlan = collectPlanDataFromForm();
-                currentPlan.parties.splice(indexToRemove, 1);
-                renderPlan(currentPlan); // Re-render the plan after removal
-            }
+            if (removeBtn) removeEntry(allDomElements.partiesContainer, parseInt(removeBtn.dataset.index, 10));
         });
         
-        // Remove Child (using event delegation)
-        childrenContainer.addEventListener('click', (e) => {
+        allDomElements.childrenContainer.addEventListener('click', (e) => {
             const removeBtn = e.target.closest('.remove-child-btn');
-            if(removeBtn) {
-                const indexToRemove = parseInt(removeBtn.dataset.index, 10);
-                const currentPlan = collectPlanDataFromForm();
-                currentPlan.children.splice(indexToRemove, 1);
-                renderPlan(currentPlan); // Re-render the plan after removal
-            }
+            if(removeBtn) removeEntry(allDomElements.childrenContainer, parseInt(removeBtn.dataset.index, 10));
         });
         
-        // Share Modal Logic
-        shareButton.addEventListener('click', () => {
+        allDomElements.shareButton.addEventListener('click', () => {
             if (currentPlanId) {
-                shareLinkInput.value = currentPlanId;
-                shareModal.style.display = 'block';
+                allDomElements.shareLinkInput.value = currentPlanId;
+                allDomElements.shareModal.style.display = 'block';
             } else {
-                alert('Please save the plan first to get a shareable ID.');
-            }
-        });
-
-        closeModalButton.addEventListener('click', () => shareModal.style.display = 'none');
-        window.addEventListener('click', (event) => {
-            if (event.target == shareModal) {
-                shareModal.style.display = 'none';
+                showAlert('Please save the plan first to get a shareable ID.');
             }
         });
         
-        copyLinkButton.addEventListener('click', () => {
-            shareLinkInput.select();
+        allDomElements.copyLinkButton.addEventListener('click', () => {
+            allDomElements.shareLinkInput.select();
             document.execCommand('copy');
-            alert('Plan ID copied to clipboard!');
+            showAlert('Plan ID copied to clipboard!');
         });
         
-        loadSharedPlanBtn.addEventListener('click', () => {
-            const planIdToLoad = sharePlanIdInput.value.trim();
+        allDomElements.loadSharedPlanBtn.addEventListener('click', () => {
+            const planIdToLoad = allDomElements.sharePlanIdInput.value.trim();
             if (planIdToLoad) {
                 loadPlan(planIdToLoad);
-                alert(`Loading plan: ${planIdToLoad}`);
             } else {
-                alert("Please enter a Plan ID to load.");
+                showAlert("Please enter a Plan ID to load.");
             }
         });
-
 
     </script>
 
 </body>
-
 </html>
