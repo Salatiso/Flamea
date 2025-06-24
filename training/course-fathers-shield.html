@@ -3,7 +3,7 @@
 <head>
     <!-- This script loads the main template and injects this course's content -->
     <script>
-        fetch('/training/course-template.html')
+        fetch('course-template.html')
             .then(response => response.text())
             .then(templateHtml => {
                 const parser = new DOMParser();
