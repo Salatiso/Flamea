@@ -1,34 +1,40 @@
 <!DOCTYPE html>
-<html>
+<html lang="en" class="dark">
 <head>
-    <!-- This script loads the main template and injects this course's content -->
-    <script>
-        fetch('course-template.html')
-            .then(response => response.text())
-            .then(templateHtml => {
-                const parser = new DOMParser();
-                const doc = parser.parseFromString(templateHtml, 'text/html');
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- EDIT THIS SECTION: Change the title for each course -->
+    <title>FLAMEA Training - Co-Parenting 101</title>
+    
+    <!-- External Styles and Fonts -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    
+    <!-- Correct, root-relative path to your custom stylesheet -->
+    <link href="/Flamea/assets/css/style.min.css" rel="stylesheet">
+    
+    <!-- Internal Styles for layout and course-specific elements -->
+    <style>
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-container { display: flex; min-height: 100vh; }
+        .main-content { flex-grow: 1; overflow-y: auto; position: relative; }
+        #background-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: -1; }
+        
+        /* Styles for this specific course */
+        .topic-card, .level-card { border: 2px solid transparent; transition: all 0.3s ease; cursor: pointer; }
+        .topic-card:hover, .level-card:hover { transform: translateY(-5px); border-color: #f59e0b; }
+        .topic-card.selected, .level-card.selected { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
+        .quiz-container, .course-container, #end-screen { background-color: rgba(30, 41, 59, 0.9); backdrop-filter: blur(8px); }
+        .ndebele-border { border: 10px solid; border-image-slice: 1; border-width: 10px; border-image-source: linear-gradient(to left, #f59e0b, #ef4444, #3b82f6, #10b981); }
+        .btn-primary { background-color: #16a34a; color: white; }
+        .btn-primary:hover { background-color: #15803d; }
+        .btn-secondary { background-color: #475569; color: white; }
+        .btn-secondary:hover { background-color: #334155; }
+        .btn { padding: 0.75rem 1.5rem; border-radius: 0.5rem; font-weight: 700; text-transform: uppercase; transition: all 0.2s ease; }
 
-                // Set the specific title for this course
-                doc.title = "FLAMEA Training - Co-Parenting 101";
-
-                // Inject this page's unique content into the template's placeholder
-                const placeholder = doc.getElementById('course-content-placeholder');
-                const sourceContent = document.getElementById('course-content-source');
-                if (placeholder && sourceContent) {
-                    placeholder.innerHTML = sourceContent.innerHTML;
-                }
-                
-                // Replace the current document with the new, templated document
-                document.documentElement.innerHTML = doc.documentElement.innerHTML;
-                
-                // Manually execute the course-specific script after the DOM is updated
-                const courseScript = document.querySelector('#course-content-placeholder script');
-                if (courseScript) {
-                    eval(courseScript.innerHTML);
-                }
-            });
-    </script>
+    </style>
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans flex">
 
