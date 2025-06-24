@@ -3,26 +3,28 @@
     <p class="mt-2 text-sm text-gray-400">Navigate your learning journey.</p>
 </div>
 <nav class="mt-4">
-    <a href="/training.html" class="flex items-center px-6 py-3 text-gray-200 hover:bg-gray-700">
+    <!-- FIX: Corrected path to be relative -->
+    <a href="../training.html" class="flex items-center px-6 py-3 text-gray-200 hover:bg-gray-700">
         <span class="mx-3">Training Home</span>
     </a>
 
     <!-- Fathers Category -->
     <div>
+        <!-- The onclick will be handled by the new training-loader.js script -->
         <button onclick="toggleAccordion('fathers')" class="flex items-center justify-between w-full px-6 py-3 text-gray-200 hover:bg-gray-700 focus:outline-none">
             <span class="mx-3 font-semibold">For Fathers</span>
             <svg id="fathers-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         <div id="fathers" class="hidden pl-8">
-            <a href="/training/course-childrens-act.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Children's Act</a>
-            <a href="/training/course-family-law.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Family Law</a>
-            <a href="/training/course-coparenting.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Co-Parenting</a>
-            <a href="/training/course-newborn-daily-care.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Newborn Daily Care</a>
-            <a href="/training/course-build-curriculum.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Build a Curriculum</a>
-            <a href="/training/course-extended-family.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Extended Family</a>
-            <a href="/training/course-fathers-shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Father's Shield</a>
-            <a href="/training/course-risk-management.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Risk Management</a>
-            <a href="/training/course-constitution.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution</a>
+            <a href="course-childrens-act.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Children's Act</a>
+            <a href="course-family-law.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Family Law</a>
+            <a href="course-coparenting.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Co-Parenting</a>
+            <a href="course-newborn-daily-care.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Newborn Daily Care</a>
+            <a href="course-build-curriculum.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Build a Curriculum</a>
+            <a href="course-extended-family.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Extended Family</a>
+            <a href="course-fathers-shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Father's Shield</a>
+            <a href="course-risk-management.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Risk Management</a>
+            <a href="course-constitution.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution</a>
         </div>
     </div>
 
@@ -33,10 +35,10 @@
             <svg id="khulu-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         <div id="khulu" class="hidden pl-8">
-            <a href="/training/course-ancestors-within.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Ancestors Within</a>
-            <a href="/training/course-unbroken-chain.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Unbroken Chain</a>
-            <a href="/training/courses_khulu-the_constitution_your_ultimate_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution Shield</a>
-            <a href="/training/course-khulu-senior-crusaders.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Senior Crusaders</a>
+            <a href="course-ancestors-within.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Ancestors Within</a>
+            <a href="course-unbroken-chain.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Unbroken Chain</a>
+            <a href="courses_khulu-the_constitution_your_ultimate_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution Shield</a>
+            <a href="course-khulu-senior-crusaders.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Senior Crusaders</a>
         </div>
     </div>
 
@@ -47,25 +49,17 @@
             <svg id="kids-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
         </button>
         <div id="kids" class="hidden pl-8">
-            <a href="/training/course_kids-rights_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Rights Shield</a>
-            <a href="/training/course-kids-big_rule_book.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Big Rule Book</a>
-            <a href="/training/course-kids-whos_in_charge.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Who's In Charge?</a>
-            <a href="/training/course-kids-great_family_homestead.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Great Family Homestead</a>
-            <a href="/training/course-kids-the_best_nest.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Best Nest</a>
+            <a href="course_kids-rights_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Rights Shield</a>
+            <a href="course-kids-big_rule_book.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Big Rule Book</a>
+            <a href="course-kids-whos_in_charge.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Who's In Charge?</a>
+            <a href="course-kids-great_family_homestead.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Great Family Homestead</a>
+            <a href="course-kids-the_best_nest.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Best Nest</a>
         </div>
     </div>
 
-    <a href="/games.html" class="flex items-center px-6 py-3 mt-4 text-gray-200 hover:bg-gray-700">
+    <!-- FIX: Corrected path to be relative -->
+    <a href="../games.html" class="flex items-center px-6 py-3 mt-4 text-gray-200 hover:bg-gray-700">
         <span class="mx-3 font-semibold">Interactive Games</span>
     </a>
 </nav>
-<script>
-    function toggleAccordion(sectionId) {
-        const section = document.getElementById(sectionId);
-        const arrow = document.getElementById(sectionId + '-arrow');
-        if (section && arrow) {
-            section.classList.toggle('hidden');
-            arrow.classList.toggle('rotate-180');
-        }
-    }
-</script>
+<!-- REMOVED: The inline <script> tag has been moved to training-loader.js -->
