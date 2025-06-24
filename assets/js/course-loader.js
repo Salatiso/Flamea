@@ -15,7 +15,6 @@ document.addEventListener('DOMContentLoaded', () => {
                 // Re-run the accordion script from the loaded sidebar content
                 const scriptEl = sidebarPlaceholder.querySelector('script');
                 if (scriptEl) {
-                    // Using eval() is acceptable here as we control the source script.
                     eval(scriptEl.innerHTML); 
                 }
             })
@@ -24,18 +23,21 @@ document.addEventListener('DOMContentLoaded', () => {
                 sidebarPlaceholder.innerHTML = '<div class="p-4 text-red-500">Error: Could not load navigation.</div>';
             });
     }
-
+    
     const courseContentPlaceholder = document.getElementById('course-content-placeholder');
     const sourceContent = document.getElementById('course-content-source');
     if (courseContentPlaceholder && sourceContent) {
         courseContentPlaceholder.innerHTML = sourceContent.innerHTML;
-        // Clean up the source element to avoid duplicate IDs
         sourceContent.remove(); 
         
-        // If the loaded content has its own script, execute it
         const contentScript = courseContentPlaceholder.querySelector('script');
         if (contentScript) {
              eval(contentScript.innerHTML);
         }
+    }
+    
+    // ENSURE BACKGROUND SCRIPT RUNS AFTER CONTENT LOADS
+    if (typeof window.initBackground === 'function') {
+        window.initBackground();
     }
 });
