@@ -1,60 +1,103 @@
 /**
  * Flamea.org - Training Page Loader
- * Version 3: Simplified Pathing
+ * Version 4: Embedded Sidebar
  * Description:
- * This script is specifically for the individual training course pages.
- * - Dynamically loads the training sidebar using a simple relative path.
+ * This script bypasses server issues by embedding the sidebar HTML directly.
+ * - Injects the sidebar HTML into the page without fetching a file.
  * - Handles the accordion functionality within the loaded sidebar.
  * - Initializes the animated particle background.
- *
- * NOTE: This script relies on the `training-sidebar.html` file being correctly
- * published by GitHub Pages. If you still get a 404 error after updating
- * your repository, please ensure you have configured your `_config.yml` file.
  */
 document.addEventListener('DOMContentLoaded', () => {
     
-    // --- 1. SIDEBAR LOADER ---
+    // --- 1. EMBEDDED SIDEBAR HTML ---
+    // The HTML for the sidebar is now stored here as a string.
+    // This avoids the 404 Not Found error from trying to fetch the file.
+    const sidebarHTML = `
+        <div class="p-6">
+            <h2 class="text-2xl font-semibold text-white">Training Modules</h2>
+            <p class="mt-2 text-sm text-gray-400">Navigate your learning journey.</p>
+        </div>
+        <nav class="mt-4">
+            <!-- This path correctly goes up one level from /training/ to the root -->
+            <a href="../training.html" class="flex items-center px-6 py-3 text-gray-200 hover:bg-gray-700">
+                <span class="mx-3">Training Home</span>
+            </a>
+
+            <!-- Fathers Category -->
+            <div>
+                <button onclick="toggleAccordion('fathers')" class="flex items-center justify-between w-full px-6 py-3 text-gray-200 hover:bg-gray-700 focus:outline-none">
+                    <span class="mx-3 font-semibold">For Fathers</span>
+                    <svg id="fathers-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="fathers" class="hidden pl-8">
+                    <!-- These paths are relative to the /training/ folder, so they are correct -->
+                    <a href="course-childrens-act.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Children's Act</a>
+                    <a href="course-family-law.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Family Law</a>
+                    <a href="course-coparenting.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Co-Parenting</a>
+                    <a href="course-newborn-daily-care.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Newborn Daily Care</a>
+                    <a href="course-build-curriculum.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Build a Curriculum</a>
+                    <a href="course-extended-family.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Extended Family</a>
+                    <a href="course-fathers-shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Father's Shield</a>
+                    <a href="course-risk-management.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Risk Management</a>
+                    <a href="course-constitution.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution</a>
+                </div>
+            </div>
+
+            <!-- Khulu Category -->
+            <div>
+                <button onclick="toggleAccordion('khulu')" class="flex items-center justify-between w-full px-6 py-3 text-gray-200 hover:bg-gray-700 focus:outline-none">
+                    <span class="mx-3 font-semibold">For Khulu</span>
+                    <svg id="khulu-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="khulu" class="hidden pl-8">
+                    <a href="course-ancestors-within.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Ancestors Within</a>
+                    <a href="course-unbroken-chain.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Unbroken Chain</a>
+                    <a href="courses_khulu-the_constitution_your_ultimate_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Constitution Shield</a>
+                    <a href="course-khulu-senior-crusaders.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Senior Crusaders</a>
+                </div>
+            </div>
+
+            <!-- Kids Category -->
+            <div>
+                <button onclick="toggleAccordion('kids')" class="flex items-center justify-between w-full px-6 py-3 text-gray-200 hover:bg-gray-700 focus:outline-none">
+                    <span class="mx-3 font-semibold">For Kids</span>
+                    <svg id="kids-arrow" class="w-4 h-4 transform transition-transform duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path></svg>
+                </button>
+                <div id="kids" class="hidden pl-8">
+                    <a href="course_kids-rights_shield.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Rights Shield</a>
+                    <a href="course-kids-big_rule_book.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Big Rule Book</a>
+                    <a href="course-kids-whos_in_charge.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Who's In Charge?</a>
+                    <a href="course-kids-great_family_homestead.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">Great Family Homestead</a>
+                    <a href="course-kids-the_best_nest.html" class="block py-2 px-4 text-sm text-gray-300 hover:bg-gray-600">The Best Nest</a>
+                </div>
+            </div>
+
+            <a href="../games.html" class="flex items-center px-6 py-3 mt-4 text-gray-200 hover:bg-gray-700">
+                <span class="mx-3 font-semibold">Interactive Games</span>
+            </a>
+        </nav>
+    `;
+
     const sidebarPlaceholder = document.getElementById('training-sidebar-placeholder');
     if (sidebarPlaceholder) {
-        // Use a simple relative path. From a page inside the /training/ directory,
-        // this correctly points to the root directory where the sidebar file lives.
-        const sidebarUrl = '../training-sidebar.html';
-
-        fetch(sidebarUrl)
-            .then(response => {
-                if (!response.ok) {
-                    throw new Error(`Network response was not ok: ${response.statusText}. Failed to load ${sidebarUrl}. Please check your repository's GitHub Pages configuration (_config.yml).`);
-                }
-                return response.text();
-            })
-            .then(html => {
-                sidebarPlaceholder.innerHTML = html;
-                initializeSidebarAccordion();
-            })
-            .catch(error => {
-                console.error('Error fetching training sidebar:', error);
-                if(sidebarPlaceholder) {
-                    sidebarPlaceholder.innerHTML = `<div class="p-4 text-red-500"><strong>Error:</strong> Could not load navigation. ${error.message}</div>`;
-                }
-            });
+        // Inject the HTML directly into the placeholder
+        sidebarPlaceholder.innerHTML = sidebarHTML;
+        // The accordion logic can now be initialized
+        initializeSidebarAccordion();
     }
 
     // --- 2. ACCORDION LOGIC ---
-    // This function is called *after* the sidebar has been loaded.
     function initializeSidebarAccordion() {
-        // We use event delegation on the placeholder to handle clicks.
         sidebarPlaceholder.addEventListener('click', function(event) {
             const button = event.target.closest('button[onclick^="toggleAccordion"]');
             if (button) {
-                event.preventDefault(); // Prevent any default button action
-                // Extract the sectionId from the onclick attribute
+                event.preventDefault();
                 const sectionId = button.getAttribute('onclick').match(/'([^']+)'/)[1];
                 toggleAccordion(sectionId);
             }
         });
     }
 
-    // This remains a global function because it's called by the `onclick` in the loaded HTML.
     window.toggleAccordion = function(sectionId) {
         const section = document.getElementById(sectionId);
         const arrow = document.getElementById(sectionId + '-arrow');
