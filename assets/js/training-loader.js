@@ -1,8 +1,9 @@
 /**
  * Flamea.org - Training Page Loader
+ * Version 2: Now with robust pathing for GitHub Pages.
  * Description:
  * This script is specifically for the individual training course pages.
- * - Dynamically loads the training sidebar.
+ * - Dynamically loads the training sidebar using a more reliable path.
  * - Handles the accordion functionality within the loaded sidebar.
  * - Initializes the animated particle background.
  */
@@ -11,12 +12,17 @@ document.addEventListener('DOMContentLoaded', () => {
     // --- 1. SIDEBAR LOADER ---
     const sidebarPlaceholder = document.getElementById('training-sidebar-placeholder');
     if (sidebarPlaceholder) {
-        // Fetch the sidebar from the correct relative path.
-        // The course pages are in /training/, so we go up one level to find training-sidebar.html
-        fetch('../training-sidebar.html')
+        // FIX: Build a more robust path for GitHub Pages environments.
+        // This finds the base path of the repository (e.g., '/Flamea') and constructs the URL from there.
+        const pathSegments = window.location.pathname.split('/').filter(segment => segment);
+        const repoNameIndex = pathSegments.indexOf('training') - 1; 
+        const repoBasePath = repoNameIndex >= 0 ? '/' + pathSegments.slice(0, repoNameIndex + 1).join('/') : '';
+        const sidebarUrl = `${repoBasePath}/training-sidebar.html`;
+
+        fetch(sidebarUrl)
             .then(response => {
                 if (!response.ok) {
-                    throw new Error('Network response was not ok: ' + response.statusText);
+                    throw new Error(`Network response was not ok: ${response.statusText}. Attempted to load from: ${sidebarUrl}`);
                 }
                 return response.text();
             })
@@ -28,7 +34,7 @@ document.addEventListener('DOMContentLoaded', () => {
             .catch(error => {
                 console.error('Error fetching training sidebar:', error);
                 if(sidebarPlaceholder) {
-                    sidebarPlaceholder.innerHTML = '<div class="p-4 text-red-500">Could not load navigation.</div>';
+                    sidebarPlaceholder.innerHTML = `<div class="p-4 text-red-500"><strong>Error:</strong> Could not load navigation sidebar. ${error.message}</div>`;
                 }
             });
     }
@@ -40,6 +46,7 @@ document.addEventListener('DOMContentLoaded', () => {
         sidebarPlaceholder.addEventListener('click', function(event) {
             const button = event.target.closest('button[onclick^="toggleAccordion"]');
             if (button) {
+                event.preventDefault(); // Prevent any default button action
                 // Extract the sectionId from the onclick attribute
                 const sectionId = button.getAttribute('onclick').match(/'([^']+)'/)[1];
                 toggleAccordion(sectionId);
