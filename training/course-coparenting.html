@@ -1,102 +1,217 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="en" class="dark">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>FLAMEA Training - Co-Parenting 101</title>
-    <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700;900&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.css">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="../assets/css/style.min.css">
     <style>
-        /* Re-using the same styles from the master course template */
-        body { font-family: 'Open Sans', sans-serif; scroll-behavior: smooth; }
-        .main-container { display: grid; grid-template-columns: 280px 1fr; height: 100vh; width: 100vw; overflow: hidden; }
-        .main-content { overflow-y: auto; }
-        .sidebar-direct-link { transition: all 0.3s ease; transform: translateX(0); }
-        .sidebar-direct-link:hover, .sidebar-direct-link.active { background-color: #2563EB; color: white; transform: translateX(10px); }
-        .prose h2 { font-size: 1.8rem; font-weight: 700; margin-top: 2rem; margin-bottom: 1rem; border-bottom: 2px solid #F59E0B; padding-bottom: 0.5rem; color: #FBBF24;}
-        .prose h3 { font-size: 1.3rem; font-weight: 600; margin-top: 1.5rem; margin-bottom: 0.75rem; color: #FCD34D;}
-        .prose p { margin-bottom: 1rem; line-height: 1.7; font-size: 1.1rem; }
-        .prose strong { color: #FCD34D; }
-        .prose ul { list-style-type: disc; margin-left: 1.5rem; margin-bottom: 1rem; }
-        .prose a { color: #60A5FA; text-decoration: underline; }
-        .quiz-option { cursor: pointer; transition: background-color 0.2s; border: 2px solid #4B5563; }
-        .quiz-option:hover { background-color: #374151; }
-        .quiz-option.selected { background-color: #2563EB; border-color: #3B82F6; }
-        .module { display: none; }
-        .module.active { display: block; }
-        .quiz-section { display: none; }
-        .quiz-section.active { display: block; }
-        .certificate-modal { display: none; }
-        .certificate-modal.active { display: flex; }
-        .progress-bar-container { background-color: #4B5563; }
-        .progress-bar-fill { background-color: #F59E0B; transition: width 0.5s ease-in-out; }
-        .feedback { display: none; margin-top: 0.5rem; padding: 0.75rem; border-radius: 0.375rem; font-size: 0.9rem; }
-        .feedback.correct { background-color: rgba(245, 158, 11, 0.2); border: 1px solid #F59E0B; color: white; }
+        body { font-family: 'Open Sans', sans-serif; }
+        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
+        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
+        .module-card:hover { transform: translateY(-5px); border-color: #f59e0b; }
+        .module-card.selected { border-color: #f59e0b; background-color: rgba(245, 158, 11, 0.1); }
+        .prose h2 { color: #fcd34d; } .prose h3 { color: #fde68a; } .prose strong { color: #fde68a; }
+        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
     </style>
 </head>
-<body class="bg-gray-800 text-white">
-     <div class="main-container">
-        <!-- Sidebar -->
-        <aside class="bg-gray-900 p-6 flex flex-col">
-            <a href="../index.html" class="text-3xl font-black font-roboto mb-12 text-center">FLAME<span class="text-yellow-400">A</span></a>
-             <nav id="main-nav" class="flex flex-col space-y-2">
-                 <a href="../training.html" class="sidebar-direct-link flex items-center p-4 rounded-lg"><i class="fas fa-arrow-left w-6 text-center mr-4"></i> Back to Hub</a>
-                 <div class="border-t border-gray-700 my-2"></div>
-                 <h4 class="text-gray-400 font-bold uppercase tracking-wider px-4 text-sm">Course Progress</h4>
-                 <a href="#module1" id="module1-link" class="sidebar-direct-link active flex items-center p-3 rounded-lg text-sm">Module 1: The Foundation</a>
-                 <a href="#module2" id="module2-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 2: Communication & Conflict</a>
-                 <a href="#module3" id="module3-link" class="sidebar-direct-link flex items-center p-3 rounded-lg text-sm text-gray-500 pointer-events-none">Module 3: The Parenting Plan</a>
-            </nav>
-            <div id="auth-reminder" class="mt-auto text-center bg-yellow-900 bg-opacity-30 p-3 rounded-lg border border-yellow-500 hidden">
-                <p class="text-xs text-yellow-200">Your progress is not being saved. <a href="../login.html" class="font-bold underline">Login or Register</a> for free to track your journey and earn certificates.</p>
-            </div>
-            <div class="mt-4 text-center">
-                <p class="text-xs text-gray-500">&copy; <span id="currentYear"></span> Flamea.org</p>
-            </div>
-        </aside>
+<body class="bg-gray-900 text-gray-200 font-sans flex">
 
-        <!-- Main Content -->
-        <main class="main-content p-8 md:p-12">
-             <div class="max-w-4xl mx-auto">
-                <!-- Course Header -->
-                <div class="mb-8">
-                    <h1 class="text-4xl font-bold font-roboto text-yellow-400">Co-Parenting 101</h1>
-                    <p class="text-lg text-gray-400 mt-2">Master the art of raising a child with your co-parent, even after separation.</p>
-                </div>
-                
-                <!-- Progress Bar -->
-                <div class="w-full progress-bar-container rounded-full h-2.5 mb-8">
-                    <div id="progress-bar" class="progress-bar-fill h-2.5 rounded-full" style="width: 0%; background-color: #F59E0B;"></div>
-                </div>
+    <aside id="training-sidebar-placeholder" class="w-64 h-screen sticky top-0"></aside>
 
-                <!-- Course Content Area -->
-                <div class="prose max-w-none prose-invert">
-                    <!-- Module 1: The Foundation -->
-                    <div id="module1" class="module active">
-                        <section>
-                            <h2>Module 1: The Foundation of Effective Co-Parenting</h2>
-                            <p>Co-parenting is not about your relationship with your ex-partner; it is about your <strong>shared relationship with your child</strong>. It requires shifting your focus from being romantic partners to being parenting partners. The goal is to provide a stable, loving, and consistent environment for your child, free from the conflict of the adult relationship.</p>
-                            
-                            <h3>A. What is Co-Parenting?</h3>
-                            <p>It's an agreement where both parents take an active role in raising their child, despite not being in a relationship. Good co-parenting is crucial for a child's emotional and psychological well-being. Research consistently shows that children who have positive relationships with both parents after a separation have better outcomes in life.</p>
-                             
-                            <h3>B. The Golden Rule: Child's Best Interests</h3>
-                            <p>Every decision you make as co-parents must be guided by one question: <strong>What is in the best interests of our child?</strong> This aligns directly with Section 28 of the Constitution. It means putting aside personal feelings, ego, and past grievances to focus solely on what will help your child thrive. This is your most powerful guiding principle.</p>
-                        </section>
-                        <button id="start-quiz1" class="w-full bg-green-600 hover:bg-green-700 font-bold py-3 rounded-lg text-lg mt-8">Start Module 1 Quiz</button>
+    <div class="flex-1 flex flex-col">
+        <main class="main-content p-4 md:p-8 flex items-center justify-center">
+            
+            <div id="course-hub" class="max-w-4xl mx-auto text-center">
+                <header class="mb-12">
+                    <div class="flex justify-center items-center gap-4 mb-4">
+                        <svg class="h-20 w-20 text-yellow-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                          <path d="M16.5 12c1.38 0 2.5-1.12 2.5-2.5S17.88 7 16.5 7C15.12 7 14 8.12 14 9.5s1.12 2.5 2.5 2.5zM9 11c1.66 0 3-1.34 3-3s-1.34-3-3-3-3 1.34-3 3 1.34 3 3 3zm7.5 3c-1.83 0-5.5.92-5.5 2.75V19h11v-2.25c0-1.83-3.67-2.75-5.5-2.75zM9 13c-2.33 0-7 1.17-7 3.5V19h7v-2.25c0-.85.33-2.34 2.37-3.47C10.5 13.1 9.66 13 9 13z"/>
+                        </svg>
+                        <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">Co-Parenting 101</h1>
                     </div>
-                     <!-- Other modules and quizzes follow -->
-                </div>
+                    <p class="text-lg text-gray-300">Master the art of raising a child with your co-parent, even after separation.</p>
+                </header>
+
+                <section id="module-selection-section">
+                    <h2 class="text-2xl font-bold text-center text-orange-400 mb-6">Choose a Module to Begin</h2>
+                    <div id="module-selection" class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="1">
+                            <h3 class="text-xl font-bold text-white mb-2">The Foundation</h3>
+                            <p class="text-gray-400 text-sm">Understand the core principle of putting your child's best interests first.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="2">
+                            <h3 class="text-xl font-bold text-white mb-2">Communication & Conflict</h3>
+                            <p class="text-gray-400 text-sm">Learn strategies for objective communication and resolving disagreements effectively.</p>
+                        </div>
+                        <div class="module-card bg-slate-800/80 p-6 rounded-xl cursor-pointer" data-module="3">
+                            <h3 class="text-xl font-bold text-white mb-2">The Parenting Plan</h3>
+                            <p class="text-gray-400 text-sm">Discover how to create a structured and fair plan that works for everyone.</p>
+                        </div>
+                    </div>
+                </section>
+            </div>
+            
+            <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
+                <div id="module-content" class="prose max-w-none prose-invert mb-8 bg-slate-800/70 p-6 rounded-lg"></div>
+                <button id="start-quiz-btn" class="btn btn-primary w-full">Test Your Understanding</button>
+                <section id="quiz-section" class="quiz-section mt-8 p-8 rounded-lg hidden"></section>
+                <div id="end-screen" class="end-screen mt-8 p-8 rounded-lg hidden text-center"></div>
+                <button id="back-to-hub-btn" class="btn btn-secondary mt-4">Back to Modules</button>
             </div>
         </main>
     </div>
-    <!-- Modal and Scripts would be identical to the master template -->
-    <script type="module" src="../assets/js/auth.js"></script>
-    <script type="module" src="../assets/js/course-logic.js"></script>
+
+    <script>
+    document.addEventListener('DOMContentLoaded', () => {
+        fetch('/training-sidebar.html')
+            .then(response => response.text())
+            .then(html => {
+                const placeholder = document.getElementById('training-sidebar-placeholder');
+                if (placeholder) {
+                    placeholder.innerHTML = html;
+                    const scriptEl = placeholder.querySelector('script');
+                    if (scriptEl) eval(scriptEl.innerHTML);
+                }
+            }).catch(error => console.error('Error fetching training sidebar:', error));
+
+        const courseHub = document.getElementById('course-hub');
+        const contentArea = document.getElementById('content-area');
+        const moduleContentEl = document.getElementById('module-content');
+        const quizSection = document.getElementById('quiz-section');
+        const startQuizBtn = document.getElementById('start-quiz-btn');
+        const backToHubBtn = document.getElementById('back-to-hub-btn');
+        const endScreen = document.getElementById('end-screen');
+        const moduleCards = document.querySelectorAll('.module-card');
+
+        const courseContent = {
+            1: {
+                title: 'Module 1: The Foundation of Effective Co-Parenting',
+                content: `
+                    <p>Co-parenting is not about your relationship with your ex-partner; it is about your <strong>shared relationship with your child</strong>. It requires shifting your focus from being romantic partners to being parenting partners. The goal is to provide a stable, loving, and consistent environment for your child, free from the conflict of the adult relationship.</p>
+                    <h3>The Golden Rule: Child's Best Interests</h3>
+                    <p>Every decision you make as co-parents must be guided by one question: <strong>What is in the best interests of our child?</strong> This aligns directly with Section 28 of the Constitution. It means putting aside personal feelings, ego, and past grievances to focus solely on what will help your child thrive.</p>
+                `,
+                questions: [
+                    { q: "What is the primary focus of co-parenting?", a: "The shared relationship with the child", o: ["Winning arguments against the other parent", "Revisiting past relationship issues"] },
+                    { q: "What is the 'Golden Rule' of co-parenting?", a: "Always asking what is in the child's best interests", o: ["Making sure everything is split 50/50", "Doing whatever the child wants"] }
+                ]
+            },
+            2: {
+                title: 'Module 2: Communication & Conflict',
+                content: `
+                    <h3>Business-Like Communication</h3>
+                    <p>Treat your co-parenting communication like a business partnership. Keep it respectful, factual, and focused on the child. Avoid emotional language, blame, and bringing up old arguments. Use tools like shared calendars and communication apps to keep things organized and documented.</p>
+                    <h3>Conflict Resolution</h3>
+                    <p>Disagreements are inevitable. The key is how you handle them. Always discuss major decisions away from the children. If you cannot agree, consider mediation before litigation. The goal is to find a solution, not to win a fight.</p>
+                `,
+                questions: [
+                    { q: "What is the recommended communication style for co-parenting?", a: "Respectful and business-like", o: ["Emotional and accusatory", "Only through lawyers"] },
+                    { q: "If you and your co-parent disagree on a major decision, what is a good first step?", a: "Consider mediation", o: ["Argue in front of the child", "Immediately go to court"] }
+                ]
+            },
+            3: {
+                title: 'Module 3: The Parenting Plan',
+                content: `
+                    <h3>Why You Need a Plan</h3>
+                    <p>A detailed Parenting Plan is your roadmap. It minimizes conflict by setting clear expectations for both parents. It should be a comprehensive document that covers schedules, holidays, decision-making, communication, and finances.</p>
+                    <h3>Key Components</h3>
+                    <ul>
+                        <li><strong>Residential Schedule:</strong> Clearly outline where the child will be on which days.</li>
+                        <li><strong>Decision-Making:</strong> Specify how major decisions about education, health, and religion will be made (jointly or by one parent).</li>
+                        <li><strong>Communication Protocol:</strong> Set rules for how and when you will communicate about the child.</li>
+                    </ul>
+                    <p>The Flamea Parenting Plan Builder is designed to help you create a thorough, fair, and legally sound plan.</p>
+                `,
+                questions: [
+                    { q: "What is the primary purpose of a Parenting Plan?", a: "To minimize conflict by setting clear expectations", o: ["To list all the other parent's faults", "To ensure one parent has all the control"] },
+                    { q: "What is a key component that should be included in a Parenting Plan?", a: "A clear residential schedule for the child", o: ["A list of past arguments", "Rules for the other parent's personal life"] }
+                ]
+            }
+        };
+
+        let currentModuleData = {}; let currentQuestionIndex = 0; let score = 0;
+
+        function displayModule(moduleNum) {
+            currentModuleData = courseContent[moduleNum];
+            courseHub.classList.add('hidden');
+            contentArea.classList.remove('hidden');
+            quizSection.classList.add('hidden');
+            endScreen.classList.add('hidden');
+            startQuizBtn.classList.remove('hidden');
+            moduleContentEl.innerHTML = `<h2>${currentModuleData.title}</h2>${currentModuleData.content}`;
+        }
+        
+        function setupQuiz() {
+            startQuizBtn.classList.add('hidden');
+            quizSection.classList.remove('hidden');
+            currentQuestionIndex = 0;
+            score = 0;
+            loadQuestion();
+        }
+
+        function loadQuestion() {
+            const questionData = currentModuleData.questions[currentQuestionIndex];
+            let optionsHTML = shuffleArray([...questionData.o, questionData.a]).map(opt => `<div class="quiz-option p-3 rounded-lg border border-gray-600 hover:bg-slate-700 cursor-pointer" data-answer="${opt === questionData.a}">${opt}</div>`).join('');
+            quizSection.innerHTML = `<p class="font-semibold text-lg mb-4">${currentQuestionIndex + 1}. ${questionData.q}</p><div class="space-y-3">${optionsHTML}</div><div class="feedback mt-4 text-sm p-3 rounded-lg"></div>`;
+        }
+
+        function handleAnswerClick(e) {
+            if (!e.target.classList.contains('quiz-option')) return;
+            const selectedOption = e.target;
+            const isCorrect = selectedOption.dataset.answer === 'true';
+            const feedbackDiv = quizSection.querySelector('.feedback');
+            
+            quizSection.querySelectorAll('.quiz-option').forEach(opt => opt.style.pointerEvents = 'none');
+
+            if (isCorrect) {
+                selectedOption.classList.add('bg-green-500/50', 'border-green-500');
+                feedbackDiv.innerHTML = '<p class="text-green-400 font-bold">Correct! You are building a strong foundation for your child.</p>';
+                score++;
+            } else {
+                selectedOption.classList.add('bg-red-500/50', 'border-red-500');
+                feedbackDiv.innerHTML = '<p class="text-red-400 font-bold">Not quite. Remember to always focus on what is best for the child.</p>';
+            }
+
+            setTimeout(() => {
+                currentQuestionIndex++;
+                if (currentQuestionIndex < currentModuleData.questions.length) {
+                    loadQuestion();
+                } else {
+                    showEndScreen();
+                }
+            }, 2500);
+        }
+
+        function showEndScreen() {
+            quizSection.classList.add('hidden');
+            endScreen.classList.remove('hidden');
+            endScreen.innerHTML = `<h2 class="text-2xl font-bold font-roboto-slab text-green-400">Module Complete!</h2><p class="text-lg mt-2">You scored ${score} out of ${currentModuleData.questions.length}.</p><p class="mt-4">You are well on your way to becoming a co-parenting pro.</p>`;
+        }
+        
+        function goBackToHub() {
+            contentArea.classList.add('hidden');
+            courseHub.classList.remove('hidden');
+            moduleCards.forEach(c => c.classList.remove('selected'));
+        }
+
+        function shuffleArray(array) { return [...array].sort(() => Math.random() - 0.5); }
+
+        moduleCards.forEach(card => card.addEventListener('click', () => {
+            selectCard(card, 'module');
+            displayModule(parseInt(card.dataset.module));
+        }));
+        startQuizBtn.addEventListener('click', setupQuiz);
+        quizSection.addEventListener('click', handleAnswerClick);
+        backToHubBtn.addEventListener('click', goBackToHub);
+        
+        function selectCard(card, cardType) {
+            document.querySelectorAll(`.${cardType}-card`).forEach(c => c.classList.remove('selected'));
+            card.classList.add('selected');
+        }
+    });
+    </script>
 </body>
 </html>
