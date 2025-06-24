@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <script>
+        // Fetch and parse the template
+        fetch('/training/course-template.html')
+            .then(response => response.text())
+            .then(templateHtml => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(templateHtml, 'text/html');
+
+                // Set the specific title for this course
+                doc.title = "FLAMEA Training - The Children's Act";
+
+                // Inject this page's unique content into the template's placeholder
+                const placeholder = doc.getElementById('course-content-placeholder');
+                const sourceContent = document.getElementById('course-content-source');
+                if (placeholder && sourceContent) {
+                    placeholder.innerHTML = sourceContent.innerHTML;
+                }
+                
+                // Replace the current document with the new, templated document
+                document.documentElement.innerHTML = doc.documentElement.innerHTML;
+                
+                // The main.js script from the template will execute automatically.
+                // However, we need to manually execute the course-specific script.
+                const courseScript = document.querySelector('#course-content-source script');
+                if (courseScript) {
+                    eval(courseScript.innerHTML);
+                }
+            });
+    </script>
+</head>
+<body>
+    <div id="course-content-source" style="display: none;">
+        <div id="course-hub" class="max-w-4xl mx-auto text-center">
+             <header class="mb-12">
+                <div class="flex justify-center items-center gap-4 mb-4">
+                    <svg class="h-20 w-20 text-green-400" viewBox="0 0 24 24" fill="currentColor" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M12 1L3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16l-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z"/>
+                    </svg>
+                    <h1 class="text-4xl md:text-5xl font-bold font-roboto-slab text-white">The Father's Armoury: The Children's Act</h1>
+                </div>
+                <p class="text-lg text-gray-300">A comprehensive guide to your rights, your child's best interests, and navigating the system.</p>
+            </header>
+            <section id="module-selection-section">
+                </section>
+        </div>
+        <div id="content-area" class="w-full max-w-4xl mx-auto hidden">
+            </div>
+        
+        <script>
+        // All of the original game logic from course-childrens-act.html goes here.
+        // It will be executed after the template is loaded.
+        document.addEventListener('DOMContentLoaded', () => {
+            // Your original game logic here...
+        });
+        </script>
+    </div>
+</body>
+</html>

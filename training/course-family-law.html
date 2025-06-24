@@ -1,21 +1,34 @@
 <!DOCTYPE html>
-<html lang="en" class="dark">
+<html>
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>FLAMEA Training - Family Law Overview</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@700&family=Open+Sans:wght@400;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="../assets/css/style.min.css">
-    <style>
-        body { font-family: 'Open Sans', sans-serif; }
-        .main-content { flex-grow: 1; overflow-y: auto; background-size: cover; background-position: center center; }
-        .module-card { border: 2px solid transparent; transition: all 0.3s ease; }
-        .module-card:hover { transform: translateY(-5px); border-color: #60a5fa; }
-        .module-card.selected { border-color: #60a5fa; background-color: rgba(96, 165, 250, 0.1); }
-        .prose h2 { color: #93c5fd; } .prose h3 { color: #bfdbfe; } .prose strong { color: #bfdbfe; }
-        .quiz-section, #end-screen { background-color: rgba(30, 41, 59, 0.8); backdrop-filter: blur(8px); }
-    </style>
+    <!-- This script loads the main template and injects this course's content -->
+    <script>
+        fetch('/training/course-template.html')
+            .then(response => response.text())
+            .then(templateHtml => {
+                const parser = new DOMParser();
+                const doc = parser.parseFromString(templateHtml, 'text/html');
+
+                // Set the specific title for this course
+                doc.title = "FLAMEA Training - Family Law Overview";
+
+                // Inject this page's unique content into the template's placeholder
+                const placeholder = doc.getElementById('course-content-placeholder');
+                const sourceContent = document.getElementById('course-content-source');
+                if (placeholder && sourceContent) {
+                    placeholder.innerHTML = sourceContent.innerHTML;
+                }
+                
+                // Replace the current document with the new, templated document
+                document.documentElement.innerHTML = doc.documentElement.innerHTML;
+                
+                // Manually execute the course-specific script after the DOM is updated
+                const courseScript = document.querySelector('#course-content-placeholder script');
+                if (courseScript) {
+                    eval(courseScript.innerHTML);
+                }
+            });
+    </script>
 </head>
 <body class="bg-gray-900 text-gray-200 font-sans flex">
 
